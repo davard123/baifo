@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南无阿弥陀佛</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body class="prayer-page">
+    <main class="prayer-shell">
+        <a class="page-link" href="index.html">返回首页</a>
+        <section class="prayer-card">
+            <div class="prayer-stage">
+                <img class="buddha" src="a2.png" alt="阿弥陀佛">
+                <div class="gifts"></div>
+                <div class="flowers1"></div>
+                <div class="flowers2"></div>
+                <div class="light1"></div>
+                <div class="light2"></div>
+                <div class="men"></div>
+                <div class="women"></div>
+                <div class="incense"></div>
+            </div>
+            <div class="prayer-panel">
+                <h1>南无阿弥陀佛</h1>
+                <p>礼敬西方极乐世界阿弥陀佛，供养祈愿后会同步写入后端数据。</p>
+
+                <div class="button-container">
+                    <button id="flower-button" type="button">献花</button>
+                    <button id="gift-button" type="button">献贡品</button>
+                    <button id="light-button" type="button">点灯</button>
+                    <button id="incense-button" type="button">上香</button>
+                    <button id="bow-button" type="button">磕头</button>
+                </div>
+
+                <form class="user-form" id="user-form">
+                    <div class="name-age-container">
+                        <input id="username" type="text" placeholder="用户名" maxlength="20" required>
+                        <input id="age" type="number" min="1" placeholder="年龄" value="50" required>
+                    </div>
+                    <div class="wish-container">
+                        <textarea id="wish" placeholder="许愿内容" maxlength="200" readonly required>愿以此功德。庄严佛净土。上报四重恩。下济三途苦。若有见闻者。悉发菩提心。尽此一报身。同生极乐国。愿消三障诸烦恼，愿得智慧真明了，普愿罪障悉消除，世世常行菩萨道。</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button id="get-submitted-data" type="submit">礼毕，回向众生</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

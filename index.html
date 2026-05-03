@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拜佛网站</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body class="home-page">
+    <main class="home-shell">
+        <section class="hero-card">
+            <h1>拜佛网站</h1>
+            <p>选择一位佛菩萨礼敬祈愿，也可以在下方查看已经提交过的祈愿信息。</p>
+
+            <div class="catalog-grid">
+                <a class="catalog-card" href="benshi.html">
+                    <img src="a1.png" alt="释迦牟尼佛">
+                    <h2>释迦牟尼佛</h2>
+                    <span>本师释迦牟尼佛</span>
+                </a>
+                <a class="catalog-card" href="amtf.html">
+                    <img src="a2.png" alt="阿弥陀佛">
+                    <h2>阿弥陀佛</h2>
+                    <span>西方极乐世界</span>
+                </a>
+                <a class="catalog-card" href="ysf.html">
+                    <img src="a3.png" alt="药师佛">
+                    <h2>药师佛</h2>
+                    <span>东方净琉璃世界</span>
+                </a>
+                <a class="catalog-card" href="mlf.html">
+                    <img src="a4.png" alt="弥勒佛">
+                    <h2>弥勒佛</h2>
+                    <span>当来下生弥勒尊佛</span>
+                </a>
+                <a class="catalog-card" href="wsps.html">
+                    <img src="a5.png" alt="文殊菩萨">
+                    <h2>文殊菩萨</h2>
+                    <span>大智文殊师利菩萨</span>
+                </a>
+                <a class="catalog-card" href="pxps.html">
+                    <img src="a6.png" alt="普贤菩萨">
+                    <h2>普贤菩萨</h2>
+                    <span>大行普贤菩萨</span>
+                </a>
+                <a class="catalog-card" href="gyps.html">
+                    <img src="a7.png" alt="观音菩萨">
+                    <h2>观音菩萨</h2>
+                    <span>大悲观世音菩萨</span>
+                </a>
+                <a class="catalog-card" href="dzps.html">
+                    <img src="a8.png" alt="地藏菩萨">
+                    <h2>地藏菩萨</h2>
+                    <span>大愿地藏王菩萨</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="users-card">
+            <h1>所有用户信息</h1>
+            <p>这里会展示提交到本地数据库中的祈愿记录。</p>
+            <p class="users-empty" id="users-empty" hidden>暂时还没有用户记录。</p>
+
+            <table id="users-table">
+                <thead>
+                    <tr>
+                        <th>用户名</th>
+                        <th>年龄</th>
+                        <th>愿望</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

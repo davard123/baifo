@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-width:100vh;
+        margin: auto;
+    }
+
+    .top-container {
+        flex: 5;
+        background-image: url("background.png"); /* 替换为实际背景图片的URL */
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .buddha {
+        width: 80%;
+        max-width: 500px;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .offering-container {
+        display: flex;
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
+
+    .offering-slot {
+        flex: 1;
+    }
+
+    .flowers,
+    .men,
+    .women,
+    .gifts {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    .flowers img,
+    .gifts img {
+        width: 50px;
+        height: auto;
+    }
+    .men img,
+    .women img {
+        width: 100px;
+        height: auto;
+    }
+    .bottom-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .user-info-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .input-row {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    </style>
+    <title>拜佛网页</title>
+</head>
+<body>
+    <div class="container">
+        <div class="top-container">
+            <img class="buddha" src="20164516590gp (1).png" alt="佛像">
+            <div class="offering-container">
+                
+                <div class="flowers"></div>
+                <div class="offering-slot"></div>
+                <div class="men"></div>
+                <div class="women"></div>
+                <div class="gifts"></div>
+                <div class="offering-slot"></div>
+                
+            </div>
+        </div>
+        <div class="bottom-container">
+            <div class="button-container">
+                <button id="flower-button">献花</button>
+                <button id="bow-button">磕头</button>
+                <button id="gift-button">献贡品</button>
+                
+            </div>
+            <!-- <div class="user-info-container">
+                <div class="input-row">
+                    <input id="username" type="text" placeholder="用户名">
+                    <input id="age" type="number" min="1" placeholder="年龄">
+                </div>
+                <div class="input-row">
+                    <textarea id="wish" rows="2" cols="30" placeholder="许愿"></textarea>
+                    <button id="submit-button">递交</button>
+                </div>
+            </div> -->
+
+            <form id="user-form">
+                <div class="input-row">
+                    <input id="username" type="text" placeholder="用户名">
+                    <input id="age" type="number" min="1" placeholder="年龄">
+                </div>
+                <div class="input-row">
+                    <input id="wish" type="text" placeholder="许愿">
+                </div>
+                <button type="submit">提交</button>
+            </form>
+            
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        // 获取花和贡品按钮元素
+        var flowerButton = document.getElementById('flower-button');
+        var giftButton = document.getElementById('gift-button');
+        // 获取新的磕头按钮元素
+        var bowButton = document.getElementById('bow-button');
+        // 获取花和贡品图片元素
+        var flowers = document.querySelector('.flowers');
+        var gifts = document.querySelector('.gifts');
+        var men = document.querySelector('.men');
+        var women = document.querySelector('.women');
+        // 添加点击事件监听器
+        flowerButton.addEventListener('click', function () {
+            var img = document.createElement('img');
+            img.src = "02.gif"; // 替换为实际花图片的URL
+            flowers.appendChild(img);
+            flowerButton.disabled = true;
+        });
+    
+        giftButton.addEventListener('click', function () {
+            var img = document.createElement('img');
+            img.src = "03.gif"; // 替换为实际贡品图片的URL
+            gifts.appendChild(img);
+            giftButton.disabled = true;
+        });
+    
+        // 添加新的磕头按钮点击事件监听器
+        bowButton.addEventListener('click', function () {
+            var menImg = document.createElement('img');
+            menImg.src = "05-1.gif"; // 替换为实际男图片的URL
+            men.appendChild(menImg);
+            bowButton.disabled = true;
+
+            var womenImg = document.createElement('img');
+            womenImg.src = "05-2.gif"; // 替换为实际女图片的URL
+            women.appendChild(womenImg);
+            bowButton.disabled = true;
+        });
+    
+        document.getElementById('user-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    var username = document.getElementById('username').value;
+    var age = document.getElementById('age').value;
+    var wish = document.getElementById('wish').value;
+
+    fetch('/submit', {
+        method: 'POST',
+        body: JSON.stringify({
+            username: username,
+            age: age,
+            wish: wish
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response =>
+
+        
+    });
+    
+    </script>
+</body>
+</html>    
