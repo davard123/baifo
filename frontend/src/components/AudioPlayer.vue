@@ -1,33 +1,29 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-/* Put a Buddhist chanting mp3 at /music/bgm.mp3 to enable audio.
-   The player silently stays hidden until a file is found.             */
 const AUDIO_SRC = '/music/bgm.mp3'
 
-const muted = ref(false)
-const visible = ref(false)
-let audio = null
+const muted    = ref(false)
+const visible  = ref(false)
+let audio      = null
 
 onMounted(() => {
   audio = new Audio(AUDIO_SRC)
-  audio.loop = true
-  audio.volume = 0.35
+  audio.loop    = true
+  audio.volume  = 0.35
 
-  audio.addEventListener('canplay', () => {
-    visible.value = true
-    audio.play().catch(() => {})
-  }, { once: true })
-
-  audio.addEventListener('error', () => {
-    visible.value = false
-  })
+  // File loaded → show button; browsers block autoplay so we just show the toggle
+  audio.addEventListener('canplay',  () => { visible.value = true })
+  audio.addEventListener('error',    () => { visible.value = false })
 })
 
 function toggle() {
-  if (!audio) return
+  if (!audio || !visible.value) return
   muted.value = !muted.value
   audio.muted = muted.value
+  if (!muted.value) {
+    audio.play().catch(() => { muted.value = true })
+  }
 }
 </script>
 
