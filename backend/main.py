@@ -1,13 +1,20 @@
 import sqlite3
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 
-# Railway: __file__ is /app/main.py  →  parent is /app  (writable)
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH  = BASE_DIR / "user_data.db"
+# Use Render's persistent disk mount (/app/data) or fallback to /app for local dev
+RENDER_DISK = os.environ.get("RENDER_DISK_PATH", "")
+if RENDER_DISK:
+    DATA_DIR = Path(RENDER_DISK)
+else:
+    DATA_DIR = Path(__file__).resolve().parent / "data"
+
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+DB_PATH = DATA_DIR / "user_data.db"
 
 app = FastAPI(title="礼佛祈愿 API")
 
@@ -22,7 +29,9 @@ app.add_middleware(
 # ── DB ───────────────────────────────────────────────────────────────────────
 
 def _get_conn() -> sqlite3.Connection:
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(str(DB_PATH), timeout=30)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=30000")
     conn.row_factory = sqlite3.Row
     return conn
 
