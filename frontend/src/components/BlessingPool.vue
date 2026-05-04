@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
+import { apiFetch } from '../api.js'
+
+const router = useRouter()
 
 const active = ref(null)    // 当前选中的祈福项
 const toast  = ref('')
@@ -39,13 +43,13 @@ async function submit() {
   localStorage.setItem('bless_name', form.value.name.trim())
   localStorage.setItem('bless_age',  form.value.age)
   try {
-    await fetch('/api/wishes', {
+    await apiFetch('/wishes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: form.value.name.trim(),
         age: Number(form.value.age) || 0,
-        wish: `${active.value.label}：${resultWish.value}`,
+        wish: `${active.value.label}：${active.value.wish}`,
         buddha: '',
         blessing: active.value.label
       })
@@ -54,6 +58,7 @@ async function submit() {
   loading.value = false
   resultWish.value = active.value.wish
   stage.value = 'done'
+  setTimeout(() => { close(); router.push('/') }, 2500)
 }
 
 const RITUALS = ['上香', '点灯', '磕头']
@@ -95,11 +100,6 @@ function doRitual(r) {
         <!-- 背景场景 -->
         <div class="modal-scene" :style="{ backgroundImage: `url(${active.bg})` }">
           <div class="scene-overlay">
-            <div class="scene-icon">
-              <img :src="active.icon" :alt="active.label" />
-            </div>
-            <h2 class="scene-title">{{ active.label }}</h2>
-
             <!-- 礼佛动作（仅 form 阶段显示） -->
             <div v-if="stage === 'form'" class="scene-rituals">
               <button
@@ -118,6 +118,7 @@ function doRitual(r) {
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-wish">{{ resultWish }}</p>
               <p class="result-user">—— {{ form.name }} 敬上</p>
+              <button class="back-home-btn" @click="close(); router.push('/')">返回首页</button>
             </div>
 
             <!-- 表单（form 阶段） -->
@@ -234,34 +235,48 @@ function doRitual(r) {
   gap: 12px;
 }
 
-.scene-icon { width: 80px; height: 80px; }
-.scene-icon img { width: 100%; height: 100%; object-fit: contain; }
-.scene-title { font-size: 1.6rem; color: #f0d080; letter-spacing: .1em; }
-
 .scene-rituals {
   display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
 }
 .ritual-btn {
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(240,200,100,.5);
-  background: rgba(0,0,0,.35);
-  color: #f0d080;
-  font-size: .9rem;
+  padding: 10px 22px;
+  border-radius: 22px;
+  border: 2px solid #fff8ee;
+  background: rgba(0,0,0,.55);
+  color: #fff8ee;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-shadow: 0 1px 4px rgba(0,0,0,.7);
+  backdrop-filter: blur(4px);
   transition: background .2s, transform .15s;
 }
 .ritual-btn:hover:not(:disabled) {
-  background: rgba(212,168,67,.3);
+  background: rgba(212,168,67,.7);
+  border-color: #f0d080;
   transform: translateY(-2px);
 }
-.ritual-btn.done { opacity: .55; }
+.ritual-btn.done { opacity: .5; background: rgba(100,80,30,.5); }
 
-.scene-result { text-align: center; }
-.result-wish { font-size: 1.1rem; color: #f0d080; line-height: 1.8; margin-bottom: 10px; }
-.result-user { font-size: .85rem; color: rgba(240,200,100,.65); }
+.scene-result { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.result-wish { font-size: 1.1rem; color: #fff8ee; line-height: 1.9; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
+.result-user { font-size: .9rem; color: rgba(255,248,238,.7); }
+.back-home-btn {
+  margin-top: 8px;
+  padding: 10px 28px;
+  border-radius: 22px;
+  border: 2px solid #fff8ee;
+  background: rgba(0,0,0,.5);
+  color: #fff8ee;
+  font-size: .95rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background .2s;
+}
+.back-home-btn:hover { background: rgba(212,168,67,.5); }
 
 .scene-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.form-wish-hint { font-size: .85rem; color: rgba(240,200,100,.7); text-align: center; }
+.form-wish-hint { font-size: .9rem; color: #fff8ee; text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,.7); line-height: 1.7; }
 
 .form-row { display: grid; grid-template-columns: 1fr 90px; gap: 10px; }
 .field {
