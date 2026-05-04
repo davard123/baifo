@@ -59,7 +59,7 @@ _init_db()
 
 class WishIn(BaseModel):
     username: str
-    age: str = ""
+    age: str = "30"
     wish: str
     buddha: str = ""
     blessing: str = ""

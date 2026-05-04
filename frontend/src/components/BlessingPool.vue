@@ -18,7 +18,7 @@ const resultWish = ref('')
 // localStorage 恢复上次记录
 onMounted(() => {
   form.value.name = localStorage.getItem('bless_name') || ''
-  form.value.age  = localStorage.getItem('bless_age')  || ''
+  form.value.age  = localStorage.getItem('bless_age')  || '30'
 })
 
 function open(b) {
@@ -48,7 +48,7 @@ async function submit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: form.value.name.trim(),
-        age: Number(form.value.age) || null,
+        age: Number(form.value.age) || 30,
         wish: active.value.wish,
         buddha: '',
         blessing: active.value.label,
