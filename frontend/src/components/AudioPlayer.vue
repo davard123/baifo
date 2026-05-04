@@ -1,50 +1,41 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const muted  = ref(true)
 let audio    = null
 
-onMounted(() => {
-  console.log('[AudioPlayer] mounted, trying to init audio')
-  initAudio()
-})
-
-function initAudio() {
+function toggle() {
   if (!audio) {
     audio = new Audio('/music/bgm.mp3')
-    audio.loop   = true
-    audio.volume = 0.35
-    audio.muted  = true
-    audio.play().catch(e => console.warn('[AudioPlayer] play failed:', e))
+    audio.loop    = true
+    audio.volume  = 0.35
+    audio.muted   = true
   }
-}
 
-function toggle() {
-  initAudio()
   muted.value = !muted.value
   audio.muted = muted.value
+
   if (!muted.value) {
-    audio.play().catch(() => { muted.value = true })
+    audio.play().catch(() => {
+      muted.value = true
+      audio.muted = true
+    })
   }
 }
 </script>
 
 <template>
-  <div class="audio-btn-wrap">
-    <button class="audio-btn" @click="toggle" :title="muted ? '开启音乐' : '关闭音乐'">
-      {{ muted ? '🔇' : '🔔' }}
-    </button>
-  </div>
+  <button class="audio-btn" @click="toggle" :title="muted ? '开启音乐' : '关闭音乐'">
+    {{ muted ? '🔇' : '🔔' }}
+  </button>
 </template>
 
 <style scoped>
-.audio-btn-wrap {
+.audio-btn {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 999;
-}
-.audio-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
