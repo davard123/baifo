@@ -108,7 +108,8 @@ function doRitual(r) {
     <Teleport to="body">
       <div v-if="active" class="blessing-modal" @click.self="close">
         <!-- 背景场景 -->
-        <div class="modal-scene" :style="{ backgroundImage: `url(${active.bg})` }">
+        <div class="modal-scene">
+          <img :src="active.bg" alt="" class="scene-img" />
           <div class="scene-overlay">
             <!-- 祈福语（form 阶段，放在按钮上方） -->
             <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
@@ -229,21 +230,26 @@ function doRitual(r) {
 
 .modal-scene {
   width: 90vw; max-width: 560px;
-  aspect-ratio: 3/4;
   max-height: 90vh;
   border-radius: 16px;
-  background-size: cover;
-  background-position: top center;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+.scene-img {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  flex-shrink: 0;
 }
 
 .scene-overlay {
   padding: 18px 20px 20px;
-  background: rgba(251, 243, 226, 0.96);
+  background: rgba(251, 243, 226, 1);
   border-top: 1px solid rgba(212, 168, 67, 0.3);
   display: flex;
   flex-direction: column;

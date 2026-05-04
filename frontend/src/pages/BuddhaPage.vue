@@ -154,7 +154,7 @@ async function onSubmit(payload) {
   }
 }
 
-/* ── 竖屏：图 4/5 | 内容条 1/5 ── */
+/* ── 竖屏：图 5/6 | 内容条 1/6 ── */
 @media (orientation: portrait) {
   .prayer-layout { flex-direction: column; }
 

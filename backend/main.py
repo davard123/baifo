@@ -51,6 +51,21 @@ def _init_db() -> None:
         if "target" not in cols:
             conn.execute("ALTER TABLE users ADD COLUMN target TEXT DEFAULT ''")
 
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ancestor_wishes (
+                id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                username       TEXT    NOT NULL,
+                age            INTEGER NOT NULL,
+                ancestor       TEXT    NOT NULL,
+                ancestor_name  TEXT    NOT NULL,
+                relationship   TEXT    NOT NULL,
+                wish           TEXT    NOT NULL,
+                created_at     TEXT    DEFAULT (datetime('now'))
+            )
+            """
+        )
+
 
 _init_db()
 
@@ -64,6 +79,32 @@ class WishIn(BaseModel):
     buddha: str = ""
     blessing: str = ""
     target: str = ""
+
+    @field_validator("username", "wish")
+    @classmethod
+    def not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("不能为空")
+        return v.strip()
+
+    @field_validator("age", mode="before")
+    @classmethod
+    def coerce_age(cls, v):
+        if v is None:
+            return 30
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return 30
+
+
+class AncestorWishIn(BaseModel):
+    username: str
+    age: int = 30
+    ancestor: str = ""
+    ancestor_name: str = ""
+    relationship: str = ""
+    wish: str = ""
 
     @field_validator("username", "wish")
     @classmethod
@@ -105,5 +146,24 @@ def create_wish(body: WishIn):
         conn.execute(
             "INSERT INTO users (username, age, wish, buddha, blessing, target) VALUES (?, ?, ?, ?, ?, ?)",
             (body.username, body.age, body.wish, body.buddha, body.blessing, body.target),
+        )
+    return {"status": "success"}
+
+
+@app.get("/ancestor-wishes")
+def get_ancestor_wishes():
+    with _get_conn() as conn:
+        rows = conn.execute(
+            "SELECT id, username, age, ancestor, ancestor_name, relationship, wish, created_at FROM ancestor_wishes ORDER BY id DESC"
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+@app.post("/ancestor-wishes")
+def create_ancestor_wish(body: AncestorWishIn):
+    with _get_conn() as conn:
+        conn.execute(
+            "INSERT INTO ancestor_wishes (username, age, ancestor, ancestor_name, relationship, wish) VALUES (?, ?, ?, ?, ?, ?)",
+            (body.username, body.age, body.ancestor, body.ancestor_name, body.relationship, body.wish),
         )
     return {"status": "success"}

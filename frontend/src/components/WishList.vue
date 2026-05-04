@@ -12,10 +12,16 @@ defineProps({
       暂时还没有祈愿记录，成为第一位礼佛发愿的人吧。🪷
     </div>
     <div v-else class="wish-items">
-      <div v-for="w in wishes" :key="w.id" class="wish-item">
+      <div v-for="w in wishes" :key="w.id" class="wish-item" :class="{ ancestor: !!w.ancestor }">
         <div class="wish-meta">
-          <span class="wish-user"><span v-if="w.age">{{ w.age }}岁的</span>{{ w.username }}敬上<span v-if="w.target">祝{{ w.target }}</span></span>
-          <span v-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
+          <span class="wish-user">
+            <span v-if="w.age">{{ w.age }}岁的</span>
+            {{ w.username }}
+            <span v-if="w.ancestor">为先{{ w.relationship }}{{ w.ancestor_name }}祭拜</span>
+            <span v-else-if="w.target">祝{{ w.target }}</span>
+          </span>
+          <span v-if="w.ancestor" class="wish-buddha ancestor-tag">{{ w.ancestor_name }}</span>
+          <span v-else-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
           <span v-else-if="w.buddha" class="wish-buddha">{{ w.buddha }}</span>
         </div>
         <p class="wish-text">{{ w.wish }}</p>
@@ -46,6 +52,13 @@ defineProps({
   transition: box-shadow 0.2s;
 }
 .wish-item:hover { box-shadow: 0 4px 16px rgba(68, 43, 17, 0.08); }
+.wish-item.ancestor {
+  background: rgba(50, 40, 35, 0.05);
+  border-color: rgba(120, 100, 80, 0.2);
+  border-left: 3px solid rgba(120, 100, 80, 0.4);
+}
+.wish-item.ancestor .wish-user { color: #5a4a3a; }
+.ancestor-tag { background: rgba(120, 100, 80, 0.12) !important; color: #5a4a3a !important; }
 
 .wish-meta {
   display: flex;

@@ -10,7 +10,14 @@
       "mcp__claude_ai_Exa__web_search_exa",
       "Bash(curl -sL \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\" -o \"D:/temp_bgm.mp3\" --max-time 30)",
       "Read(//d//**)",
-      "Bash(mv \"D:/temp_bgm.mp3\" \"D:/document/xiaoxinpad8085_termux_html/frontend/public/music/bgm.mp3\")"
+      "Bash(mv \"D:/temp_bgm.mp3\" \"D:/document/xiaoxinpad8085_termux_html/frontend/public/music/bgm.mp3\")",
+      "Bash(curl -s https://baifo.rentalinca.com/)",
+      "Bash(curl -s https://baifo.rentalinca.com/buddha/guanyin)",
+      "Bash(curl *)",
+      "Bash(python *)",
+      "Bash(git status *)",
+      "Bash(pip list *)",
+      "Bash(npx wrangler *)"
     ]
   }
 }

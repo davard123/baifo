@@ -93,8 +93,8 @@ defineProps({
 /* ── ① 佛像：从顶部撑到法器排上方 5% ── */
 .buddha-frame {
   position: absolute;
-  top: 0; left: 0; right: 0;   /* 全宽 */
-  height: 62%;                  /* 法器排 67% - 5% 间距 */
+  top: 0; left: 0; right: 0;
+  height: 62%;
   z-index: 2;
 }
 /* 图片边缘淡出，与深色舞台背景自然融合 */

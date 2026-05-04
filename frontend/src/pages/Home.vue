@@ -1,20 +1,30 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
+import { ANCESTORS } from '../data/ancestors.js'
 import WishList from '../components/WishList.vue'
 import BlessingPool from '../components/BlessingPool.vue'
 import { apiFetch } from '../api.js'
 
 const router = useRouter()
 const wishes = ref([])
+const ancestorWishes = ref([])
 const loading = ref(true)
+
+const allWishes = computed(() => {
+  return [...wishes.value, ...ancestorWishes.value].sort((a, b) => b.id - a.id)
+})
 
 async function loadWishes() {
   loading.value = true
   try {
-    const res = await apiFetch('/wishes')
-    if (res.ok) wishes.value = await res.json()
+    const [res1, res2] = await Promise.all([
+      apiFetch('/wishes'),
+      apiFetch('/ancestor-wishes')
+    ])
+    if (res1.ok) wishes.value = await res1.json()
+    if (res2.ok) ancestorWishes.value = await res2.json()
   } catch {}
   loading.value = false
 }
@@ -57,12 +67,35 @@ onMounted(() => {
       </div>
     </section>
 
+    <div class="section-divider">🙏 南无地藏王菩萨</div>
+
+    <section class="catalog-section card ancestor-catalog">
+      <h2 class="section-title">拜祭先人</h2>
+      <p class="section-sub">追思先人，超荐亡灵，虔诚祭拜，庇荫后代。</p>
+      <div class="catalog-grid">
+        <router-link
+          v-for="a in ANCESTORS"
+          :key="a.slug"
+          :to="'/ancestor/' + a.slug"
+          class="buddha-card ancestor-card"
+        >
+          <div class="buddha-img-wrap ancestor-img-wrap">
+            <img :src="a.image" :alt="a.name" />
+          </div>
+          <div class="buddha-info">
+            <h3>{{ a.name }}</h3>
+            <span>{{ a.subtitle }}</span>
+          </div>
+        </router-link>
+      </div>
+    </section>
+
     <BlessingPool @wish-submitted="loadWishes" />
 
     <section class="wishes-section card">
       <h2 class="section-title">祈愿记录</h2>
       <p class="section-sub">十方众生的礼佛祈愿，功德回向一切有情。</p>
-      <WishList :wishes="wishes" :loading="loading" />
+      <WishList :wishes="allWishes" :loading="loading" />
     </section>
 
     <footer class="site-footer">
@@ -155,6 +188,28 @@ onMounted(() => {
 }
 .buddha-info h3 { font-size: 1rem; margin-bottom: 4px; color: var(--accent); }
 .buddha-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+/* 分隔语 */
+.section-divider {
+  text-align: center;
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+  padding: 8px 0;
+}
+
+/* 先人卡片 — 冷色调滤镜 */
+.ancestor-img-wrap {
+  background: linear-gradient(135deg, #d8d0c4, #c8c0b4);
+}
+.ancestor-img-wrap img {
+  filter: grayscale(0.15) sepia(0.2);
+}
+.ancestor-card:hover {
+  box-shadow: 0 16px 36px rgba(30, 20, 15, 0.18);
+  border-color: #8a7a6a;
+}
 
 .wishes-section { animation: fadeInUp 0.7s 0.2s ease both; }
 
