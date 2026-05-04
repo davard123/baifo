@@ -105,28 +105,94 @@ async function onSubmit(payload) {
 </template>
 
 <style scoped>
+/* ── 全屏容器 ── */
 .prayer-shell {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 20px 60px;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   animation: fadeIn 0.5s ease;
 }
 
-.prayer-nav { margin-bottom: 20px; }
+.prayer-nav {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid rgba(212, 168, 67, 0.15);
+}
 
 .prayer-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ── 横屏：图 2/3 | 内容 1/3 ── */
+@media (orientation: landscape) {
+  .prayer-layout { flex-direction: row; }
+
+  .stage-section {
+    flex: 2;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  .panel-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 20px 32px;
+    border-radius: 0;
+    border-left: 1px solid rgba(212, 168, 67, 0.18);
+    box-shadow: none;
+  }
+}
+
+/* ── 竖屏：图 4/5 | 内容条 1/5 ── */
+@media (orientation: portrait) {
+  .prayer-layout { flex-direction: column; }
+
+  .stage-section {
+    flex: 4;
+    min-height: 0;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  .panel-section {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 10px 16px 16px;
+    border-radius: 0;
+    border-top: 1px solid rgba(212, 168, 67, 0.2);
+    box-shadow: none;
+  }
+
+  .namo-title { font-size: 1rem; margin-bottom: 4px; }
+  .buddha-desc { font-size: 0.82rem; line-height: 1.6; margin-bottom: 0; }
+  .divider { margin: 8px 0; }
+}
+
+/* ── 让 PrayerStage 撑满父容器 ── */
+:deep(.stage) {
+  aspect-ratio: unset;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
 }
 
 .namo-title {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: var(--accent);
   letter-spacing: 0.1em;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-shadow: 0 1px 8px rgba(127, 90, 54, 0.2);
 }
 
@@ -140,21 +206,6 @@ async function onSubmit(payload) {
 .divider {
   border: none;
   border-top: 1px solid rgba(212, 168, 67, 0.2);
-  margin: 20px 0;
-}
-
-/* ── 竖屏：上下布局 ── */
-@media (orientation: portrait) {
-  .prayer-shell { padding: 12px 12px 48px; }
-  .prayer-layout { grid-template-columns: 1fr; gap: 16px; }
-  .stage-section { padding: 0; }
-  .panel-section { padding: 20px 16px; }
-  .namo-title { font-size: 1.3rem; }
-  .prayer-nav { margin-bottom: 12px; }
-}
-
-/* ── 横屏：左右布局（默认即是，明确写出以防覆盖）── */
-@media (orientation: landscape) {
-  .prayer-layout { grid-template-columns: 1fr 1fr; }
+  margin: 16px 0;
 }
 </style>

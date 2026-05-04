@@ -204,11 +204,10 @@ defineProps({
   z-index: 8;
 }
 
-/* ── 竖屏 ── */
+/* ── 竖屏微调（aspect-ratio 由父容器控制）── */
 @media (orientation: portrait) {
-  .stage       { aspect-ratio: 4/3; max-height: 300px; border-radius: 0; }
-  .altar-row   { gap: 3%; padding: 0 4%; }
-  .wax         { height: 18px; }
+  .altar-row    { gap: 3%; padding: 0 4%; }
+  .wax          { height: 18px; }
   .offering-img { height: 58%; }
 }
 </style>
