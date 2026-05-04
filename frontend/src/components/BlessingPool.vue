@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
@@ -21,10 +21,18 @@ onMounted(() => {
   form.value.age  = localStorage.getItem('bless_age')  || '30'
 })
 
+const nextBlessing = computed(() => {
+  if (!active.value) return null
+  const i = BLESSINGS.indexOf(active.value)
+  return i >= 0 && i < BLESSINGS.length - 1 ? BLESSINGS[i + 1] : null
+})
+
 function open(b) {
   active.value = b
   stage.value  = 'form'
   resultWish.value = ''
+  form.value.target = ''
+  doneRituals.value = new Set()
 }
 
 function close() {
@@ -59,7 +67,6 @@ async function submit() {
   loading.value = false
   resultWish.value = active.value.wish
   stage.value = 'done'
-  setTimeout(() => { close(); router.push('/') }, 2500)
 }
 
 const RITUALS = ['上香', '点灯', '磕头']
@@ -118,8 +125,11 @@ function doRitual(r) {
             <!-- 祝福语结果 -->
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-wish">{{ resultWish }}</p>
-              <p class="result-user">—— {{ form.name }} 敬上</p>
-              <button class="back-home-btn" @click="close(); router.push('/')">返回首页</button>
+              <p class="result-user">—— {{ form.age }}岁的{{ form.name }}敬上{{ form.target ? `祝${form.target}` : '' }}</p>
+              <div class="result-btns">
+                <button v-if="nextBlessing" class="back-home-btn next-btn" @click="open(nextBlessing)">进入下一个祈福池</button>
+                <button class="back-home-btn" @click="close(); router.push('/')">返回首页</button>
+              </div>
             </div>
 
             <!-- 表单（form 阶段） -->
@@ -219,7 +229,7 @@ function doRitual(r) {
   max-height: 90vh;
   border-radius: 16px;
   background-size: cover;
-  background-position: center;
+  background-position: top center;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -275,6 +285,8 @@ function doRitual(r) {
   transition: background .2s;
 }
 .back-home-btn:hover { background: rgba(212,168,67,.5); }
+.result-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
+.next-btn { background: rgba(212,168,67,.25); border-color: #f0d080; }
 
 .scene-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
 .form-wish-hint { font-size: .9rem; color: #fff8ee; text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,.7); line-height: 1.7; }
