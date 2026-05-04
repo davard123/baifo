@@ -46,6 +46,8 @@ def _init_db() -> None:
             conn.execute("ALTER TABLE users ADD COLUMN buddha TEXT DEFAULT ''")
         if "created_at" not in cols:
             conn.execute("ALTER TABLE users ADD COLUMN created_at TEXT DEFAULT NULL")
+        if "blessing" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN blessing TEXT DEFAULT ''")
 
 
 _init_db()
@@ -58,6 +60,7 @@ class WishIn(BaseModel):
     age: int
     wish: str
     buddha: str = ""
+    blessing: str = ""   # 祈福池类型，如"求财""求健康"等
 
     @field_validator("username", "wish")
     @classmethod
@@ -94,7 +97,7 @@ def get_wishes():
 def create_wish(body: WishIn):
     with _get_conn() as conn:
         conn.execute(
-            "INSERT INTO users (username, age, wish, buddha) VALUES (?, ?, ?, ?)",
-            (body.username, body.age, body.wish, body.buddha),
+            "INSERT INTO users (username, age, wish, buddha, blessing) VALUES (?, ?, ?, ?, ?)",
+            (body.username, body.age, body.wish, body.buddha, body.blessing),
         )
     return {"status": "success"}

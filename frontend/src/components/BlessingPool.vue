@@ -38,9 +38,21 @@ async function submit() {
   loading.value = true
   localStorage.setItem('bless_name', form.value.name.trim())
   localStorage.setItem('bless_age',  form.value.age)
-  await new Promise(r => setTimeout(r, 1200))
-  resultWish.value = active.value.wish
+  try {
+    await fetch('/api/wishes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: form.value.name.trim(),
+        age: Number(form.value.age) || 0,
+        wish: `${active.value.label}：${resultWish.value}`,
+        buddha: '',
+        blessing: active.value.label
+      })
+    })
+  } catch {}
   loading.value = false
+  resultWish.value = active.value.wish
   stage.value = 'done'
 }
 
@@ -69,9 +81,10 @@ function doRitual(r) {
         class="blessing-item"
         @click="open(b)"
       >
-        <div class="blessing-icon">
-          <img :src="b.icon" :alt="b.label" />
-        </div>
+        <div
+          class="blessing-icon"
+          :style="{ backgroundImage: `url(${b.bg})` }"
+        ></div>
         <span class="blessing-label">{{ b.label }}</span>
       </button>
     </div>
@@ -181,9 +194,10 @@ function doRitual(r) {
 
 .blessing-icon {
   width: 64px; height: 64px;
-  object-fit: contain;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
 }
-.blessing-icon img { width: 100%; height: 100%; }
 .blessing-label { font-size: .88rem; color: var(--accent); }
 
 /* ── 弹窗 ── */

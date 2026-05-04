@@ -17,6 +17,7 @@ defineProps({
           <span class="wish-user">{{ w.username }}</span>
           <span class="wish-age">{{ w.age }} 岁</span>
           <span v-if="w.buddha" class="wish-buddha">{{ w.buddha }}</span>
+          <span v-else-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
         </div>
         <p class="wish-text">{{ w.wish }}</p>
       </div>
