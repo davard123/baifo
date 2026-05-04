@@ -20,6 +20,37 @@ onMounted(() => {
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', `虔诚礼敬${b.name}，${b.subtitle}。${b.desc} 在线发愿，功德回向一切众生。`
   )
+  // JSON-LD QAPage for GEO: AI can directly cite Q&A from this page
+  const qa = [
+    { q: `什么是${b.name}？`, a: `${b.name}，${b.subtitle}。${b.desc}` },
+    { q: `礼敬${b.name}有什么功德？`, a: `礼敬${b.name}可消业障、增福慧、开智慧。${b.wish}` },
+    { q: `${b.name}适合什么人祈愿？`, a: `任何人都可以虔诚礼敬${b.name}，发愿修行，回向众生，功德无量。` }
+  ]
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "QAPage",
+    "mainEntity": {
+      "@type": "Question",
+      "name": `如何正确礼敬${b.name}？`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": `礼敬${b.name}的方法：1. 选择本页面，点相应供养按钮（献花、点灯、上香等）；2. 填写姓名、年龄，发愿内容；3. 点击"礼毕，回向众生"提交祈愿。祈愿内容将记录于数据库，功德回向一切众生。`
+      }
+    },
+    "about": {
+      "@type": "Thing",
+      "name": b.name,
+      "description": b.desc
+    }
+  }
+  let el = document.getElementById('ld-qa')
+  if (!el) {
+    el = document.createElement('script')
+    el.id = 'ld-qa'
+    el.type = 'application/ld+json'
+    document.head.appendChild(el)
+  }
+  el.textContent = JSON.stringify(ld)
 })
 
 const offeringItems = ref([])
