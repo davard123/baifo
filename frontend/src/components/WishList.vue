@@ -14,10 +14,10 @@ defineProps({
     <div v-else class="wish-items">
       <div v-for="w in wishes" :key="w.id" class="wish-item">
         <div class="wish-meta">
-          <span class="wish-user">{{ w.username }}</span>
-          <span class="wish-age">{{ w.age }} 岁</span>
-          <span v-if="w.buddha" class="wish-buddha">{{ w.buddha }}</span>
-          <span v-else-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
+          <span class="wish-user">{{ w.username }}<span v-if="w.target"> · {{ w.target }}祈福</span><span v-else> 敬上</span></span>
+          <span v-if="w.age" class="wish-age">{{ w.age }} 岁</span>
+          <span v-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
+          <span v-else-if="w.buddha" class="wish-buddha">{{ w.buddha }}</span>
         </div>
         <p class="wish-text">{{ w.wish }}</p>
       </div>
@@ -54,8 +54,10 @@ defineProps({
   gap: 10px;
   margin-bottom: 8px;
   font-size: 0.85rem;
+  flex-wrap: wrap;
 }
 .wish-user { font-weight: 600; color: var(--accent); }
+.wish-user span { font-weight: normal; color: var(--text-muted); }
 .wish-age { color: var(--text-muted); }
 .wish-buddha {
   margin-left: auto;

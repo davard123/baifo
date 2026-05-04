@@ -48,6 +48,8 @@ def _init_db() -> None:
             conn.execute("ALTER TABLE users ADD COLUMN created_at TEXT DEFAULT NULL")
         if "blessing" not in cols:
             conn.execute("ALTER TABLE users ADD COLUMN blessing TEXT DEFAULT ''")
+        if "target" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN target TEXT DEFAULT ''")
 
 
 _init_db()
@@ -57,10 +59,11 @@ _init_db()
 
 class WishIn(BaseModel):
     username: str
-    age: int
+    age: int | None = None
     wish: str
     buddha: str = ""
     blessing: str = ""   # 祈福池类型，如"求财""求健康"等
+    target: str = ""    # 为谁祈福
 
     @field_validator("username", "wish")
     @classmethod
@@ -69,11 +72,11 @@ class WishIn(BaseModel):
             raise ValueError("不能为空")
         return v.strip()
 
-    @field_validator("age")
+    @field_validator("age", mode="before")
     @classmethod
-    def positive(cls, v: int) -> int:
-        if v <= 0:
-            raise ValueError("年龄必须大于 0")
+    def coerce_age(cls, v):
+        if v is None or v == "" or v == 0:
+            return None
         return v
 
 
@@ -97,7 +100,7 @@ def get_wishes():
 def create_wish(body: WishIn):
     with _get_conn() as conn:
         conn.execute(
-            "INSERT INTO users (username, age, wish, buddha, blessing) VALUES (?, ?, ?, ?, ?)",
-            (body.username, body.age, body.wish, body.buddha, body.blessing),
+            "INSERT INTO users (username, age, wish, buddha, blessing, target) VALUES (?, ?, ?, ?, ?, ?)",
+            (body.username, body.age, body.wish, body.buddha, body.blessing, body.target),
         )
     return {"status": "success"}

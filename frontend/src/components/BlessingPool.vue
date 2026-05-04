@@ -48,10 +48,11 @@ async function submit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: form.value.name.trim(),
-        age: Number(form.value.age) || 0,
-        wish: `${active.value.label}：${active.value.wish}`,
+        age: Number(form.value.age) || null,
+        wish: active.value.wish,
         buddha: '',
-        blessing: active.value.label
+        blessing: active.value.label,
+        target: form.value.target
       })
     })
   } catch {}
