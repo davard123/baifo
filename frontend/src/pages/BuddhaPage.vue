@@ -62,7 +62,7 @@ async function onSubmit(payload) {
       </section>
 
       <section class="panel-section card">
-        <div class="namo-title">{{ buddha.namo }}</div>
+        <h1 class="namo-title">{{ buddha.namo }}</h1>
         <p class="buddha-desc">{{ buddha.desc }}</p>
         <hr class="divider" />
         <RitualButtons @ritual="onRitual" />

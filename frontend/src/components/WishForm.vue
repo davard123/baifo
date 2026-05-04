@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   defaultWish: { type: String, default: '' }
@@ -12,6 +12,13 @@ const wish = ref(props.defaultWish)
 const loading = ref(false)
 const error = ref('')
 
+onMounted(() => {
+  // 恢复上次提交的用户名和年龄（每个浏览器各自保存）
+  username.value = localStorage.getItem('baifo_username') || ''
+  const savedAge = localStorage.getItem('baifo_age')
+  if (savedAge) age.value = Number(savedAge)
+})
+
 async function handleSubmit() {
   error.value = ''
   if (!username.value.trim()) { error.value = '请填写用户名。'; return }
@@ -20,6 +27,9 @@ async function handleSubmit() {
 
   loading.value = true
   try {
+    // 提交前先保存（成功后 localStorage 已有记录）
+    localStorage.setItem('baifo_username', username.value.trim())
+    localStorage.setItem('baifo_age', String(age.value))
     await emit('submit', {
       username: username.value.trim(),
       age: Number(age.value),
@@ -44,6 +54,7 @@ async function handleSubmit() {
           placeholder="您的法名/姓名"
           maxlength="20"
           class="field"
+          autocomplete="nickname"
         />
         <input
           v-model="age"
@@ -52,6 +63,7 @@ async function handleSubmit() {
           max="150"
           placeholder="年龄"
           class="field age-field"
+          autocomplete="off"
         />
       </div>
       <textarea
