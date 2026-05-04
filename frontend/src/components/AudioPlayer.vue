@@ -1,8 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const muted  = ref(true)
 let audio    = null
+
+onMounted(() => {
+  console.log('[AudioPlayer] mounted, trying to init audio')
+  initAudio()
+})
 
 function initAudio() {
   if (!audio) {
@@ -10,7 +15,7 @@ function initAudio() {
     audio.loop   = true
     audio.volume = 0.35
     audio.muted  = true
-    audio.play().catch(() => {})
+    audio.play().catch(e => console.warn('[AudioPlayer] play failed:', e))
   }
 }
 
@@ -25,17 +30,21 @@ function toggle() {
 </script>
 
 <template>
-  <button class="audio-btn" @click="toggle" :title="muted ? '开启音乐' : '关闭音乐'">
-    {{ muted ? '🔇' : '🔔' }}
-  </button>
+  <div class="audio-btn-wrap">
+    <button class="audio-btn" @click="toggle" :title="muted ? '开启音乐' : '关闭音乐'">
+      {{ muted ? '🔇' : '🔔' }}
+    </button>
+  </div>
 </template>
 
 <style scoped>
-.audio-btn {
+.audio-btn-wrap {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 999;
+}
+.audio-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
