@@ -1,28 +1,21 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
-const muted   = ref(false)
-const visible = ref(false)
-let audio     = null
+const muted  = ref(true)
+let audio    = null
 
-onMounted(() => {
-  audio = new Audio('/music/bgm.mp3')
-  audio.loop  = true
-  audio.volume = 0.35
-
-  // 一旦元数据加载完成（即文件有效）就显示按钮
-  audio.addEventListener('loadedmetadata', () => {
-    visible.value = true
-  })
-
-  // 即使加载失败也不报错，静默处理
-  audio.addEventListener('error', () => {
-    visible.value = false
-  })
-})
+function initAudio() {
+  if (!audio) {
+    audio = new Audio('/music/bgm.mp3')
+    audio.loop   = true
+    audio.volume = 0.35
+    audio.muted  = true
+    audio.play().catch(() => {})
+  }
+}
 
 function toggle() {
-  if (!audio) return
+  initAudio()
   muted.value = !muted.value
   audio.muted = muted.value
   if (!muted.value) {
@@ -32,12 +25,7 @@ function toggle() {
 </script>
 
 <template>
-  <button
-    v-if="visible"
-    class="audio-btn"
-    :title="muted ? '开启音乐' : '关闭音乐'"
-    @click="toggle"
-  >
+  <button class="audio-btn" @click="toggle" :title="muted ? '开启音乐' : '关闭音乐'">
     {{ muted ? '🔇' : '🔔' }}
   </button>
 </template>
