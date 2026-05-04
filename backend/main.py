@@ -59,7 +59,7 @@ _init_db()
 
 class WishIn(BaseModel):
     username: str
-    age: str = "30"
+    age: int = 30
     wish: str
     buddha: str = ""
     blessing: str = ""
@@ -71,6 +71,16 @@ class WishIn(BaseModel):
         if not v.strip():
             raise ValueError("不能为空")
         return v.strip()
+
+    @field_validator("age", mode="before")
+    @classmethod
+    def coerce_age(cls, v):
+        if v is None:
+            return 30
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return 30
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -91,10 +101,9 @@ def get_wishes():
 
 @app.post("/wishes")
 def create_wish(body: WishIn):
-    age_val = int(body.age) if str(body.age).isdigit() else None
     with _get_conn() as conn:
         conn.execute(
             "INSERT INTO users (username, age, wish, buddha, blessing, target) VALUES (?, ?, ?, ?, ?, ?)",
-            (body.username, age_val, body.wish, body.buddha, body.blessing, body.target),
+            (body.username, body.age, body.wish, body.buddha, body.blessing, body.target),
         )
     return {"status": "success"}
