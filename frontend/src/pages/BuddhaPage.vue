@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
@@ -12,6 +12,15 @@ const router = useRouter()
 
 const buddha = computed(() => BUDDHAS.find(b => b.slug === route.params.slug))
 if (!buddha.value) router.replace('/')
+
+onMounted(() => {
+  if (!buddha.value) return
+  const b = buddha.value
+  document.title = `${b.namo} | 在线礼佛祈愿 - baifo.rentalinca.com`
+  document.querySelector('meta[name="description"]')?.setAttribute(
+    'content', `虔诚礼敬${b.name}，${b.subtitle}。${b.desc} 在线发愿，功德回向一切众生。`
+  )
+})
 
 const offeringItems = ref([])
 const figureItems   = ref([])
