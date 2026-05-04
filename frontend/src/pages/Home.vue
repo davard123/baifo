@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import WishList from '../components/WishList.vue'
+import BlessingPool from '../components/BlessingPool.vue'
 import { apiFetch } from '../api.js'
 
 const router = useRouter()
@@ -50,6 +51,8 @@ onMounted(async () => {
         </router-link>
       </div>
     </section>
+
+    <BlessingPool />
 
     <section class="wishes-section card">
       <h2 class="section-title">祈愿记录</h2>
