@@ -1,24 +1,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const AUDIO_SRC = '/music/bgm.mp3'
-
-const muted    = ref(false)
-const visible  = ref(false)
-let audio      = null
+const muted   = ref(false)
+const visible = ref(false)
+let audio     = null
 
 onMounted(() => {
-  audio = new Audio(AUDIO_SRC)
-  audio.loop    = true
-  audio.volume  = 0.35
+  audio = new Audio('/music/bgm.mp3')
+  audio.loop  = true
+  audio.volume = 0.35
 
-  // File loaded → show button; browsers block autoplay so we just show the toggle
-  audio.addEventListener('canplay',  () => { visible.value = true })
-  audio.addEventListener('error',    () => { visible.value = false })
+  // 一旦元数据加载完成（即文件有效）就显示按钮
+  audio.addEventListener('loadedmetadata', () => {
+    visible.value = true
+  })
+
+  // 即使加载失败也不报错，静默处理
+  audio.addEventListener('error', () => {
+    visible.value = false
+  })
 })
 
 function toggle() {
-  if (!audio || !visible.value) return
+  if (!audio) return
   muted.value = !muted.value
   audio.muted = muted.value
   if (!muted.value) {
@@ -33,7 +37,6 @@ function toggle() {
     class="audio-btn"
     :title="muted ? '开启音乐' : '关闭音乐'"
     @click="toggle"
-    :aria-label="muted ? '开启背景音乐' : '关闭背景音乐'"
   >
     {{ muted ? '🔇' : '🔔' }}
   </button>
