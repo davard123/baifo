@@ -2,29 +2,19 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
-import { ANCESTORS } from '../data/ancestors.js'
 import WishList from '../components/WishList.vue'
 import BlessingPool from '../components/BlessingPool.vue'
 import { apiFetch } from '../api.js'
 
 const router = useRouter()
 const wishes = ref([])
-const ancestorWishes = ref([])
 const loading = ref(true)
-
-const allWishes = computed(() => {
-  return [...wishes.value, ...ancestorWishes.value].sort((a, b) => b.id - a.id)
-})
 
 async function loadWishes() {
   loading.value = true
   try {
-    const [res1, res2] = await Promise.all([
-      apiFetch('/wishes'),
-      apiFetch('/ancestor-wishes')
-    ])
-    if (res1.ok) wishes.value = await res1.json()
-    if (res2.ok) ancestorWishes.value = await res2.json()
+    const res = await apiFetch('/wishes')
+    if (res.ok) wishes.value = await res.json()
   } catch {}
   loading.value = false
 }
@@ -67,28 +57,16 @@ onMounted(() => {
       </div>
     </section>
 
-    <div class="section-divider">🙏 南无地藏王菩萨</div>
-
-    <section class="catalog-section card ancestor-catalog">
-      <h2 class="section-title">拜祭先人</h2>
-      <p class="section-sub">追思先人，超荐亡灵，虔诚祭拜，庇荫后代。</p>
-      <div class="catalog-grid">
-        <router-link
-          v-for="a in ANCESTORS"
-          :key="a.slug"
-          :to="'/ancestor/' + a.slug"
-          class="buddha-card ancestor-card"
-        >
-          <div class="buddha-img-wrap ancestor-img-wrap">
-            <img :src="a.image" :alt="a.name" />
-          </div>
-          <div class="buddha-info">
-            <h3>{{ a.name }}</h3>
-            <span>{{ a.subtitle }}</span>
-          </div>
-        </router-link>
+    <router-link to="/ancestors" class="ancestor-banner">
+      <div class="banner-inner">
+        <div class="banner-icon">🪔</div>
+        <div class="banner-text">
+          <h2>拜祭先人</h2>
+          <p>追思先人，超荐亡灵，虔诚祭拜，庇荫后代</p>
+        </div>
+        <div class="banner-arrow">→</div>
       </div>
-    </section>
+    </router-link>
 
     <BlessingPool @wish-submitted="loadWishes" />
 
@@ -199,16 +177,43 @@ onMounted(() => {
   padding: 8px 0;
 }
 
-/* 先人卡片 — 冷色调滤镜 */
-.ancestor-img-wrap {
-  background: linear-gradient(135deg, #d8d0c4, #c8c0b4);
+/* 先人横幅 */
+.ancestor-banner {
+  display: block;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, #2a1f15, #3a2a1a, #2a1f15);
+  border: 1px solid rgba(120, 100, 80, 0.3);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeInUp 0.6s 0.15s ease both;
 }
-.ancestor-img-wrap img {
-  filter: grayscale(0.15) sepia(0.2);
+.ancestor-banner:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(30, 20, 10, 0.3);
 }
-.ancestor-card:hover {
-  box-shadow: 0 16px 36px rgba(30, 20, 15, 0.18);
-  border-color: #8a7a6a;
+.banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.banner-icon { font-size: 2.8rem; flex-shrink: 0; }
+.banner-text { flex: 1; }
+.banner-text h2 {
+  font-size: 1.5rem;
+  color: #d0c8b0;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.banner-text p {
+  color: rgba(180, 170, 150, 0.8);
+  font-size: 0.9rem;
+}
+.banner-arrow {
+  font-size: 1.5rem;
+  color: rgba(180, 170, 150, 0.6);
+  flex-shrink: 0;
 }
 
 .wishes-section { animation: fadeInUp 0.7s 0.2s ease both; }
