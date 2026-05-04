@@ -1,12 +1,9 @@
 import os
 import psycopg
-from psycopg import sql
-from psycopg.adapt import PyDecimal  # unused but imported for type coherence
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field_validator
+from pydantic import BaseModel, field_validator
 
-# PostgreSQL connection via Supabase
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL environment variable not set")
@@ -21,14 +18,11 @@ app.add_middleware(
 )
 
 
-# ── DB ───────────────────────────────────────────────────────────────────────
-
 def _get_conn():
-    return psycopg.connect(DATABASE_URL, row_factory=psycopg.rows.row_factory)
+    return psycopg.connect(DATABASE_URL, row_factory=psycopg.rows.Row)
 
 
-def _dict_row(row):
-    """Convert psycopg Row to dict with string keys."""
+def _dict(row):
     return dict(zip(row.keys(), row))
 
 
@@ -46,17 +40,6 @@ def _init_db() -> None:
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
-
-        # Add blessing and target columns if they don't exist (old SQLite data migration)
-        try:
-            conn.execute("ALTER TABLE users ADD COLUMN blessing TEXT DEFAULT ''")
-        except psycopg.errors.DuplicateColumn:
-            pass
-        try:
-            conn.execute("ALTER TABLE users ADD COLUMN target TEXT DEFAULT ''")
-        except psycopg.errors.DuplicateColumn:
-            pass
-
         conn.execute("""
             CREATE TABLE IF NOT EXISTS ancestor_wishes (
                 id             BIGSERIAL PRIMARY KEY,
@@ -73,8 +56,6 @@ def _init_db() -> None:
 
 _init_db()
 
-
-# ── Schemas ───────────────────────────────────────────────────────────────────
 
 class WishIn(BaseModel):
     username: str
@@ -108,8 +89,6 @@ class AncestorWishIn(BaseModel):
         return v.strip()
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
-
 @app.get("/")
 def health():
     return {"status": "ok"}
@@ -121,7 +100,7 @@ def get_wishes():
         rows = conn.execute(
             "SELECT id, username, age, wish, buddha, blessing, target, created_at FROM users ORDER BY id DESC"
         ).fetchall()
-    return [_dict_row(r) for r in rows]
+    return [_dict(r) for r in rows]
 
 
 @app.post("/wishes")
@@ -140,7 +119,7 @@ def get_ancestor_wishes():
         rows = conn.execute(
             "SELECT id, username, age, ancestor, ancestor_name, relationship, wish, created_at FROM ancestor_wishes ORDER BY id DESC"
         ).fetchall()
-    return [_dict_row(r) for r in rows]
+    return [_dict(r) for r in rows]
 
 
 @app.post("/ancestor-wishes")
