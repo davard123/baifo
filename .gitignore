@@ -7,7 +7,6 @@ venv/
 
 # Node
 frontend/node_modules/
-frontend/dist/
 
 # DB & secrets
 user_data.db

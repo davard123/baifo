@@ -94,7 +94,7 @@ def health():
 def get_wishes():
     with _get_conn() as conn:
         rows = conn.execute(
-            "SELECT id, username, age, wish, buddha, created_at FROM users ORDER BY id DESC"
+            "SELECT id, username, age, wish, buddha, blessing, target, created_at FROM users ORDER BY id DESC"
         ).fetchall()
     return [dict(r) for r in rows]
 

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": ["/assets/*", "/music/*", "/favicon.svg"],
+  "handler": "index"
+}

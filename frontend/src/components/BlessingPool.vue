@@ -23,7 +23,7 @@ onMounted(() => {
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
-  const i = BLESSINGS.indexOf(active.value)
+  const i = BLESSINGS.findIndex(b => b.key === active.value.key)
   return i >= 0 && i < BLESSINGS.length - 1 ? BLESSINGS[i + 1] : null
 })
 
