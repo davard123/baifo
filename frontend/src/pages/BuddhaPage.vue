@@ -139,6 +139,10 @@ async function onSubmit(payload) {
     border: none;
     box-shadow: none;
     overflow: hidden;
+    background: #160800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .panel-section {
     flex: 1;
@@ -162,6 +166,10 @@ async function onSubmit(payload) {
     border: none;
     box-shadow: none;
     overflow: hidden;
+    background: #160800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .panel-section {
     flex: 1;
@@ -178,12 +186,13 @@ async function onSubmit(payload) {
   .divider { margin: 8px 0; }
 }
 
-/* ── 让 PrayerStage 撑满父容器 ── */
+/* ── PrayerStage 保持 3:4 比例居中，不强制拉伸 ── */
 :deep(.stage) {
-  aspect-ratio: unset;
-  max-height: none;
-  width: 100%;
+  aspect-ratio: 3/4;
   height: 100%;
+  max-width: 100%;
+  width: auto;
+  max-height: 680px;
   border-radius: 0;
 }
 
