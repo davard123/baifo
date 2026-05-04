@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
 
+const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
 
 const active = ref(null)    // 当前选中的祈福项
@@ -67,6 +68,7 @@ async function submit() {
   loading.value = false
   resultWish.value = active.value.wish
   stage.value = 'done'
+  emit('wish-submitted')
 }
 
 const RITUALS = ['上香', '点灯', '磕头']
@@ -108,7 +110,10 @@ function doRitual(r) {
         <!-- 背景场景 -->
         <div class="modal-scene" :style="{ backgroundImage: `url(${active.bg})` }">
           <div class="scene-overlay">
-            <!-- 礼佛动作（仅 form 阶段显示） -->
+            <!-- 祈福语（form 阶段，放在按钮上方） -->
+            <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
+
+            <!-- 礼佛动作（form 阶段） -->
             <div v-if="stage === 'form'" class="scene-rituals">
               <button
                 v-for="r in RITUALS"
@@ -132,9 +137,8 @@ function doRitual(r) {
               </div>
             </div>
 
-            <!-- 表单（form 阶段） -->
+            <!-- 表单输入（form 阶段） -->
             <div v-if="stage === 'form'" class="scene-form">
-              <p class="form-wish-hint">{{ active.wish }}</p>
               <div class="form-row">
                 <input
                   v-model="form.name"
@@ -238,12 +242,13 @@ function doRitual(r) {
 }
 
 .scene-overlay {
-  padding: 24px 20px;
-  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 100%);
+  padding: 18px 20px 20px;
+  background: rgba(251, 243, 226, 0.96);
+  border-top: 1px solid rgba(212, 168, 67, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .scene-rituals {
@@ -252,44 +257,41 @@ function doRitual(r) {
 .ritual-btn {
   padding: 10px 22px;
   border-radius: 22px;
-  border: 2px solid #fff8ee;
-  background: rgba(0,0,0,.55);
-  color: #fff8ee;
+  border: 2px solid rgba(127, 90, 54, 0.5);
+  background: rgba(127, 90, 54, 0.08);
+  color: var(--accent);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: .08em;
-  text-shadow: 0 1px 4px rgba(0,0,0,.7);
-  backdrop-filter: blur(4px);
-  transition: background .2s, transform .15s;
+  transition: background .2s, transform .15s, border-color .2s;
 }
 .ritual-btn:hover:not(:disabled) {
-  background: rgba(212,168,67,.7);
-  border-color: #f0d080;
+  background: rgba(212, 168, 67, 0.2);
+  border-color: var(--gold);
   transform: translateY(-2px);
 }
-.ritual-btn.done { opacity: .5; background: rgba(100,80,30,.5); }
+.ritual-btn.done { opacity: .5; background: rgba(212, 168, 67, 0.12); }
 
 .scene-result { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.result-wish { font-size: 1.1rem; color: #fff8ee; line-height: 1.9; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
-.result-user { font-size: .9rem; color: rgba(255,248,238,.7); }
+.result-wish { font-size: 1.1rem; color: var(--accent); line-height: 1.9; }
+.result-user { font-size: .9rem; color: var(--text-muted); }
 .back-home-btn {
-  margin-top: 8px;
+  margin-top: 4px;
   padding: 10px 28px;
   border-radius: 22px;
-  border: 2px solid #fff8ee;
-  background: rgba(0,0,0,.5);
-  color: #fff8ee;
+  border: 2px solid rgba(127, 90, 54, 0.4);
+  background: rgba(127, 90, 54, 0.08);
+  color: var(--accent);
   font-size: .95rem;
   cursor: pointer;
-  backdrop-filter: blur(4px);
-  transition: background .2s;
+  transition: background .2s, border-color .2s;
 }
-.back-home-btn:hover { background: rgba(212,168,67,.5); }
+.back-home-btn:hover { background: rgba(212,168,67,.2); border-color: var(--gold); }
 .result-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
 .next-btn { background: rgba(212,168,67,.25); border-color: #f0d080; }
 
 .scene-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.form-wish-hint { font-size: .9rem; color: #fff8ee; text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,.7); line-height: 1.7; }
+.form-wish-hint { font-size: .9rem; color: var(--accent); text-align: center; line-height: 1.7; font-style: italic; }
 
 .form-row { display: grid; grid-template-columns: 1fr 90px; gap: 10px; }
 .field {

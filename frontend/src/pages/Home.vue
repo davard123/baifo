@@ -10,14 +10,19 @@ const router = useRouter()
 const wishes = ref([])
 const loading = ref(true)
 
-onMounted(async () => {
-  document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - baifo.rentalinca.com'
-  document.querySelector('meta[name="description"]')?.setAttribute('content', '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。')
+async function loadWishes() {
+  loading.value = true
   try {
     const res = await apiFetch('/wishes')
     if (res.ok) wishes.value = await res.json()
   } catch {}
   loading.value = false
+}
+
+onMounted(() => {
+  document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - baifo.rentalinca.com'
+  document.querySelector('meta[name="description"]')?.setAttribute('content', '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。')
+  loadWishes()
 })
 </script>
 
@@ -52,7 +57,7 @@ onMounted(async () => {
       </div>
     </section>
 
-    <BlessingPool />
+    <BlessingPool @wish-submitted="loadWishes" />
 
     <section class="wishes-section card">
       <h2 class="section-title">祈愿记录</h2>
