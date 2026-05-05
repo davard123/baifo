@@ -20,7 +20,11 @@ app.add_middleware(
 
 
 def _get_conn():
-    return psycopg2.connect(dsn=DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+    return psycopg2.connect(
+        dsn=DATABASE_URL,
+        cursor_factory=psycopg2.extras.RealDictCursor,
+        connect_timeout=10,
+    )
 
 
 def _dict_row(row):
