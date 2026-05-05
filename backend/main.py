@@ -2,6 +2,7 @@ import os
 import psycopg2
 import psycopg2.extras
 from fastapi import FastAPI
+from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 
@@ -101,12 +102,19 @@ def health():
 
 
 @app.get("/wishes")
-def get_wishes():
+def get_wishes(limit: int = Query(default=15, ge=1, le=50), username: str | None = None):
     with _get_conn() as conn:
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT id, username, age, wish, buddha, blessing, target, created_at FROM users ORDER BY id DESC"
-            )
+            if username:
+                cur.execute(
+                    "SELECT id, username, age, wish, buddha, blessing, target, created_at FROM users WHERE username = %s ORDER BY id DESC LIMIT %s",
+                    (username.strip(), limit),
+                )
+            else:
+                cur.execute(
+                    "SELECT id, username, age, wish, buddha, blessing, target, created_at FROM users ORDER BY id DESC LIMIT %s",
+                    (limit,),
+                )
             rows = cur.fetchall()
     return [_dict_row(r) for r in rows]
 
@@ -123,12 +131,19 @@ def create_wish(body: WishIn):
 
 
 @app.get("/ancestor-wishes")
-def get_ancestor_wishes():
+def get_ancestor_wishes(limit: int = Query(default=15, ge=1, le=50), username: str | None = None):
     with _get_conn() as conn:
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT id, username, age, ancestor, ancestor_name, relationship, wish, created_at FROM ancestor_wishes ORDER BY id DESC"
-            )
+            if username:
+                cur.execute(
+                    "SELECT id, username, age, ancestor, ancestor_name, relationship, wish, created_at FROM ancestor_wishes WHERE username = %s ORDER BY id DESC LIMIT %s",
+                    (username.strip(), limit),
+                )
+            else:
+                cur.execute(
+                    "SELECT id, username, age, ancestor, ancestor_name, relationship, wish, created_at FROM ancestor_wishes ORDER BY id DESC LIMIT %s",
+                    (limit,),
+                )
             rows = cur.fetchall()
     return [_dict_row(r) for r in rows]
 

@@ -1,16 +1,32 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorWishList from '../components/AncestorWishList.vue'
 import { apiFetch } from '../api.js'
 import { useRouter } from 'vue-router'
 import { getPhoto, savePhoto, clearPhoto, getName, saveName } from '../utils/localPhoto.js'
 import { renderTablet } from '../utils/tabletCanvas.js'
+import { getViewerProfile } from '../utils/viewerProfile.js'
 
 const router = useRouter()
 
-const wishes = ref([])
+const publicWishes = ref([])
+const myWishes = ref([])
 const loading = ref(true)
+const viewerName = ref('')
+const latestWishes = computed(() => publicWishes.value.slice(0, 15))
+const myLatestWishes = computed(() => myWishes.value.slice(0, 5))
+const featuredAncestor = 'father'
+const ancestorFaqs = [
+  {
+    q: '拜祭先人页面适合哪些情况？',
+    a: '适合追思先父先母、祖父祖母、列祖列宗，也适合为亡偶、亡子女或一切亡灵进行超荐与回向。',
+  },
+  {
+    q: '照片和姓名会上传吗？',
+    a: '不会。页面里个性化照片和姓名设置只保存在本地设备，用于本机显示，不进入服务器数据库。',
+  },
+]
 
 // 本地照片 & 姓名映射
 const localPhotos  = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getPhoto(a.slug)])))
@@ -52,17 +68,32 @@ function onNameInput(slug, e) {
   if (!localPhotos.value[slug]) buildCard(slug)
 }
 
+function openAncestor(slug) {
+  router.push(`/ancestor/${slug}`)
+}
+
+function entryStatus(ancestor) {
+  return localNames.value[ancestor.slug] ? '使用当前自定义牌位文字' : '使用推荐牌位文字进入祭拜页'
+}
+
 async function loadWishes() {
   loading.value = true
+  viewerName.value = getViewerProfile().username
   try {
-    const res = await apiFetch('/ancestor-wishes')
-    if (res.ok) wishes.value = await res.json()
+    const requests = [apiFetch('/ancestor-wishes?limit=15')]
+    if (viewerName.value) {
+      requests.push(apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
+    }
+
+    const results = await Promise.all(requests)
+    publicWishes.value = await results[0].json()
+    myWishes.value = viewerName.value && results[1] ? await results[1].json() : []
   } catch {}
   loading.value = false
 }
 
 onMounted(() => {
-  document.title = '拜祭先人 | 在线祭拜先人 - baifo.rentalinca.com'
+  document.title = '拜祭先人 | 在线祭拜先人 - www.fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', '追思先人，超荐亡灵，虔诚祭拜，庇荫后代。选择一位先人，以虔诚之心祭拜发愿。'
   )
@@ -73,7 +104,11 @@ onMounted(() => {
 <template>
   <main class="ancestors-shell">
     <nav class="top-nav">
-      <router-link to="/" class="back-link">← 返回首页</router-link>
+      <div class="breadcrumb-row">
+        <router-link to="/" class="back-link">← 返回首页</router-link>
+        <span>/</span>
+        <span>拜祭先人</span>
+      </div>
     </nav>
     <header class="site-header">
       <div class="header-inner">
@@ -91,13 +126,25 @@ onMounted(() => {
         </div>
         <button class="setup-btn" @click="showSetup = true" title="个性化设置">⚙</button>
       </div>
+      <div class="selection-guide">
+        <div class="guide-pill">先选对象，再进入正式祭拜页</div>
+        <p>这里就是过渡选择页。你可以先确认牌位对象、修改牌位显示文字，再进入正式祭拜页面；后面如果想换对象，随时返回这里重新选择，不会被锁定。</p>
+        <div class="guide-steps">
+          <span>1. 选牌位</span>
+          <span>2. 改文字</span>
+          <span>3. 进入祭拜</span>
+        </div>
+      </div>
       <div class="catalog-grid">
-        <router-link
-          v-for="a in ANCESTORS"
+        <article
+          v-for="(a, index) in ANCESTORS"
           :key="a.slug"
-          :to="'/ancestor/' + a.slug"
           class="buddha-card ancestor-card"
         >
+          <div class="card-topline">
+            <span class="card-index">{{ index + 1 }}</span>
+            <span v-if="a.slug === featuredAncestor" class="card-badge">推荐</span>
+          </div>
           <div class="buddha-img-wrap ancestor-img-wrap">
             <img
               :src="tabletImages[a.slug] || a.image"
@@ -109,7 +156,41 @@ onMounted(() => {
             <h3>{{ a.name }}</h3>
             <span>{{ a.subtitle }}</span>
           </div>
-        </router-link>
+          <div class="ancestor-entry">
+            <div class="entry-status">
+              <span>实时预览</span>
+              <span class="entry-status-dot"></span>
+            </div>
+            <label class="entry-label">牌位显示文字</label>
+            <div class="entry-row">
+              <input
+                type="text"
+                class="entry-input"
+                :placeholder="a.title"
+                :value="localNames[a.slug] || a.title"
+                @input="onNameInput(a.slug, $event)"
+                maxlength="10"
+              />
+              <button class="entry-btn" @click="openAncestor(a.slug)">进入祭拜</button>
+            </div>
+            <p class="entry-hint">{{ entryStatus(a) }}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="guide-section card">
+      <h2 class="section-title">祭祖与追思说明</h2>
+      <p class="section-sub">这部分内容让页面不只是“能操作”，还更容易被搜索引擎与 AI 当作完整主题页面理解。</p>
+      <div class="guide-copy">
+        <p>拜祭先人页面适合用于追思祖先、家族祈愿、超荐亡灵与回向功德。不同牌位覆盖先父、先母、祖父、祖母、列祖列宗，以及亡偶、亡子女与一切亡灵等主题。</p>
+        <p>如果你希望做更个性化的追思展示，可以在本地设备中设置牌位照片和称呼。这样既保留纪念意义，也不会把私密图片上传到服务器。</p>
+      </div>
+      <div class="faq-list">
+        <article v-for="faq in ancestorFaqs" :key="faq.q" class="faq-item">
+          <h3>{{ faq.q }}</h3>
+          <p>{{ faq.a }}</p>
+        </article>
       </div>
     </section>
 
@@ -153,8 +234,26 @@ onMounted(() => {
 
     <section class="wishes-section card">
       <h2 class="section-title">祭拜记录</h2>
-      <p class="section-sub">十方众生的祭拜先人，功德回向先人。</p>
-      <AncestorWishList :wishes="wishes" />
+      <div class="record-grid">
+        <section class="record-panel">
+          <h3 class="record-title">最新祭拜记录</h3>
+          <p class="section-sub">显示所有人最近 15 条祭祖与回向记录。</p>
+          <AncestorWishList
+            :wishes="latestWishes"
+            :loading="loading"
+            empty-message="暂时还没有公开祭拜记录。"
+          />
+        </section>
+        <section class="record-panel">
+          <h3 class="record-title">我的祭拜记录</h3>
+          <p class="section-sub">显示当前设备识别到的最近 5 条个人祭拜记录。</p>
+          <AncestorWishList
+            :wishes="myLatestWishes"
+            :loading="loading"
+            :empty-message="viewerName ? '你最近还没有祭拜记录。' : '先提交一次祭拜，之后这里会显示你的最近 5 条记录。'"
+          />
+        </section>
+      </div>
     </section>
 
     <footer class="site-footer">
@@ -165,6 +264,13 @@ onMounted(() => {
 
 <style scoped>
 .top-nav { padding: 12px 20px 0; }
+.breadcrumb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8a7a6a;
+  font-size: 0.88rem;
+}
 .back-link {
   font-size: 0.9rem; color: #7a6a5a; text-decoration: none;
   padding: 6px 14px; border-radius: 8px;
@@ -229,6 +335,49 @@ onMounted(() => {
   transition: background 0.2s, transform 0.2s;
 }
 .setup-btn:hover { background: rgba(200, 185, 165, 0.6); transform: rotate(30deg); }
+
+.selection-guide {
+  margin: 18px 0 24px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(92, 62, 34, 0.95), rgba(62, 40, 22, 0.92)),
+    radial-gradient(circle at top left, rgba(215, 180, 105, 0.22), transparent 36%);
+  color: rgba(245, 237, 225, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 220, 0.08);
+}
+
+.selection-guide p {
+  margin: 10px 0 0;
+  line-height: 1.8;
+  font-size: 0.92rem;
+}
+
+.guide-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(232, 196, 122, 0.16);
+  border: 1px solid rgba(232, 196, 122, 0.28);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.guide-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.guide-steps span {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 248, 236, 0.08);
+  border: 1px solid rgba(255, 248, 236, 0.12);
+  font-size: 0.8rem;
+}
 
 /* ── 弹窗 ── */
 .setup-modal {
@@ -335,6 +484,7 @@ onMounted(() => {
 }
 
 .buddha-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -350,6 +500,43 @@ onMounted(() => {
   transform: translateY(-6px);
   box-shadow: 0 16px 36px rgba(30, 20, 15, 0.16);
   border-color: #8a7a6a;
+}
+
+.card-topline {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.card-index,
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+.card-index {
+  background: rgba(255, 248, 236, 0.86);
+  color: #8a6d42;
+  font-weight: 700;
+}
+
+.card-badge {
+  background: rgba(162, 112, 46, 0.92);
+  color: #fff5e7;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
 }
 
 .buddha-img-wrap {
@@ -375,7 +562,129 @@ onMounted(() => {
 .buddha-info h3 { font-size: 1rem; margin-bottom: 4px; color: #5a4a3a; }
 .buddha-info span { font-size: 0.8rem; color: #8a7a6a; }
 
+.ancestor-entry {
+  width: 100%;
+  padding: 0 12px 14px;
+}
+
+.entry-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #b29a7c;
+  font-size: 0.76rem;
+  margin-bottom: 10px;
+}
+
+.entry-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8daf74;
+  box-shadow: 0 0 0 4px rgba(141, 175, 116, 0.12);
+}
+
+.entry-label {
+  display: block;
+  color: #8a7a6a;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
+}
+
+.entry-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.entry-input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 100, 80, 0.22);
+  background: rgba(255, 252, 245, 0.9);
+  color: #5a4a3a;
+  font-size: 0.86rem;
+  outline: none;
+}
+
+.entry-input:focus {
+  border-color: #8a7a6a;
+  box-shadow: 0 0 0 3px rgba(120, 100, 80, 0.1);
+}
+
+.entry-btn {
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 100, 80, 0.28);
+  background: linear-gradient(135deg, #b88e4b, #c9a262);
+  color: #fff9ee;
+  font-size: 0.84rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.entry-hint {
+  margin-top: 8px;
+  color: #9a8771;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
 .wishes-section { animation: fadeInUp 0.7s 0.2s ease both; }
+
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.record-panel {
+  min-width: 0;
+}
+
+.record-title {
+  color: #5a4a3a;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.guide-section {
+  animation: fadeInUp 0.7s 0.16s ease both;
+}
+
+.guide-copy {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.guide-copy p,
+.faq-item p {
+  color: #8a7a6a;
+  line-height: 1.8;
+  font-size: 0.92rem;
+}
+
+.faq-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.faq-item {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(240, 235, 225, 0.72);
+  border: 1px solid rgba(120, 100, 80, 0.14);
+}
+
+.faq-item h3 {
+  color: #5a4a3a;
+  margin-bottom: 8px;
+  font-size: 0.98rem;
+}
 
 .site-footer {
   text-align: center;
@@ -389,10 +698,20 @@ onMounted(() => {
   .ancestors-shell { padding: 0 12px 48px; gap: 20px; }
   .card { padding: 20px 16px; }
   .site-header { padding: 36px 12px 24px; }
+  .record-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
   .site-header h1 { font-size: 1.9rem; }
   .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .selection-guide {
+    padding: 16px;
+  }
+  .entry-row {
+    grid-template-columns: 1fr;
+  }
+  .entry-btn {
+    min-height: 40px;
+  }
 }
 </style>

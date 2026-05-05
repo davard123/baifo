@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
+import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
 const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
@@ -18,8 +19,9 @@ const resultWish = ref('')
 
 // localStorage 恢复上次记录
 onMounted(() => {
-  form.value.name = localStorage.getItem('bless_name') || ''
-  form.value.age  = localStorage.getItem('bless_age')  || '30'
+  const viewer = getViewerProfile()
+  form.value.name = viewer.username || ''
+  form.value.age = viewer.age ? String(viewer.age) : '30'
 })
 
 const nextBlessing = computed(() => {
@@ -49,8 +51,7 @@ async function submit() {
     return
   }
   loading.value = true
-  localStorage.setItem('bless_name', form.value.name.trim())
-  localStorage.setItem('bless_age',  form.value.age)
+  saveViewerProfile(form.value.name.trim(), form.value.age)
   try {
     await apiFetch('/wishes', {
       method: 'POST',

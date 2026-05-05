@@ -1,16 +1,15 @@
 <script setup>
 defineProps({
   wishes: { type: Array, default: () => [] },
-  loading: { type: Boolean, default: false }
+  loading: { type: Boolean, default: false },
+  emptyMessage: { type: String, default: '暂时还没有祈愿记录，成为第一位礼佛发愿的人吧。🪷' }
 })
 </script>
 
 <template>
   <div class="wish-list">
     <div v-if="loading" class="state-msg">加载中…</div>
-    <div v-else-if="!wishes.length" class="state-msg empty">
-      暂时还没有祈愿记录，成为第一位礼佛发愿的人吧。🪷
-    </div>
+    <div v-else-if="!wishes.length" class="state-msg empty">{{ emptyMessage }}</div>
     <div v-else class="wish-items">
       <div v-for="w in wishes" :key="w.id" class="wish-item" :class="{ ancestor: !!w.ancestor }">
         <div class="wish-meta">

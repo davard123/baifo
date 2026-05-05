@@ -12,11 +12,12 @@ const router = useRouter()
 
 const buddha = computed(() => BUDDHAS.find(b => b.slug === route.params.slug))
 if (!buddha.value) router.replace('/')
+const relatedBuddhas = computed(() => BUDDHAS.filter(b => b.slug !== route.params.slug).slice(0, 3))
 
 onMounted(() => {
   if (!buddha.value) return
   const b = buddha.value
-  document.title = `${b.namo} | 在线礼佛祈愿 - baifo.rentalinca.com`
+  document.title = `${b.namo} | 在线礼佛祈愿 - www.fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', `虔诚礼敬${b.name}，${b.subtitle}。${b.desc} 在线发愿，功德回向一切众生。`
   )
@@ -84,7 +85,11 @@ async function onSubmit(payload) {
 <template>
   <div v-if="buddha" class="prayer-shell">
     <nav class="prayer-nav">
-      <router-link to="/" class="page-link">← 返回首页</router-link>
+      <div class="breadcrumb-row">
+        <router-link to="/" class="page-link">← 返回首页</router-link>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">{{ buddha.name }}</span>
+      </div>
     </nav>
 
     <div class="prayer-layout">
@@ -95,6 +100,34 @@ async function onSubmit(payload) {
       <section class="panel-section card">
         <h1 class="namo-title">{{ buddha.namo }}</h1>
         <p class="buddha-desc">{{ buddha.desc }}</p>
+        <div class="page-tags">
+          <span>{{ buddha.subtitle }}</span>
+          <span>在线礼佛</span>
+          <span>祈愿回向</span>
+        </div>
+        <section class="meaning-section">
+          <h2>礼敬意义</h2>
+          <p>{{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。页面支持供花、点灯、上香与祈愿回向，既方便初学者理解，也更利于搜索引擎与 AI 直接提取重点信息。</p>
+        </section>
+        <section class="faq-mini">
+          <h2>常见问题</h2>
+          <article>
+            <h3>{{ buddha.name }}适合什么人礼敬？</h3>
+            <p>任何希望以虔诚之心修福、积德、回向众生的人，都可以礼敬{{ buddha.name }}并发愿修行。</p>
+          </article>
+          <article>
+            <h3>在这个页面上怎么完成祈愿？</h3>
+            <p>先完成供养动作，再填写姓名、年龄和愿望内容，最后提交回向即可。</p>
+          </article>
+        </section>
+        <section class="related-links">
+          <h2>相关礼佛页面</h2>
+          <div class="related-list">
+            <router-link v-for="item in relatedBuddhas" :key="item.slug" :to="'/buddha/' + item.slug">
+              {{ item.name }} · {{ item.subtitle }}
+            </router-link>
+          </div>
+        </section>
         <hr class="divider" />
         <RitualButtons @ritual="onRitual" />
         <hr class="divider" />
@@ -120,6 +153,19 @@ async function onSubmit(payload) {
   padding: 8px 16px;
   background: var(--surface);
   border-bottom: 1px solid rgba(212, 168, 67, 0.15);
+}
+
+.breadcrumb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.crumb-sep,
+.crumb-current {
+  color: var(--text-muted);
+  font-size: 0.86rem;
 }
 
 .prayer-layout {
@@ -210,6 +256,76 @@ async function onSubmit(payload) {
   font-size: 0.92rem;
   line-height: 1.8;
   text-align: justify;
+}
+
+.page-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 10px;
+}
+
+.page-tags span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(212, 168, 67, 0.12);
+  color: var(--accent);
+  font-size: 0.78rem;
+}
+
+.meaning-section,
+.faq-mini {
+  margin-top: 14px;
+}
+
+.meaning-section h2,
+.faq-mini h2,
+.faq-mini h3 {
+  color: var(--accent);
+}
+
+.meaning-section h2,
+.faq-mini h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.meaning-section p,
+.faq-mini p {
+  color: var(--text-muted);
+  line-height: 1.75;
+  font-size: 0.88rem;
+}
+
+.faq-mini article + article {
+  margin-top: 10px;
+}
+
+.faq-mini h3 {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.related-links {
+  margin-top: 14px;
+}
+
+.related-links h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.related-list a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.88rem;
 }
 
 .divider {

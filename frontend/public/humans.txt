@@ -1,0 +1,13 @@
+/* TEAM */
+Site: 礼佛祈愿
+URL: https://www.fopusha.com/
+Focus: 在线礼佛祈愿、拜祭先人、追思回向、中文主题内容优化
+
+/* TECHNOLOGY */
+Frontend: Vue 3 + Vite
+Hosting: Cloudflare Pages
+API: Render-hosted backend
+
+/* SEO / GEO */
+Structured data: JSON-LD
+Crawler entrypoints: /robots.txt /sitemap.xml /llms.txt /llms-full.txt

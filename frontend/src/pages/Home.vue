@@ -5,35 +5,141 @@ import { BUDDHAS } from '../data/buddhas.js'
 import WishList from '../components/WishList.vue'
 import BlessingPool from '../components/BlessingPool.vue'
 import { apiFetch } from '../api.js'
+import { getViewerProfile } from '../utils/viewerProfile.js'
 
 const router = useRouter()
-const wishes = ref([])
-const ancestorWishes = ref([])
+const publicWishes = ref([])
+const publicAncestorWishes = ref([])
+const myWishes = ref([])
+const myAncestorWishes = ref([])
 const loading = ref(true)
+const viewerName = ref('')
 
 const allWishes = computed(() => {
   const combined = [
-    ...wishes.value,
-    ...ancestorWishes.value,
+    ...publicWishes.value,
+    ...publicAncestorWishes.value,
   ]
-  return combined.sort((a, b) => b.id - a.id)
+  return combined.sort((a, b) => b.id - a.id).slice(0, 15)
 })
+
+const myRecentWishes = computed(() => {
+  const combined = [
+    ...myWishes.value,
+    ...myAncestorWishes.value,
+  ]
+  return combined.sort((a, b) => b.id - a.id).slice(0, 5)
+})
+
+const guideCards = [
+  {
+    title: '在线礼佛怎么开始',
+    body: '进入任意佛菩萨页面后，可以依次供花、点灯、上香，再填写祈愿内容并回向众生。',
+  },
+  {
+    title: '适合哪些祈愿主题',
+    body: '常见主题包括平安健康、学业事业、智慧增长、家庭和顺、超荐回向与消灾延寿。',
+  },
+  {
+    title: '祭祖页面有什么不同',
+    body: '拜祭先人页面更适合追思祖先、超荐亡灵与家族祈愿，也支持本地个性化牌位照片与姓名。',
+  },
+]
+
+const faqs = [
+  {
+    q: '礼佛祈愿网站可以做什么？',
+    a: '这个网站提供八位佛菩萨的在线礼佛祈愿，也提供拜祭先人、追思祖先与超荐回向相关页面。',
+  },
+  {
+    q: '在线礼佛会公开个人照片吗？',
+    a: '礼佛祈愿内容会进入记录列表，而拜祭先人的个性化照片和姓名设置只保存在当前设备本地，不会上载到服务器。',
+  },
+  {
+    q: '第一次使用建议先去哪个页面？',
+    a: '如果是日常祈福，可以先从首页选择佛菩萨页面；如果是追思先人或祭祖，则可以直接进入拜祭先人页面。',
+  },
+]
+
+const featuredPaths = [
+  {
+    title: '日常祈福入口',
+    body: '适合从首页开始，选择释迦牟尼佛、观音菩萨或药师佛等页面进行礼佛祈愿。',
+    to: '/guide/worship',
+    cta: '查看礼佛指南',
+  },
+  {
+    title: '超荐与回向入口',
+    body: '如果重点是超荐祖先、祭祖追思或回向先人，可以直接进入拜祭先人总览页面。',
+    to: '/guide/ancestors',
+    cta: '查看祭祖指南',
+  },
+]
+
+const aiTopicPages = [
+  {
+    title: '在线礼佛网站使用说明',
+    body: '更适合承接“在线礼佛网站怎么用”“网上拜佛网站有什么功能”这类问题。',
+    to: '/topic/online-worship',
+  },
+  {
+    title: '在线祭祖网站使用说明',
+    body: '更适合承接“在线祭祖网站怎么用”“追思先人网站有什么区别”这类问题。',
+    to: '/topic/online-ancestors',
+  },
+  {
+    title: '功德回向怎么做',
+    body: '更适合承接“礼佛后怎么回向”“超荐回向是什么意思”这类问题。',
+    to: '/topic/merit-dedication',
+  },
+  {
+    title: '观音菩萨祈福指南',
+    body: '更适合承接“观音菩萨适合求什么”“观音菩萨保佑什么”这类问题。',
+    to: '/topic/guanyin',
+  },
+  {
+    title: '药师佛健康祈愿指南',
+    body: '更适合承接健康、延寿、消灾与身心安乐相关问题。',
+    to: '/topic/medicine',
+  },
+  {
+    title: '地藏菩萨超荐回向指南',
+    body: '更适合承接超荐、回向、追思先人与亡灵救度相关问题。',
+    to: '/topic/ksitigarbha',
+  },
+]
 
 async function loadWishes() {
   loading.value = true
+  viewerName.value = getViewerProfile().username
   try {
-    const [r1, r2] = await Promise.all([
-      apiFetch('/wishes'),
-      apiFetch('/ancestor-wishes'),
-    ])
-    if (r1.ok) wishes.value = await r1.json()
-    if (r2.ok) ancestorWishes.value = await r2.json()
+    const requests = [
+      apiFetch('/wishes?limit=15'),
+      apiFetch('/ancestor-wishes?limit=15'),
+    ]
+
+    if (viewerName.value) {
+      requests.push(apiFetch(`/wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
+      requests.push(apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
+    }
+
+    const results = await Promise.all(requests)
+    publicWishes.value = await results[0].json()
+    publicAncestorWishes.value = await results[1].json()
+
+    if (viewerName.value) {
+      myWishes.value = await results[2].json()
+      myAncestorWishes.value = await results[3].json()
+    } else {
+      myWishes.value = []
+      myAncestorWishes.value = []
+    }
   } catch {}
   loading.value = false
 }
 
 onMounted(() => {
-  document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - baifo.rentalinca.com'
+  document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - www.fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute('content', '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。')
   loadWishes()
 })
@@ -70,6 +176,30 @@ onMounted(() => {
       </div>
     </section>
 
+    <section class="path-section card">
+      <h2 class="section-title">推荐礼敬路径</h2>
+      <p class="section-sub">把核心入口明确写出来，既方便访客理解，也增强站内主题之间的内部链接关系。</p>
+      <div class="path-grid">
+        <article v-for="item in featuredPaths" :key="item.title" class="path-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+          <router-link :to="item.to">{{ item.cta }}</router-link>
+        </article>
+      </div>
+    </section>
+
+    <section class="path-section card">
+      <h2 class="section-title">专题知识页</h2>
+      <p class="section-sub">这些页面更适合承接 AI 问答与长尾问题，不只是简单跳转到功能页。</p>
+      <div class="path-grid">
+        <article v-for="item in aiTopicPages" :key="item.title" class="path-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+          <router-link :to="item.to">查看专题页</router-link>
+        </article>
+      </div>
+    </section>
+
     <router-link to="/ancestors" class="ancestor-banner">
       <div class="banner-inner">
         <div class="banner-icon">🪔</div>
@@ -83,10 +213,56 @@ onMounted(() => {
 
     <BlessingPool @wish-submitted="loadWishes" />
 
+    <section class="guide-section card">
+      <h2 class="section-title">礼佛与回向指南</h2>
+      <p class="section-sub">把页面本身做成清楚的说明入口，也更方便搜索引擎与 AI 理解站点用途。</p>
+      <div class="guide-grid">
+        <article v-for="item in guideCards" :key="item.title" class="guide-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+        </article>
+      </div>
+      <div class="guide-links">
+        <router-link to="/guide/worship">查看在线礼佛指南</router-link>
+        <router-link to="/guide/ancestors">查看在线祭祖指南</router-link>
+        <router-link to="/ancestors">查看拜祭先人总览</router-link>
+        <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
+      </div>
+    </section>
+
+    <section class="faq-section card">
+      <h2 class="section-title">常见问题</h2>
+      <div class="faq-list">
+        <article v-for="faq in faqs" :key="faq.q" class="faq-item">
+          <h3>{{ faq.q }}</h3>
+          <p>{{ faq.a }}</p>
+        </article>
+      </div>
+    </section>
+
     <section class="wishes-section card">
       <h2 class="section-title">祈愿记录</h2>
-      <p class="section-sub">十方众生的礼佛祈愿，功德回向一切有情。</p>
-      <WishList :wishes="allWishes" :loading="loading" />
+      <div class="record-grid">
+        <section class="record-panel">
+          <h3 class="record-title">最新祈愿记录</h3>
+          <p class="section-sub">显示所有人最近 15 条礼佛与回向记录。</p>
+          <WishList
+            :wishes="allWishes"
+            :loading="loading"
+            empty-message="暂时还没有公开祈愿记录。"
+          />
+        </section>
+
+        <section class="record-panel">
+          <h3 class="record-title">我的祈愿记录</h3>
+          <p class="section-sub">显示当前设备识别到的最近 5 条个人记录。</p>
+          <WishList
+            :wishes="myRecentWishes"
+            :loading="loading"
+            :empty-message="viewerName ? '你最近还没有祈愿记录。' : '先提交一次祈愿，之后这里会显示你的最近 5 条记录。'"
+          />
+        </section>
+      </div>
     </section>
 
     <footer class="site-footer">
@@ -231,6 +407,85 @@ onMounted(() => {
 
 .wishes-section { animation: fadeInUp 0.7s 0.2s ease both; }
 
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.record-panel {
+  min-width: 0;
+}
+
+.record-title {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.guide-section,
+.faq-section,
+.path-section {
+  animation: fadeInUp 0.7s 0.18s ease both;
+}
+
+.guide-grid,
+.faq-list,
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.guide-card,
+.faq-item,
+.path-card {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 251, 242, 0.78);
+  border: 1px solid rgba(212, 168, 67, 0.14);
+}
+
+.guide-card h3,
+.faq-item h3,
+.path-card h3 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+.guide-card p,
+.faq-item p,
+.path-card p {
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 0.92rem;
+}
+
+.path-card a {
+  display: inline-flex;
+  margin-top: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.guide-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.guide-links a {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 168, 67, 0.22);
+  color: var(--accent);
+  text-decoration: none;
+  background: rgba(255, 250, 240, 0.9);
+}
+
 .site-footer {
   text-align: center;
   padding: 24px;
@@ -243,6 +498,7 @@ onMounted(() => {
   .home-shell { padding: 0 12px 48px; gap: 20px; }
   .card { padding: 20px 16px; }
   .site-header { padding: 36px 12px 24px; }
+  .record-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {

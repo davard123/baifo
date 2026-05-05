@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
 const props = defineProps({
   defaultWish: { type: String, default: '' }
@@ -13,10 +14,9 @@ const loading = ref(false)
 const error = ref('')
 
 onMounted(() => {
-  // 恢复上次提交的用户名和年龄（每个浏览器各自保存）
-  username.value = localStorage.getItem('baifo_username') || ''
-  const savedAge = localStorage.getItem('baifo_age')
-  if (savedAge) age.value = Number(savedAge)
+  const viewer = getViewerProfile()
+  username.value = viewer.username
+  if (viewer.age) age.value = viewer.age
 })
 
 async function handleSubmit() {
@@ -27,9 +27,7 @@ async function handleSubmit() {
 
   loading.value = true
   try {
-    // 提交前先保存（成功后 localStorage 已有记录）
-    localStorage.setItem('baifo_username', username.value.trim())
-    localStorage.setItem('baifo_age', String(age.value))
+    saveViewerProfile(username.value.trim(), age.value)
     await emit('submit', {
       username: username.value.trim(),
       age: Number(age.value),

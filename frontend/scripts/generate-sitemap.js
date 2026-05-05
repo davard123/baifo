@@ -1,23 +1,33 @@
-import { BUDDHAS } from '../data/buddhas.js'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { getStaticPages, SITE } from './seo.config.js'
 
-const BASE = 'https://baifo.rentalinca.com'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const publicPath = path.resolve(__dirname, '../public/sitemap.xml')
+const distPath = path.resolve(__dirname, '../dist/sitemap.xml')
 
-const pages = [
-  { url: '/', changefreq: 'daily', priority: '1.0' },
-  ...BUDDHAS.map(b => ({
-    url: `/buddha/${b.slug}`,
-    changefreq: 'weekly',
-    priority: '0.8'
-  }))
-]
+const pages = getStaticPages().map((page) => ({
+  url: page.path,
+  changefreq: page.path === '/' ? 'daily' : 'weekly',
+  priority: page.path === '/' ? '1.0' : page.path === '/ancestors' ? '0.9' : '0.8',
+}))
+const lastmod = new Date().toISOString().slice(0, 10)
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages.map(p => `  <url>
-    <loc>${BASE}${p.url}</loc>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
+${pages.map((page) => `  <url>
+    <loc>${SITE.baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
   </url>`).join('\n')}
-</urlset>`
+</urlset>
+`
 
- Bun.write(Bun.file('public/sitemap.xml'), xml)
+fs.writeFileSync(publicPath, xml, 'utf8')
+
+if (fs.existsSync(path.dirname(distPath))) {
+  fs.writeFileSync(distPath, xml, 'utf8')
+}

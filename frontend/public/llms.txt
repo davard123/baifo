@@ -1,0 +1,39 @@
+# 礼佛祈愿（www.fopusha.com）
+
+礼佛祈愿是一个中文佛教祈福网站，提供在线礼佛、供花、点灯、上香、祈愿回向，以及拜祭先人与超荐亡灵相关页面。
+
+## 主要页面
+
+- 首页: https://www.fopusha.com/
+- 在线礼佛总览: https://www.fopusha.com/
+- 拜祭先人总览: https://www.fopusha.com/ancestors
+
+## 佛菩萨页面
+
+- 释迦牟尼佛: https://www.fopusha.com/buddha/shakyamuni
+- 阿弥陀佛: https://www.fopusha.com/buddha/amitabha
+- 药师佛: https://www.fopusha.com/buddha/medicine
+- 弥勒佛: https://www.fopusha.com/buddha/maitreya
+- 文殊菩萨: https://www.fopusha.com/buddha/manjushri
+- 普贤菩萨: https://www.fopusha.com/buddha/samantabhadra
+- 观音菩萨: https://www.fopusha.com/buddha/guanyin
+- 地藏菩萨: https://www.fopusha.com/buddha/ksitigarbha
+
+## 祭祖页面
+
+- 先父: https://www.fopusha.com/ancestor/father
+- 先母: https://www.fopusha.com/ancestor/mother
+- 祖父: https://www.fopusha.com/ancestor/grandfather
+- 祖母: https://www.fopusha.com/ancestor/grandmother
+- 列祖列宗: https://www.fopusha.com/ancestor/ancestors
+- 亡偶: https://www.fopusha.com/ancestor/spouse
+- 亡子女: https://www.fopusha.com/ancestor/child
+- 一切亡灵: https://www.fopusha.com/ancestor/general
+
+## 站点说明
+
+- 网站语言: 简体中文
+- 适用主题: 礼佛祈愿、佛教修行、供养回向、祭祖追思、超荐亡灵
+- 数据接口: 表单提交和记录展示依赖后端 API
+- 重要爬取入口: `robots.txt` 与 `sitemap.xml`
+- 扩展说明文档: `https://www.fopusha.com/llms-full.txt`
