@@ -3,13 +3,14 @@ import { ref, onMounted } from 'vue'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorWishList from '../components/AncestorWishList.vue'
 import { apiFetch } from '../api.js'
-import { getPhoto, savePhoto, clearPhoto } from '../utils/localPhoto.js'
+import { getPhoto, savePhoto, clearPhoto, getName, saveName } from '../utils/localPhoto.js'
 
 const wishes = ref([])
 const loading = ref(true)
 
-// 本地照片映射：slug → dataUrl | null
+// 本地照片 & 姓名映射
 const localPhotos = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getPhoto(a.slug)])))
+const localNames  = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getName(a.slug)])))
 
 // 个性化设置弹窗
 const showSetup = ref(false)
@@ -25,6 +26,12 @@ async function onUpload(slug, e) {
 function onClear(slug) {
   clearPhoto(slug)
   localPhotos.value[slug] = null
+}
+
+function onNameInput(slug, e) {
+  const name = e.target.value
+  saveName(slug, name)
+  localNames.value[slug] = name || null
 }
 
 async function loadWishes() {
@@ -70,9 +77,13 @@ onMounted(() => {
           :to="'/ancestor/' + a.slug"
           class="buddha-card ancestor-card"
         >
-          <div class="buddha-img-wrap ancestor-img-wrap">
+          <div class="buddha-img-wrap ancestor-img-wrap" style="position:relative">
             <img :src="localPhotos[a.slug] || a.image" :alt="a.name"
                  :style="localPhotos[a.slug] ? 'filter:none' : ''" />
+            <!-- 姓名叠加（仅牌位图时显示） -->
+            <div v-if="!localPhotos[a.slug]" class="card-name-overlay">
+              <span>{{ localNames[a.slug] || a.name }}</span>
+            </div>
           </div>
           <div class="buddha-info">
             <h3>{{ a.name }}</h3>
@@ -99,12 +110,20 @@ onMounted(() => {
                 <span v-if="localPhotos[a.slug]" class="custom-badge">已自定义</span>
               </div>
               <p class="setup-name">{{ a.name }}</p>
+              <input
+                type="text"
+                class="name-input"
+                :placeholder="a.name"
+                :value="localNames[a.slug] || ''"
+                @input="onNameInput(a.slug, $event)"
+                maxlength="6"
+              />
               <div class="setup-actions">
                 <label class="upload-btn">
                   上传照片
                   <input type="file" accept="image/*" @change="onUpload(a.slug, $event)" hidden />
                 </label>
-                <button v-if="localPhotos[a.slug]" class="clear-btn" @click="onClear(a.slug)">清除</button>
+                <button v-if="localPhotos[a.slug]" class="clear-btn" @click="onClear(a.slug)">清除照片</button>
               </div>
             </div>
           </div>
@@ -265,6 +284,39 @@ onMounted(() => {
   cursor: pointer; transition: background 0.2s;
 }
 .clear-btn:hover { background: rgba(180,80,80,0.2); }
+
+/* 网格卡片姓名叠加 */
+.card-name-overlay {
+  position: absolute;
+  top: 20%; left: 50%;
+  transform: translateX(-50%);
+  width: 30%; height: 48%;
+  background: #1e0d05;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.card-name-overlay span {
+  writing-mode: vertical-lr;
+  font-family: 'SimSun', 'STSong', serif;
+  font-size: 1.05rem;
+  color: #c8a030;
+  letter-spacing: 0.15em;
+  font-weight: bold;
+}
+
+/* 姓名输入框 */
+.name-input {
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(120,100,80,0.35);
+  background: rgba(255,252,245,0.9);
+  font-size: 0.82rem;
+  color: #5a4a3a;
+  text-align: center;
+  outline: none;
+}
+.name-input:focus { border-color: #8a7a6a; }
 
 .catalog-grid {
   display: grid;

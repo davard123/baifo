@@ -1,4 +1,13 @@
-const key = slug => `ancestor_photo_${slug}`
+const key      = slug => `ancestor_photo_${slug}`
+const nameKey  = slug => `ancestor_name_${slug}`
+
+export function saveName(slug, name) {
+  if (name?.trim()) localStorage.setItem(nameKey(slug), name.trim())
+  else localStorage.removeItem(nameKey(slug))
+}
+export function getName(slug) {
+  return localStorage.getItem(nameKey(slug)) || null
+}
 
 function compress(file) {
   return new Promise(resolve => {

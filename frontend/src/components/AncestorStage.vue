@@ -1,7 +1,8 @@
 <script setup>
 defineProps({
-  ancestor:        Object,
+  ancestor:      Object,
   customPhoto:   { type: String,  default: null },
+  customName:    { type: String,  default: null },
   offeringItems: { type: Array,   default: () => [] },
   figureItems:   { type: Array,   default: () => [] },
   hasCandles:    { type: Boolean, default: false },
@@ -17,7 +18,15 @@ defineProps({
 
     <!-- ① 先人牌位（上 62%）-->
     <div class="ancestor-frame">
-      <img :src="customPhoto || ancestor.image" :alt="ancestor.name" class="ancestor-img" />
+      <img
+        :src="customPhoto || ancestor.image"
+        :alt="ancestor.name"
+        :class="['ancestor-img', { 'has-custom': !!customPhoto }]"
+      />
+      <!-- 姓名叠加层：覆盖"某某某"区域，显示自定义或默认姓名 -->
+      <div v-if="!customPhoto" class="name-overlay">
+        <span class="name-text">{{ customName || ancestor.name }}</span>
+      </div>
     </div>
 
     <!-- ② 法器排（67%–77%）：香-烛-牌位-烛-香 -->
@@ -104,10 +113,37 @@ defineProps({
 .ancestor-img {
   width: 100%; height: 100%;
   object-fit: cover; object-position: top center;
+}
+/* 上传了自定义照片时才加柔边遮罩 */
+.ancestor-img.has-custom {
   mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
     black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
   -webkit-mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
     black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
+}
+
+/* 姓名叠加层：覆盖牌位图上"某某某"占位区 */
+.name-overlay {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 58%;
+  background: #1e0d05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.name-text {
+  writing-mode: vertical-lr;
+  font-family: 'SimSun', 'STSong', serif;
+  font-size: 180%;
+  color: #c8a030;
+  letter-spacing: 0.15em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  font-weight: bold;
 }
 
 /* ② 法器排 */
