@@ -38,7 +38,7 @@ async function buildCard(slug) {
   const photo = localPhotos.value[slug]
   if (photo) { tabletImages.value[slug] = photo; return }
   const a = ANCESTORS.find(x => x.slug === slug)
-  tabletImages.value[slug] = await renderTablet(a.image, localNames.value[slug] || a.name)
+  tabletImages.value[slug] = await renderTablet(a.image, localNames.value[slug] || a.title)
 }
 
 onMounted(() => { ANCESTORS.forEach(a => buildCard(a.slug)) })

@@ -20,7 +20,7 @@ async function buildTablet() {
   if (props.customPhoto) { tabletSrc.value = props.customPhoto; return }
   tabletSrc.value = await renderTablet(
     props.ancestor.image,
-    props.customName || props.ancestor.name
+    props.customName || props.ancestor.title
   )
 }
 
