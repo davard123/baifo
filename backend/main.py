@@ -1,5 +1,6 @@
 import os
 import psycopg2
+import psycopg2.extras
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
@@ -19,7 +20,7 @@ app.add_middleware(
 
 
 def _get_conn():
-    return psycopg2.connect(dsn=DATABASE_URL, cursor_factory=psycopg2.extensions.real_dict_cursor)
+    return psycopg2.connect(dsn=DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
 
 
 def _dict_row(row):
