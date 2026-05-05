@@ -6,12 +6,15 @@ import AncestorStage from '../components/AncestorStage.vue'
 import AncestorRituals from '../components/AncestorRituals.vue'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import { apiFetch } from '../api.js'
+import { getPhoto } from '../utils/localPhoto.js'
 
 const route = useRoute()
 const router = useRouter()
 
 const ancestor = computed(() => ANCESTORS.find(a => a.slug === route.params.slug))
 if (!ancestor.value) router.replace('/')
+
+const customPhoto = ref(getPhoto(route.params.slug))
 
 onMounted(() => {
   if (!ancestor.value) return
@@ -64,6 +67,7 @@ async function onSubmit(payload) {
       <section class="stage-section card">
         <AncestorStage
           :ancestor="ancestor"
+          :custom-photo="customPhoto"
           :offering-items="offeringItems"
           :figure-items="figureItems"
           :has-candles="hasCandles"

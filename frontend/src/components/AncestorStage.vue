@@ -1,6 +1,7 @@
 <script setup>
 defineProps({
   ancestor:        Object,
+  customPhoto:   { type: String,  default: null },
   offeringItems: { type: Array,   default: () => [] },
   figureItems:   { type: Array,   default: () => [] },
   hasCandles:    { type: Boolean, default: false },
@@ -16,7 +17,7 @@ defineProps({
 
     <!-- ① 先人牌位（上 62%）-->
     <div class="ancestor-frame">
-      <img :src="ancestor.image" :alt="ancestor.name" class="ancestor-img" />
+      <img :src="customPhoto || ancestor.image" :alt="ancestor.name" class="ancestor-img" />
     </div>
 
     <!-- ② 法器排（67%–77%）：香-烛-牌位-烛-香 -->

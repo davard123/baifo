@@ -3,9 +3,29 @@ import { ref, onMounted } from 'vue'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorWishList from '../components/AncestorWishList.vue'
 import { apiFetch } from '../api.js'
+import { getPhoto, savePhoto, clearPhoto } from '../utils/localPhoto.js'
 
 const wishes = ref([])
 const loading = ref(true)
+
+// 本地照片映射：slug → dataUrl | null
+const localPhotos = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getPhoto(a.slug)])))
+
+// 个性化设置弹窗
+const showSetup = ref(false)
+
+async function onUpload(slug, e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  const dataUrl = await savePhoto(slug, file)
+  localPhotos.value[slug] = dataUrl
+  e.target.value = ''
+}
+
+function onClear(slug) {
+  clearPhoto(slug)
+  localPhotos.value[slug] = null
+}
 
 async function loadWishes() {
   loading.value = true
@@ -36,8 +56,13 @@ onMounted(() => {
     </header>
 
     <section class="catalog-section card">
-      <h2 class="section-title">先人牌位</h2>
-      <p class="section-sub">选择一位先人，虔诚祭拜，祈愿庇荫。</p>
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">先人牌位</h2>
+          <p class="section-sub">选择一位先人，虔诚祭拜，祈愿庇荫。</p>
+        </div>
+        <button class="setup-btn" @click="showSetup = true" title="个性化设置">⚙</button>
+      </div>
       <div class="catalog-grid">
         <router-link
           v-for="a in ANCESTORS"
@@ -46,7 +71,8 @@ onMounted(() => {
           class="buddha-card ancestor-card"
         >
           <div class="buddha-img-wrap ancestor-img-wrap">
-            <img :src="a.image" :alt="a.name" />
+            <img :src="localPhotos[a.slug] || a.image" :alt="a.name"
+                 :style="localPhotos[a.slug] ? 'filter:none' : ''" />
           </div>
           <div class="buddha-info">
             <h3>{{ a.name }}</h3>
@@ -55,6 +81,36 @@ onMounted(() => {
         </router-link>
       </div>
     </section>
+
+    <!-- 个性化设置弹窗 -->
+    <Teleport to="body">
+      <div v-if="showSetup" class="setup-modal" @click.self="showSetup = false">
+        <div class="setup-dialog">
+          <div class="setup-header">
+            <h2>个性化照片设置</h2>
+            <button class="setup-close" @click="showSetup = false">✕</button>
+          </div>
+          <p class="setup-note">📱 照片仅保存在您的设备本地，不会上传到服务器，其他人无法看到。</p>
+          <div class="setup-grid">
+            <div v-for="a in ANCESTORS" :key="a.slug" class="setup-item">
+              <div class="setup-preview">
+                <img :src="localPhotos[a.slug] || a.image" :alt="a.name"
+                     :class="{ 'custom': localPhotos[a.slug] }" />
+                <span v-if="localPhotos[a.slug]" class="custom-badge">已自定义</span>
+              </div>
+              <p class="setup-name">{{ a.name }}</p>
+              <div class="setup-actions">
+                <label class="upload-btn">
+                  上传照片
+                  <input type="file" accept="image/*" @change="onUpload(a.slug, $event)" hidden />
+                </label>
+                <button v-if="localPhotos[a.slug]" class="clear-btn" @click="onClear(a.slug)">清除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <section class="wishes-section card">
       <h2 class="section-title">祭拜记录</h2>
@@ -106,6 +162,109 @@ onMounted(() => {
 }
 
 .catalog-section { animation: fadeInUp 0.7s 0.1s ease both; }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0;
+}
+.setup-btn {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(120, 100, 80, 0.3);
+  background: rgba(240, 235, 225, 0.8);
+  color: #7a6a5a;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.setup-btn:hover { background: rgba(200, 185, 165, 0.6); transform: rotate(30deg); }
+
+/* ── 弹窗 ── */
+.setup-modal {
+  position: fixed; inset: 0;
+  z-index: 950;
+  background: rgba(10, 8, 5, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+}
+.setup-dialog {
+  background: #faf6f0;
+  border-radius: 16px;
+  width: 92vw; max-width: 680px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+}
+.setup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.setup-header h2 { font-size: 1.2rem; color: #5a4a3a; }
+.setup-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(120,100,80,0.3);
+  background: transparent; color: #7a6a5a;
+  font-size: 1rem; cursor: pointer;
+}
+.setup-note {
+  font-size: 0.82rem; color: #8a7a6a;
+  background: rgba(180,165,140,0.12);
+  border-radius: 8px; padding: 8px 12px;
+  margin-bottom: 18px;
+}
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+.setup-item {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px 8px;
+  background: rgba(240,235,225,0.6);
+  border: 1px solid rgba(120,100,80,0.15);
+  border-radius: 12px;
+}
+.setup-preview {
+  position: relative;
+  width: 80px; height: 80px;
+  border-radius: 8px; overflow: hidden;
+  background: linear-gradient(135deg, #d8d0c4, #c8c0b4);
+}
+.setup-preview img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(0.15) sepia(0.2);
+}
+.setup-preview img.custom { filter: none; }
+.custom-badge {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(80,120,80,0.85);
+  color: #fff; font-size: 0.65rem;
+  text-align: center; padding: 2px 0;
+}
+.setup-name { font-size: 0.85rem; color: #5a4a3a; font-weight: 600; }
+.setup-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.upload-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(120,100,80,0.4);
+  background: rgba(180,165,140,0.15);
+  color: #5a4a3a; font-size: 0.78rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.upload-btn:hover { background: rgba(180,165,140,0.35); }
+.clear-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(180,80,80,0.3);
+  background: rgba(180,80,80,0.08);
+  color: #a05050; font-size: 0.78rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.clear-btn:hover { background: rgba(180,80,80,0.2); }
 
 .catalog-grid {
   display: grid;
