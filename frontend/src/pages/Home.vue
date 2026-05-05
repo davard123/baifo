@@ -8,13 +8,26 @@ import { apiFetch } from '../api.js'
 
 const router = useRouter()
 const wishes = ref([])
+const ancestorWishes = ref([])
 const loading = ref(true)
+
+const allWishes = computed(() => {
+  const combined = [
+    ...wishes.value,
+    ...ancestorWishes.value,
+  ]
+  return combined.sort((a, b) => b.id - a.id)
+})
 
 async function loadWishes() {
   loading.value = true
   try {
-    const res = await apiFetch('/wishes')
-    if (res.ok) wishes.value = await res.json()
+    const [r1, r2] = await Promise.all([
+      apiFetch('/wishes'),
+      apiFetch('/ancestor-wishes'),
+    ])
+    if (r1.ok) wishes.value = await r1.json()
+    if (r2.ok) ancestorWishes.value = await r2.json()
   } catch {}
   loading.value = false
 }
