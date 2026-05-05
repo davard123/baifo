@@ -3,14 +3,29 @@ import { ref, onMounted } from 'vue'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorWishList from '../components/AncestorWishList.vue'
 import { apiFetch } from '../api.js'
+import { useRouter } from 'vue-router'
 import { getPhoto, savePhoto, clearPhoto, getName, saveName } from '../utils/localPhoto.js'
+import { renderTablet } from '../utils/tabletCanvas.js'
+
+const router = useRouter()
 
 const wishes = ref([])
 const loading = ref(true)
 
 // 本地照片 & 姓名映射
-const localPhotos = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getPhoto(a.slug)])))
-const localNames  = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getName(a.slug)])))
+const localPhotos  = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getPhoto(a.slug)])))
+const localNames   = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, getName(a.slug)])))
+// 网格卡片合成图（canvas 生成）
+const tabletImages = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, ''])))
+
+async function buildCard(slug) {
+  const photo = localPhotos.value[slug]
+  if (photo) { tabletImages.value[slug] = photo; return }
+  const a = ANCESTORS.find(x => x.slug === slug)
+  tabletImages.value[slug] = await renderTablet(a.image, localNames.value[slug] || a.name)
+}
+
+onMounted(() => { ANCESTORS.forEach(a => buildCard(a.slug)) })
 
 // 个性化设置弹窗
 const showSetup = ref(false)
@@ -20,18 +35,21 @@ async function onUpload(slug, e) {
   if (!file) return
   const dataUrl = await savePhoto(slug, file)
   localPhotos.value[slug] = dataUrl
+  tabletImages.value[slug] = dataUrl
   e.target.value = ''
 }
 
 function onClear(slug) {
   clearPhoto(slug)
   localPhotos.value[slug] = null
+  buildCard(slug)
 }
 
 function onNameInput(slug, e) {
   const name = e.target.value
   saveName(slug, name)
   localNames.value[slug] = name || null
+  if (!localPhotos.value[slug]) buildCard(slug)
 }
 
 async function loadWishes() {
@@ -54,6 +72,9 @@ onMounted(() => {
 
 <template>
   <main class="ancestors-shell">
+    <nav class="top-nav">
+      <router-link to="/" class="back-link">← 返回首页</router-link>
+    </nav>
     <header class="site-header">
       <div class="header-inner">
         <div class="header-icon">🪔</div>
@@ -77,13 +98,12 @@ onMounted(() => {
           :to="'/ancestor/' + a.slug"
           class="buddha-card ancestor-card"
         >
-          <div class="buddha-img-wrap ancestor-img-wrap" style="position:relative">
-            <img :src="localPhotos[a.slug] || a.image" :alt="a.name"
-                 :style="localPhotos[a.slug] ? 'filter:none' : ''" />
-            <!-- 姓名叠加（仅牌位图时显示） -->
-            <div v-if="!localPhotos[a.slug]" class="card-name-overlay">
-              <span>{{ localNames[a.slug] || a.name }}</span>
-            </div>
+          <div class="buddha-img-wrap ancestor-img-wrap">
+            <img
+              :src="tabletImages[a.slug] || a.image"
+              :alt="a.name"
+              :style="localPhotos[a.slug] ? 'filter:none' : ''"
+            />
           </div>
           <div class="buddha-info">
             <h3>{{ a.name }}</h3>
@@ -144,6 +164,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.top-nav { padding: 12px 20px 0; }
+.back-link {
+  font-size: 0.9rem; color: #7a6a5a; text-decoration: none;
+  padding: 6px 14px; border-radius: 8px;
+  border: 1px solid rgba(120,100,80,0.25);
+  background: rgba(240,235,225,0.7); transition: background 0.2s;
+}
+.back-link:hover { background: rgba(200,185,165,0.5); }
+
 .ancestors-shell {
   max-width: 1100px;
   margin: 0 auto;
@@ -284,25 +313,6 @@ onMounted(() => {
   cursor: pointer; transition: background 0.2s;
 }
 .clear-btn:hover { background: rgba(180,80,80,0.2); }
-
-/* 网格卡片姓名叠加 */
-.card-name-overlay {
-  position: absolute;
-  top: 20%; left: 50%;
-  transform: translateX(-50%);
-  width: 30%; height: 48%;
-  background: #1e0d05;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-}
-.card-name-overlay span {
-  writing-mode: vertical-lr;
-  font-family: 'SimSun', 'STSong', serif;
-  font-size: 1.05rem;
-  color: #c8a030;
-  letter-spacing: 0.15em;
-  font-weight: bold;
-}
 
 /* 姓名输入框 */
 .name-input {

@@ -1,5 +1,8 @@
 <script setup>
-defineProps({
+import { ref, watch, onMounted } from 'vue'
+import { renderTablet } from '../utils/tabletCanvas.js'
+
+const props = defineProps({
   ancestor:      Object,
   customPhoto:   { type: String,  default: null },
   customName:    { type: String,  default: null },
@@ -10,6 +13,19 @@ defineProps({
   hasWine:       { type: Boolean, default: false },
   hasPaper:      { type: Boolean, default: false }
 })
+
+const tabletSrc = ref('')
+
+async function buildTablet() {
+  if (props.customPhoto) { tabletSrc.value = props.customPhoto; return }
+  tabletSrc.value = await renderTablet(
+    props.ancestor.image,
+    props.customName || props.ancestor.name
+  )
+}
+
+onMounted(buildTablet)
+watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildTablet)
 </script>
 
 <template>
@@ -19,14 +35,11 @@ defineProps({
     <!-- ① 先人牌位（上 62%）-->
     <div class="ancestor-frame">
       <img
-        :src="customPhoto || ancestor.image"
+        v-if="tabletSrc"
+        :src="tabletSrc"
         :alt="ancestor.name"
         :class="['ancestor-img', { 'has-custom': !!customPhoto }]"
       />
-      <!-- 姓名叠加层：覆盖"某某某"区域，显示自定义或默认姓名 -->
-      <div v-if="!customPhoto" class="name-overlay">
-        <span class="name-text">{{ customName || ancestor.name }}</span>
-      </div>
     </div>
 
     <!-- ② 法器排（67%–77%）：香-烛-牌位-烛-香 -->
@@ -40,13 +53,8 @@ defineProps({
         <div class="flame"><span></span></div>
         <div class="wax"></div>
       </div>
-      <!-- 牌位 中 -->
-      <div class="altar-slot tablet-slot" :class="{ visible: true }">
-        <div class="tablet">
-          <span class="tablet-name">{{ ancestor.name }}</span>
-          <span class="tablet-title">{{ ancestor.title }}</span>
-        </div>
-      </div>
+      <!-- 牌位占位（空槽保持间距）-->
+      <div class="altar-slot tablet-slot"></div>
       <!-- 烛 右 -->
       <div class="altar-slot candle-slot" :class="{ visible: hasCandles }">
         <div class="flame"><span></span></div>
@@ -115,36 +123,12 @@ defineProps({
   width: 100%; height: 100%;
   object-fit: cover; object-position: top center;
 }
-/* 上传了自定义照片时才加柔边遮罩 */
+/* 上传了自定义照片时加柔边遮罩 */
 .ancestor-img.has-custom {
   mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
     black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
   -webkit-mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
     black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
-}
-
-/* 姓名叠加层：覆盖牌位图上"某某某"占位区 */
-.name-overlay {
-  position: absolute;
-  top: 18%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30%;
-  height: 58%;
-  background: #1e0d05;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-.name-text {
-  writing-mode: vertical-lr;
-  font-family: 'SimSun', 'STSong', serif;
-  font-size: 180%;
-  color: #c8a030;
-  letter-spacing: 0.15em;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-  font-weight: bold;
 }
 
 /* ② 法器排 */
@@ -194,18 +178,8 @@ defineProps({
 }
 .altar-img { height: 85%; width: auto; object-fit: contain; }
 
-/* 牌位 */
-.tablet-slot { opacity: 1; }
-.tablet {
-  display: flex; flex-direction: column; align-items: center;
-  background: linear-gradient(135deg, #c8a870, #8b6432, #c8a870);
-  padding: 4px 10px 6px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.5);
-  border: 1px solid rgba(200,168,112,.4);
-}
-.tablet-name { font-size: .7rem; color: #1a0f00; font-weight: bold; letter-spacing: .1em; }
-.tablet-title { font-size: .55rem; color: #3a2810; margin-top: 2px; letter-spacing: .05em; }
+/* 牌位槽（占位用） */
+.tablet-slot { opacity: 0; width: 40px; }
 
 /* ③ 供品排 */
 .offering-row {
