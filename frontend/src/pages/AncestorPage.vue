@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorStage from '../components/AncestorStage.vue'
@@ -12,11 +12,17 @@ const route = useRoute()
 const router = useRouter()
 
 const ancestor = computed(() => ANCESTORS.find(a => a.slug === route.params.slug))
-if (!ancestor.value) router.replace('/')
 const relatedAncestors = computed(() => ANCESTORS.filter(a => a.slug !== route.params.slug).slice(0, 4))
 
-const customPhoto = ref(getPhoto(route.params.slug))
-const customName  = ref(getName(route.params.slug))
+const customPhoto = ref(null)
+const customName = ref(null)
+const offeringItems = ref([])
+const figureItems = ref([])
+const hasCandles = ref(false)
+const hasIncense = ref(false)
+const hasWine = ref(false)
+const hasPaper = ref(false)
+
 const displayAncestorName = computed(() => customName.value || ancestor.value?.title || '')
 const defaultRelationship = computed(() => {
   const map = {
@@ -32,35 +38,56 @@ const defaultRelationship = computed(() => {
   return map[ancestor.value?.slug] || '其他'
 })
 
-onMounted(() => {
+function syncAncestorState() {
+  if (!ancestor.value) {
+    router.replace('/')
+    return
+  }
+  customPhoto.value = getPhoto(route.params.slug)
+  customName.value = getName(route.params.slug)
+}
+
+function resetStageState() {
+  offeringItems.value = []
+  figureItems.value = []
+  hasCandles.value = false
+  hasIncense.value = false
+  hasWine.value = false
+  hasPaper.value = false
+}
+
+function applyPageMeta() {
   if (!ancestor.value) return
   const a = ancestor.value
   document.title = `${a.name} 拜祭 | 在线祭拜先人 - www.fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute(
-    'content', `虔诚祭拜${a.name}，${a.subtitle}。${a.desc} 在线发愿，功德回向先人。`
+    'content',
+    `虔诚祭拜${a.name}，${a.subtitle}。${a.desc} 在线发愿，功德回向先人。`
   )
+
   const ld = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
       {
-        "@type": "Question",
-        "name": `${a.name}页面适合什么祭拜主题？`,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `${a.desc} 适合用于追思、祭祖、超荐与回向。`
-        }
+        '@type': 'Question',
+        name: `${a.name}页面适合什么祭拜主题？`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `${a.desc} 适合用于追思、祭祖、超荐与回向。`,
+        },
       },
       {
-        "@type": "Question",
-        "name": "个性化照片会上传到服务器吗？",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "不会。照片和姓名设置仅保存在本地设备，用于当前设备显示。"
-        }
-      }
-    ]
+        '@type': 'Question',
+        name: '个性化照片会上传到服务器吗？',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '不会。照片和姓名设置仅保存在本地设备，用于当前设备显示。',
+        },
+      },
+    ],
   }
+
   let el = document.getElementById('ld-ancestor-qa')
   if (!el) {
     el = document.createElement('script')
@@ -69,20 +96,36 @@ onMounted(() => {
     document.head.appendChild(el)
   }
   el.textContent = JSON.stringify(ld)
-})
+}
 
-const offeringItems = ref([])
-const figureItems   = ref([])
-const hasCandles    = ref(false)
-const hasIncense    = ref(false)
-const hasWine       = ref(false)
-const hasPaper      = ref(false)
+watch(
+  () => route.params.slug,
+  () => {
+    syncAncestorState()
+    resetStageState()
+    applyPageMeta()
+  },
+  { immediate: true }
+)
 
 function onRitual({ images, isFigure, isCandle, isIncense, isWine, isPaper }) {
-  if (isCandle)  { hasCandles.value = true; return }
-  if (isIncense) { hasIncense.value = true; return }
-  if (isWine)    { hasWine.value = true;   return }
-  if (isPaper)   { hasPaper.value = true;  return }
+  if (isCandle) {
+    hasCandles.value = true
+    return
+  }
+  if (isIncense) {
+    hasIncense.value = true
+    return
+  }
+  if (isWine) {
+    hasWine.value = true
+    return
+  }
+  if (isPaper) {
+    hasPaper.value = true
+    return
+  }
+
   const items = images.map(src => ({ src, id: Date.now() + Math.random() }))
   if (isFigure) {
     figureItems.value = items
@@ -95,10 +138,12 @@ async function onSubmit(payload) {
   const res = await apiFetch('/ancestor-wishes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...payload, ancestor: ancestor.value?.slug })
+    body: JSON.stringify({ ...payload, ancestor: ancestor.value?.slug }),
   })
   const data = await res.json()
-  if (!res.ok || data.status !== 'success') throw new Error(data.message || '提交失败')
+  if (!res.ok || data.status !== 'success') {
+    throw new Error(data.message || '提交失败')
+  }
   router.push('/')
 }
 </script>
@@ -226,7 +271,9 @@ async function onSubmit(payload) {
 }
 
 @media (orientation: landscape) {
-  .prayer-layout { flex-direction: row; }
+  .prayer-layout {
+    flex-direction: row;
+  }
 
   .stage-section {
     flex: 2;
@@ -240,6 +287,7 @@ async function onSubmit(payload) {
     align-items: center;
     justify-content: center;
   }
+
   .panel-section {
     flex: 1;
     overflow-y: auto;
@@ -251,7 +299,9 @@ async function onSubmit(payload) {
 }
 
 @media (orientation: portrait) {
-  .prayer-layout { flex-direction: column; }
+  .prayer-layout {
+    flex-direction: column;
+  }
 
   .stage-section {
     flex: 4;
@@ -266,6 +316,7 @@ async function onSubmit(payload) {
     align-items: center;
     justify-content: center;
   }
+
   .panel-section {
     flex: 1;
     min-height: 0;
@@ -276,9 +327,20 @@ async function onSubmit(payload) {
     box-shadow: none;
   }
 
-  .namo-title { font-size: 1rem; margin-bottom: 4px; }
-  .ancestor-desc { font-size: 0.82rem; line-height: 1.6; margin-bottom: 0; }
-  .divider { margin: 8px 0; }
+  .namo-title {
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .ancestor-desc {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .divider {
+    margin: 8px 0;
+  }
 }
 
 :deep(.stage) {

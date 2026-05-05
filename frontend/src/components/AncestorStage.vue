@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { renderTablet } from '../utils/tabletCanvas.js'
 
 const props = defineProps({
@@ -15,6 +15,14 @@ const props = defineProps({
 })
 
 const tabletSrc = ref('')
+const isPlainStage = computed(() =>
+  !props.hasCandles &&
+  !props.hasIncense &&
+  !props.hasWine &&
+  !props.hasPaper &&
+  props.offeringItems.length === 0 &&
+  props.figureItems.length === 0
+)
 
 async function buildTablet() {
   if (props.customPhoto) { tabletSrc.value = props.customPhoto; return }
@@ -29,7 +37,7 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
 </script>
 
 <template>
-  <div class="stage">
+  <div class="stage" :class="{ 'is-plain-stage': isPlainStage }">
     <div class="stage-bg"></div>
 
     <!-- ① 先人牌位（上 62%）-->
@@ -43,7 +51,7 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
     </div>
 
     <!-- ② 法器排（67%–77%）：香-烛-牌位-烛-香 -->
-    <div class="altar-row">
+    <div class="altar-row" :class="{ hidden: isPlainStage }">
       <!-- 香 左 -->
       <div class="altar-slot" :class="{ visible: hasIncense }">
         <img src="/04.gif" alt="" class="altar-img" />
@@ -67,7 +75,7 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
     </div>
 
     <!-- ③ 供品排（78%–86%）：奠酒/祭品 -->
-    <div class="offering-row">
+    <div class="offering-row" :class="{ hidden: isPlainStage }">
       <img
         v-for="item in offeringItems"
         :key="item.id"
@@ -114,8 +122,10 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
 /* ① 先人牌位 */
 .ancestor-frame {
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 62%;
+  top: 4%;
+  left: 0;
+  right: 0;
+  height: 72%;
   z-index: 2;
   overflow: hidden;
 }
@@ -134,7 +144,9 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
 /* ② 法器排 */
 .altar-row {
   position: absolute;
-  top: 67%; left: 0; right: 0;
+  top: 75%;
+  left: 0;
+  right: 0;
   height: 10%;
   display: flex;
   align-items: flex-end;
@@ -184,7 +196,9 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
 /* ③ 供品排 */
 .offering-row {
   position: absolute;
-  top: 78%; left: 0; right: 0;
+  top: 86%;
+  left: 0;
+  right: 0;
   height: 8%;
   display: flex;
   justify-content: center;
@@ -236,6 +250,25 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
   font-size: .78rem; letter-spacing: .12em;
   text-shadow: 0 1px 5px rgba(0,0,0,.7);
   z-index: 8;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage.is-plain-stage .ancestor-frame {
+  top: 2%;
+  height: 88%;
+}
+
+.stage.is-plain-stage .ancestor-img {
+  object-fit: contain;
+  object-position: center top;
+}
+
+.stage.is-plain-stage .stage-label {
+  bottom: 3.5%;
 }
 
 /* 竖屏微调 */

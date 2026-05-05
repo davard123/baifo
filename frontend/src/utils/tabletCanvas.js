@@ -1,8 +1,8 @@
 const ZONE_X = 0.36
 const ZONE_W = 0.28
-const FILL_Y_START = 0.1
+const FILL_Y_START = 0.06
 const FILL_Y_END = 0.62
-const TEXT_Y_START = 0.27
+const TEXT_Y_START = 0.18
 const DEFAULT_STEP = 0.128
 const BG_SAMPLE = [0.5, 0.4]
 const cache = new Map()
