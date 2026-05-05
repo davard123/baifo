@@ -1,47 +1,60 @@
 <script setup>
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { renderTablet } from '../utils/tabletCanvas.js'
 
 const props = defineProps({
-  ancestor:      Object,
-  customPhoto:   { type: String,  default: null },
-  customName:    { type: String,  default: null },
-  offeringItems: { type: Array,   default: () => [] },
-  figureItems:   { type: Array,   default: () => [] },
-  hasCandles:    { type: Boolean, default: false },
-  hasIncense:    { type: Boolean, default: false },
-  hasWine:       { type: Boolean, default: false },
-  hasPaper:      { type: Boolean, default: false }
+  ancestor: { type: Object, required: true },
+  customPhoto: { type: String, default: null },
+  customName: { type: String, default: null },
+  offeringItems: { type: Array, default: () => [] },
+  figureItems: { type: Array, default: () => [] },
+  hasCandles: { type: Boolean, default: false },
+  hasIncense: { type: Boolean, default: false },
+  hasWine: { type: Boolean, default: false },
+  hasPaper: { type: Boolean, default: false },
 })
 
 const tabletSrc = ref('')
-const isPlainStage = computed(() =>
-  !props.hasCandles &&
-  !props.hasIncense &&
-  !props.hasWine &&
-  !props.hasPaper &&
-  props.offeringItems.length === 0 &&
-  props.figureItems.length === 0
+const leftFigure = computed(() => props.figureItems[0] || null)
+const rightFigure = computed(() => props.figureItems[1] || null)
+
+const isPlainStage = computed(
+  () =>
+    !props.hasCandles &&
+    !props.hasIncense &&
+    !props.hasWine &&
+    !props.hasPaper &&
+    props.offeringItems.length === 0 &&
+    props.figureItems.length === 0
 )
 
 async function buildTablet() {
-  if (props.customPhoto) { tabletSrc.value = props.customPhoto; return }
-  tabletSrc.value = await renderTablet(
-    props.ancestor.image,
-    props.customName || props.ancestor.title
-  )
+  if (props.customPhoto) {
+    tabletSrc.value = props.customPhoto
+    return
+  }
+
+  if (!props.customName?.trim()) {
+    tabletSrc.value = props.ancestor.image
+    return
+  }
+
+  tabletSrc.value = await renderTablet(props.ancestor.image, props.customName)
 }
 
-onMounted(buildTablet)
-watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildTablet)
+watch(
+  () => [props.customPhoto, props.customName, props.ancestor?.image],
+  buildTablet,
+  { immediate: true }
+)
 </script>
 
 <template>
-  <div class="stage" :class="{ 'is-plain-stage': isPlainStage }">
-    <div class="stage-bg"></div>
+  <div class="stage">
+    <div class="sky-layer"></div>
+    <div class="altar-floor"></div>
 
-    <!-- ① 先人牌位（上 62%）-->
-    <div class="ancestor-frame">
+    <div class="ancestor-frame" :class="{ 'plain-mode': isPlainStage }">
       <img
         v-if="tabletSrc"
         :src="tabletSrc"
@@ -50,31 +63,24 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
       />
     </div>
 
-    <!-- ② 法器排（67%–77%）：香-烛-牌位-烛-香 -->
     <div class="altar-row" :class="{ hidden: isPlainStage }">
-      <!-- 香 左 -->
-      <div class="altar-slot" :class="{ visible: hasIncense }">
+      <div class="altar-slot incense-slot" :class="{ visible: hasIncense }">
         <img src="/04.gif" alt="" class="altar-img" />
       </div>
-      <!-- 烛 左 -->
       <div class="altar-slot candle-slot" :class="{ visible: hasCandles }">
         <div class="flame"><span></span></div>
         <div class="wax"></div>
       </div>
-      <!-- 牌位占位（空槽保持间距）-->
       <div class="altar-slot tablet-slot"></div>
-      <!-- 烛 右 -->
       <div class="altar-slot candle-slot" :class="{ visible: hasCandles }">
         <div class="flame"><span></span></div>
         <div class="wax"></div>
       </div>
-      <!-- 香 右 -->
-      <div class="altar-slot" :class="{ visible: hasIncense }">
+      <div class="altar-slot incense-slot" :class="{ visible: hasIncense }">
         <img src="/04.gif" alt="" class="altar-img" />
       </div>
     </div>
 
-    <!-- ③ 供品排（78%–86%）：奠酒/祭品 -->
     <div class="offering-row" :class="{ hidden: isPlainStage }">
       <img
         v-for="item in offeringItems"
@@ -83,16 +89,12 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
         alt=""
         class="offering-img"
       />
-      <!-- 奠酒杯 -->
       <div v-if="hasWine" class="wine-cup"></div>
-      <!-- 纸钱 -->
       <div v-if="hasPaper" class="paper-burn"></div>
     </div>
 
-    <!-- ④ 叩拜人物（下 22%）-->
-    <img v-if="figureItems[0]" :src="figureItems[0].src" alt="" class="figure-left" />
-
-    <div class="stage-label">{{ ancestor.subtitle }}</div>
+    <img v-if="leftFigure" :src="leftFigure.src" alt="" class="figure figure-left" />
+    <img v-if="rightFigure" :src="rightFigure.src" alt="" class="figure figure-right" />
   </div>
 </template>
 
@@ -100,156 +102,189 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
 .stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 3/4;
-  max-height: 540px;
-  border-radius: 12px;
+  aspect-ratio: 3 / 4;
+  max-height: 620px;
   overflow: hidden;
-  background: linear-gradient(180deg,
-    #0a0805 0%,
-    #1a1208 22%,
-    #2a1f10 46%,
-    #3a2a18 68%,
-    #4a3520 100%
-  );
-}
-.stage-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse at 50% 28%, rgba(180,160,120,.08) 0%, transparent 52%),
-    radial-gradient(ellipse at 50% 92%, rgba(100,60,20,.10) 0%, transparent 42%);
+  background: linear-gradient(180deg, #fbf5e9 0%, #f7efdf 56%, #ead7bb 100%);
 }
 
-/* ① 先人牌位 */
+.sky-layer {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 32%, rgba(214, 182, 128, 0.14), transparent 14%),
+    radial-gradient(circle at 82% 28%, rgba(214, 182, 128, 0.08), transparent 16%);
+  z-index: 0;
+}
+
+.altar-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34%;
+  background:
+    linear-gradient(180deg, rgba(122, 87, 51, 0.18), rgba(146, 104, 60, 0.24)),
+    linear-gradient(180deg, #cba57a 0%, #b88d62 100%);
+  z-index: 1;
+}
+
 .ancestor-frame {
   position: absolute;
-  top: 4%;
+  top: 2%;
   left: 0;
   right: 0;
   height: 72%;
-  z-index: 2;
-  overflow: hidden;
-}
-.ancestor-img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: top center;
-}
-/* 上传了自定义照片时加柔边遮罩 */
-.ancestor-img.has-custom {
-  mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
-    black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 96% at 50% 36%,
-    black 42%, rgba(0,0,0,.55) 60%, transparent 78%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 3;
 }
 
-/* ② 法器排 */
+.ancestor-frame.plain-mode {
+  top: 4%;
+  height: 78%;
+}
+
+.ancestor-img {
+  height: 100%;
+  width: auto;
+  max-width: 94%;
+  object-fit: contain;
+  object-position: center top;
+  filter: drop-shadow(0 18px 26px rgba(72, 43, 18, 0.12));
+}
+
+.ancestor-img.has-custom {
+  filter: drop-shadow(0 18px 26px rgba(72, 43, 18, 0.16));
+}
+
 .altar-row {
   position: absolute;
-  top: 75%;
   left: 0;
   right: 0;
-  height: 10%;
+  bottom: 21%;
+  height: 14%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 3.5%;
-  padding: 0 6%;
-  z-index: 3;
+  gap: 3.4%;
+  padding: 0 7%;
+  z-index: 4;
 }
+
 .altar-slot {
   height: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
+  justify-content: center;
   opacity: 0;
-  transition: opacity 0.65s ease;
+  transition: opacity 0.45s ease;
   flex-shrink: 0;
 }
-.altar-slot.visible { opacity: 1; }
-.candle-slot { width: auto; }
-.flame { width: 9px; height: 15px; }
+
+.altar-slot.visible {
+  opacity: 1;
+}
+
+.incense-slot {
+  width: 28px;
+}
+
+.candle-slot {
+  width: 18px;
+}
+
+.tablet-slot {
+  width: 120px;
+  opacity: 0;
+}
+
+.altar-img {
+  height: 88%;
+  width: auto;
+  object-fit: contain;
+}
+
+.flame {
+  width: 10px;
+  height: 16px;
+}
+
 .flame span {
-  display: block; width: 9px; height: 15px;
-  background: linear-gradient(to top, #ff7500, #ffd800, #fffacc);
+  display: block;
+  width: 10px;
+  height: 16px;
+  background: linear-gradient(to top, #ff7a00, #ffd54a, #fff7cb);
   border-radius: 50% 50% 22% 22%;
-  animation: flicker .75s ease-in-out infinite alternate;
+  animation: flicker 0.75s ease-in-out infinite alternate;
   transform-origin: bottom center;
-  box-shadow: 0 0 6px 3px rgba(255,148,0,.5);
+  box-shadow: 0 0 6px 3px rgba(255, 148, 0, 0.4);
 }
-@keyframes flicker {
-  0%   { transform: scaleX(1)    scaleY(1)    skewX(0deg); }
-  30%  { transform: scaleX(.83)  scaleY(1.10) skewX(2deg); }
-  65%  { transform: scaleX(1.12) scaleY(.92)  skewX(-1deg); }
-  100% { transform: scaleX(.95)  scaleY(1.06) skewX(1deg); }
-}
+
 .wax {
-  width: 7px; height: 28px;
-  background: linear-gradient(to right, #f0e4a8, #ceb45a, #e6d280);
+  width: 8px;
+  height: 28px;
+  background: linear-gradient(to right, #f6edd0, #d8c374, #f0e1aa);
   border-radius: 3px 3px 1px 1px;
-  box-shadow: inset -2px 0 3px rgba(0,0,0,.22);
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.18);
 }
-.altar-img { height: 85%; width: auto; object-fit: contain; }
 
-/* 牌位槽（占位用） */
-.tablet-slot { opacity: 0; width: 40px; }
-
-/* ③ 供品排 */
 .offering-row {
   position: absolute;
-  top: 86%;
   left: 0;
   right: 0;
-  height: 8%;
+  bottom: 12%;
+  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   padding: 0 16%;
-  z-index: 6;
+  z-index: 5;
 }
+
 .offering-img {
-  height: 62%; width: auto;
-  animation: fadeInUp .4s ease;
+  height: 70%;
+  width: auto;
+  animation: fadeInUp 0.4s ease;
   border-radius: 3px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.45));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
 }
+
 .wine-cup {
-  width: 18px; height: 24px;
-  background: linear-gradient(to right, #d0c8b0, #a09070, #d0c8b0);
+  width: 18px;
+  height: 24px;
+  background: linear-gradient(to right, #f0ead6, #ccb78a, #f0ead6);
   border-radius: 2px 2px 6px 6px;
-  box-shadow: inset -2px 0 4px rgba(0,0,0,.25);
-  border: 1px solid rgba(160,144,112,.5);
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(160, 144, 112, 0.35);
 }
+
 .paper-burn {
-  width: 22px; height: 28px;
-  background: linear-gradient(to top, #c83000, #ff6010, #ffd020);
+  width: 22px;
+  height: 28px;
+  background: linear-gradient(to top, #d34b16, #ff7d1d, #ffd15c);
   border-radius: 4px 4px 2px 2px;
   animation: paperBurn 1.2s ease-in-out infinite alternate;
 }
-@keyframes paperBurn {
-  0%   { transform: scaleX(1)    scaleY(1);    opacity: 1; }
-  50%  { transform: scaleX(.9)  scaleY(1.08); opacity: .85; }
-  100% { transform: scaleX(1.05) scaleY(.95); opacity: .95; }
-}
 
-/* ④ 叩拜人物 */
-.figure-left {
+.figure {
   position: absolute;
-  bottom: 0; height: 22%;
+  bottom: 0.5%;
+  height: 19%;
   width: auto;
-  animation: fadeInUp .5s ease;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,.55));
-  z-index: 7;
+  animation: fadeInUp 0.45s ease;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.18));
+  z-index: 6;
 }
-.figure-right { right: 2%; }
 
-.stage-label {
-  position: absolute; bottom: 1.5%; width: 100%;
-  text-align: center;
-  color: rgba(200,190,170,.8);
-  font-size: .78rem; letter-spacing: .12em;
-  text-shadow: 0 1px 5px rgba(0,0,0,.7);
-  z-index: 8;
+.figure-left {
+  left: 18%;
+}
+
+.figure-right {
+  right: 18%;
 }
 
 .hidden {
@@ -257,24 +292,53 @@ watch(() => [props.customPhoto, props.customName, props.ancestor?.image], buildT
   pointer-events: none;
 }
 
-.stage.is-plain-stage .ancestor-frame {
-  top: 2%;
-  height: 88%;
+@keyframes flicker {
+  0% {
+    transform: scaleX(1) scaleY(1) skewX(0deg);
+  }
+  30% {
+    transform: scaleX(0.83) scaleY(1.1) skewX(2deg);
+  }
+  65% {
+    transform: scaleX(1.12) scaleY(0.92) skewX(-1deg);
+  }
+  100% {
+    transform: scaleX(0.95) scaleY(1.06) skewX(1deg);
+  }
 }
 
-.stage.is-plain-stage .ancestor-img {
-  object-fit: contain;
-  object-position: center top;
+@keyframes paperBurn {
+  0% {
+    transform: scaleX(1) scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.9) scaleY(1.08);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scaleX(1.05) scaleY(0.95);
+    opacity: 0.95;
+  }
 }
 
-.stage.is-plain-stage .stage-label {
-  bottom: 3.5%;
-}
-
-/* 竖屏微调 */
 @media (orientation: portrait) {
-  .altar-row    { gap: 3%; padding: 0 4%; }
-  .wax          { height: 18px; }
-  .offering-img { height: 58%; }
+  .altar-row {
+    bottom: 22%;
+    gap: 3%;
+    padding: 0 5%;
+  }
+
+  .offering-row {
+    bottom: 12.5%;
+  }
+
+  .figure-left {
+    left: 14%;
+  }
+
+  .figure-right {
+    right: 14%;
+  }
 }
 </style>

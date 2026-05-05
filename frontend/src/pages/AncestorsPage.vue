@@ -36,9 +36,10 @@ const tabletImages = ref(Object.fromEntries(ANCESTORS.map(a => [a.slug, ''])))
 
 async function buildCard(slug) {
   const photo = localPhotos.value[slug]
+  const name = localNames.value[slug]
   if (photo) { tabletImages.value[slug] = photo; return }
   const a = ANCESTORS.find(x => x.slug === slug)
-  tabletImages.value[slug] = await renderTablet(a.image, localNames.value[slug] || a.title)
+  tabletImages.value[slug] = name ? await renderTablet(a.image, name) : a.image
 }
 
 onMounted(() => { ANCESTORS.forEach(a => buildCard(a.slug)) })

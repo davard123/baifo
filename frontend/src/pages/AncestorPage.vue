@@ -183,37 +183,17 @@ async function onSubmit(payload) {
           <span>祭祖追思</span>
           <span>功德回向</span>
         </div>
-        <section class="meaning-section">
-          <h2>页面说明</h2>
-          <p>{{ ancestor.name }}页面适合围绕追思先人、超荐亡灵与家族祈愿进行祭拜。你可以先完成供奉动作，再填写祈愿内容，以此表达纪念与回向之意。</p>
-        </section>
         <section class="entry-summary">
           <h2>本次祭拜对象</h2>
           <div class="summary-chips">
             <span>{{ displayAncestorName }}</span>
             <span>{{ defaultRelationship }}</span>
           </div>
-          <p>如果要换牌位或重新选择对象，可以返回上一页重新选择；当前页面会自动带入你刚才选择的牌位信息。</p>
+          <p>如果要换牌位或重新输入姓名，可以返回上一页重新选择；当前页面会自动带入你刚才确认的牌位信息。</p>
           <router-link to="/ancestors" class="reselect-link">重新选择牌位</router-link>
         </section>
-        <section class="faq-mini">
-          <h2>常见问题</h2>
-          <article>
-            <h3>这个页面会公开个人照片吗？</h3>
-            <p>不会。个性化牌位照片和姓名设置只保存在当前设备中，不会进入服务器。</p>
-          </article>
-          <article>
-            <h3>适合哪些追思场景？</h3>
-            <p>适合祭祖、追思长辈、超荐亡灵，以及围绕家族平安和后代庇荫进行回向。</p>
-          </article>
-        </section>
-        <section class="related-links">
-          <h2>相关祭拜页面</h2>
-          <div class="related-list">
-            <router-link v-for="item in relatedAncestors" :key="item.slug" :to="'/ancestor/' + item.slug">
-              {{ item.name }} · {{ item.subtitle }}
-            </router-link>
-          </div>
+        <section class="privacy-note">
+          <p>个性化姓名和照片只保存在当前设备，不会公开给其他人。</p>
         </section>
         <hr class="divider" />
         <AncestorRituals @ritual="onRitual" />
@@ -383,29 +363,23 @@ async function onSubmit(payload) {
   font-size: 0.78rem;
 }
 
-.meaning-section,
-.faq-mini,
-.entry-summary {
+.entry-summary,
+.privacy-note {
   margin-top: 14px;
 }
 
-.meaning-section h2,
 .entry-summary h2,
-.faq-mini h2,
-.faq-mini h3 {
+.privacy-note p {
   color: #8a7a6a;
 }
 
-.meaning-section h2,
-.entry-summary h2,
-.faq-mini h2 {
+.entry-summary h2 {
   font-size: 1rem;
   margin-bottom: 8px;
 }
 
-.meaning-section p,
 .entry-summary p,
-.faq-mini p {
+.privacy-note p {
   color: var(--text-muted);
   line-height: 1.75;
   font-size: 0.88rem;
@@ -437,37 +411,6 @@ async function onSubmit(payload) {
   color: #7a6a5a;
   font-size: 0.84rem;
   text-decoration: none;
-}
-
-.faq-mini article + article {
-  margin-top: 10px;
-}
-
-.faq-mini h3 {
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
-
-.related-links {
-  margin-top: 14px;
-}
-
-.related-links h2 {
-  font-size: 1rem;
-  margin-bottom: 8px;
-  color: #8a7a6a;
-}
-
-.related-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.related-list a {
-  color: #8a7a6a;
-  text-decoration: none;
-  font-size: 0.88rem;
 }
 
 .divider {
