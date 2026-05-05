@@ -86,6 +86,7 @@ async function onSubmit(payload) {
         <AncestorRituals @ritual="onRitual" />
         <hr class="divider" />
         <AncestorWishForm
+          :slug="ancestor.slug"
           :default-wish="ancestor.wish"
           :default-ancestor-name="ancestor.title"
           :default-relationship="ancestor.slug === 'father' ? '父亲' : ancestor.slug === 'mother' ? '母亲' : ancestor.slug === 'grandfather' ? '祖父' : ancestor.slug === 'grandmother' ? '祖母' : ''"

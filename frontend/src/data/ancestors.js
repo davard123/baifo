@@ -2,7 +2,7 @@ export const ANCESTORS = [
   {
     slug: 'father',
     name: '先父',
-    title: '先父张公之灵位',
+    title: '先父之灵位',
     subtitle: '严父慈恩',
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/father.png',
@@ -12,7 +12,7 @@ export const ANCESTORS = [
   {
     slug: 'mother',
     name: '先母',
-    title: '先母王氏之灵位',
+    title: '先母之灵位',
     subtitle: '慈母深恩',
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/mother.png',

@@ -109,6 +109,7 @@ defineProps({
   top: 0; left: 0; right: 0;
   height: 62%;
   z-index: 2;
+  overflow: hidden;
 }
 .ancestor-img {
   width: 100%; height: 100%;

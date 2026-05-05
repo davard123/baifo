@@ -1,49 +1,60 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { saveField, getField, saveGlobal, getGlobal } from '../utils/localPhoto.js'
 
 const props = defineProps({
+  slug:                 { type: String, required: true },
   defaultWish:          { type: String, default: '' },
   defaultAncestorName:  { type: String, default: '' },
   defaultRelationship:  { type: String, default: '' }
 })
 const emit = defineEmits(['submit'])
 
-const username       = ref('')
-const age            = ref(50)
-const ancestorName   = ref(props.defaultAncestorName)
-const relationship   = ref(props.defaultRelationship)
-const wish           = ref(props.defaultWish)
-const loading        = ref(false)
-const error          = ref('')
+const username     = ref('')
+const age          = ref(50)
+const ancestorName = ref('')
+const relationship = ref('')
+const wish         = ref('')
+const loading      = ref(false)
+const error        = ref('')
 
 const RELATIONSHIPS = ['父亲', '母亲', '祖父', '祖母', '配偶', '子女', '先祖', '其他']
 
 onMounted(() => {
-  username.value = localStorage.getItem('baifo_ancestor_username') || ''
-  const savedAge = localStorage.getItem('baifo_ancestor_age')
+  // 全局字段（跨所有先祖页面共用）
+  username.value = getGlobal('username') || ''
+  const savedAge = getGlobal('age')
   if (savedAge) age.value = Number(savedAge)
-  if (props.defaultAncestorName) ancestorName.value = props.defaultAncestorName
-  if (props.defaultRelationship) relationship.value = props.defaultRelationship
+
+  // per-slug 字段（每位先祖独立保存）
+  ancestorName.value = getField(props.slug, 'ancestorName') || props.defaultAncestorName || ''
+  relationship.value = getField(props.slug, 'relationship') || props.defaultRelationship || ''
+  wish.value         = getField(props.slug, 'wish')         || props.defaultWish         || ''
 })
+
+// 每次字段变化都实时保存
+function onUsernameChange()     { saveGlobal('username', username.value) }
+function onAgeChange()          { saveGlobal('age', age.value) }
+function onAncestorNameChange() { saveField(props.slug, 'ancestorName', ancestorName.value) }
+function onRelationshipChange() { saveField(props.slug, 'relationship', relationship.value) }
+function onWishChange()         { saveField(props.slug, 'wish', wish.value) }
 
 async function handleSubmit() {
   error.value = ''
-  if (!username.value.trim())           { error.value = '请填写您的姓名。'; return }
-  if (!age.value || age.value <= 0)      { error.value = '请填写正确的年龄。'; return }
-  if (!ancestorName.value.trim())       { error.value = '请填写先人姓名。'; return }
-  if (!relationship.value)             { error.value = '请选择与先人的关系。'; return }
-  if (!wish.value.trim())               { error.value = '请填写祈祷内容。'; return }
+  if (!username.value.trim())      { error.value = '请填写您的姓名。'; return }
+  if (!age.value || age.value <= 0){ error.value = '请填写正确的年龄。'; return }
+  if (!ancestorName.value.trim())  { error.value = '请填写先人姓名。'; return }
+  if (!relationship.value)         { error.value = '请选择与先人的关系。'; return }
+  if (!wish.value.trim())          { error.value = '请填写祈祷内容。'; return }
 
   loading.value = true
   try {
-    localStorage.setItem('baifo_ancestor_username', username.value.trim())
-    localStorage.setItem('baifo_ancestor_age', String(age.value))
     await emit('submit', {
-      username:       username.value.trim(),
-      age:            Number(age.value),
-      ancestor_name:  ancestorName.value.trim(),
-      relationship:   relationship.value,
-      wish:           wish.value.trim()
+      username:      username.value.trim(),
+      age:           Number(age.value),
+      ancestor_name: ancestorName.value.trim(),
+      relationship:  relationship.value,
+      wish:          wish.value.trim()
     })
   } catch (e) {
     error.value = e.message || '提交失败，请稍后重试。'
@@ -65,6 +76,7 @@ async function handleSubmit() {
           maxlength="20"
           class="field"
           autocomplete="nickname"
+          @input="onUsernameChange"
         />
         <input
           v-model="age"
@@ -74,6 +86,7 @@ async function handleSubmit() {
           placeholder="年龄"
           class="field age-field"
           autocomplete="off"
+          @change="onAgeChange"
         />
       </div>
 
@@ -84,8 +97,9 @@ async function handleSubmit() {
           placeholder="先人姓名（必填）"
           maxlength="20"
           class="field"
+          @input="onAncestorNameChange"
         />
-        <select v-model="relationship" class="field rel-field">
+        <select v-model="relationship" class="field rel-field" @change="onRelationshipChange">
           <option value="">关系</option>
           <option v-for="r in RELATIONSHIPS" :key="r" :value="r">{{ r }}</option>
         </select>
@@ -96,6 +110,7 @@ async function handleSubmit() {
         placeholder="祈祷文（可修改）"
         maxlength="300"
         class="field wish-field"
+        @input="onWishChange"
       ></textarea>
 
       <p v-if="error" class="error-msg">{{ error }}</p>
