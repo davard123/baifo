@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2f2216" />
     <!-- SEO_META_START -->
     <meta name="description" content="选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。" />
-    <meta name="keywords" content="拜佛,祈愿,佛菩萨,释迦牟尼佛,阿弥陀佛,药师佛,弥勒佛,文殊菩萨,普贤菩萨,观音菩萨,地藏菩萨,礼佛,供佛,佛教,修行,功德" />
+    <meta name="keywords" content="拜佛,祈愿,佛菩萨,释迦牟尼佛,阿弥陀佛,药师佛,弥勒佛,文殊菩萨,普贤菩萨,观音菩萨,地藏菩萨,礼佛,供佛,佛教,修行,功德,回向,在线礼佛,在线拜佛,在线祭祖" />
     <meta name="author" content="www.fopusha.com" />
     <meta property="og:site_name" content="礼佛祈愿" />
     <meta property="og:locale" content="zh_CN" />
@@ -25,9 +25,7 @@
     <!-- SEO_META_END -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- JSON-LD: WebSite with SearchAction for GEO/SEO -->
-    <script type="application/ld+json" id="ld-webpage">
-    </script>
+    <script type="application/ld+json" id="ld-webpage"></script>
   </head>
   <body>
     <!-- 供搜索引擎爬取的 H1 SSR 层（Vue 渲染后会被替换，视觉上隐藏） -->
@@ -35,21 +33,48 @@
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
     <script>
-      const ld = {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "礼佛祈愿",
-        "url": "https://www.fopusha.com/",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://www.fopusha.com/?q={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
+      const baseUrl = 'https://www.fopusha.com/';
+      const schema = [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": `${baseUrl}#website`,
+          "name": "礼佛祈愿",
+          "alternateName": "Fopusha",
+          "url": baseUrl,
+          "inLanguage": "zh-CN",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.fopusha.com/?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": `${baseUrl}#organization`,
+          "name": "Fopusha 礼佛祈愿",
+          "url": baseUrl,
+          "logo": "https://www.fopusha.com/favicon.svg",
+          "sameAs": []
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "@id": `${baseUrl}#webapp`,
+          "name": "Fopusha 在线礼佛祈愿",
+          "url": baseUrl,
+          "applicationCategory": "LifestyleApplication",
+          "operatingSystem": "Web",
+          "inLanguage": "zh-CN",
+          "description": "Fopusha 提供在线礼佛祈愿、供花、点灯、上香、拜祭先人与发愿回向，并整理佛菩萨、礼佛步骤与回向主题说明。",
+          "publisher": { "@id": `${baseUrl}#organization` }
         }
-      };
-      document.getElementById('ld-webpage').textContent = JSON.stringify(ld);
+      ];
+      document.getElementById('ld-webpage').textContent = JSON.stringify(schema);
     </script>
   </body>
 </html>
