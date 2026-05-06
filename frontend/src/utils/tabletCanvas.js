@@ -1,11 +1,11 @@
-const OVERLAY_X = 0.448
-const OVERLAY_W = 0.102
-const OVERLAY_Y_START = 0.19
-const OVERLAY_Y_END = 0.525
-const TEXT_Y_START = 0.208
+const OVERLAY_X = 0.435
+const OVERLAY_W = 0.128
+const OVERLAY_Y_START = 0.16
+const OVERLAY_Y_END = 0.54
+const TEXT_Y_START = 0.19
 const DEFAULT_STEP = 0.103
 const cache = new Map()
-const VERSION = 7
+const VERSION = 8
 
 export async function renderTablet(imageSrc, name) {
   const cleanName = (name || '').trim()
@@ -33,11 +33,11 @@ export async function renderTablet(imageSrc, name) {
       const overlayH = Math.round(H * (OVERLAY_Y_END - OVERLAY_Y_START))
 
       // Rebuild the center name column from nearby wood texture so it blends with the original plaque.
-      const leftSampleX = Math.round(W * 0.454)
+      const leftSampleX = Math.round(W * 0.442)
       const centerSampleX = Math.round(W * 0.486)
-      const rightSampleX = Math.round(W * 0.522)
-      const sampleW = Math.max(10, Math.round(W * 0.02))
-      const midW = Math.round(overlayW * 0.32)
+      const rightSampleX = Math.round(W * 0.532)
+      const sampleW = Math.max(12, Math.round(W * 0.022))
+      const midW = Math.round(overlayW * 0.28)
       const sideW = Math.round((overlayW - midW) / 2)
 
       ctx.drawImage(img, leftSampleX, overlayY, sampleW, overlayH, overlayX, overlayY, sideW, overlayH)
@@ -56,21 +56,21 @@ export async function renderTablet(imageSrc, name) {
 
       ctx.save()
       ctx.globalCompositeOperation = 'multiply'
-      ctx.fillStyle = 'rgba(61, 39, 23, 0.22)'
+      ctx.fillStyle = 'rgba(59, 37, 22, 0.28)'
       ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
       ctx.restore()
 
       const gloss = ctx.createLinearGradient(overlayX, overlayY, overlayX + overlayW, overlayY)
-      gloss.addColorStop(0, 'rgba(255, 237, 210, 0.035)')
-      gloss.addColorStop(0.5, 'rgba(255, 240, 214, 0.01)')
-      gloss.addColorStop(1, 'rgba(255, 237, 210, 0.03)')
+      gloss.addColorStop(0, 'rgba(255, 237, 210, 0.025)')
+      gloss.addColorStop(0.5, 'rgba(255, 240, 214, 0.008)')
+      gloss.addColorStop(1, 'rgba(255, 237, 210, 0.022)')
       ctx.fillStyle = gloss
       ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
 
       const chars = Array.from(cleanName).slice(0, 4)
       const maxTextHeight = H * (OVERLAY_Y_END - TEXT_Y_START) * 0.94
       const stepPx = Math.min(H * DEFAULT_STEP, maxTextHeight / chars.length)
-      const fontSize = Math.max(18, Math.round(stepPx * 0.62))
+      const fontSize = Math.max(18, Math.round(stepPx * 0.58))
       const textBlockHeight = stepPx * chars.length
       const startY = H * TEXT_Y_START + Math.max(0, (maxTextHeight - textBlockHeight) / 2)
 
