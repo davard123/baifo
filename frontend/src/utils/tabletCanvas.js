@@ -1,11 +1,11 @@
-const OVERLAY_X = 0.432
+const OVERLAY_X = 0.438
 const OVERLAY_W = 0.112
 const OVERLAY_Y_START = 0.16
-const OVERLAY_Y_END = 0.54
-const TEXT_Y_START = 0.19
-const DEFAULT_STEP = 0.103
+const OVERLAY_Y_END = 0.515
+const TEXT_Y_START = 0.198
+const DEFAULT_STEP = 0.096
 const cache = new Map()
-const VERSION = 10
+const VERSION = 12
 
 export async function renderTablet(imageSrc, name) {
   const cleanName = (name || '').trim()
@@ -58,7 +58,7 @@ export async function renderTablet(imageSrc, name) {
       ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
 
       const chars = Array.from(cleanName).slice(0, 4)
-      const maxTextHeight = H * (OVERLAY_Y_END - TEXT_Y_START) * 0.94
+      const maxTextHeight = H * (OVERLAY_Y_END - TEXT_Y_START) * 0.9
       const stepPx = Math.min(H * DEFAULT_STEP, maxTextHeight / chars.length)
       const fontSize = Math.max(17, Math.round(stepPx * 0.56))
       const textBlockHeight = stepPx * chars.length
