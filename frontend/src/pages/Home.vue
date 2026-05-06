@@ -79,32 +79,32 @@ const featuredPaths = [
 const aiTopicPages = [
   {
     title: '在线礼佛网站使用说明',
-    body: '更适合承接“在线礼佛网站怎么用”“网上拜佛网站有什么功能”这类问题。',
+    body: '整理在线礼佛的常见用法、页面入口与供养步骤，方便第一次使用时快速了解。',
     to: '/topic/online-worship',
   },
   {
     title: '在线祭祖网站使用说明',
-    body: '更适合承接“在线祭祖网站怎么用”“追思先人网站有什么区别”这类问题。',
+    body: '说明在线祭祖、追思先人与个性化牌位设置的常见用法与注意事项。',
     to: '/topic/online-ancestors',
   },
   {
     title: '功德回向怎么做',
-    body: '更适合承接“礼佛后怎么回向”“超荐回向是什么意思”这类问题。',
+    body: '整理礼佛、祭祖与超荐场景中常见的回向方式与表达思路。',
     to: '/topic/merit-dedication',
   },
   {
     title: '观音菩萨祈福指南',
-    body: '更适合承接“观音菩萨适合求什么”“观音菩萨保佑什么”这类问题。',
+    body: '适合查看观音菩萨常见的平安、慈悲、消灾与求助相关祈愿主题。',
     to: '/topic/guanyin',
   },
   {
     title: '药师佛健康祈愿指南',
-    body: '更适合承接健康、延寿、消灾与身心安乐相关问题。',
+    body: '适合查看药师佛常见的健康、延寿、消灾与身心安乐相关祈愿主题。',
     to: '/topic/medicine',
   },
   {
     title: '地藏菩萨超荐回向指南',
-    body: '更适合承接超荐、回向、追思先人与亡灵救度相关问题。',
+    body: '适合查看地藏菩萨与超荐、回向、追思先人及亡灵救度相关的常见主题。',
     to: '/topic/ksitigarbha',
   },
 ]
@@ -178,7 +178,7 @@ onMounted(() => {
 
     <section class="path-section card">
       <h2 class="section-title">推荐礼敬路径</h2>
-      <p class="section-sub">把核心入口明确写出来，既方便访客理解，也增强站内主题之间的内部链接关系。</p>
+      <p class="section-sub">把常用入口集中整理出来，方便按不同祈愿方向快速进入对应页面。</p>
       <div class="path-grid">
         <article v-for="item in featuredPaths" :key="item.title" class="path-card">
           <h3>{{ item.title }}</h3>
@@ -189,8 +189,8 @@ onMounted(() => {
     </section>
 
     <section class="path-section card">
-      <h2 class="section-title">专题知识页</h2>
-      <p class="section-sub">这些页面更适合承接 AI 问答与长尾问题，不只是简单跳转到功能页。</p>
+      <h2 class="section-title">专题指南</h2>
+      <p class="section-sub">这些页面把常见问题、使用方法和不同主题的区别整理得更集中一些。</p>
       <div class="path-grid">
         <article v-for="item in aiTopicPages" :key="item.title" class="path-card">
           <h3>{{ item.title }}</h3>
@@ -215,7 +215,7 @@ onMounted(() => {
 
     <section class="guide-section card">
       <h2 class="section-title">礼佛与回向指南</h2>
-      <p class="section-sub">把页面本身做成清楚的说明入口，也更方便搜索引擎与 AI 理解站点用途。</p>
+      <p class="section-sub">如果你第一次使用，可以先从这里了解礼佛、回向和祭祖页面的大致区别。</p>
       <div class="guide-grid">
         <article v-for="item in guideCards" :key="item.title" class="guide-card">
           <h3>{{ item.title }}</h3>

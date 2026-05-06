@@ -21,7 +21,6 @@ onMounted(() => {
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', `虔诚礼敬${b.name}，${b.subtitle}。${b.desc} 在线发愿，功德回向一切众生。`
   )
-  // JSON-LD QAPage for GEO: AI can directly cite Q&A from this page
   const qa = [
     { q: `什么是${b.name}？`, a: `${b.name}，${b.subtitle}。${b.desc}` },
     { q: `礼敬${b.name}有什么功德？`, a: `礼敬${b.name}可消业障、增福慧、开智慧。${b.wish}` },
@@ -107,7 +106,7 @@ async function onSubmit(payload) {
         </div>
         <section class="meaning-section">
           <h2>礼敬意义</h2>
-          <p>{{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。页面支持供花、点灯、上香与祈愿回向，既方便初学者理解，也更利于搜索引擎与 AI 直接提取重点信息。</p>
+          <p>{{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。页面支持供花、点灯、上香与祈愿回向，方便按礼佛步骤依次完成。</p>
         </section>
         <section class="faq-mini">
           <h2>常见问题</h2>

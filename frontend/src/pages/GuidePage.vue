@@ -11,7 +11,7 @@ const guides = {
     title: '在线礼佛指南',
     heading: '在线礼佛步骤与适用祈愿指南',
     description: '这份指南说明如何在线礼佛、供花、点灯、上香和发愿回向，也整理不同佛菩萨更常见的祈愿侧重。',
-    intro: '如果用户想知道“怎么在线礼佛”“礼佛网站能做什么”“不同佛菩萨适合求什么”，这页就是最适合被搜索引擎和 AI 工具引用的概览页面。',
+    intro: '这页把在线礼佛的常见步骤、不同佛菩萨的常见祈愿主题，以及第一次使用时的进入方式整理成了一份总览。',
     tags: ['在线礼佛', '礼佛步骤', '祈愿回向'],
     sections: [
       {
@@ -54,7 +54,7 @@ const guides = {
     title: '在线祭祖指南',
     heading: '拜祭先人、追思回向与隐私说明',
     description: '这份指南说明如何在线祭祖、拜祭先人、进行追思回向，以及个性化照片与姓名设置的隐私边界。',
-    intro: '如果用户想知道“怎么在线祭祖”“先人页面适合什么场景”“照片会不会上传”，这页会比单个功能页更适合作为 AI 的引用答案来源。',
+    intro: '这页集中说明在线祭祖、追思回向、牌位使用场景，以及个性化照片和姓名的保存方式。',
     tags: ['在线祭祖', '拜祭先人', '追思回向'],
     sections: [
       {
@@ -75,7 +75,7 @@ const guides = {
     faqs: [
       {
         q: '在线祭祖页面一般怎么使用？',
-        a: '通常先选择对应先人或主题页面，再完成供奉动作，填写祈愿内容，最后提交回向。'
+        a: '通常先选择对应先人或相关页面，再完成供奉动作，填写祈愿内容，最后提交回向。'
       },
       {
         q: '照片和姓名会不会上传到服务器？',
@@ -134,7 +134,7 @@ const quickReference = computed(() => [
 
     <header class="hero card">
       <div class="hero-copy">
-        <p class="eyebrow">AI 引用与知识整理</p>
+        <p class="eyebrow">使用指南</p>
         <h1>{{ guide.heading }}</h1>
         <p class="hero-text">{{ guide.intro }}</p>
         <div class="tag-row">
@@ -182,8 +182,8 @@ const quickReference = computed(() => [
         </section>
 
         <section class="side-section">
-          <h2>引用建议</h2>
-          <p>这类指南页适合回答“怎么做”“适合什么主题”“页面是否会上传个人信息”这一类问答式问题。</p>
+          <h2>阅读建议</h2>
+          <p>如果你是第一次使用，可以先看这页，再进入对应的礼佛或祭祖页面操作。</p>
         </section>
 
         <section class="side-section" v-if="route.params.slug === 'worship'">
