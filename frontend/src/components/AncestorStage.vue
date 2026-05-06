@@ -84,8 +84,8 @@ watch(
         alt=""
         class="offering-img"
       />
-      <img v-if="hasWine" src="/ancestor-wine.png" alt="" class="offering-img offering-img-wine" />
-      <img v-if="hasPaper" src="/ancestor-paper.png" alt="" class="offering-img offering-img-paper" />
+      <img v-if="hasWine" src="/ancestor-wine-v2.png" alt="" class="offering-img offering-img-wine" />
+      <img v-if="hasPaper" src="/ancestor-paper-v2.png" alt="" class="offering-img offering-img-paper" />
     </div>
 
     <img v-if="leftFigure" :src="leftFigure.src" alt="" class="figure figure-left" />
