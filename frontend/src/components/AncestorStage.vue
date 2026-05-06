@@ -50,7 +50,7 @@ watch(
 </script>
 
 <template>
-  <div class="stage">
+  <div class="stage" :class="{ 'plain-stage': isPlainStage }">
     <div class="sky-layer"></div>
     <div class="altar-floor"></div>
 
@@ -137,21 +137,21 @@ watch(
   height: 72%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   z-index: 3;
 }
 
 .ancestor-frame.plain-mode {
-  top: 4%;
-  height: 78%;
+  top: 8%;
+  height: 62%;
 }
 
 .ancestor-img {
-  height: 100%;
+  height: 94%;
   width: auto;
-  max-width: 94%;
+  max-width: 84%;
   object-fit: contain;
-  object-position: center top;
+  object-position: center center;
   filter: drop-shadow(0 18px 26px rgba(72, 43, 18, 0.12));
 }
 
@@ -292,6 +292,10 @@ watch(
   pointer-events: none;
 }
 
+.stage.plain-stage .altar-floor {
+  height: 28%;
+}
+
 @keyframes flicker {
   0% {
     transform: scaleX(1) scaleY(1) skewX(0deg);
@@ -323,6 +327,11 @@ watch(
 }
 
 @media (orientation: portrait) {
+  .ancestor-frame.plain-mode {
+    top: 9%;
+    height: 58%;
+  }
+
   .altar-row {
     bottom: 22%;
     gap: 3%;
