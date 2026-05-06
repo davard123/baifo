@@ -84,8 +84,8 @@ watch(
         alt=""
         class="offering-img"
       />
-      <div v-if="hasWine" class="wine-cup"></div>
-      <div v-if="hasPaper" class="paper-burn"></div>
+      <img v-if="hasWine" src="/ancestor-wine.png" alt="" class="offering-img offering-img-wine" />
+      <img v-if="hasPaper" src="/ancestor-paper.png" alt="" class="offering-img offering-img-paper" />
     </div>
 
     <img v-if="leftFigure" :src="leftFigure.src" alt="" class="figure figure-left" />
@@ -247,21 +247,16 @@ watch(
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
 }
 
-.wine-cup {
-  width: 18px;
-  height: 24px;
-  background: linear-gradient(to right, #f0ead6, #ccb78a, #f0ead6);
-  border-radius: 2px 2px 6px 6px;
-  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(160, 144, 112, 0.35);
+.offering-img-wine {
+  height: 72%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(124, 85, 30, 0.2));
 }
 
-.paper-burn {
-  width: 22px;
-  height: 28px;
-  background: linear-gradient(to top, #d34b16, #ff7d1d, #ffd15c);
-  border-radius: 4px 4px 2px 2px;
-  animation: paperBurn 1.2s ease-in-out infinite alternate;
+.offering-img-paper {
+  height: 78%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(124, 85, 30, 0.22));
 }
 
 .figure {
@@ -303,21 +298,6 @@ watch(
   }
   100% {
     transform: scaleX(0.95) scaleY(1.06) skewX(1deg);
-  }
-}
-
-@keyframes paperBurn {
-  0% {
-    transform: scaleX(1) scaleY(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scaleX(0.9) scaleY(1.08);
-    opacity: 0.85;
-  }
-  100% {
-    transform: scaleX(1.05) scaleY(0.95);
-    opacity: 0.95;
   }
 }
 
