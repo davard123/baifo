@@ -5,7 +5,7 @@ const OVERLAY_Y_END = 0.54
 const TEXT_Y_START = 0.19
 const DEFAULT_STEP = 0.103
 const cache = new Map()
-const VERSION = 8
+const VERSION = 9
 
 export async function renderTablet(imageSrc, name) {
   const cleanName = (name || '').trim()
@@ -32,39 +32,29 @@ export async function renderTablet(imageSrc, name) {
       const overlayW = Math.round(W * OVERLAY_W)
       const overlayH = Math.round(H * (OVERLAY_Y_END - OVERLAY_Y_START))
 
-      // Rebuild the center name column from nearby wood texture so it blends with the original plaque.
-      const leftSampleX = Math.round(W * 0.442)
-      const centerSampleX = Math.round(W * 0.486)
-      const rightSampleX = Math.round(W * 0.532)
-      const sampleW = Math.max(12, Math.round(W * 0.022))
-      const midW = Math.round(overlayW * 0.28)
-      const sideW = Math.round((overlayW - midW) / 2)
-
-      ctx.drawImage(img, leftSampleX, overlayY, sampleW, overlayH, overlayX, overlayY, sideW, overlayH)
-      ctx.drawImage(img, centerSampleX, overlayY, sampleW, overlayH, overlayX + sideW, overlayY, midW, overlayH)
-      ctx.drawImage(
-        img,
-        rightSampleX,
-        overlayY,
-        sampleW,
-        overlayH,
-        overlayX + sideW + midW,
-        overlayY,
-        overlayW - sideW - midW,
-        overlayH
-      )
-
-      ctx.save()
-      ctx.globalCompositeOperation = 'multiply'
-      ctx.fillStyle = 'rgba(59, 37, 22, 0.28)'
+      // Clear the original placeholder column completely, then rebuild a clean wood plaque core.
+      const woodBase = ctx.createLinearGradient(overlayX, overlayY, overlayX + overlayW, overlayY)
+      woodBase.addColorStop(0, '#4e3220')
+      woodBase.addColorStop(0.18, '#6a4630')
+      woodBase.addColorStop(0.5, '#5a3926')
+      woodBase.addColorStop(0.82, '#69452f')
+      woodBase.addColorStop(1, '#4b301f')
+      ctx.fillStyle = woodBase
       ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
-      ctx.restore()
 
-      const gloss = ctx.createLinearGradient(overlayX, overlayY, overlayX + overlayW, overlayY)
-      gloss.addColorStop(0, 'rgba(255, 237, 210, 0.025)')
-      gloss.addColorStop(0.5, 'rgba(255, 240, 214, 0.008)')
-      gloss.addColorStop(1, 'rgba(255, 237, 210, 0.022)')
-      ctx.fillStyle = gloss
+      const verticalShade = ctx.createLinearGradient(overlayX, overlayY, overlayX, overlayY + overlayH)
+      verticalShade.addColorStop(0, 'rgba(255, 241, 216, 0.05)')
+      verticalShade.addColorStop(0.12, 'rgba(255, 241, 216, 0.015)')
+      verticalShade.addColorStop(0.72, 'rgba(38, 23, 12, 0.06)')
+      verticalShade.addColorStop(1, 'rgba(24, 14, 8, 0.12)')
+      ctx.fillStyle = verticalShade
+      ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
+
+      const innerGlow = ctx.createLinearGradient(overlayX, overlayY, overlayX + overlayW, overlayY)
+      innerGlow.addColorStop(0, 'rgba(255, 236, 208, 0.028)')
+      innerGlow.addColorStop(0.5, 'rgba(255, 236, 208, 0.008)')
+      innerGlow.addColorStop(1, 'rgba(255, 236, 208, 0.026)')
+      ctx.fillStyle = innerGlow
       ctx.fillRect(overlayX, overlayY, overlayW, overlayH)
 
       const chars = Array.from(cleanName).slice(0, 4)
