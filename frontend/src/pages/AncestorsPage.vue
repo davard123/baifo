@@ -180,21 +180,6 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="guide-section card">
-      <h2 class="section-title">祭祖与追思说明</h2>
-      <p class="section-sub">这里把祭祖、追思和个性化牌位设置的常见用法整理在一起，方便你快速了解。</p>
-      <div class="guide-copy">
-        <p>拜祭先人页面适合用于追思祖先、家族祈愿、超荐亡灵与回向功德。不同牌位覆盖先父、先母、祖父、祖母、列祖列宗，以及亡偶、亡子女与一切亡灵等主题。</p>
-        <p>如果你希望做更个性化的追思展示，可以在本地设备中设置牌位照片和称呼。这样既保留纪念意义，也不会把私密图片上传到服务器。</p>
-      </div>
-      <div class="faq-list">
-        <article v-for="faq in ancestorFaqs" :key="faq.q" class="faq-item">
-          <h3>{{ faq.q }}</h3>
-          <p>{{ faq.a }}</p>
-        </article>
-      </div>
-    </section>
-
     <!-- 个性化设置弹窗 -->
     <Teleport to="body">
       <div v-if="showSetup" class="setup-modal" @click.self="showSetup = false">
@@ -254,6 +239,21 @@ onMounted(() => {
             :empty-message="viewerName ? '你最近还没有祭拜记录。' : '先提交一次祭拜，之后这里会显示你的最近 5 条记录。'"
           />
         </section>
+      </div>
+    </section>
+
+    <section class="guide-section card">
+      <h2 class="section-title">祭祖与追思说明</h2>
+      <p class="section-sub">如果你想进一步了解适合的祭拜场景、隐私说明或牌位设置方式，可以在这里查看。</p>
+      <div class="guide-copy">
+        <p>拜祭先人页面适合用于追思祖先、家族祈愿、超荐亡灵与回向功德。不同牌位覆盖先父、先母、祖父、祖母、列祖列宗，以及亡偶、亡子女与一切亡灵等主题。</p>
+        <p>如果你希望做更个性化的追思展示，可以在本地设备中设置牌位照片和称呼。这样既保留纪念意义，也不会把私密图片上传到服务器。</p>
+      </div>
+      <div class="faq-list">
+        <article v-for="faq in ancestorFaqs" :key="faq.q" class="faq-item">
+          <h3>{{ faq.q }}</h3>
+          <p>{{ faq.a }}</p>
+        </article>
       </div>
     </section>
 

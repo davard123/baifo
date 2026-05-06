@@ -14,6 +14,23 @@ const myWishes = ref([])
 const myAncestorWishes = ref([])
 const loading = ref(true)
 const viewerName = ref('')
+const topBookmarks = [
+  {
+    title: '礼佛祈愿',
+    body: '进入佛菩萨页面，依次供花、点灯、上香并填写祈愿。',
+    to: '/guide/worship',
+  },
+  {
+    title: '祭祖追思',
+    body: '进入先人牌位页面，追思祭拜、超荐回向，并可自定义牌位显示。',
+    to: '/ancestors',
+  },
+  {
+    title: '使用说明',
+    body: '第一次使用时，先看这里了解礼佛、祭祖和回向页面的大致区别。',
+    to: '/guide/overview',
+  },
+]
 
 const allWishes = computed(() => {
   const combined = [
@@ -155,6 +172,16 @@ onMounted(() => {
       </div>
     </header>
 
+    <section class="bookmark-section card">
+      <div class="bookmark-grid">
+        <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.body }}</p>
+          <span>进入</span>
+        </router-link>
+      </div>
+    </section>
+
     <section class="catalog-section card">
       <h2 class="section-title">诸佛菩萨</h2>
       <p class="section-sub">八位佛菩萨，各具大愿，礼敬供养，福慧双增。</p>
@@ -173,30 +200,6 @@ onMounted(() => {
             <span>{{ b.subtitle }}</span>
           </div>
         </router-link>
-      </div>
-    </section>
-
-    <section class="path-section card">
-      <h2 class="section-title">推荐礼敬路径</h2>
-      <p class="section-sub">把常用入口集中整理出来，方便按不同祈愿方向快速进入对应页面。</p>
-      <div class="path-grid">
-        <article v-for="item in featuredPaths" :key="item.title" class="path-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-          <router-link :to="item.to">{{ item.cta }}</router-link>
-        </article>
-      </div>
-    </section>
-
-    <section class="path-section card">
-      <h2 class="section-title">专题指南</h2>
-      <p class="section-sub">这些页面把常见问题、使用方法和不同主题的区别整理得更集中一些。</p>
-      <div class="path-grid">
-        <article v-for="item in aiTopicPages" :key="item.title" class="path-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-          <router-link :to="item.to">查看专题页</router-link>
-        </article>
       </div>
     </section>
 
@@ -265,6 +268,30 @@ onMounted(() => {
       </div>
     </section>
 
+    <section class="path-section card">
+      <h2 class="section-title">推荐礼敬路径</h2>
+      <p class="section-sub">如果你已经熟悉页面结构，可以从这里按不同祈愿方向继续进入。</p>
+      <div class="path-grid">
+        <article v-for="item in featuredPaths" :key="item.title" class="path-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+          <router-link :to="item.to">{{ item.cta }}</router-link>
+        </article>
+      </div>
+    </section>
+
+    <section class="path-section card">
+      <h2 class="section-title">专题指南</h2>
+      <p class="section-sub">如果你想先看不同主题之间的区别，再决定进入哪个页面，可以从这里开始。</p>
+      <div class="path-grid">
+        <article v-for="item in aiTopicPages" :key="item.title" class="path-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+          <router-link :to="item.to">查看专题页</router-link>
+        </article>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
     </footer>
@@ -309,6 +336,49 @@ onMounted(() => {
 }
 
 .catalog-section { animation: fadeInUp 0.7s 0.1s ease both; }
+
+.bookmark-section {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.bookmark-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.bookmark-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  background:
+    linear-gradient(135deg, rgba(250, 244, 231, 0.96), rgba(244, 233, 213, 0.9));
+  border: 1px solid rgba(212, 168, 67, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.bookmark-card h2 {
+  font-size: 1.05rem;
+  color: var(--accent);
+}
+
+.bookmark-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  min-height: 3.2em;
+}
+
+.bookmark-card span {
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
 
 .catalog-grid {
   display: grid;
@@ -499,6 +569,7 @@ onMounted(() => {
   .card { padding: 20px 16px; }
   .site-header { padding: 36px 12px 24px; }
   .record-grid { grid-template-columns: 1fr; }
+  .bookmark-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
