@@ -1,17 +1,18 @@
-const OVERLAY_X = 0.438
+const OVERLAY_X = 0.442
 const OVERLAY_W = 0.112
-const OVERLAY_Y_START = 0.16
-const OVERLAY_Y_END = 0.515
-const TEXT_Y_START = 0.198
-const DEFAULT_STEP = 0.096
+const OVERLAY_Y_START = 0.17
+const OVERLAY_Y_END = 0.5
+const TEXT_Y_START = 0.206
+const DEFAULT_STEP = 0.09
 const cache = new Map()
-const VERSION = 12
+const VERSION = 13
 
-export async function renderTablet(imageSrc, name) {
+export async function renderTablet(imageSrc, name, options = {}) {
+  const { blank = false } = options
   const cleanName = (name || '').trim()
-  if (!cleanName) return imageSrc
+  if (!cleanName && !blank) return imageSrc
 
-  const cacheKey = `${VERSION}::${imageSrc}::${cleanName}`
+  const cacheKey = `${VERSION}::${imageSrc}::${cleanName}::${blank ? 'blank' : 'named'}`
   if (cache.has(cacheKey)) return cache.get(cacheKey)
 
   return new Promise(resolve => {
@@ -59,7 +60,8 @@ export async function renderTablet(imageSrc, name) {
 
       const chars = Array.from(cleanName).slice(0, 4)
       const maxTextHeight = H * (OVERLAY_Y_END - TEXT_Y_START) * 0.9
-      const stepPx = Math.min(H * DEFAULT_STEP, maxTextHeight / chars.length)
+      const divisor = Math.max(chars.length, 1)
+      const stepPx = Math.min(H * DEFAULT_STEP, maxTextHeight / divisor)
       const fontSize = Math.max(17, Math.round(stepPx * 0.56))
       const textBlockHeight = stepPx * chars.length
       const startY = H * TEXT_Y_START + Math.max(0, (maxTextHeight - textBlockHeight) / 2)
@@ -71,14 +73,16 @@ export async function renderTablet(imageSrc, name) {
       ctx.shadowColor = 'rgba(43, 26, 13, 0.24)'
       ctx.shadowBlur = 1.4
 
-      const cx = W * (OVERLAY_X + OVERLAY_W / 2)
-      chars.forEach((char, index) => {
-        const cy = startY + index * stepPx + stepPx * 0.5
-        ctx.lineWidth = Math.max(1, Math.round(fontSize * 0.04))
-      ctx.strokeStyle = 'rgba(112, 75, 37, 0.32)'
-        ctx.strokeText(char, cx, cy)
-        ctx.fillText(char, cx, cy)
-      })
+      if (chars.length) {
+        const cx = W * (OVERLAY_X + OVERLAY_W / 2)
+        chars.forEach((char, index) => {
+          const cy = startY + index * stepPx + stepPx * 0.5
+          ctx.lineWidth = Math.max(1, Math.round(fontSize * 0.04))
+          ctx.strokeStyle = 'rgba(112, 75, 37, 0.32)'
+          ctx.strokeText(char, cx, cy)
+          ctx.fillText(char, cx, cy)
+        })
+      }
 
       const url = canvas.toDataURL('image/png')
       cache.set(cacheKey, url)

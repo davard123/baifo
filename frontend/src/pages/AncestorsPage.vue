@@ -39,7 +39,11 @@ async function buildCard(slug) {
   const name = localNames.value[slug]
   if (photo) { tabletImages.value[slug] = photo; return }
   const a = ANCESTORS.find(x => x.slug === slug)
-  tabletImages.value[slug] = name ? await renderTablet(a.image, name) : a.image
+  tabletImages.value[slug] = await renderTablet(a.image, name, { blank: true })
+}
+
+function previewSrc(slug) {
+  return localPhotos.value[slug] || tabletImages.value[slug] || ANCESTORS.find(a => a.slug === slug)?.image
 }
 
 onMounted(() => { ANCESTORS.forEach(a => buildCard(a.slug)) })
@@ -192,7 +196,7 @@ onMounted(() => {
           <div class="setup-grid">
             <div v-for="a in ANCESTORS" :key="a.slug" class="setup-item">
               <div class="setup-preview">
-                <img :src="localPhotos[a.slug] || a.image" :alt="a.name"
+                <img :src="previewSrc(a.slug)" :alt="a.name"
                      :class="{ 'custom': localPhotos[a.slug] }" />
                 <span v-if="localPhotos[a.slug]" class="custom-badge">已自定义</span>
               </div>

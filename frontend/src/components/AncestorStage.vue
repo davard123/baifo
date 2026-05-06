@@ -34,12 +34,7 @@ async function buildTablet() {
     return
   }
 
-  if (!props.customName?.trim()) {
-    tabletSrc.value = props.ancestor.image
-    return
-  }
-
-  tabletSrc.value = await renderTablet(props.ancestor.image, props.customName)
+  tabletSrc.value = await renderTablet(props.ancestor.image, props.customName, { blank: true })
 }
 
 watch(
