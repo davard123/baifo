@@ -1,10 +1,26 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   buddha: Object,
   offeringItems: { type: Array, default: () => [] },
   figureItems: { type: Array, default: () => [] },
   hasCandles: { type: Boolean, default: false },
   hasIncense: { type: Boolean, default: false },
+})
+
+const displayedOfferings = computed(() => {
+  const flowers = props.offeringItems.filter((item) => item.src === '/02.gif')
+  const others = props.offeringItems.filter((item) => item.src !== '/02.gif')
+
+  if (!flowers.length) return others
+
+  const [firstFlower] = flowers
+  return [
+    { ...firstFlower, id: `${firstFlower.id}-left` },
+    ...others,
+    { ...firstFlower, id: `${firstFlower.id}-right` },
+  ]
 })
 </script>
 
@@ -42,7 +58,7 @@ defineProps({
 
     <div class="offering-row">
       <img
-        v-for="item in offeringItems"
+        v-for="item in displayedOfferings"
         :key="item.id"
         :src="item.src"
         alt=""
@@ -87,14 +103,14 @@ defineProps({
   height: 100%;
   object-fit: cover;
   object-position: center 10%;
-  transform: scale(1.12);
+  transform: scale(1.05);
   mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
   -webkit-mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
 }
 
 .altar-row {
   position: absolute;
-  top: 67%;
+  top: 73%;
   left: 50%;
   transform: translateX(-50%);
   width: min(44%, 420px);
@@ -170,7 +186,7 @@ defineProps({
 
 .offering-row {
   position: absolute;
-  top: 78%;
+  top: 84%;
   left: 50%;
   transform: translateX(-50%);
   width: min(54%, 520px);
@@ -184,7 +200,7 @@ defineProps({
 }
 
 .offering-img {
-  height: 76%;
+  height: 72%;
   width: auto;
   animation: fadeInUp 0.4s ease;
   border-radius: 3px;
@@ -194,7 +210,7 @@ defineProps({
 .figure-left,
 .figure-right {
   position: absolute;
-  bottom: 5%;
+  bottom: 4%;
   height: 16%;
   width: auto;
   animation: fadeInUp 0.5s ease;
@@ -226,28 +242,28 @@ defineProps({
 
 @media (max-width: 900px) {
   .buddha-img {
-    transform: scale(1.06);
+    transform: scale(1.01);
     object-position: center 14%;
   }
 
   .altar-row {
-    top: 65%;
+    top: 71.5%;
     width: min(58%, 340px);
   }
 
   .offering-row {
-    top: 75.5%;
+    top: 82.5%;
     width: min(72%, 420px);
     gap: 8px;
   }
 
   .offering-img {
-    height: 70%;
+    height: 66%;
   }
 
   .figure-left,
   .figure-right {
-    bottom: 7%;
+    bottom: 5%;
     height: 14%;
   }
 
