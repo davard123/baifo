@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
@@ -10,58 +10,87 @@ import { apiFetch } from '../api.js'
 const route = useRoute()
 const router = useRouter()
 
-const buddha = computed(() => BUDDHAS.find(b => b.slug === route.params.slug))
-if (!buddha.value) router.replace('/')
-const relatedBuddhas = computed(() => BUDDHAS.filter(b => b.slug !== route.params.slug).slice(0, 3))
-
-onMounted(() => {
-  if (!buddha.value) return
-  const b = buddha.value
-  document.title = `${b.namo} | 在线礼佛祈愿 - www.fopusha.com`
-  document.querySelector('meta[name="description"]')?.setAttribute(
-    'content', `虔诚礼敬${b.name}，${b.subtitle}。${b.desc} 在线发愿，功德回向一切众生。`
-  )
-  const qa = [
-    { q: `什么是${b.name}？`, a: `${b.name}，${b.subtitle}。${b.desc}` },
-    { q: `礼敬${b.name}有什么功德？`, a: `礼敬${b.name}可消业障、增福慧、开智慧。${b.wish}` },
-    { q: `${b.name}适合什么人祈愿？`, a: `任何人都可以虔诚礼敬${b.name}，发愿修行，回向众生，功德无量。` }
-  ]
-  const ld = {
-    "@context": "https://schema.org",
-    "@type": "QAPage",
-    "mainEntity": {
-      "@type": "Question",
-      "name": `如何正确礼敬${b.name}？`,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": `礼敬${b.name}的方法：1. 选择本页面，点相应供养按钮（献花、点灯、上香等）；2. 填写姓名、年龄，发愿内容；3. 点击"礼毕，回向众生"提交祈愿。祈愿内容将记录于数据库，功德回向一切众生。`
-      }
-    },
-    "about": {
-      "@type": "Thing",
-      "name": b.name,
-      "description": b.desc
-    }
-  }
-  let el = document.getElementById('ld-qa')
-  if (!el) {
-    el = document.createElement('script')
-    el.id = 'ld-qa'
-    el.type = 'application/ld+json'
-    document.head.appendChild(el)
-  }
-  el.textContent = JSON.stringify(ld)
-})
+const buddha = computed(() => BUDDHAS.find((item) => item.slug === route.params.slug))
+const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== route.params.slug).slice(0, 3))
 
 const offeringItems = ref([])
-const figureItems   = ref([])
-const hasCandles    = ref(false)
-const hasIncense    = ref(false)
+const figureItems = ref([])
+const hasCandles = ref(false)
+const hasIncense = ref(false)
+const drawerOpen = ref(false)
+
+function updatePageMeta() {
+  if (!buddha.value) return
+
+  const current = buddha.value
+  document.title = `${current.namo} | 在线礼佛祈愿 - www.fopusha.com`
+  document.querySelector('meta[name="description"]')?.setAttribute(
+    'content',
+    `礼敬${current.name}，围绕${current.subtitle}发愿修行。页面支持献花、点灯、上香、礼拜与回向，帮助按顺序完成在线礼佛。`
+  )
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'QAPage',
+    mainEntity: {
+      '@type': 'Question',
+      name: `如何礼敬${current.name}？`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `进入${current.name}页面后，可依次完成献花、点灯、上香等供养动作，再填写姓名、年龄与发愿内容，最后提交回向。`,
+      },
+    },
+    about: {
+      '@type': 'Thing',
+      name: current.name,
+      description: current.desc,
+    },
+  }
+
+  let script = document.getElementById('ld-qa')
+  if (!script) {
+    script = document.createElement('script')
+    script.id = 'ld-qa'
+    script.type = 'application/ld+json'
+    document.head.appendChild(script)
+  }
+  script.textContent = JSON.stringify(ld)
+}
+
+watch(
+  buddha,
+  (current) => {
+    if (!current) {
+      router.replace('/')
+      return
+    }
+
+    offeringItems.value = []
+    figureItems.value = []
+    hasCandles.value = false
+    hasIncense.value = false
+    drawerOpen.value = false
+    updatePageMeta()
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  updatePageMeta()
+})
 
 function onRitual({ images, isFigure, isCandle, isIncense }) {
-  if (isCandle)  { hasCandles.value = true; return }
-  if (isIncense) { hasIncense.value = true; return }
-  const items = images.map(src => ({ src, id: Date.now() + Math.random() }))
+  if (isCandle) {
+    hasCandles.value = true
+    return
+  }
+
+  if (isIncense) {
+    hasIncense.value = true
+    return
+  }
+
+  const items = images.map((src) => ({ src, id: Date.now() + Math.random() }))
   if (isFigure) {
     figureItems.value = items
   } else {
@@ -70,13 +99,17 @@ function onRitual({ images, isFigure, isCandle, isIncense }) {
 }
 
 async function onSubmit(payload) {
-  const res = await apiFetch('/wishes', {
+  const response = await apiFetch('/wishes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...payload, buddha: buddha.value?.slug })
+    body: JSON.stringify({ ...payload, buddha: buddha.value?.slug }),
   })
-  const data = await res.json()
-  if (!res.ok || data.status !== 'success') throw new Error(data.message || '提交失败')
+  const data = await response.json()
+
+  if (!response.ok || data.status !== 'success') {
+    throw new Error(data.message || '提交失败')
+  }
+
   router.push('/')
 }
 </script>
@@ -85,48 +118,79 @@ async function onSubmit(payload) {
   <div v-if="buddha" class="prayer-shell">
     <nav class="prayer-nav">
       <div class="breadcrumb-row">
-        <router-link to="/" class="page-link">← 返回首页</router-link>
+        <router-link to="/" class="page-link">返回首页</router-link>
         <span class="crumb-sep">/</span>
         <span class="crumb-current">{{ buddha.name }}</span>
       </div>
     </nav>
 
-    <div class="prayer-layout">
+    <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
-        <PrayerStage :buddha="buddha" :offering-items="offeringItems" :figure-items="figureItems" :has-candles="hasCandles" :has-incense="hasIncense" />
+        <PrayerStage
+          :buddha="buddha"
+          :offering-items="offeringItems"
+          :figure-items="figureItems"
+          :has-candles="hasCandles"
+          :has-incense="hasIncense"
+        />
       </section>
 
-      <section class="panel-section card">
+      <button
+        type="button"
+        class="panel-toggle"
+        :class="{ open: drawerOpen }"
+        @click="drawerOpen = !drawerOpen"
+      >
+        {{ drawerOpen ? '收起说明' : '展开说明' }}
+      </button>
+
+      <button
+        v-if="drawerOpen"
+        type="button"
+        class="drawer-backdrop"
+        aria-label="关闭说明"
+        @click="drawerOpen = false"
+      ></button>
+
+      <section class="panel-section card" :class="{ open: drawerOpen }">
         <h1 class="namo-title">{{ buddha.namo }}</h1>
         <p class="buddha-desc">{{ buddha.desc }}</p>
+
         <div class="page-tags">
           <span>{{ buddha.subtitle }}</span>
           <span>在线礼佛</span>
           <span>祈愿回向</span>
         </div>
+
         <section class="meaning-section">
-          <h2>礼敬意义</h2>
-          <p>{{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。页面支持供花、点灯、上香与祈愿回向，方便按礼佛步骤依次完成。</p>
+          <h2>礼佛说明</h2>
+          <p>
+            {{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。
+            你可以先完成供花、点灯、上香与礼拜，再填写祈愿内容，按顺序完成这一页的礼佛过程。
+          </p>
         </section>
+
         <section class="faq-mini">
           <h2>常见问题</h2>
           <article>
             <h3>{{ buddha.name }}适合什么人礼敬？</h3>
-            <p>任何希望以虔诚之心修福、积德、回向众生的人，都可以礼敬{{ buddha.name }}并发愿修行。</p>
+            <p>凡希望以恭敬心修福、积德、回向众生的人，都可以来此礼敬 {{ buddha.name }} 并发愿修行。</p>
           </article>
           <article>
             <h3>在这个页面上怎么完成祈愿？</h3>
             <p>先完成供养动作，再填写姓名、年龄和愿望内容，最后提交回向即可。</p>
           </article>
         </section>
+
         <section class="related-links">
           <h2>相关礼佛页面</h2>
           <div class="related-list">
-            <router-link v-for="item in relatedBuddhas" :key="item.slug" :to="'/buddha/' + item.slug">
+            <router-link v-for="item in relatedBuddhas" :key="item.slug" :to="`/buddha/${item.slug}`">
               {{ item.name }} · {{ item.subtitle }}
             </router-link>
           </div>
         </section>
+
         <hr class="divider" />
         <RitualButtons @ritual="onRitual" />
         <hr class="divider" />
@@ -137,7 +201,6 @@ async function onSubmit(payload) {
 </template>
 
 <style scoped>
-/* ── 全屏容器 ── */
 .prayer-shell {
   width: 100%;
   height: 100dvh;
@@ -161,84 +224,94 @@ async function onSubmit(payload) {
   align-items: center;
 }
 
+.page-link,
 .crumb-sep,
 .crumb-current {
   color: var(--text-muted);
   font-size: 0.86rem;
+  text-decoration: none;
 }
 
 .prayer-layout {
+  position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
+  overflow: hidden;
 }
 
-/* ── 横屏：图 2/3 | 内容 1/3 ── */
-@media (orientation: landscape) {
-  .prayer-layout { flex-direction: row; }
-
-  .stage-section {
-    flex: 2;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    background: #160800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .panel-section {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 20px 32px;
-    border-radius: 0;
-    border-left: 1px solid rgba(212, 168, 67, 0.18);
-    box-shadow: none;
-  }
-}
-
-/* ── 竖屏：图 5/6 | 内容条 1/6 ── */
-@media (orientation: portrait) {
-  .prayer-layout { flex-direction: column; }
-
-  .stage-section {
-    flex: 4;
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    background: #160800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .panel-section {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 10px 16px 16px;
-    border-radius: 0;
-    border-top: 1px solid rgba(212, 168, 67, 0.2);
-    box-shadow: none;
-  }
-
-  .namo-title { font-size: 1rem; margin-bottom: 4px; }
-  .buddha-desc { font-size: 0.82rem; line-height: 1.6; margin-bottom: 0; }
-  .divider { margin: 8px 0; }
-}
-
-/* ── PrayerStage 保持 3:4 比例居中，不强制拉伸 ── */
-:deep(.stage) {
-  aspect-ratio: 3/4;
+.stage-section {
+  width: 100%;
   height: 100%;
-  max-width: 100%;
-  width: auto;
-  max-height: 680px;
+  padding: 0;
   border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+  background: #160800;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+:deep(.stage) {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 25;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  padding: 18px 10px;
+  border: 1px solid rgba(212, 168, 67, 0.36);
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+  background: rgba(255, 248, 235, 0.96);
+  color: var(--accent);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 10px 26px rgba(38, 18, 6, 0.18);
+  transition: right 0.28s ease, background 0.2s ease;
+}
+
+.panel-toggle.open {
+  right: min(380px, 88vw);
+}
+
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  border: none;
+  background: rgba(18, 6, 0, 0.28);
+}
+
+.panel-section {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(380px, 88vw);
+  overflow-y: auto;
+  padding: 20px 20px 32px;
+  border-radius: 0;
+  border-left: 1px solid rgba(212, 168, 67, 0.18);
+  box-shadow: -10px 0 28px rgba(24, 9, 2, 0.22);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
+}
+
+.panel-section.open {
+  transform: translateX(0);
 }
 
 .namo-title {
@@ -273,18 +346,21 @@ async function onSubmit(payload) {
 }
 
 .meaning-section,
-.faq-mini {
+.faq-mini,
+.related-links {
   margin-top: 14px;
 }
 
 .meaning-section h2,
 .faq-mini h2,
-.faq-mini h3 {
+.faq-mini h3,
+.related-links h2 {
   color: var(--accent);
 }
 
 .meaning-section h2,
-.faq-mini h2 {
+.faq-mini h2,
+.related-links h2 {
   font-size: 1rem;
   margin-bottom: 8px;
 }
@@ -305,16 +381,6 @@ async function onSubmit(payload) {
   margin-bottom: 4px;
 }
 
-.related-links {
-  margin-top: 14px;
-}
-
-.related-links h2 {
-  font-size: 1rem;
-  margin-bottom: 8px;
-  color: var(--accent);
-}
-
 .related-list {
   display: flex;
   flex-direction: column;
@@ -331,5 +397,32 @@ async function onSubmit(payload) {
   border: none;
   border-top: 1px solid rgba(212, 168, 67, 0.2);
   margin: 16px 0;
+}
+
+@media (max-width: 768px) {
+  .panel-section {
+    width: min(420px, 100vw);
+    padding: 14px 16px 18px;
+  }
+
+  .panel-toggle {
+    top: auto;
+    bottom: 18px;
+    transform: none;
+  }
+
+  .panel-toggle.open {
+    right: min(420px, 100vw);
+  }
+
+  .namo-title {
+    font-size: 1.08rem;
+    margin-bottom: 6px;
+  }
+
+  .buddha-desc {
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
 }
 </style>
