@@ -141,7 +141,7 @@ async function onSubmit(payload) {
         :class="{ open: drawerOpen }"
         @click="drawerOpen = !drawerOpen"
       >
-        {{ drawerOpen ? '收起说明' : '展开说明' }}
+        {{ drawerOpen ? '收起供养' : '礼佛供养' }}
       </button>
 
       <button
