@@ -94,18 +94,17 @@ const displayedOfferings = computed(() => {
 
 .buddha-frame {
   position: absolute;
-  inset: 0 0 22% 0;
+  inset: 1.5% 0 22% 0;
   z-index: 2;
 }
 
 .buddha-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 10%;
-  transform: scale(0.97);
-  mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
-  -webkit-mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
+  object-fit: contain;
+  object-position: center top;
+  transform: scale(0.92);
+  filter: drop-shadow(0 10px 18px rgba(66, 26, 2, 0.28));
 }
 
 .altar-row {
@@ -242,8 +241,8 @@ const displayedOfferings = computed(() => {
 
 @media (max-width: 900px) {
   .buddha-img {
-    transform: scale(0.96);
-    object-position: center 14%;
+    transform: scale(0.9);
+    object-position: center top;
   }
 
   .altar-row {
