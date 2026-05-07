@@ -210,13 +210,30 @@ function guidePage({ slug, title, description, heading }) {
     schema: [
       {
         '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${absoluteUrl(`/guide/${slug}`)}#webpage`,
+        name: heading,
+        url: absoluteUrl(`/guide/${slug}`),
+        description,
+        inLanguage: 'zh-CN',
+        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+        breadcrumb: breadcrumb([
+          { name: SITE.shortName, path: '/' },
+          { name: heading, path: `/guide/${slug}` },
+        ]),
+      },
+      {
+        '@context': 'https://schema.org',
         '@type': 'Article',
+        '@id': `${absoluteUrl(`/guide/${slug}`)}#article`,
         headline: heading,
         name: title,
         url: absoluteUrl(`/guide/${slug}`),
         description,
         inLanguage: 'zh-CN',
         author: { '@type': 'Organization', name: SITE.name },
+        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+        mainEntityOfPage: { '@id': `${absoluteUrl(`/guide/${slug}`)}#webpage` },
       },
     ],
   }
@@ -234,13 +251,31 @@ function topicPage({ path, slug }) {
     schema: [
       {
         '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        '@id': `${absoluteUrl(path)}#webpage`,
+        name: topic.heading,
+        url: absoluteUrl(path),
+        description: topic.description,
+        inLanguage: 'zh-CN',
+        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+        breadcrumb: breadcrumb([
+          { name: SITE.shortName, path: '/' },
+          { name: topic.heading, path },
+        ]),
+      },
+      {
+        '@context': 'https://schema.org',
         '@type': path.startsWith('/rituals/') ? 'HowTo' : 'Article',
+        '@id': `${absoluteUrl(path)}#main`,
         headline: topic.heading,
         name: topic.title,
         url: absoluteUrl(path),
         description: topic.description,
         inLanguage: 'zh-CN',
         author: { '@type': 'Organization', name: SITE.name },
+        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+        mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
+        about: { '@type': 'Thing', name: topic.heading, description: topic.description },
       },
       buildFaqSchema(topic.title, topic.faqs),
     ],
@@ -250,6 +285,7 @@ function topicPage({ path, slug }) {
 export function getStaticPages() {
   return [
     homePage(),
+    guidePage({ slug: 'overview', title: '使用说明 | 礼佛祈愿', heading: '使用说明与礼佛流程', description: '汇总礼佛祈愿、祭祖追思、供花点灯、上香回向与隐私说明，帮助用户快速了解网站主要功能与使用方式。' }),
     guidePage({ slug: 'worship', title: '在线礼佛指南', heading: '在线礼佛步骤与适用祈愿指南', description: '说明如何在线礼佛、供花、点灯、上香和发愿回向，也整理不同佛菩萨更常见的祈愿侧重。' }),
     guidePage({ slug: 'ancestors', title: '在线祭祖指南', heading: '拜祭先人、追思回向与隐私说明', description: '说明如何在线祭祖、拜祭先人、进行追思回向，以及个性化照片与姓名设置的隐私边界。' }),
     ...getTopicEntries().map(topicPage),

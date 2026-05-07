@@ -1,5 +1,82 @@
 <script setup>
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
+import { getSeoByPath, SITE } from '../scripts/seo.config.js'
+
+const route = useRoute()
+
+function upsertMeta(selector, attributes) {
+  let element = document.head.querySelector(selector)
+
+  if (!element) {
+    element = document.createElement('meta')
+    document.head.appendChild(element)
+  }
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      element.setAttribute(key, value)
+    }
+  })
+}
+
+function upsertLink(selector, attributes) {
+  let element = document.head.querySelector(selector)
+
+  if (!element) {
+    element = document.createElement('link')
+    document.head.appendChild(element)
+  }
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      element.setAttribute(key, value)
+    }
+  })
+}
+
+function applyRouteSeo(path) {
+  const page = getSeoByPath(path)
+  const title = page?.title || SITE.name
+  const description = page?.description || ''
+  const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
+  const canonical = `${SITE.baseUrl}${page?.path || path || '/'}`
+  const schema = Array.isArray(page?.schema) ? page.schema : []
+
+  document.title = title
+
+  upsertMeta('meta[name="description"]', { name: 'description', content: description })
+  upsertMeta('meta[name="keywords"]', { name: 'keywords', content: SITE.keywords.join(', ') })
+  upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' })
+  upsertMeta('meta[property="og:title"]', { property: 'og:title', content: title })
+  upsertMeta('meta[property="og:description"]', { property: 'og:description', content: description })
+  upsertMeta('meta[property="og:url"]', { property: 'og:url', content: canonical })
+  upsertMeta('meta[property="og:image"]', { property: 'og:image', content: image })
+  upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: SITE.shortName })
+  upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' })
+  upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: title })
+  upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: description })
+  upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: image })
+  upsertLink('link[rel="canonical"]', { rel: 'canonical', href: canonical })
+
+  let schemaScript = document.head.querySelector('#ld-webpage')
+
+  if (!schemaScript) {
+    schemaScript = document.createElement('script')
+    schemaScript.id = 'ld-webpage'
+    schemaScript.type = 'application/ld+json'
+    document.head.appendChild(schemaScript)
+  }
+
+  schemaScript.textContent = JSON.stringify(schema)
+}
+
+watch(
+  () => route.path,
+  (path) => applyRouteSeo(path),
+  { immediate: true }
+)
 </script>
 
 <template>
