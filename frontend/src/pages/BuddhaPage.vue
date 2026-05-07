@@ -249,16 +249,16 @@ async function onSubmit(payload) {
   overflow: hidden;
   background: #160800;
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
+  align-items: center;
+  justify-content: center;
 }
 
 :deep(.stage) {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  aspect-ratio: auto;
+  width: min(100%, 1180px);
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
   border-radius: 0;
 }
 
@@ -400,6 +400,13 @@ async function onSubmit(payload) {
 }
 
 @media (max-width: 768px) {
+  :deep(.stage) {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    aspect-ratio: auto;
+  }
+
   .panel-section {
     width: min(420px, 100vw);
     padding: 14px 16px 18px;

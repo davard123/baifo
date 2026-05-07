@@ -103,7 +103,7 @@ const displayedOfferings = computed(() => {
   height: 100%;
   object-fit: cover;
   object-position: center 10%;
-  transform: scale(1.05);
+  transform: scale(0.97);
   mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
   -webkit-mask-image: radial-gradient(ellipse 92% 96% at 50% 30%, black 42%, rgba(0, 0, 0, 0.7) 62%, transparent 84%);
 }
@@ -242,7 +242,7 @@ const displayedOfferings = computed(() => {
 
 @media (max-width: 900px) {
   .buddha-img {
-    transform: scale(1.01);
+    transform: scale(0.96);
     object-position: center 14%;
   }
 
