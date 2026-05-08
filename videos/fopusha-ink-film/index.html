@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fopusha Ink Film</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --paper: #f6efe3;
+        --ink: #2f170f;
+        --warm: #7f4321;
+        --gold: #c89b47;
+        --mist: #d8c1a2;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--paper);
+        font-family: "Noto Sans SC", sans-serif;
+      }
+
+      #comp-1 {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(200, 155, 71, 0.08), transparent 28%),
+          radial-gradient(circle at 80% 78%, rgba(127, 67, 33, 0.08), transparent 32%),
+          linear-gradient(180deg, #fbf5ea 0%, #f3ead9 100%);
+        color: var(--ink);
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        opacity: 0;
+        z-index: 2;
+      }
+
+      .scene-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 108px 140px;
+        gap: 26px;
+        box-sizing: border-box;
+      }
+
+      .ink-cloud,
+      .ink-cloud::before,
+      .ink-cloud::after {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .ink-cloud {
+        inset: auto;
+        width: 640px;
+        height: 640px;
+        background: radial-gradient(circle, rgba(47, 23, 15, 0.12) 0%, rgba(47, 23, 15, 0.04) 42%, transparent 72%);
+        filter: blur(10px);
+      }
+
+      .cloud-a { top: -120px; left: -80px; }
+      .cloud-b { right: -100px; bottom: -120px; }
+
+      .gold-ring {
+        position: absolute;
+        inset: 120px auto auto 140px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        border: 1px solid rgba(200, 155, 71, 0.35);
+        box-shadow: 0 0 90px rgba(200, 155, 71, 0.15);
+      }
+
+      .headline {
+        font-family: "Noto Serif SC", serif;
+        font-size: 104px;
+        line-height: 1.06;
+        letter-spacing: 0.08em;
+        color: var(--ink);
+        margin: 0;
+      }
+
+      .subhead {
+        font-family: "Noto Serif SC", serif;
+        font-size: 38px;
+        color: rgba(47, 23, 15, 0.82);
+        margin: 0;
+      }
+
+      .body {
+        max-width: 980px;
+        font-size: 28px;
+        line-height: 1.8;
+        color: rgba(47, 23, 15, 0.8);
+        margin: 0;
+      }
+
+      .feature-row,
+      .steps-row,
+      .closing-row {
+        display: flex;
+        gap: 24px;
+      }
+
+      .card {
+        flex: 1;
+        min-height: 180px;
+        padding: 28px 30px;
+        border-radius: 26px;
+        background: rgba(255, 251, 244, 0.75);
+        border: 1px solid rgba(200, 155, 71, 0.28);
+        box-shadow: 0 18px 38px rgba(85, 53, 26, 0.08);
+        backdrop-filter: blur(4px);
+      }
+
+      .card h3 {
+        margin: 0 0 14px;
+        font-family: "Noto Serif SC", serif;
+        font-size: 34px;
+        color: var(--warm);
+      }
+
+      .card p,
+      .card li {
+        font-size: 24px;
+        line-height: 1.75;
+        color: rgba(47, 23, 15, 0.78);
+      }
+
+      .card ul {
+        margin: 0;
+        padding-left: 28px;
+      }
+
+      .interface-board {
+        display: grid;
+        grid-template-columns: 1.2fr 0.9fr;
+        gap: 28px;
+        align-items: stretch;
+      }
+
+      .mock-stage,
+      .mock-panel {
+        border-radius: 32px;
+        overflow: hidden;
+        border: 1px solid rgba(200, 155, 71, 0.28);
+        background: rgba(255, 250, 241, 0.68);
+        box-shadow: 0 20px 44px rgba(84, 48, 22, 0.1);
+      }
+
+      .mock-stage {
+        min-height: 520px;
+        background:
+          radial-gradient(circle at 50% 22%, rgba(200, 155, 71, 0.18), transparent 28%),
+          linear-gradient(180deg, #5c280f 0%, #8a4714 56%, #a85d22 100%);
+        position: relative;
+      }
+
+      .mock-buddha {
+        position: absolute;
+        inset: 64px 120px 168px;
+        border-radius: 180px 180px 18px 18px;
+        background:
+          radial-gradient(circle at 50% 20%, rgba(255, 233, 155, 0.9), rgba(212, 160, 52, 0.94) 40%, rgba(127, 67, 33, 0.42) 72%, transparent 74%);
+      }
+
+      .mock-altar {
+        position: absolute;
+        left: 50%;
+        bottom: 84px;
+        transform: translateX(-50%);
+        width: 68%;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+      }
+
+      .dot,
+      .pill,
+      .lamp {
+        display: block;
+        border-radius: 999px;
+      }
+
+      .dot {
+        width: 26px;
+        height: 26px;
+        background: rgba(255, 234, 187, 0.82);
+      }
+
+      .pill {
+        width: 70px;
+        height: 24px;
+        background: rgba(255, 248, 220, 0.82);
+      }
+
+      .lamp {
+        width: 44px;
+        height: 58px;
+        background: linear-gradient(180deg, rgba(255, 242, 188, 0.95), rgba(233, 163, 39, 0.85));
+      }
+
+      .mock-panel {
+        padding: 34px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .panel-line {
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(127, 67, 33, 0.1);
+      }
+
+      .panel-line.short { width: 42%; }
+      .panel-line.mid { width: 72%; }
+      .panel-line.long { width: 100%; }
+
+      .section-label {
+        font-size: 20px;
+        letter-spacing: 0.18em;
+        color: rgba(127, 67, 33, 0.7);
+        text-transform: uppercase;
+      }
+
+      .closing-url {
+        font-family: "Noto Serif SC", "Source Han Serif SC", serif;
+        font-size: 62px;
+        color: var(--warm);
+        letter-spacing: 0.08em;
+      }
+
+      .closing-word {
+        flex: 1;
+        padding: 28px 30px;
+        border-radius: 26px;
+        border: 1px solid rgba(200, 155, 71, 0.24);
+        background: rgba(255, 250, 243, 0.72);
+        font-size: 26px;
+        line-height: 1.7;
+      }
+
+      .transition-ink {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        z-index: 10;
+        background:
+          radial-gradient(circle at 25% 40%, rgba(47, 23, 15, 0.86), transparent 28%),
+          radial-gradient(circle at 68% 58%, rgba(47, 23, 15, 0.9), transparent 32%),
+          radial-gradient(circle at 52% 35%, rgba(47, 23, 15, 0.84), transparent 26%),
+          linear-gradient(180deg, rgba(47, 23, 15, 0.82), rgba(47, 23, 15, 0.88));
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="comp-1"
+      data-composition-id="fopusha-ink-film"
+      data-start="0"
+      data-duration="180"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="ink-cloud cloud-a"></div>
+      <div class="ink-cloud cloud-b"></div>
+      <div class="gold-ring"></div>
+
+      <section id="scene-1" class="scene">
+        <div class="scene-content">
+          <p class="section-label">第一段 · 40 秒</p>
+          <h1 class="headline">这一方<br />清净之境</h1>
+          <p class="subhead">在线礼佛 · 祈愿回向 · 祭祖追思</p>
+          <p class="body">
+            从忙碌日常中，留出一方可以安放心念的地方。这里不是喧闹的工具页，而是一处可以礼佛、发愿、祭祖与回向的静境入口。
+          </p>
+          <div class="feature-row">
+            <article class="card">
+              <h3>礼佛祈愿</h3>
+              <p>进入佛菩萨页面，依次献花、点灯、上香与发愿。</p>
+            </article>
+            <article class="card">
+              <h3>祭祖追思</h3>
+              <p>为先人供奉、纪念、礼拜与回向，表达思念与敬意。</p>
+            </article>
+            <article class="card">
+              <h3>使用说明</h3>
+              <p>让初次来到这里的人，也能慢慢看懂，慢慢靠近。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-2" class="scene">
+        <div class="scene-content">
+          <p class="section-label">第二段 · 85 秒</p>
+          <h2 class="headline" style="font-size: 86px;">循着香火<br />完成一念心愿</h2>
+          <div class="interface-board">
+            <div class="mock-stage">
+              <div class="mock-buddha"></div>
+              <div class="mock-altar">
+                <span class="dot"></span>
+                <span class="lamp"></span>
+                <span class="pill"></span>
+                <span class="lamp"></span>
+                <span class="dot"></span>
+              </div>
+            </div>
+            <div class="mock-panel">
+              <span class="panel-line short"></span>
+              <span class="panel-line long"></span>
+              <span class="panel-line long"></span>
+              <span class="panel-line mid"></span>
+              <span class="panel-line short"></span>
+              <span class="panel-line long"></span>
+              <span class="panel-line long"></span>
+              <span class="panel-line mid"></span>
+            </div>
+          </div>
+          <div class="steps-row">
+            <article class="card">
+              <h3>第一步</h3>
+              <p>选择礼佛或祭祖页面，进入对应的静修场景。</p>
+            </article>
+            <article class="card">
+              <h3>第二步</h3>
+              <p>依次完成献花、点灯、上香、礼拜等供养动作。</p>
+            </article>
+            <article class="card">
+              <h3>第三步</h3>
+              <p>填写姓名、愿望与回向内容，让祝愿完整落下。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-3" class="scene">
+        <div class="scene-content">
+          <p class="section-label">第三段 · 55 秒</p>
+          <h2 class="headline" style="font-size: 88px;">愿有所归<br />心有所安</h2>
+          <p class="body">
+            它把礼佛、祭祖、供养与回向，整理成一种清楚、柔和、可亲近的方式。不是替代现实生活，而是在许多时刻，为人留下一处安放敬意与心愿的地方。
+          </p>
+          <div class="closing-row">
+            <div class="closing-word">礼佛可以按顺序完成，祭祖也能循着步骤展开，说明始终在旁，初次来到这里的人，也能慢慢看懂。</div>
+            <div class="closing-word">当墨色最终收回纸面，愿所礼所愿，皆得清明；愿所思所念，皆有所归。</div>
+          </div>
+          <div class="closing-url">www.fopusha.com</div>
+        </div>
+      </section>
+
+      <div id="transition-a" class="transition-ink"></div>
+      <div id="transition-b" class="transition-ink"></div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+
+        const tl = gsap.timeline({ paused: true });
+
+        gsap.set(["#scene-1", "#scene-2", "#scene-3"], { opacity: 0 });
+
+        tl.set("#scene-1", { opacity: 1 }, 0);
+        tl.from("#scene-1 .section-label", { y: 20, opacity: 0, duration: 0.6, ease: "power2.out" }, 0.2);
+        tl.from("#scene-1 .headline", { y: 34, opacity: 0, duration: 1.1, ease: "expo.out" }, 0.45);
+        tl.from("#scene-1 .subhead", { y: 28, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.9);
+        tl.from("#scene-1 .body", { y: 24, opacity: 0, duration: 0.9, ease: "sine.out" }, 1.2);
+        tl.from("#scene-1 .card", { y: 40, opacity: 0, stagger: 0.16, duration: 0.9, ease: "back.out(1.2)" }, 1.6);
+
+        tl.to("#transition-a", { opacity: 1, duration: 0.9, ease: "power2.inOut" }, 38.5);
+        tl.set("#scene-2", { opacity: 1 }, 39.1);
+        tl.from("#scene-2 .section-label", { y: 18, opacity: 0, duration: 0.5, ease: "power2.out" }, 39.4);
+        tl.from("#scene-2 .headline", { y: 28, opacity: 0, duration: 0.8, ease: "expo.out" }, 39.7);
+        tl.from("#scene-2 .mock-stage", { scale: 0.95, opacity: 0, duration: 1.1, ease: "power3.out" }, 40.2);
+        tl.from("#scene-2 .mock-panel", { x: 40, opacity: 0, duration: 0.9, ease: "power2.out" }, 40.5);
+        tl.from("#scene-2 .card", { y: 32, opacity: 0, stagger: 0.18, duration: 0.75, ease: "circ.out" }, 41.1);
+        tl.to("#transition-a", { opacity: 0, duration: 1.1, ease: "power2.out" }, 41.2);
+
+        tl.to("#transition-b", { opacity: 1, duration: 1, ease: "power2.inOut" }, 123.5);
+        tl.set("#scene-3", { opacity: 1 }, 124.2);
+        tl.from("#scene-3 .section-label", { y: 18, opacity: 0, duration: 0.5, ease: "power2.out" }, 124.5);
+        tl.from("#scene-3 .headline", { y: 30, opacity: 0, duration: 0.9, ease: "expo.out" }, 124.8);
+        tl.from("#scene-3 .body", { y: 24, opacity: 0, duration: 0.8, ease: "sine.out" }, 125.3);
+        tl.from("#scene-3 .closing-word", { y: 28, opacity: 0, stagger: 0.18, duration: 0.75, ease: "back.out(1.1)" }, 126);
+        tl.from("#scene-3 .closing-url", { y: 20, opacity: 0, duration: 0.9, ease: "power3.out" }, 126.8);
+        tl.to("#transition-b", { opacity: 0, duration: 1.2, ease: "power2.out" }, 126.5);
+        tl.to("#scene-3", { opacity: 0, duration: 1.4, ease: "power2.inOut" }, 178.4);
+
+        window.__timelines["fopusha-ink-film"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
