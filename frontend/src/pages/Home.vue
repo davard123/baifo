@@ -169,18 +169,9 @@ onMounted(() => {
         <div class="header-icon">🪷</div>
         <h1>礼佛祈愿</h1>
         <p>选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。</p>
+        <div class="header-divider"></div>
       </div>
     </header>
-
-    <section class="bookmark-section card">
-      <div class="bookmark-grid">
-        <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
-          <h2>{{ item.title }}</h2>
-          <p>{{ item.body }}</p>
-          <span>进入</span>
-        </router-link>
-      </div>
-    </section>
 
     <section class="catalog-section card">
       <h2 class="section-title">诸佛菩萨</h2>
@@ -213,6 +204,16 @@ onMounted(() => {
         <div class="banner-arrow">→</div>
       </div>
     </router-link>
+
+    <section class="bookmark-section card">
+      <div class="bookmark-grid">
+        <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.body }}</p>
+          <span>进入</span>
+        </router-link>
+      </div>
+    </section>
 
     <BlessingPool @wish-submitted="loadWishes" />
 
@@ -305,7 +306,7 @@ onMounted(() => {
   padding: 0 20px 60px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 40px;
 }
 
 .site-header {
@@ -313,7 +314,16 @@ onMounted(() => {
   padding: 60px 20px 40px;
   animation: fadeInUp 0.7s ease both;
 }
-.header-icon { font-size: 3rem; margin-bottom: 16px; }
+.header-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: slowSpin 20s linear infinite;
+}
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 .site-header h1 {
   font-size: 2.6rem;
   color: var(--accent);
@@ -322,6 +332,13 @@ onMounted(() => {
   text-shadow: 0 2px 12px rgba(127, 90, 54, 0.15);
 }
 .site-header p { color: var(--text-muted); font-size: 1.05rem; }
+.header-divider {
+  width: 80px;
+  height: 1px;
+  background: var(--gold);
+  margin: 24px auto 0;
+  opacity: 0.6;
+}
 
 .section-title {
   font-size: 1.4rem;
@@ -371,7 +388,6 @@ onMounted(() => {
   color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.75;
-  min-height: 3.2em;
 }
 
 .bookmark-card span {
@@ -405,10 +421,19 @@ onMounted(() => {
 }
 
 .buddha-img-wrap {
-  width: 100%;
+  width: 80%;
   aspect-ratio: 1;
+  margin: 20px auto 0;
   overflow: hidden;
+  border-radius: 50%;
   background: linear-gradient(135deg, #f5e9d0, #ede0c0);
+  border: 2px solid rgba(212, 168, 67, 0.35);
+  box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.1);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.buddha-card:hover .buddha-img-wrap {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 6px rgba(212, 168, 67, 0.2);
 }
 .buddha-img-wrap img {
   width: 100%;
@@ -416,7 +441,7 @@ onMounted(() => {
   object-fit: cover;
   transition: transform 0.4s;
 }
-.buddha-card:hover .buddha-img-wrap img { transform: scale(1.05); }
+.buddha-card:hover .buddha-img-wrap img { transform: scale(1.06); }
 
 .buddha-info {
   padding: 14px 12px;
@@ -565,7 +590,7 @@ onMounted(() => {
 }
 
 @media (max-width: 900px) {
-  .home-shell { padding: 0 12px 48px; gap: 20px; }
+  .home-shell { padding: 0 12px 48px; gap: 24px; }
   .card { padding: 20px 16px; }
   .site-header { padding: 36px 12px 24px; }
   .record-grid { grid-template-columns: 1fr; }

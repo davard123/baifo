@@ -154,6 +154,13 @@ async function onSubmit(payload) {
 
       <section class="panel-section card" :class="{ open: drawerOpen }">
         <h1 class="namo-title">{{ buddha.namo }}</h1>
+
+        <hr class="divider" />
+        <RitualButtons @ritual="onRitual" />
+        <hr class="divider" />
+        <WishForm :default-wish="buddha.wish" @submit="onSubmit" />
+        <hr class="divider" />
+
         <p class="buddha-desc">{{ buddha.desc }}</p>
 
         <div class="page-tags">
@@ -190,11 +197,6 @@ async function onSubmit(payload) {
             </router-link>
           </div>
         </section>
-
-        <hr class="divider" />
-        <RitualButtons @ritual="onRitual" />
-        <hr class="divider" />
-        <WishForm :default-wish="buddha.wish" @submit="onSubmit" />
       </section>
     </div>
   </div>
