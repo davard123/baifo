@@ -317,19 +317,21 @@ async function onSubmit(payload) {
 }
 
 .namo-title {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
   color: var(--accent);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-align: center;
   margin-bottom: 10px;
-  text-shadow: 0 1px 8px rgba(127, 90, 54, 0.2);
+  text-shadow: 0 2px 12px rgba(127, 90, 54, 0.25);
 }
 
 .buddha-desc {
   color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.8;
+  font-size: 0.82rem;
+  line-height: 1.75;
   text-align: justify;
+  opacity: 0.85;
 }
 
 .page-tags {
@@ -363,15 +365,17 @@ async function onSubmit(payload) {
 .meaning-section h2,
 .faq-mini h2,
 .related-links h2 {
-  font-size: 1rem;
+  font-size: 0.88rem;
   margin-bottom: 8px;
+  opacity: 0.8;
 }
 
 .meaning-section p,
 .faq-mini p {
   color: var(--text-muted);
-  line-height: 1.75;
-  font-size: 0.88rem;
+  line-height: 1.7;
+  font-size: 0.79rem;
+  opacity: 0.8;
 }
 
 .faq-mini article + article {
@@ -379,8 +383,9 @@ async function onSubmit(payload) {
 }
 
 .faq-mini h3 {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   margin-bottom: 4px;
+  opacity: 0.85;
 }
 
 .related-list {
@@ -392,7 +397,8 @@ async function onSubmit(payload) {
 .related-list a {
   color: var(--accent);
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: 0.79rem;
+  opacity: 0.8;
 }
 
 .divider {

@@ -205,7 +205,7 @@ onMounted(() => {
       </div>
     </router-link>
 
-    <section class="bookmark-section card">
+    <section class="bookmark-section dim-section">
       <div class="bookmark-grid">
         <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
           <h2>{{ item.title }}</h2>
@@ -217,7 +217,7 @@ onMounted(() => {
 
     <BlessingPool @wish-submitted="loadWishes" />
 
-    <section class="guide-section card">
+    <section class="guide-section dim-section">
       <h2 class="section-title">礼佛与回向指南</h2>
       <p class="section-sub">如果你第一次使用，可以先从这里了解礼佛、回向和祭祖页面的大致区别。</p>
       <div class="guide-grid">
@@ -234,7 +234,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="faq-section card">
+    <section class="faq-section dim-section">
       <h2 class="section-title">常见问题</h2>
       <div class="faq-list">
         <article v-for="faq in faqs" :key="faq.q" class="faq-item">
@@ -244,7 +244,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="wishes-section card">
+    <section class="wishes-section dim-section">
       <h2 class="section-title">祈愿记录</h2>
       <div class="record-grid">
         <section class="record-panel">
@@ -269,7 +269,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="path-section card">
+    <section class="path-section dim-section">
       <h2 class="section-title">推荐礼敬路径</h2>
       <p class="section-sub">如果你已经熟悉页面结构，可以从这里按不同祈愿方向继续进入。</p>
       <div class="path-grid">
@@ -281,7 +281,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="path-section card">
+    <section class="path-section dim-section">
       <h2 class="section-title">专题指南</h2>
       <p class="section-sub">如果你想先看不同主题之间的区别，再决定进入哪个页面，可以从这里开始。</p>
       <div class="path-grid">
@@ -340,16 +340,36 @@ onMounted(() => {
   opacity: 0.6;
 }
 
+/* ── 主内容区 section 标题 ── */
 .section-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--accent);
   margin-bottom: 6px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 .section-sub {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   margin-bottom: 28px;
+}
+
+/* ── 辅助性 section（降权） ── */
+.dim-section {
+  background: rgba(255, 252, 245, 0.45);
+  border: 1px solid rgba(212, 168, 67, 0.1);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+}
+.dim-section .section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.dim-section .section-sub {
+  font-size: 0.82rem;
+  margin-bottom: 18px;
 }
 
 .catalog-section { animation: fadeInUp 0.7s 0.1s ease both; }
@@ -380,19 +400,21 @@ onMounted(() => {
 }
 
 .bookmark-card h2 {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--accent);
 }
 
 .bookmark-card p {
   color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.75;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  opacity: 0.85;
 }
 
 .bookmark-card span {
-  color: var(--accent);
-  font-size: 0.86rem;
+  color: var(--accent-light);
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
@@ -448,8 +470,8 @@ onMounted(() => {
   text-align: center;
   width: 100%;
 }
-.buddha-info h3 { font-size: 1rem; margin-bottom: 4px; color: var(--accent); }
-.buddha-info span { font-size: 0.8rem; color: var(--text-muted); }
+.buddha-info h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: var(--accent); letter-spacing: 0.05em; }
+.buddha-info span { font-size: 0.75rem; color: var(--text-muted); opacity: 0.75; }
 
 /* 分隔语 */
 .section-divider {
@@ -535,17 +557,18 @@ onMounted(() => {
 .guide-card,
 .faq-item,
 .path-card {
-  padding: 18px;
-  border-radius: 14px;
-  background: rgba(255, 251, 242, 0.78);
-  border: 1px solid rgba(212, 168, 67, 0.14);
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 251, 242, 0.55);
+  border: 1px solid rgba(212, 168, 67, 0.1);
 }
 
 .guide-card h3,
 .faq-item h3,
 .path-card h3 {
-  margin-bottom: 10px;
-  font-size: 1rem;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
   color: var(--accent);
 }
 
@@ -553,8 +576,9 @@ onMounted(() => {
 .faq-item p,
 .path-card p {
   color: var(--text-muted);
-  line-height: 1.8;
-  font-size: 0.92rem;
+  line-height: 1.75;
+  font-size: 0.8rem;
+  opacity: 0.85;
 }
 
 .path-card a {
