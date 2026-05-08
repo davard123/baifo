@@ -72,15 +72,22 @@ async function submit() {
   emit('wish-submitted')
 }
 
-const RITUALS = ['上香', '点灯', '磕头']
+const RITUALS = [
+  { name: '上香', icon: '🪔', toast: '心香一瓣，供养十方。' },
+  { name: '点灯', icon: '🕯️', toast: '慧灯常明，照破无明。' },
+  { name: '磕头', icon: '🙏', toast: '三叩首，礼敬祈福。' },
+]
 const doneRituals = ref(new Set())
+const popRitual  = ref('')   // 触发 pop 动画的 name
+
 function doRitual(r) {
-  if (doneRituals.value.has(r)) return
-  doneRituals.value = new Set([...doneRituals.value, r])
-  toast.value = r === '上香' ? '心香一瓣，供养十方。' :
-               r === '点灯' ? '慧灯常明，照破无明。' :
-               '三叩首，礼敬祈福。'
+  if (doneRituals.value.has(r.name)) return
+  doneRituals.value = new Set([...doneRituals.value, r.name])
+  toast.value = r.toast
   setTimeout(() => toast.value = '', 2500)
+  // 触发 pop 动画
+  popRitual.value = r.name
+  setTimeout(() => popRitual.value = '', 400)
 }
 </script>
 
@@ -119,13 +126,14 @@ function doRitual(r) {
             <div v-if="stage === 'form'" class="scene-rituals">
               <button
                 v-for="r in RITUALS"
-                :key="r"
+                :key="r.name"
                 class="ritual-btn"
-                :class="{ done: doneRituals.has(r) }"
-                :disabled="doneRituals.has(r)"
+                :class="{ done: doneRituals.has(r.name), pop: popRitual === r.name }"
+                :disabled="doneRituals.has(r.name)"
                 @click="doRitual(r)"
               >
-                {{ r }}{{ doneRituals.has(r) ? ' ✓' : '' }}
+                <span class="ritual-icon">{{ r.icon }}</span>
+                <span class="ritual-name">{{ r.name }}{{ doneRituals.has(r.name) ? ' ✓' : '' }}</span>
               </button>
             </div>
 
@@ -198,25 +206,26 @@ function doRitual(r) {
   align-items: center;
   gap: 8px;
   padding: 14px 8px;
-  background: rgba(255,250,240,.7);
-  border: 1px solid rgba(212,168,67,.18);
+  background: rgba(252,246,230,0.82);
+  border: 1px solid rgba(180,140,80,.18);
   border-radius: 12px;
   cursor: pointer;
   transition: transform .2s, box-shadow .2s, border-color .2s;
 }
 .blessing-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(68,43,17,.14);
+  box-shadow: 0 8px 24px rgba(100,60,20,.14);
   border-color: var(--gold);
 }
 
 .blessing-icon {
-  width: 64px; height: 64px;
+  width: 60px; height: 60px;
   background-size: cover;
   background-position: center;
-  border-radius: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(212,168,67,0.25);
 }
-.blessing-label { font-size: .88rem; color: var(--accent); }
+.blessing-label { font-size: .82rem; color: var(--accent); opacity: 0.85; }
 
 /* ── 弹窗 ── */
 .blessing-modal {
@@ -231,9 +240,9 @@ function doRitual(r) {
 
 .modal-scene {
   width: 90vw; max-width: 560px;
-  max-height: 90vh;
+  max-height: 92vh;
   border-radius: 16px;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0,0,0,.5);
@@ -241,7 +250,8 @@ function doRitual(r) {
 
 .scene-img {
   width: 100%;
-  height: 50vh;
+  max-height: 36vh;
+  min-height: 140px;
   object-fit: cover;
   object-position: top center;
   display: block;
@@ -249,35 +259,61 @@ function doRitual(r) {
 }
 
 .scene-overlay {
-  padding: 18px 20px 20px;
+  padding: 18px 20px 24px;
   background: rgba(251, 243, 226, 1);
   border-top: 1px solid rgba(212, 168, 67, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .scene-rituals {
   display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
 }
 .ritual-btn {
-  padding: 10px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 20px;
   border-radius: 22px;
   border: 2px solid rgba(127, 90, 54, 0.5);
   background: rgba(127, 90, 54, 0.08);
   color: var(--accent);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: .08em;
   transition: background .2s, transform .15s, border-color .2s;
+}
+.ritual-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  display: block;
+}
+.ritual-name {
+  font-size: 0.88rem;
+  display: block;
 }
 .ritual-btn:hover:not(:disabled) {
   background: rgba(212, 168, 67, 0.2);
   border-color: var(--gold);
   transform: translateY(-2px);
 }
-.ritual-btn.done { opacity: .5; background: rgba(212, 168, 67, 0.12); }
+.ritual-btn.done {
+  opacity: .55;
+  background: rgba(212, 168, 67, 0.12);
+}
+.ritual-btn.pop {
+  animation: ritualPop 0.38s ease;
+}
+@keyframes ritualPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.22) translateY(-4px); }
+  70%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
 
 .scene-result { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .result-wish { font-size: 1.1rem; color: var(--accent); line-height: 1.9; }

@@ -131,15 +131,6 @@ onMounted(() => {
         </div>
         <button class="setup-btn" @click="showSetup = true" title="个性化设置">⚙</button>
       </div>
-      <div class="selection-guide">
-        <div class="guide-pill">先选对象，再进入正式祭拜页</div>
-        <p>这里就是过渡选择页。你可以先确认牌位对象、修改牌位显示文字，再进入正式祭拜页面；后面如果想换对象，随时返回这里重新选择，不会被锁定。</p>
-        <div class="guide-steps">
-          <span>1. 选牌位</span>
-          <span>2. 改文字</span>
-          <span>3. 进入祭拜</span>
-        </div>
-      </div>
       <div class="catalog-grid">
         <article
           v-for="(a, index) in ANCESTORS"
@@ -182,6 +173,10 @@ onMounted(() => {
           </div>
         </article>
       </div>
+
+      <div class="selection-guide">
+        <p>选择一位先人，可修改牌位显示文字后进入正式祭拜页。随时可返回此页重新选择，不会被锁定。步骤：选牌位 → 改文字（可选）→ 进入祭拜。</p>
+      </div>
     </section>
 
     <!-- 个性化设置弹窗 -->
@@ -222,7 +217,7 @@ onMounted(() => {
       </div>
     </Teleport>
 
-    <section class="wishes-section card">
+    <section class="wishes-section dim-section">
       <h2 class="section-title">祭拜记录</h2>
       <div class="record-grid">
         <section class="record-panel">
@@ -246,7 +241,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="guide-section card">
+    <section class="guide-section dim-section">
       <h2 class="section-title">祭祖与追思说明</h2>
       <p class="section-sub">如果你想进一步了解适合的祭拜场景、隐私说明或牌位设置方式，可以在这里查看。</p>
       <div class="guide-copy">
@@ -290,7 +285,7 @@ onMounted(() => {
   padding: 0 20px 60px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 40px;
 }
 
 .site-header {
@@ -309,15 +304,29 @@ onMounted(() => {
 .site-header p { color: #6a5a4a; font-size: 1.05rem; }
 
 .section-title {
-  font-size: 1.4rem;
-  color: #7a6a5a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6a5242;
   margin-bottom: 6px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 .section-sub {
   color: #8a7a6a;
-  font-size: 0.9rem;
-  margin-bottom: 28px;
+  font-size: 0.88rem;
+  margin-bottom: 24px;
+}
+
+/* ── 辅助 section 降权 ── */
+.dim-section {
+  background: rgba(250, 244, 232, 0.45);
+  border: 1px solid rgba(160, 120, 70, 0.12);
+  border-radius: 16px;
+  padding: 28px 32px;
+}
+.dim-section .section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #8a7a6a;
 }
 
 .catalog-section { animation: fadeInUp 0.7s 0.1s ease both; }
@@ -342,46 +351,17 @@ onMounted(() => {
 .setup-btn:hover { background: rgba(200, 185, 165, 0.6); transform: rotate(30deg); }
 
 .selection-guide {
-  margin: 18px 0 24px;
-  padding: 18px 20px;
-  border-radius: 16px;
-  background:
-    linear-gradient(135deg, rgba(92, 62, 34, 0.95), rgba(62, 40, 22, 0.92)),
-    radial-gradient(circle at top left, rgba(215, 180, 105, 0.22), transparent 36%);
-  color: rgba(245, 237, 225, 0.92);
-  box-shadow: inset 0 1px 0 rgba(255, 240, 220, 0.08);
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(160, 120, 70, 0.15);
+  background: rgba(250, 244, 232, 0.5);
 }
 
 .selection-guide p {
-  margin: 10px 0 0;
-  line-height: 1.8;
-  font-size: 0.92rem;
-}
-
-.guide-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(232, 196, 122, 0.16);
-  border: 1px solid rgba(232, 196, 122, 0.28);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-}
-
-.guide-steps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.guide-steps span {
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(255, 248, 236, 0.08);
-  border: 1px solid rgba(255, 248, 236, 0.12);
+  color: #9a8a78;
   font-size: 0.8rem;
+  line-height: 1.7;
 }
 
 /* ── 弹窗 ── */
@@ -494,8 +474,8 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   border-radius: 14px;
-  background: rgba(240, 235, 225, 0.7);
-  border: 1px solid rgba(120, 100, 80, 0.15);
+  background: rgba(250, 244, 230, 0.88);
+  border: 1px solid rgba(180, 140, 80, 0.22);
   overflow: hidden;
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
   text-decoration: none;
@@ -503,8 +483,8 @@ onMounted(() => {
 }
 .buddha-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 36px rgba(30, 20, 15, 0.16);
-  border-color: #8a7a6a;
+  box-shadow: 0 16px 36px rgba(100, 60, 20, 0.18);
+  border-color: #c9a35a;
 }
 
 .card-topline {
@@ -548,14 +528,14 @@ onMounted(() => {
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  background: linear-gradient(135deg, #d8d0c4, #c8c0b4);
+  background: linear-gradient(160deg, #e8d8b8, #d4c4a0);
 }
 .buddha-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s;
-  filter: grayscale(0.15) sepia(0.2);
+  filter: sepia(0.12);
 }
 .buddha-card:hover .buddha-img-wrap img { transform: scale(1.05); }
 
@@ -564,8 +544,8 @@ onMounted(() => {
   text-align: center;
   width: 100%;
 }
-.buddha-info h3 { font-size: 1rem; margin-bottom: 4px; color: #5a4a3a; }
-.buddha-info span { font-size: 0.8rem; color: #8a7a6a; }
+.buddha-info h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: #5a3a22; letter-spacing: 0.05em; }
+.buddha-info span { font-size: 0.75rem; color: #8a7a6a; opacity: 0.78; }
 
 .ancestor-entry {
   width: 100%;
@@ -605,18 +585,21 @@ onMounted(() => {
 
 .entry-input {
   width: 100%;
-  padding: 9px 12px;
+  padding: 9px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(120, 100, 80, 0.22);
-  background: rgba(255, 252, 245, 0.9);
-  color: #5a4a3a;
-  font-size: 0.86rem;
+  border: 1px solid rgba(160, 120, 70, 0.35);
+  background: rgba(252, 246, 232, 0.95);
+  color: #4a3222;
+  font-family: 'Noto Serif SC', STSong, SimSun, serif;
+  font-size: 0.96rem;
+  text-align: center;
+  letter-spacing: 0.1em;
   outline: none;
 }
 
 .entry-input:focus {
-  border-color: #8a7a6a;
-  box-shadow: 0 0 0 3px rgba(120, 100, 80, 0.1);
+  border-color: #c9a35a;
+  box-shadow: 0 0 0 3px rgba(180, 140, 80, 0.14);
 }
 
 .entry-btn {
@@ -668,8 +651,9 @@ onMounted(() => {
 .guide-copy p,
 .faq-item p {
   color: #8a7a6a;
-  line-height: 1.8;
-  font-size: 0.92rem;
+  line-height: 1.75;
+  font-size: 0.8rem;
+  opacity: 0.82;
 }
 
 .faq-list {
@@ -686,9 +670,10 @@ onMounted(() => {
 }
 
 .faq-item h3 {
-  color: #5a4a3a;
+  color: #6a5848;
   margin-bottom: 8px;
-  font-size: 0.98rem;
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .site-footer {
