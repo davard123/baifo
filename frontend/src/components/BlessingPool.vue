@@ -276,12 +276,14 @@ function doRitual(r) {
 
 .scene-img-wrap {
   flex-shrink: 0;
+  overflow: hidden;
   line-height: 0;
 }
 .scene-img {
   width: 100%;
-  height: auto;       /* 完整显示图片，不裁剪 */
+  height: auto;
   display: block;
+  margin-top: -48px;  /* 裁掉顶部空白，内容上移 */
 }
 
 .scene-overlay {
