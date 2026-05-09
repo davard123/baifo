@@ -265,8 +265,8 @@ function doRitual(r) {
 }
 
 .modal-scene {
-  width: 90vw; max-width: 560px;
-  max-height: 92vh;
+  width: 88vw; max-width: 480px;
+  max-height: 90vh;
   border-radius: 16px;
   overflow-y: auto;
   display: flex;
@@ -275,24 +275,12 @@ function doRitual(r) {
 }
 
 .scene-img-wrap {
-  position: relative;
   flex-shrink: 0;
   line-height: 0;
 }
-.scene-img-wrap::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(251, 243, 226, 1));
-  pointer-events: none;
-}
 .scene-img {
   width: 100%;
-  max-height: 36vh;
-  min-height: 140px;
-  object-fit: cover;
-  object-position: top center;
+  height: auto;       /* 完整显示图片，不裁剪 */
   display: block;
 }
 
