@@ -217,34 +217,8 @@ onMounted(() => {
 
     <BlessingPool @wish-submitted="loadWishes" />
 
-    <section class="guide-section dim-section">
-      <h2 class="section-title">礼佛与回向指南</h2>
-      <p class="section-sub">如果你第一次使用，可以先从这里了解礼佛、回向和祭祖页面的大致区别。</p>
-      <div class="guide-grid">
-        <article v-for="item in guideCards" :key="item.title" class="guide-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-        </article>
-      </div>
-      <div class="guide-links">
-        <router-link to="/guide/worship">查看在线礼佛指南</router-link>
-        <router-link to="/guide/ancestors">查看在线祭祖指南</router-link>
-        <router-link to="/ancestors">查看拜祭先人总览</router-link>
-        <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
-      </div>
-    </section>
-
-    <section class="faq-section dim-section">
-      <h2 class="section-title">常见问题</h2>
-      <div class="faq-list">
-        <article v-for="faq in faqs" :key="faq.q" class="faq-item">
-          <h3>{{ faq.q }}</h3>
-          <p>{{ faq.a }}</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="wishes-section dim-section">
+    <!-- ── 祈愿记录：网站内容，优先展示 ── -->
+    <section class="wishes-section card">
       <h2 class="section-title">祈愿记录</h2>
       <div class="record-grid">
         <section class="record-panel">
@@ -266,6 +240,34 @@ onMounted(() => {
             :empty-message="viewerName ? '你最近还没有祈愿记录。' : '先提交一次祈愿，之后这里会显示你的最近 5 条记录。'"
           />
         </section>
+      </div>
+    </section>
+
+    <!-- ── 以下为使用说明类，视觉降权 ── -->
+    <section class="guide-section help-section">
+      <h2 class="help-title">礼佛与回向指南</h2>
+      <p class="help-sub">如果你第一次使用，可以先从这里了解礼佛、回向和祭祖页面的大致区别。</p>
+      <div class="guide-grid">
+        <article v-for="item in guideCards" :key="item.title" class="guide-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+        </article>
+      </div>
+      <div class="guide-links">
+        <router-link to="/guide/worship">查看在线礼佛指南</router-link>
+        <router-link to="/guide/ancestors">查看在线祭祖指南</router-link>
+        <router-link to="/ancestors">查看拜祭先人总览</router-link>
+        <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
+      </div>
+    </section>
+
+    <section class="faq-section help-section help-section--faq">
+      <h2 class="help-title">常见问题</h2>
+      <div class="faq-list">
+        <article v-for="faq in faqs" :key="faq.q" class="faq-item">
+          <h3>{{ faq.q }}</h3>
+          <p>{{ faq.a }}</p>
+        </article>
       </div>
     </section>
 
@@ -538,6 +540,58 @@ onMounted(() => {
   color: var(--accent);
   font-size: 1rem;
   margin-bottom: 6px;
+}
+
+/* ── 祈愿记录：完整卡片，主标题，生动感 ── */
+.wishes-section .section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+.wishes-section .record-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  border-left: 3px solid var(--gold);
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+/* ── 使用指南类（指南 + FAQ）：统一帮助区风格 ── */
+.help-section {
+  background: rgba(240, 233, 215, 0.5);
+  border: 1px solid rgba(160, 130, 80, 0.14);
+  border-radius: 14px;
+  padding: 24px 28px;
+  animation: fadeInUp 0.7s 0.18s ease both;
+}
+.help-title {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #9a8260;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  text-transform: none;
+}
+.help-sub {
+  color: #a89070;
+  font-size: 0.78rem;
+  margin-bottom: 16px;
+}
+
+/* 礼佛指南：暖金左边框标记 */
+.guide-section.help-section {
+  border-left: 4px solid rgba(212, 168, 67, 0.45);
+}
+
+/* 常见问题：更暗一点，区别于指南 */
+.help-section--faq {
+  background: rgba(228, 222, 208, 0.45);
+  border-left: 4px solid rgba(140, 110, 70, 0.3);
+}
+.help-section--faq .help-title {
+  color: #8a7458;
 }
 
 .guide-section,
