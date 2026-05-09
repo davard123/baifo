@@ -78,16 +78,30 @@ const RITUALS = [
   { name: '磕头', icon: '🙏', toast: '三叩首，礼敬祈福。' },
 ]
 const doneRituals = ref(new Set())
-const popRitual  = ref('')   // 触发 pop 动画的 name
+const popRitual  = ref('')
+const floats     = ref([])   // [{id, icon, left}] 浮起粒子列表
 
 function doRitual(r) {
   if (doneRituals.value.has(r.name)) return
   doneRituals.value = new Set([...doneRituals.value, r.name])
   toast.value = r.toast
   setTimeout(() => toast.value = '', 2500)
-  // 触发 pop 动画
+  // 按钮弹跳
   popRitual.value = r.name
   setTimeout(() => popRitual.value = '', 400)
+  // 发射浮起粒子（3个，随机左右偏移）
+  const count = 3
+  for (let i = 0; i < count; i++) {
+    const id   = Date.now() + i
+    const left = 30 + Math.random() * 40   // 30%~70%
+    const delay = i * 180                   // 错开发射
+    setTimeout(() => {
+      floats.value.push({ id, icon: r.icon, left })
+      setTimeout(() => {
+        floats.value = floats.value.filter(f => f.id !== id)
+      }, 1500)
+    }, delay)
+  }
 }
 </script>
 
@@ -117,13 +131,25 @@ function doRitual(r) {
       <div v-if="active" class="blessing-modal" @click.self="close">
         <!-- 背景场景 -->
         <div class="modal-scene">
-          <img :src="active.bg" alt="" class="scene-img" />
+          <div class="scene-img-wrap">
+            <img :src="active.bg" alt="" class="scene-img" />
+          </div>
           <div class="scene-overlay">
             <!-- 祈福语（form 阶段，放在按钮上方） -->
             <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
 
             <!-- 礼佛动作（form 阶段） -->
             <div v-if="stage === 'form'" class="scene-rituals">
+              <!-- 浮起 emoji 粒子 -->
+              <TransitionGroup name="float-group">
+                <span
+                  v-for="f in floats"
+                  :key="f.id"
+                  class="float-emoji"
+                  :style="{ left: f.left + '%' }"
+                >{{ f.icon }}</span>
+              </TransitionGroup>
+
               <button
                 v-for="r in RITUALS"
                 :key="r.name"
@@ -248,6 +274,19 @@ function doRitual(r) {
   box-shadow: 0 20px 60px rgba(0,0,0,.5);
 }
 
+.scene-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.scene-img-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(251, 243, 226, 1));
+  pointer-events: none;
+}
 .scene-img {
   width: 100%;
   max-height: 36vh;
@@ -255,7 +294,6 @@ function doRitual(r) {
   object-fit: cover;
   object-position: top center;
   display: block;
-  flex-shrink: 0;
 }
 
 .scene-overlay {
@@ -270,8 +308,31 @@ function doRitual(r) {
 }
 
 .scene-rituals {
-  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  position: relative;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
+/* ── 浮起粒子 ── */
+.float-emoji {
+  position: absolute;
+  bottom: 100%;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: floatUp 1.4s ease-out forwards;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+@keyframes floatUp {
+  0%   { opacity: 1;   transform: translateX(-50%) translateY(0)     scale(1); }
+  50%  { opacity: 0.9; transform: translateX(-50%) translateY(-50px)  scale(1.3); }
+  100% { opacity: 0;   transform: translateX(-50%) translateY(-110px) scale(0.7); }
+}
+/* TransitionGroup 淡出（粒子消失时不跳动） */
+.float-group-leave-active { transition: opacity 0.2s; }
+.float-group-leave-to     { opacity: 0; }
 .ritual-btn {
   display: flex;
   flex-direction: column;
