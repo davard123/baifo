@@ -64,38 +64,6 @@ function applyPageMeta() {
     'content',
     `虔诚祭拜${a.name}，${a.subtitle}。${a.desc} 在线发愿，功德回向先人。`
   )
-
-  const ld = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `${a.name}页面适合什么祭拜主题？`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${a.desc} 适合用于追思、祭祖、超荐与回向。`,
-        },
-      },
-      {
-        '@type': 'Question',
-        name: '个性化照片会上传到服务器吗？',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: '不会。照片和姓名设置仅保存在本地设备，用于当前设备显示。',
-        },
-      },
-    ],
-  }
-
-  let el = document.getElementById('ld-ancestor-qa')
-  if (!el) {
-    el = document.createElement('script')
-    el.id = 'ld-ancestor-qa'
-    el.type = 'application/ld+json'
-    document.head.appendChild(el)
-  }
-  el.textContent = JSON.stringify(ld)
 }
 
 watch(

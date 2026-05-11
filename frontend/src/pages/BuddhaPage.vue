@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
@@ -28,33 +28,6 @@ function updatePageMeta() {
     'content',
     `礼敬${current.name}，围绕${current.subtitle}发愿修行。页面支持献花、点灯、上香、礼拜与回向，帮助按顺序完成在线礼佛。`
   )
-
-  const ld = {
-    '@context': 'https://schema.org',
-    '@type': 'QAPage',
-    mainEntity: {
-      '@type': 'Question',
-      name: `如何礼敬${current.name}？`,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `进入${current.name}页面后，可依次完成献花、点灯、上香等供养动作，再填写姓名、年龄与发愿内容，最后提交回向。`,
-      },
-    },
-    about: {
-      '@type': 'Thing',
-      name: current.name,
-      description: current.desc,
-    },
-  }
-
-  let script = document.getElementById('ld-qa')
-  if (!script) {
-    script = document.createElement('script')
-    script.id = 'ld-qa'
-    script.type = 'application/ld+json'
-    document.head.appendChild(script)
-  }
-  script.textContent = JSON.stringify(ld)
 }
 
 watch(
@@ -74,10 +47,6 @@ watch(
   },
   { immediate: true }
 )
-
-onMounted(() => {
-  updatePageMeta()
-})
 
 function onRitual({ images, isFigure, isCandle, isIncense }) {
   if (isCandle) {

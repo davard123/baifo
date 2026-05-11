@@ -44,9 +44,7 @@ function buildMetaTags(page) {
 }
 
 function buildJsonLd(page) {
-  return page.schema
-    .map((entry) => `<script type="application/ld+json">${JSON.stringify(entry)}</script>`)
-    .join('\n    ')
+  return `<script type="application/ld+json" id="ld-webpage">${JSON.stringify(page.schema)}</script>`
 }
 
 function buildHiddenContent(page) {
@@ -67,7 +65,7 @@ function renderPage(page) {
     .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)
     .replace(/<script type="application\/ld\+json" id="ld-webpage">[\s\S]*?<\/script>/, jsonLd)
-    .replace(/<script>\s*const ld =[\s\S]*?<\/script>/, '')
+    .replace(/<script>\s*const baseUrl = 'https:\/\/www\.fopusha\.com\/'[\s\S]*?document\.getElementById\('ld-webpage'\)\.textContent = JSON\.stringify\(schema\);\s*<\/script>/, '')
     .replace(/<h1 style="position:absolute;[\s\S]*?<\/h1>/, hiddenContent)
 }
 
