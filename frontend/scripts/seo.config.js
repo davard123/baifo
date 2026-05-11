@@ -9,22 +9,95 @@ export const SITE = {
   defaultImage: '/devotee.png',
   defaultLocale: 'zh_CN',
   themeColor: '#2f2216',
+  datePublished: '2024-10-01',
   keywords: [
-    '拜佛', '祈愿', '礼佛', '在线礼佛', '在线拜佛', '佛菩萨', '释迦牟尼佛',
-    '阿弥陀佛', '药师佛', '弥勒佛', '文殊菩萨', '普贤菩萨', '观音菩萨',
-    '地藏菩萨', '供花', '点灯', '上香', '回向文', '功德回向', '拜祭先人',
-    '在线祭祖', '佛教祈福'
-  ]
+    '拜佛',
+    '祈愿',
+    '礼佛',
+    '在线礼佛',
+    '在线拜佛',
+    '佛菩萨',
+    '释迦牟尼佛',
+    '阿弥陀佛',
+    '药师佛',
+    '弥勒佛',
+    '文殊菩萨',
+    '普贤菩萨',
+    '观音菩萨',
+    '地藏菩萨',
+    '供花',
+    '点灯',
+    '上香',
+    '回向文',
+    '功德回向',
+    '拜祭先人',
+    '在线祭祖',
+    '佛教祈福',
+  ],
 }
 
-function absoluteUrl(path) {
-  return `${SITE.baseUrl}${path}`
+const BUILD_DATE = new Date().toISOString().split('T')[0]
+
+const BUDDHA_WIKI = {
+  shakyamuni: 'https://zh.wikipedia.org/wiki/释迦牟尼',
+  amitabha: 'https://zh.wikipedia.org/wiki/阿弥陀佛',
+  medicine: 'https://zh.wikipedia.org/wiki/药师佛',
+  maitreya: 'https://zh.wikipedia.org/wiki/弥勒菩萨',
+  manjushri: 'https://zh.wikipedia.org/wiki/文殊菩萨',
+  samantabhadra: 'https://zh.wikipedia.org/wiki/普贤菩萨',
+  guanyin: 'https://zh.wikipedia.org/wiki/观世音菩萨',
+  ksitigarbha: 'https://zh.wikipedia.org/wiki/地藏菩萨',
 }
 
-function buildFaqSchema(title, items = []) {
+const BUDDHA_LOCATIONS = {
+  shakyamuni: '释迦牟尼佛是娑婆世界教主，佛教传统中并不对应单一道场圣地，而是被视为一切佛法修行的根本依止。',
+  amitabha: '阿弥陀佛对应西方极乐世界信仰，汉传佛教中常与净土法门和念佛往生的修持传统相联系。',
+  medicine: '药师佛对应东方净琉璃世界，汉传佛教礼敬药师佛时，常围绕健康、消灾、延寿与身心安稳发愿。',
+  maitreya: '弥勒菩萨现居兜率内院，佛教传统中常与未来下生、慈悲欢喜和希望光明相联系。',
+  manjushri: '文殊菩萨在汉传佛教中常与五台山道场相联系，象征大智、善巧与学修精进。',
+  samantabhadra: '普贤菩萨在汉传佛教中常与峨眉山道场相联系，象征大行、大愿与实践菩提道。',
+  guanyin: '观音菩萨在汉传佛教中常与普陀山道场相联系，最常见的主题是慈悲救苦、护念平安与寻声应愿。',
+  ksitigarbha: '地藏菩萨在汉传佛教中常与九华山道场相联系，常见礼敬主题包括超荐回向、追思先人和救度亡灵。',
+}
+
+function absoluteUrl(pagePath) {
+  return `${SITE.baseUrl}${pagePath}`
+}
+
+function orgRef() {
+  return {
+    '@type': 'Organization',
+    '@id': `${SITE.baseUrl}/#organization`,
+    name: '礼佛祈愿 Fopusha',
+    url: SITE.baseUrl,
+  }
+}
+
+function publisherRef() {
+  return {
+    '@type': 'Organization',
+    '@id': `${SITE.baseUrl}/#organization`,
+    name: '礼佛祈愿',
+    url: SITE.baseUrl,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE.baseUrl}/favicon.svg`,
+    },
+  }
+}
+
+function buildSpeakable(cssSelector) {
+  return {
+    '@type': 'SpeakableSpecification',
+    cssSelector,
+  }
+}
+
+function buildFaqSchema(title, items = [], aboutName = title) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    name: `${title}常见问题`,
     mainEntity: items.map((item) => ({
       '@type': 'Question',
       name: item.question || item.q,
@@ -35,13 +108,14 @@ function buildFaqSchema(title, items = []) {
     })),
     about: {
       '@type': 'Thing',
-      name: title,
+      name: aboutName,
     },
   }
 }
 
 function breadcrumb(items) {
   return {
+    '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
@@ -52,13 +126,67 @@ function breadcrumb(items) {
   }
 }
 
+function buildWebPageSchema({
+  path,
+  name,
+  description,
+  breadcrumbItems,
+  about,
+  selectors = ['h1', '.hero-text', '.copy-section p:first-child'],
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${absoluteUrl(path)}#webpage`,
+    name,
+    url: absoluteUrl(path),
+    description,
+    inLanguage: 'zh-CN',
+    isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+    breadcrumb: breadcrumb(breadcrumbItems),
+    about,
+    mainEntity: about,
+    speakable: buildSpeakable(selectors),
+  }
+}
+
+function buildArticleSchema({
+  type = 'Article',
+  idSuffix = 'article',
+  path,
+  headline,
+  name,
+  description,
+  about,
+  step,
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': type,
+    '@id': `${absoluteUrl(path)}#${idSuffix}`,
+    headline,
+    name,
+    url: absoluteUrl(path),
+    description,
+    inLanguage: 'zh-CN',
+    datePublished: SITE.datePublished,
+    dateModified: BUILD_DATE,
+    author: orgRef(),
+    publisher: publisherRef(),
+    isPartOf: { '@id': `${SITE.baseUrl}/#website` },
+    mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
+    about,
+    ...(step ? { step } : {}),
+  }
+}
+
 function homePage() {
   return {
     path: '/',
-    title: '礼佛祈愿 | 八位佛菩萨在线礼佛',
-    description: '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。',
+    title: '礼佛祈愿 | 八位佛菩萨在线礼佛祈愿平台',
+    description: '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。站内覆盖释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨，也提供在线祭祖、供花、点灯、上香和功德回向。',
     heading: '礼佛祈愿',
-    summary: '在线礼佛祈愿平台，提供八位佛菩萨礼敬、供花、点灯、上香、祈愿回向与拜祭先人。',
+    summary: '在线礼佛祈愿平台，提供八位佛菩萨礼敬、供花、点灯、上香、祈愿回向与在线祭祖追思。',
     image: SITE.defaultImage,
     schema: [
       {
@@ -66,7 +194,7 @@ function homePage() {
         '@type': 'WebSite',
         '@id': `${SITE.baseUrl}/#website`,
         name: SITE.name,
-        alternateName: 'Fopusha',
+        alternateName: SITE.shortName,
         url: absoluteUrl('/'),
         inLanguage: 'zh-CN',
         potentialAction: {
@@ -84,15 +212,17 @@ function homePage() {
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
         inLanguage: 'zh-CN',
-        description: 'Fopusha 提供在线礼佛祈愿、供花、点灯、上香、拜祭先人与发愿回向。',
+        description: 'Fopusha 提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
       },
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
+        '@id': `${absoluteUrl('/')}#collection`,
         name: SITE.name,
         url: absoluteUrl('/'),
-        description: '八位佛菩萨在线礼佛祈愿与回向平台。',
+        description: '八位佛菩萨在线礼佛祈愿与功德回向平台。',
         inLanguage: 'zh-CN',
+        speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child']),
         mainEntity: {
           '@type': 'ItemList',
           itemListElement: BUDDHAS.map((item, index) => ({
@@ -104,14 +234,35 @@ function homePage() {
         },
       },
       buildFaqSchema('礼佛祈愿', [
-        { question: '这个网站可以做什么？', answer: '这个网站提供在线礼佛祈愿、供花、点灯、上香和回向，也提供拜祭先人的页面。' },
-        { question: '适合哪些祈愿主题？', answer: '用户可以围绕平安、健康、智慧、学业、事业、家运与超荐回向等主题进行祈愿。' },
+        {
+          q: '这个网站是做什么的？',
+          a: 'Fopusha 是一个在线礼佛、祈愿、祭祖追思与功德回向平台，用户可以选择佛菩萨礼敬，也可以进入先人牌位页面进行追思祭拜。',
+        },
+        {
+          q: '在这里可以完成哪些礼佛动作？',
+          a: '用户可以在不同页面完成供花、点灯、上香、礼拜、填写祈愿内容和提交回向等步骤。',
+        },
+        {
+          q: '这个网站适合哪些祈愿主题？',
+          a: '常见祈愿主题包括平安、健康、智慧、学业、事业、家庭和顺、祭祖追思以及功德回向。',
+        },
+        {
+          q: '第一次使用应该先看哪里？',
+          a: '第一次使用可以先看使用说明页，再根据需要进入礼佛祈愿或在线祭祖追思页面。',
+        },
       ]),
     ],
   }
 }
 
 function buddhaPage(item) {
+  const about = {
+    '@type': 'Thing',
+    name: item.name,
+    description: item.desc,
+    sameAs: BUDDHA_WIKI[item.slug] || undefined,
+  }
+
   return {
     path: `/buddha/${item.slug}`,
     title: `${item.namo} | 在线礼佛祈愿`,
@@ -120,24 +271,50 @@ function buddhaPage(item) {
     summary: `${item.name}，${item.subtitle}。${item.desc}`,
     image: item.image,
     schema: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
+      buildWebPageSchema({
+        path: `/buddha/${item.slug}`,
         name: item.namo,
-        url: absoluteUrl(`/buddha/${item.slug}`),
         description: item.desc,
-        inLanguage: 'zh-CN',
-        about: { '@type': 'Thing', name: item.name, description: item.desc },
-        mainEntity: { '@type': 'Thing', name: item.name, description: item.desc },
-        breadcrumb: breadcrumb([
+        breadcrumbItems: [
           { name: '礼佛祈愿', path: '/' },
           { name: item.name, path: `/buddha/${item.slug}` },
-        ]),
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        path: `/buddha/${item.slug}`,
+        headline: item.namo,
+        name: `${item.name}礼佛指南`,
+        description: item.desc,
+        about,
+      }),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'DefinedTerm',
+        name: item.name,
+        description: item.desc,
+        inDefinedTermSet: { '@type': 'DefinedTermSet', name: '佛教词汇' },
+        sameAs: BUDDHA_WIKI[item.slug],
       },
       buildFaqSchema(item.name, [
-        { q: `${item.name}适合什么祈愿主题？`, a: `${item.name}${item.subtitle ? `，${item.subtitle}` : ''}。${item.desc}` },
-        { q: `如何在网上礼敬${item.name}？`, a: `进入${item.name}页面后，可以进行供花、点灯、上香并填写祈愿内容，再提交回向。` },
-      ]),
+        {
+          q: `${item.name}是谁？`,
+          a: `${item.name}，${item.subtitle}。${item.desc}`,
+        },
+        {
+          q: `${item.name}适合什么祈愿主题？`,
+          a: `${item.name}${item.subtitle ? `，${item.subtitle}` : ''}。${item.desc}常见祈愿主题包括平安、健康、智慧、消灾、家庭和顺、学业事业或功德回向。`,
+        },
+        {
+          q: `如何在网上礼敬${item.name}？`,
+          a: `进入${item.name}页面后，可以依次完成供花、点灯、上香，再填写祈愿内容并提交回向。`,
+        },
+        {
+          q: `${item.name}的道场在哪里？`,
+          a: BUDDHA_LOCATIONS[item.slug],
+        },
+      ], item.name),
     ],
   }
 }
@@ -146,18 +323,35 @@ function ancestorsPage() {
   return {
     path: '/ancestors',
     title: '拜祭先人 | 在线祭拜先人',
-    description: '追思先人，超荐亡灵，虔诚祭拜，庇荫后代。选择不同亲属或历代祖先进行在线祭拜与祈愿回向。',
+    description: '追思先人，超荐亡灵，虔诚祭拜，祈愿庇佑后代。可选择不同亲属牌位，完成在线祭祖、追思回向与祈愿记录。',
     heading: '拜祭先人',
-    summary: '在线祭祖与追思页面，覆盖先父、先母、祖父、祖母、列祖列宗、亡偶、亡子女与一切亡灵。',
+    summary: '在线祭祖追思页面，覆盖先父、先母、祖父、祖母、列祖列宗、亡偶、亡子女与一切亡灵。',
     image: '/ancestors/ancestors.png',
     schema: [
+      buildWebPageSchema({
+        path: '/ancestors',
+        name: '拜祭先人',
+        description: '在线祭祖、追思祖先、超荐亡灵的页面集合。',
+        breadcrumbItems: [
+          { name: '礼佛祈愿', path: '/' },
+          { name: '拜祭先人', path: '/ancestors' },
+        ],
+        about: {
+          '@type': 'Thing',
+          name: '在线祭祖',
+          description: '在线祭祖、追思祖先、先人牌位选择与功德回向。',
+        },
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
+        '@id': `${absoluteUrl('/ancestors')}#collection`,
         name: '拜祭先人',
         url: absoluteUrl('/ancestors'),
         description: '在线祭拜先人、追思祖先、超荐亡灵的页面集合。',
         inLanguage: 'zh-CN',
+        speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item']),
         mainEntity: {
           '@type': 'ItemList',
           itemListElement: ANCESTORS.map((item, index) => ({
@@ -168,79 +362,140 @@ function ancestorsPage() {
           })),
         },
       },
-    ],
-  }
-}
-
-function ancestorPage(item) {
-  return {
-    path: `/ancestor/${item.slug}`,
-    title: `${item.name}拜祭 | 在线祭拜先人`,
-    description: `虔诚祭拜${item.name}，${item.subtitle}。${item.desc}在线发愿，功德回向先人。`,
-    heading: item.title,
-    summary: `${item.name}，${item.subtitle}。${item.desc}`,
-    image: item.image,
-    schema: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: `${item.name}拜祭`,
-        url: absoluteUrl(`/ancestor/${item.slug}`),
-        description: item.desc,
-        inLanguage: 'zh-CN',
-        about: { '@type': 'Thing', name: item.name, description: item.desc },
-        mainEntity: { '@type': 'Thing', name: item.name, description: item.desc },
-      },
-      buildFaqSchema(item.name, [
-        { q: `这个页面适合祭拜${item.name}吗？`, a: `${item.desc}用户可以在页面中进行祭拜、供奉和祈愿回向。` },
-        { q: '祭拜内容会公开显示吗？', a: '页面支持提交祭拜祈愿记录，个性化照片和姓名设置则仅保存在用户本地设备。' },
+      buildFaqSchema('拜祭先人', [
+        {
+          q: '在线祭祖适合哪些场景？',
+          a: '在线祭祖适合追思父母、祖父祖母、列祖列宗、亡偶、亡子女以及一切亡灵，也适合日常追思、忌日纪念和超荐回向。',
+        },
+        {
+          q: '牌位上的姓名和照片会上传吗？',
+          a: '个性化牌位姓名和照片设置仅保存在当前设备本地，用于本机显示，不会上传到服务器。',
+        },
+        {
+          q: '第一次使用在线祭祖应该怎么开始？',
+          a: '可以先进入先人选择页，选择对应牌位，再进入正式祭拜页面完成上香、献花、奠酒、烧纸和回向。',
+        },
+        {
+          q: '在线祭祖和礼佛祈愿有什么区别？',
+          a: '在线祭祖更偏向追思祖先、家族回向和超荐亡灵；礼佛祈愿则更偏向佛菩萨礼敬、发愿祈福与日常修持。',
+        },
       ]),
     ],
   }
 }
 
-function guidePage({ slug, title, description, heading }) {
+function ancestorPage(item) {
+  const about = {
+    '@type': 'Thing',
+    name: item.name,
+    description: item.desc,
+  }
+
   return {
-    path: `/guide/${slug}`,
+    path: `/ancestor/${item.slug}`,
+    title: `${item.name}祭拜 | 在线祭拜先人`,
+    description: `虔诚祭拜${item.name}，${item.subtitle}。${item.desc}在线发愿，功德回向先人。`,
+    heading: item.title,
+    summary: `${item.name}，${item.subtitle}。${item.desc}`,
+    image: item.image,
+    schema: [
+      buildWebPageSchema({
+        path: `/ancestor/${item.slug}`,
+        name: `${item.name}祭拜`,
+        description: item.desc,
+        breadcrumbItems: [
+          { name: '礼佛祈愿', path: '/' },
+          { name: '拜祭先人', path: '/ancestors' },
+          { name: item.name, path: `/ancestor/${item.slug}` },
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        path: `/ancestor/${item.slug}`,
+        headline: `${item.name}祭拜`,
+        name: `${item.name}祭祖说明`,
+        description: item.desc,
+        about,
+      }),
+      buildFaqSchema(item.name, [
+        {
+          q: `这个页面适合祭拜${item.name}吗？`,
+          a: `${item.name}页面适合追思${item.name}、完成上香献花和写下回向内容。${item.desc}`,
+        },
+        {
+          q: '正式祭拜时一般要做哪些步骤？',
+          a: '正式祭拜时通常可以依次完成上香、献花、奠酒、烧纸，再填写追思或回向内容并提交记录。',
+        },
+        {
+          q: '页面中的牌位姓名和照片会公开吗？',
+          a: '页面支持提交祭拜祈愿记录，但个性化照片和姓名设置仅保存在当前设备，不会上传到服务器。',
+        },
+        {
+          q: '如果想重新选择不同牌位怎么办？',
+          a: '可以返回先人选择页重新选择牌位，正式祭拜页会自动带入你刚选择的牌位信息。',
+        },
+      ], item.name),
+    ],
+  }
+}
+
+function guidePage({ slug, title, description, heading }) {
+  const pagePath = `/guide/${slug}`
+  const about = {
+    '@type': 'Thing',
+    name: heading,
+    description,
+  }
+
+  return {
+    path: pagePath,
     title,
     description,
     heading,
     summary: description,
     image: SITE.defaultImage,
     schema: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        '@id': `${absoluteUrl(`/guide/${slug}`)}#webpage`,
+      buildWebPageSchema({
+        path: pagePath,
         name: heading,
-        url: absoluteUrl(`/guide/${slug}`),
         description,
-        inLanguage: 'zh-CN',
-        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
-        breadcrumb: breadcrumb([
+        breadcrumbItems: [
           { name: SITE.shortName, path: '/' },
-          { name: heading, path: `/guide/${slug}` },
-        ]),
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        '@id': `${absoluteUrl(`/guide/${slug}`)}#article`,
+          { name: heading, path: pagePath },
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        path: pagePath,
         headline: heading,
         name: title,
-        url: absoluteUrl(`/guide/${slug}`),
         description,
-        inLanguage: 'zh-CN',
-        author: { '@type': 'Organization', name: SITE.name },
-        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
-        mainEntityOfPage: { '@id': `${absoluteUrl(`/guide/${slug}`)}#webpage` },
-      },
+        about,
+      }),
     ],
   }
 }
 
 function topicPage({ path, slug }) {
   const topic = TOPICS[slug]
+  const isRitual = path.startsWith('/rituals/')
+  const isDefinitionPage = isRitual || path.startsWith('/prayers/') || path.startsWith('/texts/')
+  const about = {
+    '@type': 'Thing',
+    name: topic.heading,
+    description: topic.description,
+  }
+  const steps = isRitual
+    ? (topic.sections || []).map((section, index) => ({
+        '@type': 'HowToStep',
+        position: index + 1,
+        name: section.title,
+        text: (section.paragraphs || []).join(' '),
+      }))
+    : undefined
+
   return {
     path,
     title: topic.title,
@@ -249,35 +504,37 @@ function topicPage({ path, slug }) {
     summary: topic.intro,
     image: SITE.defaultImage,
     schema: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        '@id': `${absoluteUrl(path)}#webpage`,
+      buildWebPageSchema({
+        path,
         name: topic.heading,
-        url: absoluteUrl(path),
         description: topic.description,
-        inLanguage: 'zh-CN',
-        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
-        breadcrumb: breadcrumb([
+        breadcrumbItems: [
           { name: SITE.shortName, path: '/' },
           { name: topic.heading, path },
-        ]),
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': path.startsWith('/rituals/') ? 'HowTo' : 'Article',
-        '@id': `${absoluteUrl(path)}#main`,
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        type: isRitual ? 'HowTo' : 'Article',
+        idSuffix: 'main',
+        path,
         headline: topic.heading,
         name: topic.title,
-        url: absoluteUrl(path),
         description: topic.description,
-        inLanguage: 'zh-CN',
-        author: { '@type': 'Organization', name: SITE.name },
-        isPartOf: { '@id': `${SITE.baseUrl}/#website` },
-        mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
-        about: { '@type': 'Thing', name: topic.heading, description: topic.description },
-      },
-      buildFaqSchema(topic.title, topic.faqs),
+        about,
+        step: steps,
+      }),
+      ...(isDefinitionPage
+        ? [{
+            '@context': 'https://schema.org',
+            '@type': 'DefinedTerm',
+            name: topic.title,
+            description: topic.intro,
+            inDefinedTermSet: { '@type': 'DefinedTermSet', name: '礼佛祈愿术语与仪式说明' },
+          }]
+        : []),
+      buildFaqSchema(topic.title, topic.faqs, topic.heading),
     ],
   }
 }
@@ -285,9 +542,24 @@ function topicPage({ path, slug }) {
 export function getStaticPages() {
   return [
     homePage(),
-    guidePage({ slug: 'overview', title: '使用说明 | 礼佛祈愿', heading: '使用说明与礼佛流程', description: '汇总礼佛祈愿、祭祖追思、供花点灯、上香回向与隐私说明，帮助用户快速了解网站主要功能与使用方式。' }),
-    guidePage({ slug: 'worship', title: '在线礼佛指南', heading: '在线礼佛步骤与适用祈愿指南', description: '说明如何在线礼佛、供花、点灯、上香和发愿回向，也整理不同佛菩萨更常见的祈愿侧重。' }),
-    guidePage({ slug: 'ancestors', title: '在线祭祖指南', heading: '拜祭先人、追思回向与隐私说明', description: '说明如何在线祭祖、拜祭先人、进行追思回向，以及个性化照片与姓名设置的隐私边界。' }),
+    guidePage({
+      slug: 'overview',
+      title: '使用说明 | 礼佛祈愿',
+      heading: '使用说明与礼佛流程',
+      description: '汇总礼佛祈愿、祭祖追思、供花点灯、上香回向与隐私说明，帮助用户快速了解网站主要功能与使用方式。',
+    }),
+    guidePage({
+      slug: 'worship',
+      title: '在线礼佛指南',
+      heading: '在线礼佛步骤与适用祈愿指南',
+      description: '说明如何在线礼佛、供花、点灯、上香和发愿回向，也整理不同佛菩萨更常见的祈愿侧重。',
+    }),
+    guidePage({
+      slug: 'ancestors',
+      title: '在线祭祖指南',
+      heading: '祭祖追思、回向步骤与隐私说明',
+      description: '说明如何在线祭祖、追思先人、进行回向，以及个性化照片与姓名设置的隐私边界。',
+    }),
     ...getTopicEntries().map(topicPage),
     ...BUDDHAS.map(buddhaPage),
     ancestorsPage(),

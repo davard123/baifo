@@ -64,6 +64,7 @@ function renderPage(page) {
   const hiddenContent = buildHiddenContent(page)
 
   return template
+    .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)
     .replace(/<script type="application\/ld\+json" id="ld-webpage">[\s\S]*?<\/script>/, jsonLd)
     .replace(/<script>\s*const ld =[\s\S]*?<\/script>/, '')
