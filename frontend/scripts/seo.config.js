@@ -49,6 +49,28 @@ const BUDDHA_WIKI = {
   ksitigarbha: 'https://zh.wikipedia.org/wiki/地藏菩萨',
 }
 
+const BUDDHA_WIKIDATA = {
+  shakyamuni: 'https://www.wikidata.org/wiki/Q9441',
+  amitabha: 'https://www.wikidata.org/wiki/Q236242',
+  medicine: 'https://www.wikidata.org/wiki/Q18683181',
+  maitreya: 'https://www.wikidata.org/wiki/Q193461',
+  manjushri: 'https://www.wikidata.org/wiki/Q471696',
+  samantabhadra: 'https://www.wikidata.org/wiki/Q868306',
+  guanyin: 'https://www.wikidata.org/wiki/Q193849',
+  ksitigarbha: 'https://www.wikidata.org/wiki/Q604687',
+}
+
+const BUDDHA_EN = {
+  shakyamuni: 'Shakyamuni Buddha',
+  amitabha: 'Amitabha Buddha',
+  medicine: 'Medicine Buddha (Bhaisajyaguru)',
+  maitreya: 'Maitreya Bodhisattva',
+  manjushri: 'Manjushri Bodhisattva',
+  samantabhadra: 'Samantabhadra Bodhisattva',
+  guanyin: 'Guanyin (Avalokitesvara)',
+  ksitigarbha: 'Ksitigarbha Bodhisattva',
+}
+
 const BUDDHA_LOCATIONS = {
   shakyamuni: '释迦牟尼佛是娑婆世界教主，佛教传统中并不对应单一道场圣地，而是被视为一切佛法修行的根本依止。',
   amitabha: '阿弥陀佛对应西方极乐世界信仰，汉传佛教中常与净土法门和念佛往生的修持传统相联系。',
@@ -58,6 +80,95 @@ const BUDDHA_LOCATIONS = {
   samantabhadra: '普贤菩萨在汉传佛教中常与峨眉山道场相联系，象征大行、大愿与实践菩提道。',
   guanyin: '观音菩萨在汉传佛教中常与普陀山道场相联系，最常见的主题是慈悲救苦、护念平安与寻声应愿。',
   ksitigarbha: '地藏菩萨在汉传佛教中常与九华山道场相联系，常见礼敬主题包括超荐回向、追思先人和救度亡灵。',
+}
+
+const GUIDE_FAQS = {
+  overview: [
+    {
+      q: '第一次使用 Fopusha 建议先看哪里？',
+      a: '第一次使用可以先看使用说明页，再根据自己是想礼佛祈愿还是想祭祖追思，进入对应的功能页面。',
+    },
+    {
+      q: '功能页和专题说明页有什么区别？',
+      a: '功能页更适合直接完成礼佛、祭祖与回向操作；专题说明页更适合先了解某个主题是什么、适合什么场景和应该怎样开始。',
+    },
+    {
+      q: '祭祖页面里的姓名和照片会公开吗？',
+      a: '不会。个性化姓名和照片只保存在当前设备本地，用于本机显示，不会上传到服务器。',
+    },
+    {
+      q: 'Fopusha 更适合礼佛还是祭祖？',
+      a: 'Fopusha 同时覆盖在线礼佛祈愿与在线祭祖追思，两类入口都可以独立使用，也可以结合功德回向一起完成。',
+    },
+  ],
+  worship: [
+    {
+      q: '在线礼佛网站通常能做什么？',
+      a: '通常可以选择佛菩萨页面，完成供花、点灯、上香等动作，并填写祈愿内容后提交回向。',
+    },
+    {
+      q: '第一次礼佛建议先从哪个页面开始？',
+      a: '如果没有特别明确的祈愿主题，可以先从释迦牟尼佛页面开始，再根据健康、平安、智慧、超荐等主题进入相应佛菩萨页面。',
+    },
+    {
+      q: '观音菩萨、药师佛、地藏菩萨分别适合什么主题？',
+      a: '观音菩萨常见于慈悲、平安、消灾与求助；药师佛更常见于健康、延寿、消灾；地藏菩萨则更常见于超荐、回向与亡灵救度。',
+    },
+    {
+      q: '在线礼佛的基本步骤是什么？',
+      a: '在线礼佛通常分为四步：选择佛菩萨页面、完成供花点灯上香、填写祈愿内容、提交功德回向。',
+    },
+  ],
+  ancestors: [
+    {
+      q: '在线祭祖页面一般怎么使用？',
+      a: '通常先选择对应先人或相关页面，再完成供奉动作，填写祈愿内容，最后提交回向。',
+    },
+    {
+      q: '照片和姓名会不会上传到服务器？',
+      a: '不会。个性化照片和姓名设置仅保存在本地设备，用于当前设备显示。',
+    },
+    {
+      q: '在线祭祖和在线礼佛有什么不同？',
+      a: '在线礼佛更偏向佛菩萨礼敬与日常祈福；在线祭祖更偏向追思祖先、超荐亡灵和家族回向。',
+    },
+    {
+      q: '在线祭祖的基本步骤是什么？',
+      a: '在线祭祖通常分为四步：选择先人牌位、完成上香献花等供奉、填写追思或回向内容、提交祭拜记录。',
+    },
+  ],
+}
+
+const GUIDE_ARTICLE_BODIES = {
+  overview:
+    '使用说明页用于帮助第一次使用 Fopusha 的访客理解礼佛祈愿页面、祭祖追思页面和专题说明页分别适合什么场景，并快速找到正确入口。',
+  worship:
+    '在线礼佛指南说明如何在 Fopusha 中选择佛菩萨、完成供花点灯上香等供养动作、填写祈愿内容并提交功德回向，也说明不同佛菩萨常见的祈愿主题。',
+  ancestors:
+    '在线祭祖指南说明如何在 Fopusha 中选择先人牌位、完成上香献花奠酒烧纸等祭拜动作、填写追思或回向内容，并解释个性化姓名与照片设置的隐私边界。',
+}
+
+const HOWTO_META = {
+  'how-to-worship-buddha': {
+    totalTime: 'PT10M',
+    supply: ['清净之心', '祈愿内容'],
+  },
+  'offering-flowers': {
+    totalTime: 'PT5M',
+    supply: ['鲜花', '供养之心'],
+  },
+  'offering-light': {
+    totalTime: 'PT5M',
+    supply: ['灯烛或灯明', '祈愿内容'],
+  },
+  'offering-incense': {
+    totalTime: 'PT5M',
+    supply: ['清香', '恭敬之心'],
+  },
+  'how-to-dedicate-merit': {
+    totalTime: 'PT5M',
+    supply: ['回向对象', '回向内容'],
+  },
 }
 
 function absoluteUrl(pagePath) {
@@ -159,6 +270,10 @@ function buildArticleSchema({
   description,
   about,
   step,
+  articleBody,
+  totalTime,
+  supply,
+  tool,
 }) {
   return {
     '@context': 'https://schema.org',
@@ -176,7 +291,25 @@ function buildArticleSchema({
     isPartOf: { '@id': `${SITE.baseUrl}/#website` },
     mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
     about,
+    ...(articleBody ? { articleBody } : {}),
     ...(step ? { step } : {}),
+    ...(totalTime ? { totalTime } : {}),
+    ...(supply
+      ? {
+          supply: supply.map((item) => ({
+            '@type': 'HowToSupply',
+            name: item,
+          })),
+        }
+      : {}),
+    ...(tool
+      ? {
+          tool: tool.map((item) => ({
+            '@type': 'HowToTool',
+            name: item,
+          })),
+        }
+      : {}),
   }
 }
 
@@ -256,11 +389,13 @@ function homePage() {
 }
 
 function buddhaPage(item) {
+  const sameAs = [BUDDHA_WIKI[item.slug], BUDDHA_WIKIDATA[item.slug]].filter(Boolean)
   const about = {
     '@type': 'Thing',
     name: item.name,
     description: item.desc,
-    sameAs: BUDDHA_WIKI[item.slug] || undefined,
+    alternateName: BUDDHA_EN[item.slug],
+    sameAs,
   }
 
   return {
@@ -288,14 +423,16 @@ function buddhaPage(item) {
         name: `${item.name}礼佛指南`,
         description: item.desc,
         about,
+        articleBody: `${item.name}，${item.subtitle}。${item.desc}此页适合在线供花、点灯、上香、填写祈愿内容并提交功德回向。`,
       }),
       {
         '@context': 'https://schema.org',
         '@type': 'DefinedTerm',
         name: item.name,
+        alternateName: BUDDHA_EN[item.slug],
         description: item.desc,
         inDefinedTermSet: { '@type': 'DefinedTermSet', name: '佛教词汇' },
-        sameAs: BUDDHA_WIKI[item.slug],
+        sameAs,
       },
       buildFaqSchema(item.name, [
         {
@@ -442,6 +579,7 @@ function ancestorPage(item) {
 
 function guidePage({ slug, title, description, heading }) {
   const pagePath = `/guide/${slug}`
+  const faqs = GUIDE_FAQS[slug] || []
   const about = {
     '@type': 'Thing',
     name: heading,
@@ -473,7 +611,9 @@ function guidePage({ slug, title, description, heading }) {
         name: title,
         description,
         about,
+        articleBody: GUIDE_ARTICLE_BODIES[slug] || description,
       }),
+      buildFaqSchema(title, faqs, heading),
     ],
   }
 }
@@ -482,6 +622,7 @@ function topicPage({ path, slug }) {
   const topic = TOPICS[slug]
   const isRitual = path.startsWith('/rituals/')
   const isDefinitionPage = isRitual || path.startsWith('/prayers/') || path.startsWith('/texts/')
+  const howToMeta = HOWTO_META[slug]
   const about = {
     '@type': 'Thing',
     name: topic.heading,
@@ -524,6 +665,12 @@ function topicPage({ path, slug }) {
         description: topic.description,
         about,
         step: steps,
+        articleBody: [topic.intro, ...(topic.sections || []).flatMap((section) => [section.title, ...(section.paragraphs || [])])]
+          .filter(Boolean)
+          .join('\n'),
+        totalTime: howToMeta?.totalTime,
+        supply: howToMeta?.supply,
+        tool: isRitual ? ['Fopusha 在线礼佛平台'] : undefined,
       }),
       ...(isDefinitionPage
         ? [{
