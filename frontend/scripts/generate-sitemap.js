@@ -7,6 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const publicSitemapPath = path.resolve(__dirname, '../public/sitemap.xml')
 const distSitemapPath = path.resolve(__dirname, '../dist/sitemap.xml')
+const publicTextSitemapPath = path.resolve(__dirname, '../public/sitemap.txt')
+const distTextSitemapPath = path.resolve(__dirname, '../dist/sitemap.txt')
 const publicRobotsPath = path.resolve(__dirname, '../public/robots.txt')
 const distRobotsPath = path.resolve(__dirname, '../dist/robots.txt')
 
@@ -59,10 +61,14 @@ ${pages.map((page) => `  <url>
 </urlset>
 `
 
+const txt = `${pages.map((page) => `${SITE.baseUrl}${page.url}`).join('\n')}\n`
+
 fs.writeFileSync(publicSitemapPath, xml, 'utf8')
+fs.writeFileSync(publicTextSitemapPath, txt, 'utf8')
 
 if (fs.existsSync(path.dirname(distSitemapPath))) {
   fs.writeFileSync(distSitemapPath, xml, 'utf8')
+  fs.writeFileSync(distTextSitemapPath, txt, 'utf8')
 }
 
 if (fs.existsSync(publicRobotsPath) && fs.existsSync(path.dirname(distRobotsPath))) {

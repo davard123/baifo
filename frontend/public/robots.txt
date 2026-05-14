@@ -1,6 +1,16 @@
 User-agent: *
 Allow: /
 
+# China search engines
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
 # OpenAI
 User-agent: GPTBot
 Allow: /
@@ -40,3 +50,4 @@ Allow: /
 
 Crawl-delay: 1
 Sitemap: https://www.fopusha.com/sitemap.xml
+Sitemap: https://www.fopusha.com/sitemap.txt
