@@ -317,7 +317,7 @@ function homePage() {
   return {
     path: '/',
     title: '礼佛祈愿 | 八位佛菩萨在线礼佛祈愿平台',
-    description: '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。站内覆盖释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨，也提供在线祭祖、供花、点灯、上香和功德回向。',
+    description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站。站内覆盖释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨，也提供在线祭祖、供花、点灯、上香和功德回向。',
     heading: '礼佛祈愿',
     summary: '在线礼佛祈愿平台，提供八位佛菩萨礼敬、供花、点灯、上香、祈愿回向与在线祭祖追思。',
     image: SITE.defaultImage,
@@ -345,7 +345,7 @@ function homePage() {
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
         inLanguage: 'zh-CN',
-        description: 'Fopusha 提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
+        description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
       },
       {
         '@context': 'https://schema.org',
@@ -353,7 +353,7 @@ function homePage() {
         '@id': `${absoluteUrl('/')}#collection`,
         name: SITE.name,
         url: absoluteUrl('/'),
-        description: '八位佛菩萨在线礼佛祈愿与功德回向平台。',
+        description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供八位佛菩萨礼佛祈愿与功德回向入口。',
         inLanguage: 'zh-CN',
         speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child']),
         mainEntity: {
@@ -369,7 +369,7 @@ function homePage() {
       buildFaqSchema('礼佛祈愿', [
         {
           q: 'Fopusha 是什么网站？',
-          a: 'Fopusha 是一个在线礼佛、祈愿、祭祖追思与功德回向网站，用户可以选择佛菩萨页面完成供花、点灯、上香与回向，也可以进入先人牌位页面进行追思祭拜。',
+          a: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，用户可以选择佛菩萨页面完成供花、点灯、上香与回向，也可以进入先人牌位页面进行追思祭拜。',
         },
         {
           q: '这个网站可以做什么？',
