@@ -1,4 +1,17 @@
 <script setup>
+function formatWishTime(value) {
+  if (!value) return ''
+  const date = new Date(typeof value === 'string' ? value.replace(' ', 'T') : value)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date)
+}
+
 defineProps({
   wishes: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
@@ -19,6 +32,7 @@ defineProps({
             <span v-if="w.ancestor">为先{{ w.relationship }}{{ w.ancestor_name }}祭拜</span>
             <span v-else-if="w.target">祝{{ w.target }}</span>
           </span>
+          <span v-if="w.created_at" class="wish-time">{{ formatWishTime(w.created_at) }}</span>
           <span v-if="w.ancestor" class="wish-buddha ancestor-tag">{{ w.ancestor_name }}</span>
           <span v-else-if="w.blessing" class="wish-buddha">{{ w.blessing }}</span>
           <span v-else-if="w.buddha" class="wish-buddha">{{ w.buddha }}</span>
@@ -69,6 +83,10 @@ defineProps({
 }
 .wish-user { font-weight: 600; color: var(--accent); }
 .wish-user span { font-weight: normal; color: var(--text-muted); }
+.wish-time {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
 .wish-buddha {
   margin-left: auto;
   font-size: 0.78rem;
