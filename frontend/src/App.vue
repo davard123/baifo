@@ -1,7 +1,8 @@
 <script setup>
-import { watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
+import { warmApi } from './api.js'
 import { getSeoByPath, SITE } from '../scripts/seo.config.js'
 
 const route = useRoute()
@@ -77,6 +78,10 @@ watch(
   (path) => applyRouteSeo(path),
   { immediate: true }
 )
+
+onMounted(() => {
+  warmApi()
+})
 </script>
 
 <template>

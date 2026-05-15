@@ -1,6 +1,8 @@
 import os
+from contextlib import contextmanager
 import psycopg2
 import psycopg2.extras
+import psycopg2.pool
 from fastapi import FastAPI
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +11,14 @@ from pydantic import BaseModel, field_validator
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL environment variable not set")
+
+DB_POOL = psycopg2.pool.SimpleConnectionPool(
+    minconn=1,
+    maxconn=5,
+    dsn=DATABASE_URL,
+    cursor_factory=psycopg2.extras.RealDictCursor,
+    connect_timeout=10,
+)
 
 app = FastAPI(title="礼佛祈愿 API")
 
@@ -20,12 +30,13 @@ app.add_middleware(
 )
 
 
-def _get_conn():
-    return psycopg2.connect(
-        dsn=DATABASE_URL,
-        cursor_factory=psycopg2.extras.RealDictCursor,
-        connect_timeout=10,
-    )
+@contextmanager
+def _db_conn():
+    conn = DB_POOL.getconn()
+    try:
+        yield conn
+    finally:
+        DB_POOL.putconn(conn)
 
 
 def _dict_row(row):
@@ -33,7 +44,7 @@ def _dict_row(row):
 
 
 def _init_db() -> None:
-    with _get_conn() as conn:
+    with _db_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS users (
@@ -59,6 +70,10 @@ def _init_db() -> None:
                     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_users_created_id ON users (id DESC)")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_users_username_id ON users (username, id DESC)")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_ancestor_wishes_created_id ON ancestor_wishes (id DESC)")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_ancestor_wishes_username_id ON ancestor_wishes (username, id DESC)")
 
 
 _init_db()
@@ -103,7 +118,7 @@ def health():
 
 @app.get("/wishes")
 def get_wishes(limit: int = Query(default=15, ge=1, le=50), username: str | None = None):
-    with _get_conn() as conn:
+    with _db_conn() as conn:
         with conn.cursor() as cur:
             if username:
                 cur.execute(
@@ -121,7 +136,7 @@ def get_wishes(limit: int = Query(default=15, ge=1, le=50), username: str | None
 
 @app.post("/wishes")
 def create_wish(body: WishIn):
-    with _get_conn() as conn:
+    with _db_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO users (username, age, wish, buddha, blessing, target) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -132,7 +147,7 @@ def create_wish(body: WishIn):
 
 @app.get("/ancestor-wishes")
 def get_ancestor_wishes(limit: int = Query(default=15, ge=1, le=50), username: str | None = None):
-    with _get_conn() as conn:
+    with _db_conn() as conn:
         with conn.cursor() as cur:
             if username:
                 cur.execute(
@@ -150,7 +165,7 @@ def get_ancestor_wishes(limit: int = Query(default=15, ge=1, le=50), username: s
 
 @app.post("/ancestor-wishes")
 def create_ancestor_wish(body: AncestorWishIn):
-    with _get_conn() as conn:
+    with _db_conn() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO ancestor_wishes (username, age, ancestor, ancestor_name, relationship, wish) VALUES (%s, %s, %s, %s, %s, %s)",

@@ -12,7 +12,8 @@ const router = useRouter()
 
 const publicWishes = ref([])
 const myWishes = ref([])
-const loading = ref(true)
+const loadingPublic = ref(true)
+const loadingMine = ref(true)
 const viewerName = ref('')
 const latestWishes = computed(() => publicWishes.value.slice(0, 15))
 const myLatestWishes = computed(() => myWishes.value.slice(0, 5))
@@ -82,19 +83,30 @@ function entryStatus(ancestor) {
 }
 
 async function loadWishes() {
-  loading.value = true
+  loadingPublic.value = true
+  loadingMine.value = true
   viewerName.value = getViewerProfile().username
   try {
-    const requests = [apiFetch('/ancestor-wishes?limit=15')]
-    if (viewerName.value) {
-      requests.push(apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
-    }
+    const publicResult = await apiFetch('/ancestor-wishes?limit=15')
+    publicWishes.value = await publicResult.json()
+  } catch {
+    publicWishes.value = []
+  }
+  loadingPublic.value = false
 
-    const results = await Promise.all(requests)
-    publicWishes.value = await results[0].json()
-    myWishes.value = viewerName.value && results[1] ? await results[1].json() : []
-  } catch {}
-  loading.value = false
+  if (!viewerName.value) {
+    myWishes.value = []
+    loadingMine.value = false
+    return
+  }
+
+  try {
+    const mineResult = await apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`)
+    myWishes.value = await mineResult.json()
+  } catch {
+    myWishes.value = []
+  }
+  loadingMine.value = false
 }
 
 onMounted(() => {
@@ -225,7 +237,7 @@ onMounted(() => {
           <p class="section-sub">显示所有人最近 15 条祭祖与回向记录。</p>
           <AncestorWishList
             :wishes="latestWishes"
-            :loading="loading"
+            :loading="loadingPublic"
             empty-message="暂时还没有公开祭拜记录。"
           />
         </section>
@@ -234,7 +246,7 @@ onMounted(() => {
           <p class="section-sub">显示当前设备识别到的最近 5 条个人祭拜记录。</p>
           <AncestorWishList
             :wishes="myLatestWishes"
-            :loading="loading"
+            :loading="loadingMine"
             :empty-message="viewerName ? '你最近还没有祭拜记录。' : '先提交一次祭拜，之后这里会显示你的最近 5 条记录。'"
           />
         </section>

@@ -12,7 +12,8 @@ const publicWishes = ref([])
 const publicAncestorWishes = ref([])
 const myWishes = ref([])
 const myAncestorWishes = ref([])
-const loading = ref(true)
+const loadingPublic = ref(true)
+const loadingMine = ref(true)
 const viewerName = ref('')
 const topBookmarks = [
   {
@@ -127,32 +128,41 @@ const aiTopicPages = [
 ]
 
 async function loadWishes() {
-  loading.value = true
+  loadingPublic.value = true
+  loadingMine.value = true
   viewerName.value = getViewerProfile().username
   try {
-    const requests = [
+    const publicResults = await Promise.all([
       apiFetch('/wishes?limit=15'),
       apiFetch('/ancestor-wishes?limit=15'),
-    ]
+    ])
+    publicWishes.value = await publicResults[0].json()
+    publicAncestorWishes.value = await publicResults[1].json()
+  } catch {
+    publicWishes.value = []
+    publicAncestorWishes.value = []
+  }
+  loadingPublic.value = false
 
-    if (viewerName.value) {
-      requests.push(apiFetch(`/wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
-      requests.push(apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`))
-    }
+  if (!viewerName.value) {
+    myWishes.value = []
+    myAncestorWishes.value = []
+    loadingMine.value = false
+    return
+  }
 
-    const results = await Promise.all(requests)
-    publicWishes.value = await results[0].json()
-    publicAncestorWishes.value = await results[1].json()
-
-    if (viewerName.value) {
-      myWishes.value = await results[2].json()
-      myAncestorWishes.value = await results[3].json()
-    } else {
-      myWishes.value = []
-      myAncestorWishes.value = []
-    }
-  } catch {}
-  loading.value = false
+  try {
+    const mineResults = await Promise.all([
+      apiFetch(`/wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`),
+      apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`),
+    ])
+    myWishes.value = await mineResults[0].json()
+    myAncestorWishes.value = await mineResults[1].json()
+  } catch {
+    myWishes.value = []
+    myAncestorWishes.value = []
+  }
+  loadingMine.value = false
 }
 
 onMounted(() => {
@@ -226,7 +236,7 @@ onMounted(() => {
           <p class="section-sub">显示所有人最近 15 条礼佛与回向记录。</p>
           <WishList
             :wishes="allWishes"
-            :loading="loading"
+            :loading="loadingPublic"
             empty-message="暂时还没有公开祈愿记录。"
           />
         </section>
@@ -236,7 +246,7 @@ onMounted(() => {
           <p class="section-sub">显示当前设备识别到的最近 5 条个人记录。</p>
           <WishList
             :wishes="myRecentWishes"
-            :loading="loading"
+            :loading="loadingMine"
             :empty-message="viewerName ? '你最近还没有祈愿记录。' : '先提交一次祈愿，之后这里会显示你的最近 5 条记录。'"
           />
         </section>
