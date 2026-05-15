@@ -81,6 +81,7 @@ watch(
 
 <template>
   <img src="/music/7-25-100%20(1).jpg" aria-hidden="true" class="hidden-figure" />
+  <img src="/devotee.png" aria-hidden="true" class="hidden-figure" />
   <router-view />
   <section class="site-disclaimer" aria-label="网站说明">
     <p>
