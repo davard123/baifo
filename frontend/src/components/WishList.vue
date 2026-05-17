@@ -12,6 +12,10 @@ function formatWishTime(value) {
   }).format(date)
 }
 
+function isAncestorWish(wish) {
+  return wish?.record_type === 'ancestor' || !!wish?.ancestor_name || !!wish?.ancestor
+}
+
 defineProps({
   wishes: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
@@ -24,7 +28,7 @@ defineProps({
     <div v-if="loading" class="state-msg">加载中…</div>
     <div v-else-if="!wishes.length" class="state-msg empty">{{ emptyMessage }}</div>
     <div v-else class="wish-items">
-      <div v-for="w in wishes" :key="w.id" class="wish-item" :class="{ ancestor: !!w.ancestor }">
+      <div v-for="w in wishes" :key="w.record_key || `${isAncestorWish(w) ? 'ancestor' : 'wish'}-${w.id}`" class="wish-item" :class="{ ancestor: isAncestorWish(w) }">
         <div class="wish-meta">
           <span class="wish-user">
             <span v-if="w.age">{{ w.age }}岁的</span>

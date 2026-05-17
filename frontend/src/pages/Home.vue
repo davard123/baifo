@@ -33,20 +33,33 @@ const topBookmarks = [
   },
 ]
 
+function normalizeWishRecords(records, type) {
+  return records.map((record) => {
+    const createdAt = record.created_at ? String(record.created_at).replace(' ', 'T') : ''
+    const time = createdAt ? new Date(createdAt).getTime() : 0
+    return {
+      ...record,
+      record_type: type,
+      record_key: `${type}-${record.id}`,
+      record_time: Number.isNaN(time) ? 0 : time,
+    }
+  })
+}
+
 const allWishes = computed(() => {
   const combined = [
-    ...publicWishes.value,
-    ...publicAncestorWishes.value,
+    ...normalizeWishRecords(publicWishes.value, 'wish'),
+    ...normalizeWishRecords(publicAncestorWishes.value, 'ancestor'),
   ]
-  return combined.sort((a, b) => b.id - a.id).slice(0, 15)
+  return combined.sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key))).slice(0, 15)
 })
 
 const myRecentWishes = computed(() => {
   const combined = [
-    ...myWishes.value,
-    ...myAncestorWishes.value,
+    ...normalizeWishRecords(myWishes.value, 'wish'),
+    ...normalizeWishRecords(myAncestorWishes.value, 'ancestor'),
   ]
-  return combined.sort((a, b) => b.id - a.id).slice(0, 5)
+  return combined.sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key))).slice(0, 5)
 })
 
 const guideCards = [
