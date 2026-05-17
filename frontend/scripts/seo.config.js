@@ -6,7 +6,7 @@ export const SITE = {
   name: '礼佛祈愿',
   shortName: 'Fopusha',
   baseUrl: 'https://www.fopusha.com',
-  defaultImage: '/devotee.png',
+  defaultImage: '/devotee-og.jpg',
   defaultLocale: 'zh_CN',
   themeColor: '#2f2216',
   datePublished: '2024-10-01',

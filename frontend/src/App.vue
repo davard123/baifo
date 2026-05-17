@@ -85,8 +85,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <img src="/music/7-25-100%20(1).jpg" aria-hidden="true" class="hidden-figure" />
-  <img src="/devotee.png" aria-hidden="true" class="hidden-figure" />
   <router-view />
   <section class="site-disclaimer" aria-label="网站说明">
     <p>
@@ -94,16 +92,20 @@ onMounted(() => {
       祈愿不构成对现实结果的保证，也不能替代医疗、心理、法律、财务或紧急专业帮助。
     </p>
   </section>
+  <img src="/music/hidden-figure.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
+  <img src="/devotee-og.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
   <AudioPlayer />
 </template>
 
 <style>
 #app { min-height: 100vh; }
 .hidden-figure {
-  position: fixed;
+  position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
+  left: 0;
+  bottom: 0;
   pointer-events: none;
 }
 .site-disclaimer {
