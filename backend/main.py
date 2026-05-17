@@ -35,6 +35,10 @@ def _db_conn():
     conn = DB_POOL.getconn()
     try:
         yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         DB_POOL.putconn(conn)
 
