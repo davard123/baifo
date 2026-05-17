@@ -118,10 +118,13 @@ function doRitual(r) {
         class="blessing-item"
         @click="open(b)"
       >
-        <div
+        <img
           class="blessing-icon"
-          :style="{ backgroundImage: `url(${b.bg})` }"
-        ></div>
+          :src="b.icon"
+          :alt="b.label"
+          loading="lazy"
+          decoding="async"
+        />
         <span class="blessing-label">{{ b.label }}</span>
       </button>
     </div>
@@ -246,8 +249,7 @@ function doRitual(r) {
 
 .blessing-icon {
   width: 60px; height: 60px;
-  background-size: cover;
-  background-position: center;
+  object-fit: cover;
   border-radius: 50%;
   border: 2px solid rgba(212,168,67,0.25);
 }

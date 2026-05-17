@@ -194,7 +194,7 @@ onMounted(() => {
           class="buddha-card"
         >
           <div class="buddha-img-wrap">
-            <img :src="b.image" :alt="b.name" />
+            <img :src="b.thumb || b.image" :alt="b.name" loading="lazy" decoding="async" />
           </div>
           <div class="buddha-info">
             <h3>{{ b.name }}</h3>

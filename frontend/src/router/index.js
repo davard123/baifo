@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../pages/Home.vue'
-import BuddhaPage from '../pages/BuddhaPage.vue'
-import AncestorPage from '../pages/AncestorPage.vue'
-import AncestorsPage from '../pages/AncestorsPage.vue'
-import GuidePage from '../pages/GuidePage.vue'
-import TopicPage from '../pages/TopicPage.vue'
+
+const Home = () => import('../pages/Home.vue')
+const BuddhaPage = () => import('../pages/BuddhaPage.vue')
+const AncestorPage = () => import('../pages/AncestorPage.vue')
+const AncestorsPage = () => import('../pages/AncestorsPage.vue')
+const GuidePage = () => import('../pages/GuidePage.vue')
+const TopicPage = () => import('../pages/TopicPage.vue')
 
 export default createRouter({
   history: createWebHistory(),
