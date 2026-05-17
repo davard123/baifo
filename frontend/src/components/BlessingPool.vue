@@ -45,6 +45,8 @@ function close() {
 }
 
 async function submit() {
+  if (loading.value) return
+
   if (!form.value.name.trim()) {
     toast.value = '请填写祈福者姓名'
     setTimeout(() => toast.value = '', 2500)
@@ -65,7 +67,12 @@ async function submit() {
         target: form.value.target
       })
     })
-  } catch {}
+  } catch {
+    toast.value = '提交失败，请稍后重试。'
+    setTimeout(() => toast.value = '', 2500)
+    loading.value = false
+    return
+  }
   loading.value = false
   resultWish.value = active.value.wish
   stage.value = 'done'

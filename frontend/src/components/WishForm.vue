@@ -3,7 +3,8 @@ import { ref, onMounted } from 'vue'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
 const props = defineProps({
-  defaultWish: { type: String, default: '' }
+  defaultWish: { type: String, default: '' },
+  onSubmit: { type: Function, default: null }
 })
 const emit = defineEmits(['submit'])
 
@@ -20,6 +21,8 @@ onMounted(() => {
 })
 
 async function handleSubmit() {
+  if (loading.value) return
+
   error.value = ''
   if (!username.value.trim()) { error.value = '请填写用户名。'; return }
   if (!age.value || age.value <= 0) { error.value = '请填写正确的年龄。'; return }
@@ -28,11 +31,17 @@ async function handleSubmit() {
   loading.value = true
   try {
     saveViewerProfile(username.value.trim(), age.value)
-    await emit('submit', {
+    const payload = {
       username: username.value.trim(),
       age: Number(age.value),
       wish: wish.value.trim()
-    })
+    }
+
+    if (props.onSubmit) {
+      await props.onSubmit(payload)
+    } else {
+      emit('submit', payload)
+    }
   } catch (e) {
     error.value = e.message || '提交失败，请稍后重试。'
   } finally {

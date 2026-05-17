@@ -171,7 +171,7 @@ async function onSubmit(payload) {
           :default-wish="ancestor.wish"
           :default-ancestor-name="displayAncestorName"
           :default-relationship="defaultRelationship"
-          @submit="onSubmit"
+          :on-submit="onSubmit"
         />
       </section>
     </div>

@@ -127,7 +127,7 @@ async function onSubmit(payload) {
         <hr class="divider" />
         <RitualButtons @ritual="onRitual" />
         <hr class="divider" />
-        <WishForm :default-wish="buddha.wish" @submit="onSubmit" />
+        <WishForm :default-wish="buddha.wish" :on-submit="onSubmit" />
         <hr class="divider" />
 
         <p class="buddha-desc">{{ buddha.desc }}</p>
