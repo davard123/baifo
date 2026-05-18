@@ -54,7 +54,7 @@ watch(
         v-if="tabletSrc"
         :src="tabletSrc"
         :alt="ancestor.name"
-        :class="['ancestor-img', { 'has-custom': !!customPhoto }]"
+        :class="['ancestor-img', { 'has-custom': !!customPhoto, 'plain-fill': isPlainStage && !customPhoto }]"
       />
     </div>
 
@@ -137,8 +137,8 @@ watch(
 }
 
 .ancestor-frame.plain-mode {
-  top: 8%;
-  height: 62%;
+  inset: 0;
+  height: auto;
 }
 
 .ancestor-img {
@@ -152,6 +152,15 @@ watch(
 
 .ancestor-img.has-custom {
   filter: drop-shadow(0 18px 26px rgba(72, 43, 18, 0.16));
+}
+
+.ancestor-img.plain-fill {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 44%;
+  filter: none;
 }
 
 .altar-row {
@@ -283,7 +292,15 @@ watch(
 }
 
 .stage.plain-stage .altar-floor {
-  height: 28%;
+  display: none;
+}
+
+.stage.plain-stage .sky-layer {
+  display: none;
+}
+
+.stage.plain-stage {
+  background: #0f0905;
 }
 
 @keyframes flicker {
@@ -303,8 +320,8 @@ watch(
 
 @media (orientation: portrait) {
   .ancestor-frame.plain-mode {
-    top: 9%;
-    height: 58%;
+    inset: 0;
+    height: auto;
   }
 
   .altar-row {

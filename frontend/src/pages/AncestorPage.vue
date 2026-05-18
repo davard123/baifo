@@ -292,11 +292,11 @@ async function onSubmit(payload) {
 }
 
 :deep(.stage) {
-  aspect-ratio: 3/4;
+  aspect-ratio: auto;
   height: 100%;
-  max-width: 100%;
-  width: auto;
-  max-height: 680px;
+  width: 100%;
+  max-width: none;
+  max-height: none;
   border-radius: 0;
 }
 
