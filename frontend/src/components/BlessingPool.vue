@@ -8,16 +8,14 @@ import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
 
-const active = ref(null)    // 当前选中的祈福项
-const toast  = ref('')
-const stage  = ref('select')  // 'select' | 'form' | 'done'
+const active = ref(null)
+const toast = ref('')
+const stage = ref('select')
 
-// 表单
 const form = ref({ name: '', age: '', target: '' })
 const loading = ref(false)
 const resultWish = ref('')
 
-// localStorage 恢复上次记录
 onMounted(() => {
   const viewer = getViewerProfile()
   form.value.name = viewer.username || ''
@@ -26,13 +24,13 @@ onMounted(() => {
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
-  const i = BLESSINGS.findIndex(b => b.key === active.value.key)
+  const i = BLESSINGS.findIndex((b) => b.key === active.value.key)
   return i >= 0 && i < BLESSINGS.length - 1 ? BLESSINGS[i + 1] : null
 })
 
 function open(b) {
   active.value = b
-  stage.value  = 'form'
+  stage.value = 'form'
   resultWish.value = ''
   form.value.target = ''
   doneRituals.value = new Set()
@@ -40,8 +38,8 @@ function open(b) {
 
 function close() {
   active.value = null
-  stage.value  = 'select'
-  form.value   = { name: '', age: '', target: '' }
+  stage.value = 'select'
+  form.value = { name: '', age: '', target: '' }
 }
 
 async function submit() {
@@ -49,11 +47,15 @@ async function submit() {
 
   if (!form.value.name.trim()) {
     toast.value = '请填写祈福者姓名'
-    setTimeout(() => toast.value = '', 2500)
+    setTimeout(() => {
+      toast.value = ''
+    }, 2500)
     return
   }
+
   loading.value = true
   saveViewerProfile(form.value.name.trim(), form.value.age)
+
   try {
     await apiFetch('/wishes', {
       method: 'POST',
@@ -64,15 +66,18 @@ async function submit() {
         wish: active.value.wish,
         buddha: '',
         blessing: active.value.label,
-        target: form.value.target
-      })
+        target: form.value.target,
+      }),
     })
   } catch {
     toast.value = '提交失败，请稍后重试。'
-    setTimeout(() => toast.value = '', 2500)
+    setTimeout(() => {
+      toast.value = ''
+    }, 2500)
     loading.value = false
     return
   }
+
   loading.value = false
   resultWish.value = active.value.wish
   stage.value = 'done'
@@ -82,30 +87,36 @@ async function submit() {
 const RITUALS = [
   { name: '上香', icon: '🪔', toast: '心香一瓣，供养十方。' },
   { name: '点灯', icon: '🕯️', toast: '慧灯常明，照破无明。' },
-  { name: '磕头', icon: '🙏', toast: '三叩首，礼敬祈福。' },
+  { name: '叩拜', icon: '🙏', toast: '三叩首，礼敬祈福。' },
 ]
+
 const doneRituals = ref(new Set())
-const popRitual  = ref('')
-const floats     = ref([])   // [{id, icon, left}] 浮起粒子列表
+const popRitual = ref('')
+const floats = ref([])
 
 function doRitual(r) {
   if (doneRituals.value.has(r.name)) return
+
   doneRituals.value = new Set([...doneRituals.value, r.name])
   toast.value = r.toast
-  setTimeout(() => toast.value = '', 2500)
-  // 按钮弹跳
+  setTimeout(() => {
+    toast.value = ''
+  }, 2500)
+
   popRitual.value = r.name
-  setTimeout(() => popRitual.value = '', 400)
-  // 发射浮起粒子（3个，随机左右偏移）
+  setTimeout(() => {
+    popRitual.value = ''
+  }, 400)
+
   const count = 3
-  for (let i = 0; i < count; i++) {
-    const id   = Date.now() + i
-    const left = 30 + Math.random() * 40   // 30%~70%
-    const delay = i * 180                   // 错开发射
+  for (let i = 0; i < count; i += 1) {
+    const id = Date.now() + i
+    const left = 30 + Math.random() * 40
+    const delay = i * 180
     setTimeout(() => {
       floats.value.push({ id, icon: r.icon, left })
       setTimeout(() => {
-        floats.value = floats.value.filter(f => f.id !== id)
+        floats.value = floats.value.filter((f) => f.id !== id)
       }, 1500)
     }, delay)
   }
@@ -117,7 +128,6 @@ function doRitual(r) {
     <h2 class="section-title">祈福池</h2>
     <p class="section-sub">心诚则灵，选择一项，虔诚发愿，功德回向。</p>
 
-    <!-- 12 项祈福网格 -->
     <div class="blessing-grid">
       <button
         v-for="b in BLESSINGS"
@@ -136,27 +146,30 @@ function doRitual(r) {
       </button>
     </div>
 
-    <!-- 祈福弹窗 -->
     <Teleport to="body">
       <div v-if="active" class="blessing-modal" @click.self="close">
-        <!-- 背景场景 -->
-        <div class="modal-scene">
-          <div class="scene-img-wrap">
-            <img :src="active.bg" alt="" class="scene-img" />
+        <div class="modal-shell">
+          <div class="modal-scene">
+            <div class="scene-img-wrap">
+              <img :src="active.bg" :alt="active.label" class="scene-img" />
+            </div>
           </div>
-          <div class="scene-overlay">
-            <!-- 祈福语（form 阶段，放在按钮上方） -->
-            <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
 
-            <!-- 礼佛动作（form 阶段） -->
+          <div class="scene-overlay">
+            <div class="overlay-head">
+              <p class="overlay-kicker">祈福主题</p>
+              <h3 class="overlay-title">{{ active.label }}</h3>
+              <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
+              <p v-if="stage === 'done'" class="result-wish">{{ resultWish }}</p>
+            </div>
+
             <div v-if="stage === 'form'" class="scene-rituals">
-              <!-- 浮起 emoji 粒子 -->
               <TransitionGroup name="float-group">
                 <span
                   v-for="f in floats"
                   :key="f.id"
                   class="float-emoji"
-                  :style="{ left: f.left + '%' }"
+                  :style="{ left: `${f.left}%` }"
                 >{{ f.icon }}</span>
               </TransitionGroup>
 
@@ -169,21 +182,30 @@ function doRitual(r) {
                 @click="doRitual(r)"
               >
                 <span class="ritual-icon">{{ r.icon }}</span>
-                <span class="ritual-name">{{ r.name }}{{ doneRituals.has(r.name) ? ' ✓' : '' }}</span>
+                <span class="ritual-name">
+                  {{ r.name }}{{ doneRituals.has(r.name) ? ' ✓' : '' }}
+                </span>
               </button>
             </div>
 
-            <!-- 祝福语结果 -->
             <div v-if="stage === 'done'" class="scene-result">
-              <p class="result-wish">{{ resultWish }}</p>
-              <p class="result-user">—— {{ form.age }}岁的{{ form.name }}敬上{{ form.target ? `祝${form.target}` : '' }}</p>
+              <p class="result-user">
+                {{ form.age }}岁的{{ form.name }}敬上{{ form.target ? `，祈愿${form.target}` : '' }}
+              </p>
               <div class="result-btns">
-                <button v-if="nextBlessing" class="back-home-btn next-btn" @click="open(nextBlessing)">进入下一个祈福池</button>
-                <button class="back-home-btn" @click="close(); router.push('/')">返回首页</button>
+                <button
+                  v-if="nextBlessing"
+                  class="back-home-btn next-btn"
+                  @click="open(nextBlessing)"
+                >
+                  进入下一个祈福池
+                </button>
+                <button class="back-home-btn" @click="close(); router.push('/')">
+                  返回首页
+                </button>
               </div>
             </div>
 
-            <!-- 表单输入（form 阶段） -->
             <div v-if="stage === 'form'" class="scene-form">
               <div class="form-row">
                 <input
@@ -198,18 +220,21 @@ function doRitual(r) {
                   type="number"
                   placeholder="年龄"
                   class="field age-field"
-                  min="1" max="150"
+                  min="1"
+                  max="150"
                 />
               </div>
+
               <input
                 v-model="form.target"
                 type="text"
-                placeholder="为谁祈福？（可填，如：父亲健康）"
+                placeholder="为谁祈福（可选，如：父亲健康）"
                 class="field target-field"
                 maxlength="50"
               />
+
               <button class="submit-btn" :disabled="loading" @click="submit">
-                <span v-if="loading">祈福中…</span>
+                <span v-if="loading">祈福中...</span>
                 <span v-else>🙏 递交祈福</span>
               </button>
             </div>
@@ -227,8 +252,9 @@ function doRitual(r) {
 </template>
 
 <style scoped>
-/* ── 祈福池网格 ── */
-.blessing-section { animation: fadeInUp .7s .15s ease both; }
+.blessing-section {
+  animation: fadeInUp 0.7s 0.15s ease both;
+}
 
 .blessing-grid {
   display: grid;
@@ -242,15 +268,16 @@ function doRitual(r) {
   align-items: center;
   gap: 10px;
   padding: 14px 10px 12px;
-  background: rgba(252,246,230,0.82);
-  border: 1px solid rgba(180,140,80,.18);
+  background: rgba(252, 246, 230, 0.82);
+  border: 1px solid rgba(180, 140, 80, 0.18);
   border-radius: 12px;
   cursor: pointer;
-  transition: transform .2s, box-shadow .2s, border-color .2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
+
 .blessing-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(100,60,20,.14);
+  box-shadow: 0 8px 24px rgba(100, 60, 20, 0.14);
   border-color: var(--gold);
 }
 
@@ -260,64 +287,130 @@ function doRitual(r) {
   object-fit: cover;
   object-position: top center;
   border-radius: 14px;
-  border: 2px solid rgba(212,168,67,0.25);
+  border: 2px solid rgba(212, 168, 67, 0.25);
   box-shadow: 0 8px 18px rgba(96, 64, 24, 0.12);
 }
-.blessing-label { font-size: .82rem; color: var(--accent); opacity: 0.85; line-height: 1.2; }
 
-/* ── 弹窗 ── */
+.blessing-label {
+  font-size: 0.82rem;
+  color: var(--accent);
+  opacity: 0.85;
+  line-height: 1.2;
+}
+
 .blessing-modal {
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   z-index: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(20,8,0,.88);
-  backdrop-filter: blur(6px);
+  padding: 24px;
+  background:
+    radial-gradient(circle at center, rgba(151, 108, 56, 0.18), transparent 30%),
+    rgba(20, 8, 0, 0.88);
+  backdrop-filter: blur(10px);
+}
+
+.modal-shell {
+  width: min(1120px, 92vw);
+  min-height: min(760px, 86vh);
+  max-height: 86vh;
+  border-radius: 28px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(420px, 1.15fr) minmax(320px, 0.85fr);
+  background: linear-gradient(135deg, rgba(255, 249, 238, 0.96), rgba(246, 234, 212, 0.94));
+  border: 1px solid rgba(212, 168, 67, 0.22);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
 }
 
 .modal-scene {
-  width: 88vw; max-width: 480px;
-  max-height: 90vh;
-  border-radius: 16px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  position: relative;
+  min-height: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 220, 150, 0.26), transparent 46%),
+    linear-gradient(180deg, #f5ead3 0%, #ecd8b5 100%);
+}
+
+.modal-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(127, 90, 54, 0.06));
+  pointer-events: none;
 }
 
 .scene-img-wrap {
-  flex-shrink: 0;
-  overflow: hidden;
-  line-height: 0;
-}
-.scene-img {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  height: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 18px;
+}
+
+.scene-img {
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
   display: block;
-  margin-top: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 36px rgba(96, 62, 24, 0.18));
 }
 
 .scene-overlay {
-  padding: 18px 20px 24px;
-  background: rgba(251, 243, 226, 1);
-  border-top: 1px solid rgba(212, 168, 67, 0.3);
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 28px 30px;
+  background: linear-gradient(180deg, rgba(255, 251, 245, 0.92), rgba(246, 235, 216, 0.98));
+  border-left: 1px solid rgba(212, 168, 67, 0.22);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.overlay-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(212, 168, 67, 0.18);
+}
+
+.overlay-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(127, 90, 54, 0.58);
+}
+
+.overlay-title {
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.form-wish-hint {
+  font-size: 0.96rem;
+  color: rgba(127, 90, 54, 0.86);
+  text-align: center;
+  line-height: 1.8;
 }
 
 .scene-rituals {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
-/* ── 浮起粒子 ── */
 .float-emoji {
   position: absolute;
   bottom: 100%;
@@ -327,60 +420,121 @@ function doRitual(r) {
   transform: translateX(-50%);
   z-index: 10;
 }
+
 @keyframes floatUp {
-  0%   { opacity: 1;   transform: translateX(-50%) translateY(0)     scale(1); }
-  50%  { opacity: 0.9; transform: translateX(-50%) translateY(-50px)  scale(1.3); }
-  100% { opacity: 0;   transform: translateX(-50%) translateY(-110px) scale(0.7); }
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: translateX(-50%) translateY(-50px) scale(1.3);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-110px) scale(0.7);
+  }
 }
-/* TransitionGroup 淡出（粒子消失时不跳动） */
-.float-group-leave-active { transition: opacity 0.2s; }
-.float-group-leave-to     { opacity: 0; }
+
+.float-group-leave-active {
+  transition: opacity 0.2s;
+}
+
+.float-group-leave-to {
+  opacity: 0;
+}
+
 .ritual-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 12px 20px;
-  border-radius: 22px;
-  border: 2px solid rgba(127, 90, 54, 0.5);
-  background: rgba(127, 90, 54, 0.08);
+  justify-content: center;
+  gap: 8px;
+  min-height: 104px;
+  padding: 16px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(127, 90, 54, 0.24);
+  background: linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(244, 232, 212, 0.9));
   color: var(--accent);
   font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: .08em;
-  transition: background .2s, transform .15s, border-color .2s;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, transform 0.15s, border-color 0.2s;
 }
+
 .ritual-icon {
   font-size: 1.6rem;
   line-height: 1;
   display: block;
 }
+
 .ritual-name {
   font-size: 0.88rem;
   display: block;
 }
+
 .ritual-btn:hover:not(:disabled) {
   background: rgba(212, 168, 67, 0.2);
   border-color: var(--gold);
   transform: translateY(-2px);
 }
+
 .ritual-btn.done {
-  opacity: .55;
+  opacity: 0.55;
   background: rgba(212, 168, 67, 0.12);
 }
+
 .ritual-btn.pop {
   animation: ritualPop 0.38s ease;
 }
+
 @keyframes ritualPop {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.22) translateY(-4px); }
-  70%  { transform: scale(0.96); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.22) translateY(-4px);
+  }
+
+  70% {
+    transform: scale(0.96);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
-.scene-result { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.result-wish { font-size: 1.1rem; color: var(--accent); line-height: 1.9; }
-.result-user { font-size: .9rem; color: var(--text-muted); }
+.scene-result {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.result-wish {
+  font-size: 1.12rem;
+  color: var(--accent);
+  line-height: 1.9;
+}
+
+.result-user {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.result-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
 .back-home-btn {
   margin-top: 4px;
   padding: 10px 28px;
@@ -388,73 +542,186 @@ function doRitual(r) {
   border: 2px solid rgba(127, 90, 54, 0.4);
   background: rgba(127, 90, 54, 0.08);
   color: var(--accent);
-  font-size: .95rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background .2s, border-color .2s;
+  transition: background 0.2s, border-color 0.2s;
 }
-.back-home-btn:hover { background: rgba(212,168,67,.2); border-color: var(--gold); }
-.result-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
-.next-btn { background: rgba(212,168,67,.25); border-color: #f0d080; }
 
-.scene-form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.form-wish-hint { font-size: .9rem; color: var(--accent); text-align: center; line-height: 1.7; font-style: italic; }
+.back-home-btn:hover {
+  background: rgba(212, 168, 67, 0.2);
+  border-color: var(--gold);
+}
 
-.form-row { display: grid; grid-template-columns: 1fr 90px; gap: 10px; }
+.next-btn {
+  background: rgba(212, 168, 67, 0.25);
+  border-color: #f0d080;
+}
+
+.scene-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 10px;
+}
+
 .field {
   width: 100%;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(212,168,67,.4);
-  background: rgba(255,252,245,.92);
+  border: 1px solid rgba(212, 168, 67, 0.4);
+  background: rgba(255, 252, 245, 0.92);
   color: var(--text);
   font-family: inherit;
-  font-size: .9rem;
+  font-size: 0.9rem;
   outline: none;
 }
-.field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.12); }
-.age-field, .target-field { width: 100%; }
-.target-field { grid-column: 1 / -1; }
+
+.field:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.12);
+}
+
+.age-field,
+.target-field {
+  width: 100%;
+}
+
+.target-field {
+  grid-column: 1 / -1;
+}
 
 .submit-btn {
-  width: 100%; padding: 12px;
-  border: none; border-radius: 12px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
   background: linear-gradient(135deg, #7f5a36, #a07040);
   color: #fff8ee;
-  font-size: 1rem; letter-spacing: .08em;
-  box-shadow: 0 4px 16px rgba(127,90,54,.3);
-  transition: opacity .2s, transform .15s;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 16px rgba(127, 90, 54, 0.3);
+  transition: opacity 0.2s, transform 0.15s;
 }
-.submit-btn:hover:not(:disabled) { opacity: .92; transform: translateY(-1px); }
-.submit-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.submit-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 .modal-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 36px; height: 36px;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255,250,240,.15);
-  border: 1px solid rgba(255,250,240,.3);
-  color: #fff8ee; font-size: 1.1rem;
+  background: rgba(255, 250, 240, 0.15);
+  border: 1px solid rgba(255, 250, 240, 0.3);
+  color: #fff8ee;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: background .2s;
+  transition: background 0.2s;
 }
-.modal-close:hover { background: rgba(255,250,240,.28); }
+
+.modal-close:hover {
+  background: rgba(255, 250, 240, 0.28);
+}
 
 .modal-toast {
-  position: absolute; bottom: 32px;
-  left: 50%; transform: translateX(-50%);
-  background: rgba(50,30,10,.88);
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(50, 30, 10, 0.88);
   color: #f0d080;
-  padding: 10px 22px; border-radius: 24px;
-  font-size: .9rem; letter-spacing: .05em;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
   pointer-events: none;
   white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-.toast-fade-enter-active, .toast-fade-leave-active { transition: opacity .35s, transform .35s; }
-.toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(-8px); }
 
-@media (max-width: 600px) {
-  .blessing-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .blessing-icon { width: 70px; height: 94px; }
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-8px);
+}
+
+@media (max-width: 980px) {
+  .modal-shell {
+    width: min(92vw, 520px);
+    min-height: auto;
+    max-height: 88vh;
+    grid-template-columns: 1fr;
+  }
+
+  .modal-scene {
+    min-height: 0;
+    max-height: 54vh;
+  }
+
+  .scene-img-wrap {
+    padding: 20px 14px 8px;
+  }
+
+  .scene-img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+
+  .scene-overlay {
+    border-left: none;
+    border-top: 1px solid rgba(212, 168, 67, 0.22);
+    padding: 20px 18px 22px;
+  }
+
+  .overlay-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .blessing-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .blessing-icon {
+    width: 70px;
+    height: 94px;
+  }
+
+  .blessing-modal {
+    padding: 12px;
+  }
+
+  .scene-rituals {
+    grid-template-columns: 1fr;
+  }
+
+  .ritual-btn {
+    min-height: 74px;
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 </style>
