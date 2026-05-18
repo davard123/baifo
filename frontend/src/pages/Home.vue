@@ -521,9 +521,10 @@ onMounted(() => {
 /* 先人横幅 */
 .ancestor-banner {
   display: block;
-  padding: 28px 32px;
-  background: linear-gradient(135deg, #2a1f15, #3a2a1a, #2a1f15);
-  border: 1px solid rgba(120, 100, 80, 0.3);
+  padding: 0;
+  aspect-ratio: 2172 / 724;
+  background: url('/jizhu/b1.png') center / cover no-repeat;
+  border: 1px solid rgba(212, 168, 67, 0.18);
   border-radius: 16px;
   text-decoration: none;
   color: inherit;
@@ -535,9 +536,7 @@ onMounted(() => {
   box-shadow: 0 12px 36px rgba(30, 20, 10, 0.3);
 }
 .banner-inner {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  display: none;
 }
 .banner-icon { font-size: 2.8rem; flex-shrink: 0; }
 .banner-text { flex: 1; }
