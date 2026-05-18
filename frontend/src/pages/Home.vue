@@ -228,7 +228,7 @@ onMounted(() => {
       </div>
     </router-link>
 
-    <section class="bookmark-section dim-section">
+    <section v-if="false" class="bookmark-section dim-section">
       <div class="bookmark-grid">
         <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
           <h2>{{ item.title }}</h2>
@@ -239,6 +239,16 @@ onMounted(() => {
     </section>
 
     <BlessingPool @wish-submitted="loadWishes" />
+
+    <section class="bookmark-section dim-section">
+      <div class="bookmark-grid">
+        <router-link v-for="item in topBookmarks" :key="`${item.title}-after-pool`" :to="item.to" class="bookmark-card">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.body }}</p>
+          <span>杩涘叆</span>
+        </router-link>
+      </div>
+    </section>
 
     <!-- ── 祈愿记录：网站内容，优先展示 ── -->
     <section class="wishes-section card">

@@ -240,8 +240,8 @@ function doRitual(r) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 14px 8px;
+  gap: 10px;
+  padding: 14px 10px 12px;
   background: rgba(252,246,230,0.82);
   border: 1px solid rgba(180,140,80,.18);
   border-radius: 12px;
@@ -255,12 +255,15 @@ function doRitual(r) {
 }
 
 .blessing-icon {
-  width: 60px; height: 60px;
+  width: 88px;
+  height: 118px;
   object-fit: cover;
-  border-radius: 50%;
+  object-position: top center;
+  border-radius: 14px;
   border: 2px solid rgba(212,168,67,0.25);
+  box-shadow: 0 8px 18px rgba(96, 64, 24, 0.12);
 }
-.blessing-label { font-size: .82rem; color: var(--accent); opacity: 0.85; }
+.blessing-label { font-size: .82rem; color: var(--accent); opacity: 0.85; line-height: 1.2; }
 
 /* ── 弹窗 ── */
 .blessing-modal {
@@ -452,6 +455,6 @@ function doRitual(r) {
 
 @media (max-width: 600px) {
   .blessing-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .blessing-icon { width: 52px; height: 52px; }
+  .blessing-icon { width: 70px; height: 94px; }
 }
 </style>
