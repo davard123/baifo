@@ -349,16 +349,18 @@ function doRitual(r) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px 18px;
+  padding: 0;
+  overflow: hidden;
 }
 
 .scene-img {
-  width: auto;
-  max-width: 100%;
-  height: 100%;
-  max-height: 100%;
+  width: 108%;
+  height: 108%;
+  max-width: none;
+  max-height: none;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center 68%;
   filter: drop-shadow(0 24px 36px rgba(96, 62, 24, 0.18));
 }
 
@@ -679,13 +681,14 @@ function doRitual(r) {
   }
 
   .scene-img-wrap {
-    padding: 20px 14px 8px;
+    padding: 0;
   }
 
   .scene-img {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-height: none;
+    object-position: center 62%;
   }
 
   .scene-overlay {
