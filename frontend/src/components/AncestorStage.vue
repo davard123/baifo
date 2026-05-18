@@ -155,11 +155,12 @@ watch(
 }
 
 .ancestor-img.plain-fill {
-  width: 100%;
+  width: auto;
   height: 100%;
-  max-width: none;
-  object-fit: cover;
-  object-position: center 44%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(1.045);
   filter: none;
 }
 
