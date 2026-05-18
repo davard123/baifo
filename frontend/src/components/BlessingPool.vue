@@ -295,7 +295,7 @@ function doRitual(r) {
   width: 100%;
   height: auto;
   display: block;
-  margin-top: -48px;  /* 裁掉顶部空白，内容上移 */
+  margin-top: 0;
 }
 
 .scene-overlay {
