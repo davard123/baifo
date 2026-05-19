@@ -667,7 +667,7 @@ function doRitual(r) {
   transform: translateX(-50%) translateY(-8px);
 }
 
-@media (max-width: 980px) {
+@media (max-width: 980px) and (orientation: portrait) {
   .blessing-modal {
     display: block;
     overflow-y: auto;
@@ -742,6 +742,55 @@ function doRitual(r) {
     min-height: 74px;
     flex-direction: row;
     justify-content: center;
+  }
+}
+
+@media (max-width: 980px) and (orientation: landscape) {
+  .blessing-modal {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: max(10px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom));
+  }
+
+  .modal-shell {
+    width: min(96vw, 920px);
+    min-height: auto;
+    max-height: none;
+    grid-template-columns: minmax(240px, 0.95fr) minmax(300px, 1.05fr);
+    margin: 0 auto;
+  }
+
+  .modal-scene {
+    min-height: 320px;
+    max-height: none;
+  }
+
+  .scene-img {
+    width: 106%;
+    height: 106%;
+    object-position: center 58%;
+  }
+
+  .scene-overlay {
+    overflow: visible;
+    padding: 18px 18px 20px;
+  }
+
+  .scene-rituals {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ritual-btn {
+    min-height: 82px;
+    padding: 12px 10px;
+  }
+
+  .modal-close {
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top));
+    right: 10px;
+    z-index: 2;
   }
 }
 </style>
