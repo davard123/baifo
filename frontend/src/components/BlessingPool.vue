@@ -668,16 +668,24 @@ function doRitual(r) {
 }
 
 @media (max-width: 980px) {
+  .blessing-modal {
+    display: block;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: max(16px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
+  }
+
   .modal-shell {
     width: min(92vw, 520px);
     min-height: auto;
-    max-height: 88vh;
+    max-height: none;
     grid-template-columns: 1fr;
+    margin: 0 auto;
   }
 
   .modal-scene {
     min-height: 0;
-    max-height: 54vh;
+    max-height: none;
   }
 
   .scene-img-wrap {
@@ -695,10 +703,18 @@ function doRitual(r) {
     border-left: none;
     border-top: 1px solid rgba(212, 168, 67, 0.22);
     padding: 20px 18px 22px;
+    overflow: visible;
   }
 
   .overlay-title {
     font-size: 1.7rem;
+  }
+
+  .modal-close {
+    position: fixed;
+    top: max(12px, env(safe-area-inset-top));
+    right: 12px;
+    z-index: 2;
   }
 }
 
@@ -714,7 +730,8 @@ function doRitual(r) {
   }
 
   .blessing-modal {
-    padding: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .scene-rituals {
