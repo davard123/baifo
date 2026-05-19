@@ -245,7 +245,7 @@ onMounted(() => {
         <router-link v-for="item in topBookmarks" :key="`${item.title}-after-pool`" :to="item.to" class="bookmark-card">
           <h2>{{ item.title }}</h2>
           <p>{{ item.body }}</p>
-          <span>杩涘叆</span>
+          <span>进入</span>
         </router-link>
       </div>
     </section>
