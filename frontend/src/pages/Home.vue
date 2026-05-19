@@ -15,6 +15,29 @@ const myAncestorWishes = ref([])
 const loadingPublic = ref(true)
 const loadingMine = ref(true)
 const viewerName = ref('')
+const blessingPoolAnchor = ref(null)
+const heroEntrances = [
+  {
+    title: '礼佛祈愿',
+    body: '进入佛菩萨页面，依次供花、点灯、上香，并填写祈愿内容。',
+    action: '查看礼佛',
+    to: '/guide/worship',
+    tone: 'primary',
+  },
+  {
+    title: '拜祭先人',
+    body: '进入先人牌位页面，追思祭拜、超荐回向，并可自定义牌位显示。',
+    action: '进入祭祖',
+    to: '/ancestors',
+    tone: 'warm',
+  },
+  {
+    title: '祈福池',
+    body: '按求财、求健康、求平安等主题快速发愿，适合日常祈福。',
+    action: '打开祈福池',
+    tone: 'light',
+  },
+]
 const topBookmarks = [
   {
     title: '礼佛祈愿',
@@ -183,6 +206,10 @@ onMounted(() => {
   document.querySelector('meta[name="description"]')?.setAttribute('content', '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。')
   loadWishes()
 })
+
+function scrollToBlessingPool() {
+  blessingPoolAnchor.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 </script>
 
 <template>
@@ -193,6 +220,31 @@ onMounted(() => {
         <h1>礼佛祈愿</h1>
         <p>选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。</p>
         <div class="header-divider"></div>
+        <div class="hero-entrance-grid">
+          <template v-for="item in heroEntrances" :key="item.title">
+            <router-link
+              v-if="item.to"
+              :to="item.to"
+              class="hero-entrance-card"
+              :class="`hero-entrance-card--${item.tone}`"
+            >
+              <span class="hero-entrance-kicker">{{ item.action }}</span>
+              <h2>{{ item.title }}</h2>
+              <p>{{ item.body }}</p>
+            </router-link>
+            <button
+              v-else
+              type="button"
+              class="hero-entrance-card hero-entrance-button"
+              :class="`hero-entrance-card--${item.tone}`"
+              @click="scrollToBlessingPool"
+            >
+              <span class="hero-entrance-kicker">{{ item.action }}</span>
+              <h2>{{ item.title }}</h2>
+              <p>{{ item.body }}</p>
+            </button>
+          </template>
+        </div>
       </div>
     </header>
 
@@ -238,7 +290,9 @@ onMounted(() => {
       </div>
     </section>
 
-    <BlessingPool @wish-submitted="loadWishes" />
+    <section ref="blessingPoolAnchor">
+      <BlessingPool @wish-submitted="loadWishes" />
+    </section>
 
     <section class="bookmark-section dim-section">
       <div class="bookmark-grid">
@@ -346,7 +400,7 @@ onMounted(() => {
 
 .site-header {
   text-align: center;
-  padding: 60px 20px 40px;
+  padding: 44px 20px 12px;
   animation: fadeInUp 0.7s ease both;
 }
 .header-icon {
@@ -373,6 +427,86 @@ onMounted(() => {
   background: var(--gold);
   margin: 24px auto 0;
   opacity: 0.6;
+}
+
+.hero-entrance-grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 16px;
+  text-align: left;
+}
+
+.hero-entrance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 188px;
+  padding: 24px 24px 22px;
+  border-radius: 22px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(212, 168, 67, 0.18);
+  box-shadow: 0 14px 36px rgba(84, 56, 24, 0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.hero-entrance-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 42px rgba(84, 56, 24, 0.14);
+  border-color: rgba(212, 168, 67, 0.42);
+}
+
+.hero-entrance-button {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hero-entrance-card--primary {
+  background:
+    radial-gradient(circle at right top, rgba(255, 236, 186, 0.58), transparent 30%),
+    linear-gradient(135deg, rgba(255, 249, 238, 0.98), rgba(245, 231, 206, 0.96));
+}
+
+.hero-entrance-card--warm {
+  background:
+    radial-gradient(circle at left bottom, rgba(160, 100, 42, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(86, 56, 31, 0.98), rgba(121, 80, 41, 0.96));
+  color: #fff4df;
+}
+
+.hero-entrance-card--warm p,
+.hero-entrance-card--warm .hero-entrance-kicker,
+.hero-entrance-card--warm h2 {
+  color: inherit;
+}
+
+.hero-entrance-card--light {
+  background:
+    radial-gradient(circle at center top, rgba(255, 239, 199, 0.5), transparent 34%),
+    linear-gradient(135deg, rgba(252, 247, 237, 0.96), rgba(243, 234, 218, 0.92));
+}
+
+.hero-entrance-kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--accent-light);
+  opacity: 0.9;
+}
+
+.hero-entrance-card h2 {
+  margin: 0;
+  font-size: 1.34rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+
+.hero-entrance-card p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 0.9rem;
 }
 
 /* ── 主内容区 section 标题 ── */
@@ -705,10 +839,14 @@ onMounted(() => {
   .site-header { padding: 36px 12px 24px; }
   .record-grid { grid-template-columns: 1fr; }
   .bookmark-grid { grid-template-columns: 1fr; }
+  .hero-entrance-grid { grid-template-columns: 1fr; }
+  .hero-entrance-card { min-height: auto; padding: 20px 18px; }
 }
 
 @media (max-width: 600px) {
   .site-header h1 { font-size: 1.9rem; }
   .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .hero-entrance-grid { gap: 12px; }
+  .hero-entrance-card h2 { font-size: 1.18rem; }
 }
 </style>
