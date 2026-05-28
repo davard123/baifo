@@ -27,10 +27,57 @@ function invalidateRecordCache(path) {
   }
 }
 
+// 预热后端：避免 serverless 容器冷启动导致首次提交卡顿
+// - 4 分钟内不重复预热（避免悬停/路由变化触发太多请求）
+// - 失败自动重置，下次再试
+// - keepalive=true 即使页面跳转也能完成
+let warmedAt = 0
+const WARM_VALID_MS = 4 * 60 * 1000
+const SUBMIT_WARMUP_WAIT_MS = 1_500
+
+function isWarmFresh() {
+  return warmedAt && Date.now() - warmedAt < WARM_VALID_MS
+}
+
+async function waitForWarmup(maxMs = SUBMIT_WARMUP_WAIT_MS) {
+  if (isWarmFresh()) return
+
+  const warm = warmApi()
+  if (!warm) return
+
+  await Promise.race([
+    warm,
+    new Promise((resolve) => setTimeout(resolve, maxMs)),
+  ])
+}
+
 export function warmApi() {
-  if (!warmPromise) {
-    warmPromise = fetch(`${BASE}/`, { method: 'GET' }).catch(() => null)
+  if (warmPromise) {
+    return warmPromise
   }
+  if (isWarmFresh()) {
+    return Promise.resolve(null)
+  }
+  warmPromise = (async () => {
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 30_000)
+      const res = await fetch(`${BASE}/readyz`, {
+        method: 'GET',
+        signal: controller.signal,
+        cache: 'no-store',
+        keepalive: true,
+      })
+      clearTimeout(timer)
+      warmedAt = Date.now()
+      return res
+    } catch {
+      warmedAt = 0
+      return null
+    } finally {
+      warmPromise = null
+    }
+  })()
   return warmPromise
 }
 
@@ -44,7 +91,7 @@ export async function apiFetch(path, options = {}) {
   }
 
   if ((options.method ?? 'GET').toUpperCase() !== 'GET') {
-    warmApi()
+    await waitForWarmup()
   }
 
   const res = await fetch(url, options)
