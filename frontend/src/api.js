@@ -3,6 +3,9 @@ const RECORD_CACHE_TTL = 30_000
 
 let warmPromise = null
 const recordCache = new Map()
+let warmedAt = 0
+const WARM_VALID_MS = 4 * 60 * 1000
+const SUBMIT_WARMUP_WAIT_MS = 1_500
 
 function makeJsonResponse(data) {
   return new Response(JSON.stringify(data), {
@@ -27,10 +30,49 @@ function invalidateRecordCache(path) {
   }
 }
 
+function isWarmFresh() {
+  return warmedAt && Date.now() - warmedAt < WARM_VALID_MS
+}
+
+async function waitForWarmup(maxMs = SUBMIT_WARMUP_WAIT_MS) {
+  if (isWarmFresh()) return
+
+  const warm = warmApi()
+  if (!warm) return
+
+  await Promise.race([
+    warm,
+    new Promise((resolve) => setTimeout(resolve, maxMs)),
+  ])
+}
+
 export function warmApi() {
-  if (!warmPromise) {
-    warmPromise = fetch(`${BASE}/`, { method: 'GET' }).catch(() => null)
+  if (warmPromise) {
+    return warmPromise
   }
+  if (isWarmFresh()) {
+    return Promise.resolve(null)
+  }
+
+  warmPromise = (async () => {
+    const warmRequests = [
+      fetch(`${BASE}/`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
+      fetch(`${BASE}/wishes?limit=1`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
+      fetch(`${BASE}/ancestor-wishes?limit=1`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
+    ]
+
+    try {
+      await Promise.allSettled(warmRequests)
+      warmedAt = Date.now()
+      return true
+    } catch {
+      warmedAt = 0
+      return null
+    } finally {
+      warmPromise = null
+    }
+  })()
+
   return warmPromise
 }
 
@@ -44,7 +86,7 @@ export async function apiFetch(path, options = {}) {
   }
 
   if ((options.method ?? 'GET').toUpperCase() !== 'GET') {
-    warmApi()
+    await waitForWarmup()
   }
 
   const res = await fetch(url, options)
