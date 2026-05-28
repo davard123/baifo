@@ -47,13 +47,6 @@ def _dict_row(row):
     return dict(row)
 
 
-def _ping_db() -> None:
-    with _db_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT 1")
-            cur.fetchone()
-
-
 def _init_db() -> None:
     with _db_conn() as conn:
         with conn.cursor() as cur:
@@ -125,12 +118,6 @@ class AncestorWishIn(BaseModel):
 @app.get("/")
 def health():
     return {"status": "ok"}
-
-
-@app.get("/readyz")
-def ready():
-    _ping_db()
-    return {"status": "ready"}
 
 
 @app.get("/wishes")
