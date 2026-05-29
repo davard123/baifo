@@ -1,0 +1,12 @@
+name = "fopusha-api"
+main = "src/index.ts"
+compatibility_date = "2026-05-04"
+
+# Secrets (set via `wrangler secret put`, NOT committed):
+#   SUPABASE_URL          e.g. https://xxxx.supabase.co
+#   SUPABASE_SERVICE_KEY  service_role key (server-side only, bypasses RLS)
+
+# Optional: map a custom domain after first deploy.
+# [[routes]]
+# pattern = "api.fopusha.com"
+# custom_domain = true
