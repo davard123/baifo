@@ -1,0 +1,15 @@
+name: Keep Render API Warm
+
+on:
+  schedule:
+    - cron: "*/12 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ping fopusha API
+        run: |
+          curl --fail --silent --show-error --max-time 45 --retry 1 --retry-delay 5 "https://baifo.onrender.com/wishes?limit=1" >/dev/null
