@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getStaticPages, SITE } from './seo.config.js'
+import { getStaticPages, SITE, canonicalUrl } from './seo.config.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,7 +19,7 @@ function ensureTrailingSlashless(url) {
 }
 
 function buildMetaTags(page) {
-  const canonical = `${SITE.baseUrl}${page.path}`
+  const canonical = canonicalUrl(page.path)
   const image = `${SITE.baseUrl}${page.image || SITE.defaultImage}`
   const keywords = SITE.keywords.join(',')
 

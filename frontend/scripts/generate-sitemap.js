@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getStaticPages, SITE } from './seo.config.js'
+import { getStaticPages, SITE, canonicalUrl } from './seo.config.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -53,7 +53,7 @@ const lastmod = new Date().toISOString().slice(0, 10)
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages.map((page) => `  <url>
-    <loc>${SITE.baseUrl}${page.url}</loc>
+    <loc>${canonicalUrl(page.url)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
@@ -61,7 +61,7 @@ ${pages.map((page) => `  <url>
 </urlset>
 `
 
-const txt = `${pages.map((page) => `${SITE.baseUrl}${page.url}`).join('\n')}\n`
+const txt = `${pages.map((page) => canonicalUrl(page.url)).join('\n')}\n`
 
 fs.writeFileSync(publicSitemapPath, xml, 'utf8')
 fs.writeFileSync(publicTextSitemapPath, txt, 'utf8')

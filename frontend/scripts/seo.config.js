@@ -171,8 +171,17 @@ const HOWTO_META = {
   },
 }
 
+export function withTrailingSlash(pagePath) {
+  if (!pagePath || pagePath === '/') return '/'
+  return pagePath.endsWith('/') ? pagePath : `${pagePath}/`
+}
+
 function absoluteUrl(pagePath) {
-  return `${SITE.baseUrl}${pagePath}`
+  return `${SITE.baseUrl}${withTrailingSlash(pagePath)}`
+}
+
+export function canonicalUrl(pagePath) {
+  return absoluteUrl(pagePath)
 }
 
 function orgRef() {
