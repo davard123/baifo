@@ -48,12 +48,34 @@ function buildJsonLd(page) {
 }
 
 function buildHiddenContent(page) {
-  return [
+  const lines = [
     '<section aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">',
     `  <h1>${page.heading}</h1>`,
     `  <p>${page.summary}</p>`,
-    '</section>',
-  ].join('\n')
+  ]
+
+  // Flatten schema array (some entries may themselves be arrays)
+  const schemas = [page.schema].flat(2).filter(Boolean)
+
+  // Inject articleBody if present and different from summary
+  const articleSchema = schemas.find((s) => s['@type'] === 'Article' || s['@type'] === 'BlogPosting')
+  if (articleSchema?.articleBody && articleSchema.articleBody !== page.summary) {
+    lines.push(`  <p>${articleSchema.articleBody}</p>`)
+  }
+
+  // Inject FAQ Q&A as HTML <dl> so Google sees the text directly
+  const faqSchema = schemas.find((s) => s['@type'] === 'FAQPage')
+  if (faqSchema?.mainEntity?.length) {
+    lines.push('  <dl>')
+    for (const q of faqSchema.mainEntity) {
+      lines.push(`    <dt>${q.name}</dt>`)
+      lines.push(`    <dd>${q.acceptedAnswer?.text ?? ''}</dd>`)
+    }
+    lines.push('  </dl>')
+  }
+
+  lines.push('</section>')
+  return lines.join('\n')
 }
 
 function renderPage(page) {

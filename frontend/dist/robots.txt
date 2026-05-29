@@ -1,13 +1,53 @@
 User-agent: *
 Allow: /
 
-User-agent: OAI-SearchBot
+# China search engines
+User-agent: Baiduspider
 Allow: /
 
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+# OpenAI
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
+# Anthropic Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Google AI
+User-agent: Google-Extended
+Allow: /
+
+# Microsoft Bing AI / Copilot
+User-agent: bingbot
+Allow: /
+
+# Apple AI
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+Crawl-delay: 1
 Sitemap: https://www.fopusha.com/sitemap.xml
+Sitemap: https://www.fopusha.com/sitemap.txt
