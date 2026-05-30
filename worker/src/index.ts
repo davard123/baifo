@@ -284,11 +284,11 @@ app.post('/wishes', async (c) => {
 
   const email = asStr(body.email)
   if (email && isValidEmail(email)) {
-    sendEmail(c.env, {
+    c.executionCtx.waitUntil(sendEmail(c.env, {
       to: email,
       subject: `您的祈愿已提交 | ${SITE_NAME}`,
       html: wishConfirmationHtml(payload.username, payload.buddha, payload.wish),
-    })
+    }))
   }
   return c.json({ status: 'success' })
 })
@@ -323,7 +323,7 @@ app.post('/ancestor-wishes', async (c) => {
 
   const email = asStr(body.email)
   if (email && isValidEmail(email)) {
-    sendEmail(c.env, {
+    c.executionCtx.waitUntil(sendEmail(c.env, {
       to: email,
       subject: `您的祭祖祈愿已提交 | ${SITE_NAME}`,
       html: ancestorConfirmationHtml(
@@ -332,7 +332,7 @@ app.post('/ancestor-wishes', async (c) => {
         payload.relationship,
         payload.wish,
       ),
-    })
+    }))
   }
   return c.json({ status: 'success' })
 })
@@ -356,11 +356,11 @@ app.post('/contact', async (c) => {
     html: adminContactHtml(name, email, message),
   })
 
-  sendEmail(c.env, {
+  c.executionCtx.waitUntil(sendEmail(c.env, {
     to: email,
     subject: `已收到您的留言 | ${SITE_NAME}`,
     html: contactAutoReplyHtml(name, message),
-  })
+  }))
 
   return c.json({ status: 'success' })
 })
