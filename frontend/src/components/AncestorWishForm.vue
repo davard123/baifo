@@ -15,6 +15,7 @@ const emit = defineEmits(['submit'])
 const username     = ref('')
 const age          = ref(50)
 const wish         = ref('')
+const email        = ref('')
 const loading      = ref(false)
 const error        = ref('')
 
@@ -52,7 +53,8 @@ async function handleSubmit() {
       age:           Number(age.value),
       ancestor_name: props.defaultAncestorName.trim(),
       relationship:  props.defaultRelationship,
-      wish:          wish.value.trim()
+      wish:          wish.value.trim(),
+      ...(email.value.trim() ? { email: email.value.trim() } : {})
     }
 
     if (props.onSubmit) {
@@ -112,6 +114,14 @@ async function handleSubmit() {
         class="field wish-field"
         @input="onWishChange"
       ></textarea>
+
+      <input
+        v-model="email"
+        type="email"
+        placeholder="邮箱（选填）— 填写后可收到祭祖确认邮件"
+        class="field email-field"
+        autocomplete="email"
+      />
 
       <p v-if="error" class="error-msg">{{ error }}</p>
 
@@ -187,7 +197,12 @@ async function handleSubmit() {
   height: 100px;
   resize: vertical;
   line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.email-field {
   margin-bottom: 14px;
+  font-size: 0.85rem;
 }
 
 .error-msg {

@@ -11,6 +11,7 @@ const emit = defineEmits(['submit'])
 const username = ref('')
 const age = ref(50)
 const wish = ref(props.defaultWish)
+const email = ref('')
 const loading = ref(false)
 const error = ref('')
 
@@ -34,7 +35,8 @@ async function handleSubmit() {
     const payload = {
       username: username.value.trim(),
       age: Number(age.value),
-      wish: wish.value.trim()
+      wish: wish.value.trim(),
+      ...(email.value.trim() ? { email: email.value.trim() } : {})
     }
 
     if (props.onSubmit) {
@@ -79,6 +81,14 @@ async function handleSubmit() {
         maxlength="300"
         class="field wish-field"
       ></textarea>
+
+      <input
+        v-model="email"
+        type="email"
+        placeholder="邮箱（选填）— 填写后可收到祈愿确认邮件"
+        class="field email-field"
+        autocomplete="email"
+      />
 
       <p v-if="error" class="error-msg">{{ error }}</p>
 
@@ -128,7 +138,13 @@ async function handleSubmit() {
   height: 110px;
   resize: vertical;
   line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.email-field {
   margin-bottom: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .error-msg {
