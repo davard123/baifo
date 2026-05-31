@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { warmApi } from '../api.js'
 
 const Home = () => import('../pages/Home.vue')
 const BuddhaPage = () => import('../pages/BuddhaPage.vue')
@@ -7,7 +8,7 @@ const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: Home },
@@ -22,3 +23,13 @@ export default createRouter({
   ],
   scrollBehavior: () => ({ top: 0 })
 })
+
+// 进入任何可能提交记录的页面前再次预热（即使用户直接打开 /buddha/* 也覆盖）
+const WARMUP_ROUTES = ['/buddha/', '/ancestor/', '/ancestors']
+router.beforeEach((to) => {
+  if (WARMUP_ROUTES.some((p) => to.path.startsWith(p))) {
+    warmApi()
+  }
+})
+
+export default router

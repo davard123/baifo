@@ -22,6 +22,25 @@ const displayedOfferings = computed(() => {
     { ...firstFlower, id: `${firstFlower.id}-right` },
   ]
 })
+
+const stageScaleMap = {
+  shakyamuni: { desktop: 0.94, mobile: 0.92 },
+  amitabha: { desktop: 1.04, mobile: 1.01 },
+  medicine: { desktop: 1.05, mobile: 1.02 },
+  maitreya: { desktop: 0.88, mobile: 0.87 },
+  manjushri: { desktop: 0.97, mobile: 0.95 },
+  samantabhadra: { desktop: 1.06, mobile: 1.03 },
+  guanyin: { desktop: 1.08, mobile: 1.05 },
+  ksitigarbha: { desktop: 1.12, mobile: 1.08 },
+}
+
+const stageImageStyle = computed(() => {
+  const scale = stageScaleMap[props.buddha?.slug] || { desktop: 0.92, mobile: 0.9 }
+  return {
+    '--buddha-scale': String(scale.desktop),
+    '--buddha-scale-mobile': String(scale.mobile),
+  }
+})
 </script>
 
 <template>
@@ -29,7 +48,7 @@ const displayedOfferings = computed(() => {
     <div class="stage-bg"></div>
 
     <div class="buddha-frame">
-      <img :src="buddha.image" :alt="buddha.name" class="buddha-img" />
+      <img :src="buddha.image" :alt="buddha.name" class="buddha-img" :style="stageImageStyle" />
     </div>
 
     <div class="altar-row">
@@ -103,7 +122,7 @@ const displayedOfferings = computed(() => {
   height: 100%;
   object-fit: contain;
   object-position: center top;
-  transform: scale(0.92);
+  transform: scale(var(--buddha-scale, 0.92));
   filter: drop-shadow(0 10px 18px rgba(66, 26, 2, 0.28));
 }
 
@@ -241,7 +260,7 @@ const displayedOfferings = computed(() => {
 
 @media (max-width: 900px) {
   .buddha-img {
-    transform: scale(0.9);
+    transform: scale(var(--buddha-scale-mobile, 0.9));
     object-position: center top;
   }
 

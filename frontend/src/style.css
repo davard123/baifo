@@ -24,11 +24,20 @@ body {
   background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+  line-height: 1.5;
 }
 
 a { color: var(--accent); text-decoration: none; }
 button { cursor: pointer; font-family: inherit; }
 img { display: block; max-width: 100%; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(212, 168, 67, 0.55);
+  outline-offset: 3px;
+}
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -63,4 +72,18 @@ img { display: block; max-width: 100%; }
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

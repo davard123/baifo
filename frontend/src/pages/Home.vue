@@ -1,13 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
 import { BUDDHAS } from '../data/buddhas.js'
-import WishList from '../components/WishList.vue'
 import BlessingPool from '../components/BlessingPool.vue'
-import { apiFetch } from '../api.js'
+import WishList from '../components/WishList.vue'
+import { apiFetch, warmApi } from '../api.js'
 import { getViewerProfile } from '../utils/viewerProfile.js'
 
-const router = useRouter()
 const publicWishes = ref([])
 const publicAncestorWishes = ref([])
 const myWishes = ref([])
@@ -15,21 +13,109 @@ const myAncestorWishes = ref([])
 const loadingPublic = ref(true)
 const loadingMine = ref(true)
 const viewerName = ref('')
-const topBookmarks = [
+
+const primaryPaths = [
   {
     title: '礼佛祈愿',
-    body: '进入佛菩萨页面，依次供花、点灯、上香并填写祈愿。',
+    body: '进入佛菩萨页面后，可以依次供花、点灯、上香，再写下祈愿并回向众生。',
     to: '/guide/worship',
+    cta: '查看礼佛指南',
   },
   {
-    title: '祭祖追思',
-    body: '进入先人牌位页面，追思祭拜、超荐回向，并可自定义牌位显示。',
+    title: '祈愿求福',
+    body: '如果此刻更想直接为平安、健康、学业、姻缘等主题发愿，可先进入祈福池再继续下行。',
+    to: { path: '/', hash: '#blessing-pool-title' },
+    cta: '进入祈福池',
+  },
+  {
+    title: '祭祀先人',
+    body: '追思祖先、祭拜先人、回向亡灵，也支持本地个性化牌位照片与姓名显示。',
     to: '/ancestors',
+    cta: '进入祭祀先人',
   },
   {
-    title: '使用说明',
-    body: '第一次使用时，先看这里了解礼佛、祭祖和回向页面的大致区别。',
+    title: '初次使用说明',
+    body: '第一次来到这里时，先了解礼佛、回向与祭祀页面的差别，会更容易找到适合的入口。',
     to: '/guide/overview',
+    cta: '阅读使用说明',
+  },
+]
+
+const guideCards = [
+  {
+    title: '在线礼佛怎么开始',
+    body: '从任意佛菩萨页面进入后，按顺序完成供花、点灯、上香，再留下祈愿内容与回向。',
+  },
+  {
+    title: '适合哪些祈愿主题',
+    body: '常见祈愿包括平安健康、学业事业、智慧增长、家庭和顺、超荐回向与消灾延寿。',
+  },
+  {
+    title: '祭祀页面与礼佛页面的区别',
+    body: '祭祀先人更适合追思祖先、超荐亡灵与家族祈愿，礼佛页面则更适合日常发愿与供养。',
+  },
+]
+
+const faqs = [
+  {
+    q: '礼佛祈愿网站可以做什么？',
+    a: '这里提供在线礼佛、祭祀追思与祈福回向入口，方便你在不同场景下找到合适的页面表达心意。',
+  },
+  {
+    q: '祭祀时会公开我的照片吗？',
+    a: '祭祀先人使用的个性化照片与姓名设置仅保存在当前设备本地，不会上传到服务器。',
+  },
+  {
+    q: '第一次使用建议先去哪一个页面？',
+    a: '如果是日常祈福，可以先从礼佛指南或佛菩萨页面开始；如果是追思亲人，则建议直接进入祭祀先人页面。',
+  },
+]
+
+const featuredPaths = [
+  {
+    title: '日常祈福入口',
+    body: '适合从首页开始，选择释迦牟尼佛、观音菩萨、药师佛等页面进行礼佛祈愿。',
+    to: '/guide/worship',
+    cta: '查看礼佛动线',
+  },
+  {
+    title: '超荐与回向入口',
+    body: '如果重点是超荐祭祖、追思先人或为家人回向，可以直接进入祭祀先人总览页面。',
+    to: '/guide/ancestors',
+    cta: '查看祭祀动线',
+  },
+]
+
+const topicPages = [
+  {
+    title: '在线礼佛网站使用说明',
+    body: '整理在线礼佛的常见用法、页面入口与供养步骤，方便第一次使用时快速了解。',
+    to: '/topic/online-worship',
+  },
+  {
+    title: '在线祭祀网站使用说明',
+    body: '说明在线祭祀、追思先人与个性化牌位设置的常见用法与注意事项。',
+    to: '/topic/online-ancestors',
+  },
+  {
+    title: '功德回向怎么做',
+    body: '整理礼佛、祭祀与超荐场景中常见的回向方式与表达思路。',
+    to: '/topic/merit-dedication',
+  },
+  {
+    title: '观音菩萨祈福指南',
+    body: '适合查看与平安、慈悲、消灾和求助相关的观音祈愿主题。',
+    to: '/topic/guanyin',
+  },
+  {
+    title: '药师佛健康祈愿指南',
+    body: '适合查看与健康、延寿、消灾和身心安乐相关的药师佛祈愿主题。',
+    to: '/topic/medicine',
+  },
+  {
+    title: '地藏菩萨超荐回向指南',
+    body: '适合查看与超荐、回向、追思先人及亡灵救度相关的常见主题。',
+    to: '/topic/ksitigarbha',
   },
 ]
 
@@ -46,104 +132,41 @@ function normalizeWishRecords(records, type) {
   })
 }
 
-const allWishes = computed(() => {
-  const combined = [
-    ...normalizeWishRecords(publicWishes.value, 'wish'),
-    ...normalizeWishRecords(publicAncestorWishes.value, 'ancestor'),
-  ]
-  return combined.sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key))).slice(0, 15)
-})
+const buddhaRecentWishes = computed(() =>
+  normalizeWishRecords(publicWishes.value, 'wish')
+    .filter((record) => record.buddha && !record.blessing)
+    .sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key)))
+    .slice(0, 5)
+)
+
+const blessingRecentWishes = computed(() =>
+  normalizeWishRecords(publicWishes.value, 'wish')
+    .filter((record) => record.blessing)
+    .sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key)))
+    .slice(0, 5)
+)
+
+const ancestorRecentWishes = computed(() =>
+  normalizeWishRecords(publicAncestorWishes.value, 'ancestor')
+    .sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key)))
+    .slice(0, 5)
+)
 
 const myRecentWishes = computed(() => {
   const combined = [
     ...normalizeWishRecords(myWishes.value, 'wish'),
     ...normalizeWishRecords(myAncestorWishes.value, 'ancestor'),
   ]
-  return combined.sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key))).slice(0, 5)
+  return combined
+    .sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key)))
+    .slice(0, 5)
 })
-
-const guideCards = [
-  {
-    title: '在线礼佛怎么开始',
-    body: '进入任意佛菩萨页面后，可以依次供花、点灯、上香，再填写祈愿内容并回向众生。',
-  },
-  {
-    title: '适合哪些祈愿主题',
-    body: '常见主题包括平安健康、学业事业、智慧增长、家庭和顺、超荐回向与消灾延寿。',
-  },
-  {
-    title: '祭祖页面有什么不同',
-    body: '拜祭先人页面更适合追思祖先、超荐亡灵与家族祈愿，也支持本地个性化牌位照片与姓名。',
-  },
-]
-
-const faqs = [
-  {
-    q: '礼佛祈愿网站可以做什么？',
-    a: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供八位佛菩萨的礼佛祈愿页面，也提供拜祭先人、追思祖先与超荐回向相关页面。',
-  },
-  {
-    q: '在线礼佛会公开个人照片吗？',
-    a: '礼佛祈愿内容会进入记录列表，而拜祭先人的个性化照片和姓名设置只保存在当前设备本地，不会上载到服务器。',
-  },
-  {
-    q: '第一次使用建议先去哪个页面？',
-    a: '如果是日常祈福，可以先从首页选择佛菩萨页面；如果是追思先人或祭祖，则可以直接进入拜祭先人页面。',
-  },
-]
-
-const featuredPaths = [
-  {
-    title: '日常祈福入口',
-    body: '适合从首页开始，选择释迦牟尼佛、观音菩萨或药师佛等页面进行礼佛祈愿。',
-    to: '/guide/worship',
-    cta: '查看礼佛指南',
-  },
-  {
-    title: '超荐与回向入口',
-    body: '如果重点是超荐祖先、祭祖追思或回向先人，可以直接进入拜祭先人总览页面。',
-    to: '/guide/ancestors',
-    cta: '查看祭祖指南',
-  },
-]
-
-const aiTopicPages = [
-  {
-    title: '在线礼佛网站使用说明',
-    body: '整理在线礼佛的常见用法、页面入口与供养步骤，方便第一次使用时快速了解。',
-    to: '/topic/online-worship',
-  },
-  {
-    title: '在线祭祖网站使用说明',
-    body: '说明在线祭祖、追思先人与个性化牌位设置的常见用法与注意事项。',
-    to: '/topic/online-ancestors',
-  },
-  {
-    title: '功德回向怎么做',
-    body: '整理礼佛、祭祖与超荐场景中常见的回向方式与表达思路。',
-    to: '/topic/merit-dedication',
-  },
-  {
-    title: '观音菩萨祈福指南',
-    body: '适合查看观音菩萨常见的平安、慈悲、消灾与求助相关祈愿主题。',
-    to: '/topic/guanyin',
-  },
-  {
-    title: '药师佛健康祈愿指南',
-    body: '适合查看药师佛常见的健康、延寿、消灾与身心安乐相关祈愿主题。',
-    to: '/topic/medicine',
-  },
-  {
-    title: '地藏菩萨超荐回向指南',
-    body: '适合查看地藏菩萨与超荐、回向、追思先人及亡灵救度相关的常见主题。',
-    to: '/topic/ksitigarbha',
-  },
-]
 
 async function loadWishes() {
   loadingPublic.value = true
   loadingMine.value = true
   viewerName.value = getViewerProfile().username
+
   try {
     const publicResults = await Promise.all([
       apiFetch('/wishes?limit=15'),
@@ -180,31 +203,68 @@ async function loadWishes() {
 
 onMounted(() => {
   document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - www.fopusha.com'
-  document.querySelector('meta[name="description"]')?.setAttribute('content', '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿，功德回向十方众生。')
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute(
+      'content',
+      '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿入口，也提供祭祀先人与回向页面。'
+    )
   loadWishes()
 })
 </script>
 
 <template>
   <main class="home-shell">
-    <header class="site-header">
-      <div class="header-inner">
-        <div class="header-icon">🪷</div>
+    <header class="hero-section">
+      <div class="hero-copy">
+        <div class="hero-emblem" aria-hidden="true">
+          <span class="hero-emblem__ring"></span>
+          <span class="hero-emblem__core"></span>
+        </div>
+        <p class="hero-kicker">线上礼佛与祭祀入口</p>
         <h1>礼佛祈愿</h1>
-        <p>选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。</p>
-        <div class="header-divider"></div>
+        <p class="hero-lead">
+          以庄严而温和的方式，进入礼佛、祈愿、回向与追思的页面，在现代生活中保留一份敬意与安定。
+        </p>
+        <div class="hero-quote">
+          <span class="hero-quote__line"></span>
+          <p>愿来者先得安定，再明白如何进入。</p>
+        </div>
+      </div>
+
+      <div class="hero-actions" aria-label="首页主要入口">
+        <router-link
+          v-for="item in primaryPaths"
+          :key="item.title"
+          :to="item.to"
+          class="hero-action"
+          @mouseenter="warmApi"
+          @mousedown="warmApi"
+          @touchstart.passive="warmApi"
+        >
+          <span class="hero-action__title">{{ item.title }}</span>
+          <span class="hero-action__body">{{ item.body }}</span>
+          <span class="hero-action__cta">{{ item.cta }}</span>
+        </router-link>
       </div>
     </header>
 
     <section class="catalog-section card">
-      <h2 class="section-title">诸佛菩萨</h2>
-      <p class="section-sub">八位佛菩萨，各具大愿，礼敬供养，福慧双增。</p>
+      <div class="section-head">
+        <p class="section-kicker">礼佛入口</p>
+        <h2 class="section-title">诸佛菩萨</h2>
+        <p class="section-sub">八位佛菩萨，各具大愿。选择与你此刻心意最相应的一页，安静进入礼敬与回向。</p>
+      </div>
       <div class="catalog-grid">
         <router-link
           v-for="b in BUDDHAS"
           :key="b.slug"
           :to="'/buddha/' + b.slug"
           class="buddha-card"
+          :aria-label="`进入${b.name}礼佛页面`"
+          @mouseenter="warmApi"
+          @mousedown="warmApi"
+          @touchstart.passive="warmApi"
         >
           <div class="buddha-img-wrap">
             <img :src="b.thumb || b.image" :alt="b.name" loading="lazy" decoding="async" />
@@ -217,69 +277,86 @@ onMounted(() => {
       </div>
     </section>
 
-    <router-link to="/ancestors" class="ancestor-banner">
-      <div class="banner-inner">
-        <div class="banner-icon">🪔</div>
-        <div class="banner-text">
-          <h2>拜祭先人</h2>
-          <p>追思先人，超荐亡灵，虔诚祭拜，庇荫后代</p>
+    <section class="ritual-stage">
+      <router-link
+        to="/ancestors"
+        class="ancestor-banner"
+        aria-label="进入祭祀先人页面，追思祖先并进行回向祈福"
+        @mouseenter="warmApi"
+        @mousedown="warmApi"
+        @touchstart.passive="warmApi"
+      >
+        <div class="ancestor-banner__media" aria-hidden="true"></div>
+        <div class="ancestor-banner__content">
+          <p class="ancestor-banner__kicker">追思与祭祀</p>
+          <h2>祭祀先人</h2>
+          <p>追思祖先，超荐亡灵，以克制而温暖的方式安放思念，也为家人留下可持续回访的祭祀入口。</p>
+          <span class="ancestor-banner__cta">进入祭祀先人</span>
         </div>
-        <div class="banner-arrow">→</div>
-      </div>
-    </router-link>
-
-    <section v-if="false" class="bookmark-section dim-section">
-      <div class="bookmark-grid">
-        <router-link v-for="item in topBookmarks" :key="item.title" :to="item.to" class="bookmark-card">
-          <h2>{{ item.title }}</h2>
-          <p>{{ item.body }}</p>
-          <span>进入</span>
-        </router-link>
-      </div>
+      </router-link>
     </section>
 
     <BlessingPool @wish-submitted="loadWishes" />
 
-    <section class="bookmark-section dim-section">
-      <div class="bookmark-grid">
-        <router-link v-for="item in topBookmarks" :key="`${item.title}-after-pool`" :to="item.to" class="bookmark-card">
-          <h2>{{ item.title }}</h2>
-          <p>{{ item.body }}</p>
-          <span>进入</span>
-        </router-link>
-      </div>
-    </section>
-
-    <!-- ── 祈愿记录：网站内容，优先展示 ── -->
     <section class="wishes-section card">
-      <h2 class="section-title">祈愿记录</h2>
+      <div class="section-head">
+        <p class="section-kicker">当下回响</p>
+        <h2 class="section-title">祈愿记录</h2>
+        <p class="section-sub">网站内最近的礼佛与回向记录，以及当前设备识别到的个人记录，方便继续回看与追踪。</p>
+      </div>
       <div class="record-grid">
-        <section class="record-panel">
-          <h3 class="record-title">最新祈愿记录</h3>
-          <p class="section-sub">显示所有人最近 15 条礼佛与回向记录。</p>
+        <section class="record-panel" aria-labelledby="buddha-wishes-title">
+          <h3 id="buddha-wishes-title" class="record-title">拜佛记录</h3>
+          <p class="record-note">显示最近 5 条礼佛与回向记录。</p>
           <WishList
-            :wishes="allWishes"
+            :wishes="buddhaRecentWishes"
             :loading="loadingPublic"
-            empty-message="暂时还没有公开祈愿记录。"
+            empty-message="暂时还没有公开拜佛记录。"
           />
         </section>
 
-        <section class="record-panel">
-          <h3 class="record-title">我的祈愿记录</h3>
-          <p class="section-sub">显示当前设备识别到的最近 5 条个人记录。</p>
+        <section class="record-panel" aria-labelledby="ancestor-wishes-title">
+          <h3 id="ancestor-wishes-title" class="record-title">祭祀记录</h3>
+          <p class="record-note">显示最近 5 条祭祀、追思与回向记录。</p>
+          <WishList
+            :wishes="ancestorRecentWishes"
+            :loading="loadingPublic"
+            empty-message="暂时还没有公开祭祀记录。"
+          />
+        </section>
+
+        <section class="record-panel" aria-labelledby="blessing-wishes-title">
+          <h3 id="blessing-wishes-title" class="record-title">求福记录</h3>
+          <p class="record-note">显示最近 5 条祈福池求福记录。</p>
+          <WishList
+            :wishes="blessingRecentWishes"
+            :loading="loadingPublic"
+            empty-message="暂时还没有公开求福记录。"
+          />
+        </section>
+
+        <section class="record-panel" aria-labelledby="mine-wishes-title">
+          <h3 id="mine-wishes-title" class="record-title">我的记录</h3>
+          <p class="record-note">显示当前设备识别到的最近 5 条个人记录，方便你继续回看。</p>
           <WishList
             :wishes="myRecentWishes"
             :loading="loadingMine"
-            :empty-message="viewerName ? '你最近还没有祈愿记录。' : '先提交一次祈愿，之后这里会显示你的最近 5 条记录。'"
+            :empty-message="
+              viewerName
+                ? '你最近还没有新的祈愿记录。'
+                : '先提交一次祈愿，之后这里会显示你最近的 5 条记录。'
+            "
           />
         </section>
       </div>
     </section>
 
-    <!-- ── 以下为使用说明类，视觉降权 ── -->
-    <section class="guide-section help-section">
-      <h2 class="help-title">礼佛与回向指南</h2>
-      <p class="help-sub">如果你第一次使用，可以先从这里了解礼佛、回向和祭祖页面的大致区别。</p>
+    <section class="guide-section">
+      <div class="guide-section__intro">
+        <p class="section-kicker">初次进入</p>
+        <h2 class="section-title">礼佛与回向指南</h2>
+        <p class="section-sub">如果你是第一次使用，建议先了解礼佛、回向和祭祀页面的区别，再决定从哪一条路径开始。</p>
+      </div>
       <div class="guide-grid">
         <article v-for="item in guideCards" :key="item.title" class="guide-card">
           <h3>{{ item.title }}</h3>
@@ -288,43 +365,53 @@ onMounted(() => {
       </div>
       <div class="guide-links">
         <router-link to="/guide/worship">查看在线礼佛指南</router-link>
-        <router-link to="/guide/ancestors">查看在线祭祖指南</router-link>
-        <router-link to="/ancestors">查看拜祭先人总览</router-link>
+        <router-link to="/guide/ancestors">查看在线祭祀指南</router-link>
+        <router-link to="/ancestors">查看祭祀先人总览</router-link>
         <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
       </div>
     </section>
 
-    <section class="faq-section help-section help-section--faq">
-      <h2 class="help-title">常见问题</h2>
-      <div class="faq-list">
-        <article v-for="faq in faqs" :key="faq.q" class="faq-item">
-          <h3>{{ faq.q }}</h3>
-          <p>{{ faq.a }}</p>
-        </article>
-      </div>
+    <section class="insight-layout">
+      <section class="faq-section card card--soft">
+        <div class="section-head section-head--compact">
+          <p class="section-kicker">常见问题</p>
+          <h2 class="section-title">首次使用前，你可能想知道</h2>
+        </div>
+        <div class="faq-list">
+          <details v-for="faq in faqs" :key="faq.q" class="faq-item">
+            <summary>{{ faq.q }}</summary>
+            <p>{{ faq.a }}</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="path-section card card--soft">
+        <div class="section-head section-head--compact">
+          <p class="section-kicker">推荐路径</p>
+          <h2 class="section-title">按心愿方向继续进入</h2>
+        </div>
+        <div class="path-grid">
+          <article v-for="item in featuredPaths" :key="item.title" class="path-card">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.body }}</p>
+            <router-link :to="item.to">{{ item.cta }}</router-link>
+          </article>
+        </div>
+      </section>
     </section>
 
-    <section class="path-section dim-section">
-      <h2 class="section-title">推荐礼敬路径</h2>
-      <p class="section-sub">如果你已经熟悉页面结构，可以从这里按不同祈愿方向继续进入。</p>
-      <div class="path-grid">
-        <article v-for="item in featuredPaths" :key="item.title" class="path-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-          <router-link :to="item.to">{{ item.cta }}</router-link>
-        </article>
+    <section class="topics-section">
+      <div class="section-head">
+        <p class="section-kicker">专题说明</p>
+        <h2 class="section-title">先看主题，再决定进入哪一页</h2>
+        <p class="section-sub">如果你想先理解不同主题之间的区别，再决定从哪一条礼佛或祭祀路径进入，可以从这里开始。</p>
       </div>
-    </section>
-
-    <section class="path-section dim-section">
-      <h2 class="section-title">专题指南</h2>
-      <p class="section-sub">如果你想先看不同主题之间的区别，再决定进入哪个页面，可以从这里开始。</p>
-      <div class="path-grid">
-        <article v-for="item in aiTopicPages" :key="item.title" class="path-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-          <router-link :to="item.to">查看专题页</router-link>
-        </article>
+      <div class="topics-list">
+        <router-link v-for="item in topicPages" :key="item.title" :to="item.to" class="topic-row">
+          <span class="topic-row__title">{{ item.title }}</span>
+          <span class="topic-row__body">{{ item.body }}</span>
+          <span class="topic-row__cta">查看专题</span>
+        </router-link>
       </div>
     </section>
 
@@ -336,126 +423,223 @@ onMounted(() => {
 
 <style scoped>
 .home-shell {
-  max-width: 1100px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 0 20px 60px;
+  padding: 0 20px 72px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 30px;
 }
 
-.site-header {
-  text-align: center;
-  padding: 60px 20px 40px;
-  animation: fadeInUp 0.7s ease both;
-}
-.header-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  display: inline-block;
-  animation: slowSpin 20s linear infinite;
-}
-@keyframes slowSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.site-header h1 {
-  font-size: 2.6rem;
-  color: var(--accent);
-  letter-spacing: 0.12em;
-  margin-bottom: 12px;
-  text-shadow: 0 2px 12px rgba(127, 90, 54, 0.15);
-}
-.site-header p { color: var(--text-muted); font-size: 1.05rem; }
-.header-divider {
-  width: 80px;
-  height: 1px;
-  background: var(--gold);
-  margin: 24px auto 0;
-  opacity: 0.6;
-}
-
-/* ── 主内容区 section 标题 ── */
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 6px;
-  letter-spacing: 0.06em;
-}
-.section-sub {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  margin-bottom: 28px;
-}
-
-/* ── 辅助性 section（降权） ── */
-.dim-section {
-  background: rgba(255, 252, 245, 0.45);
-  border: 1px solid rgba(212, 168, 67, 0.1);
-  border-radius: var(--radius);
-  padding: 28px 32px;
-}
-.dim-section .section-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-.dim-section .section-sub {
-  font-size: 0.82rem;
-  margin-bottom: 18px;
-}
-
-.catalog-section { animation: fadeInUp 0.7s 0.1s ease both; }
-
-.bookmark-section {
-  padding-top: 16px;
-  padding-bottom: 16px;
-}
-
-.bookmark-grid {
+.hero-section {
+  position: relative;
+  padding: 46px 46px 42px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.82fr);
+  gap: 24px;
+  align-items: stretch;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(240, 208, 128, 0.22), transparent 18%),
+    radial-gradient(circle at 30% 70%, rgba(196, 154, 108, 0.1), transparent 30%),
+    linear-gradient(135deg, rgba(255, 249, 236, 0.98), rgba(239, 225, 195, 0.92) 54%, rgba(86, 57, 29, 0.96) 54.4%, rgba(46, 28, 13, 0.98));
+  border: 1px solid rgba(180, 132, 72, 0.3);
+  box-shadow:
+    0 26px 70px rgba(68, 43, 17, 0.14),
+    inset 0 1px 0 rgba(255, 251, 243, 0.8);
+  animation: fadeInUp 0.7s ease both;
+  overflow: hidden;
 }
 
-.bookmark-card {
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(125deg, transparent 0 50%, rgba(255, 255, 255, 0.06) 50.2%, transparent 51%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 22%);
+  pointer-events: none;
+}
+
+.hero-copy {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 18px 20px;
-  border-radius: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 14px;
+  text-align: left;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-emblem {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+}
+
+.hero-emblem__ring,
+.hero-emblem__core {
+  position: absolute;
+  border-radius: 999px;
+}
+
+.hero-emblem__ring {
+  inset: 0;
+  border: 1px solid rgba(212, 168, 67, 0.55);
+  box-shadow:
+    0 0 0 6px rgba(212, 168, 67, 0.08),
+    0 12px 36px rgba(68, 43, 17, 0.08);
+}
+
+.hero-emblem__core {
+  inset: 24px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(240, 208, 128, 0.9), rgba(196, 154, 108, 0.95) 60%, rgba(127, 90, 54, 0.95));
+}
+
+.hero-kicker {
+  color: rgba(110, 74, 45, 0.76);
+  font-size: 0.82rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.5rem, 5vw, 4.15rem);
+  line-height: 1.06;
+  color: #5f3e25;
+  letter-spacing: 0.1em;
+  text-shadow: 0 6px 16px rgba(127, 90, 54, 0.1);
+}
+
+.hero-lead {
+  max-width: 620px;
+  color: rgba(70, 50, 34, 0.92);
+  font-size: 1rem;
+  line-height: 1.88;
+}
+
+.hero-quote {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(127, 90, 54, 0.82);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.hero-quote__line {
+  width: 58px;
+  height: 1px;
+  background: rgba(212, 168, 67, 0.7);
+}
+
+.hero-actions {
+  width: 100%;
+  display: grid;
+  align-content: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-action {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px 18px 16px;
+  border-radius: 18px;
   text-decoration: none;
   color: inherit;
   background:
-    linear-gradient(135deg, rgba(250, 244, 231, 0.96), rgba(244, 233, 213, 0.9));
-  border: 1px solid rgba(212, 168, 67, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    linear-gradient(145deg, rgba(95, 66, 38, 0.96), rgba(52, 32, 16, 0.98));
+  border: 1px solid rgba(240, 208, 128, 0.24);
+  box-shadow:
+    0 16px 34px rgba(20, 10, 0, 0.2),
+    inset 0 1px 0 rgba(255, 240, 214, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.bookmark-card h2 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--accent);
+.hero-action__title {
+  color: #f3dfba;
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-.bookmark-card p {
-  color: var(--text-muted);
-  font-size: 0.82rem;
+.hero-action__body {
+  color: rgba(243, 232, 214, 0.82);
+  font-size: 0.84rem;
   line-height: 1.7;
-  opacity: 0.85;
+  overflow-wrap: anywhere;
 }
 
-.bookmark-card span {
-  color: var(--accent-light);
+.hero-action__cta {
+  color: #f0d080;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
+.hero-action:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px rgba(20, 10, 0, 0.28);
+  border-color: rgba(240, 208, 128, 0.42);
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.section-head--compact {
+  margin-bottom: 18px;
+}
+
+.section-kicker {
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.section-sub {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.72;
+  max-width: 760px;
+}
+
+.card--soft {
+  background: rgba(255, 252, 245, 0.72);
+}
+
+.catalog-section {
+  animation: fadeInUp 0.7s 0.08s ease both;
+}
+
+.ritual-stage {
+  display: block;
+}
+
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 20px;
 }
 
@@ -463,18 +647,20 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 14px;
-  background: rgba(255, 250, 240, 0.7);
+  min-width: 0;
+  border-radius: 16px;
+  background: rgba(255, 250, 240, 0.8);
   border: 1px solid rgba(212, 168, 67, 0.15);
   overflow: hidden;
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   text-decoration: none;
   color: var(--text);
 }
+
 .buddha-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 36px rgba(68, 43, 17, 0.16);
-  border-color: var(--gold);
+  border-color: rgba(212, 168, 67, 0.4);
 }
 
 .buddha-img-wrap {
@@ -483,174 +669,257 @@ onMounted(() => {
   margin: 20px auto 0;
   overflow: hidden;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f5e9d0, #ede0c0);
+  background: linear-gradient(135deg, rgba(245, 233, 208, 1), rgba(237, 224, 192, 1));
   border: 2px solid rgba(212, 168, 67, 0.35);
   box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.1);
-  transition: box-shadow 0.3s, border-color 0.3s;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
+
 .buddha-card:hover .buddha-img-wrap {
   border-color: var(--gold);
-  box-shadow: 0 0 0 6px rgba(212, 168, 67, 0.2);
+  box-shadow: 0 0 0 6px rgba(212, 168, 67, 0.18);
 }
+
 .buddha-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s;
+  transition: transform 0.4s ease;
 }
-.buddha-card:hover .buddha-img-wrap img { transform: scale(1.06); }
+
+.buddha-card:hover .buddha-img-wrap img {
+  transform: scale(1.04);
+}
 
 .buddha-info {
-  padding: 14px 12px;
-  text-align: center;
   width: 100%;
-}
-.buddha-info h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: var(--accent); letter-spacing: 0.05em; }
-.buddha-info span { font-size: 0.75rem; color: var(--text-muted); opacity: 0.75; }
-
-/* 分隔语 */
-.section-divider {
+  padding: 16px 14px 18px;
   text-align: center;
-  color: var(--gold-light);
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  opacity: 0.7;
-  padding: 8px 0;
 }
 
-/* 先人横幅 */
-.ancestor-banner {
+.buddha-info h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.buddha-info span {
   display: block;
-  padding: 0;
-  aspect-ratio: 2172 / 724;
-  background: url('/jizhu/b1.png') center / cover no-repeat;
-  border: 1px solid rgba(212, 168, 67, 0.18);
-  border-radius: 16px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.ancestor-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  min-height: 280px;
+  border-radius: 24px;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s, box-shadow 0.2s;
-  animation: fadeInUp 0.6s 0.15s ease both;
-}
-.ancestor-banner:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(30, 20, 10, 0.3);
-}
-.banner-inner {
-  display: none;
-}
-.banner-icon { font-size: 2.8rem; flex-shrink: 0; }
-.banner-text { flex: 1; }
-.banner-text h2 {
-  font-size: 1.5rem;
-  color: #d0c8b0;
-  letter-spacing: 0.1em;
-  margin-bottom: 6px;
-}
-.banner-text p {
-  color: rgba(180, 170, 150, 0.8);
-  font-size: 0.9rem;
-}
-.banner-arrow {
-  font-size: 1.5rem;
-  color: rgba(180, 170, 150, 0.6);
-  flex-shrink: 0;
+  background: rgba(30, 20, 10, 0.92);
+  border: 1px solid rgba(212, 168, 67, 0.22);
+  box-shadow: 0 16px 40px rgba(20, 10, 0, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: fadeInUp 0.7s 0.14s ease both;
 }
 
-.wishes-section { animation: fadeInUp 0.7s 0.2s ease both; }
+.ancestor-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 46px rgba(20, 10, 0, 0.24);
+  border-color: rgba(212, 168, 67, 0.4);
+}
+
+.ancestor-banner__media {
+  min-height: 100%;
+  background:
+    linear-gradient(90deg, rgba(20, 10, 0, 0.08), rgba(20, 10, 0, 0.52)),
+    url('/jizhu/b1.png') center / cover no-repeat;
+}
+
+.ancestor-banner__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 36px 34px;
+  background: linear-gradient(180deg, rgba(38, 25, 14, 0.96), rgba(58, 38, 22, 0.92));
+}
+
+.ancestor-banner__kicker {
+  color: rgba(240, 208, 128, 0.78);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.ancestor-banner__content h2 {
+  color: #f2deba;
+  font-size: clamp(1.75rem, 4vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: 0.08em;
+}
+
+.ancestor-banner__content p {
+  color: rgba(240, 231, 214, 0.88);
+  font-size: 0.96rem;
+  line-height: 1.85;
+}
+
+.ancestor-banner__cta {
+  color: #f0d080;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.wishes-section {
+  animation: fadeInUp 0.7s 0.18s ease both;
+}
 
 .record-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 16px;
 }
 
 .record-panel {
   min-width: 0;
+  padding: 16px 16px 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 251, 242, 0.86), rgba(248, 240, 224, 0.72));
+  border: 1px solid rgba(212, 168, 67, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 .record-title {
   color: var(--accent);
-  font-size: 1rem;
-  margin-bottom: 6px;
-}
-
-/* ── 祈愿记录：完整卡片，主标题，生动感 ── */
-.wishes-section .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.06em;
-}
-.wishes-section .record-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent);
-  border-left: 3px solid var(--gold);
-  padding-left: 10px;
-  margin-bottom: 10px;
-}
-
-/* ── 使用指南类（指南 + FAQ）：统一帮助区风格 ── */
-.help-section {
-  background: rgba(240, 233, 215, 0.5);
-  border: 1px solid rgba(160, 130, 80, 0.14);
-  border-radius: 14px;
-  padding: 24px 28px;
-  animation: fadeInUp 0.7s 0.18s ease both;
-}
-.help-title {
   font-size: 0.98rem;
-  font-weight: 600;
-  color: #9a8260;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-  text-transform: none;
-}
-.help-sub {
-  color: #a89070;
-  font-size: 0.78rem;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
+  padding-left: 9px;
+  border-left: 3px solid var(--gold);
 }
 
-/* 礼佛指南：暖金左边框标记 */
-.guide-section.help-section {
-  border-left: 4px solid rgba(212, 168, 67, 0.45);
+.record-note {
+  color: var(--text-muted);
+  font-size: 0.79rem;
+  line-height: 1.65;
+  margin-bottom: 12px;
 }
 
-/* 常见问题：更暗一点，区别于指南 */
-.help-section--faq {
-  background: rgba(228, 222, 208, 0.45);
-  border-left: 4px solid rgba(140, 110, 70, 0.3);
-}
-.help-section--faq .help-title {
-  color: #8a7458;
-}
-
-.guide-section,
-.faq-section,
-.path-section {
-  animation: fadeInUp 0.7s 0.18s ease both;
+.guide-section {
+  padding: 30px 32px 32px;
+  background:
+    linear-gradient(180deg, rgba(244, 236, 220, 0.9), rgba(233, 220, 196, 0.72));
+  border: 1px solid rgba(212, 168, 67, 0.16);
+  border-left: 4px solid rgba(212, 168, 67, 0.5);
+  border-radius: 22px;
+  animation: fadeInUp 0.7s 0.2s ease both;
 }
 
-.guide-grid,
-.faq-list,
-.path-grid {
+.guide-section__intro {
+  margin-bottom: 20px;
+}
+
+.guide-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
-.guide-card,
-.faq-item,
-.path-card {
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: rgba(255, 251, 242, 0.55);
+.guide-card {
+  min-width: 0;
+  padding: 15px 16px;
+  border-radius: 16px;
+  background: rgba(255, 251, 242, 0.8);
+  border: 1px solid rgba(212, 168, 67, 0.12);
+}
+
+.guide-card h3 {
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.guide-card p {
+  color: var(--text-muted);
+  line-height: 1.72;
+  font-size: 0.81rem;
+  overflow-wrap: anywhere;
+}
+
+.guide-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.guide-links a {
+  padding: 11px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 168, 67, 0.22);
+  color: var(--accent);
+  text-decoration: none;
+  background: rgba(255, 250, 240, 0.92);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.insight-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  min-width: 0;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: rgba(255, 250, 242, 0.72);
   border: 1px solid rgba(212, 168, 67, 0.1);
 }
 
-.guide-card h3,
-.faq-item h3,
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.65;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item p {
+  color: var(--text-muted);
+  line-height: 1.72;
+  font-size: 0.81rem;
+  margin-top: 8px;
+}
+
+.path-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.path-card {
+  padding: 15px 16px;
+  border-radius: 14px;
+  background: rgba(255, 251, 242, 0.72);
+  border: 1px solid rgba(212, 168, 67, 0.1);
+}
+
 .path-card h3 {
   margin-bottom: 8px;
   font-size: 0.92rem;
@@ -658,13 +927,10 @@ onMounted(() => {
   color: var(--accent);
 }
 
-.guide-card p,
-.faq-item p,
 .path-card p {
   color: var(--text-muted);
-  line-height: 1.75;
-  font-size: 0.8rem;
-  opacity: 0.85;
+  line-height: 1.72;
+  font-size: 0.81rem;
 }
 
 .path-card a {
@@ -675,40 +941,156 @@ onMounted(() => {
   font-weight: 600;
 }
 
-.guide-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 18px;
+.topics-section {
+  padding: 14px 0 0;
+  animation: fadeInUp 0.7s 0.22s ease both;
 }
 
-.guide-links a {
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(212, 168, 67, 0.22);
-  color: var(--accent);
+.topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topic-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.2fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 20px;
+  border-radius: 18px;
   text-decoration: none;
-  background: rgba(255, 250, 240, 0.9);
+  color: inherit;
+  background:
+    linear-gradient(90deg, rgba(255, 252, 246, 0.85), rgba(247, 238, 220, 0.76));
+  border: 1px solid rgba(212, 168, 67, 0.14);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-row:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 168, 67, 0.35);
+  box-shadow: 0 10px 26px rgba(68, 43, 17, 0.08);
+}
+
+.topic-row__title {
+  color: var(--accent);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.topic-row__body {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.72;
+  min-width: 0;
+}
+
+.topic-row__cta {
+  color: var(--accent-light);
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .site-footer {
   text-align: center;
-  padding: 24px;
+  padding: 28px 12px 0;
   color: var(--text-muted);
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
 }
 
-@media (max-width: 900px) {
-  .home-shell { padding: 0 12px 48px; gap: 24px; }
-  .card { padding: 20px 16px; }
-  .site-header { padding: 36px 12px 24px; }
-  .record-grid { grid-template-columns: 1fr; }
-  .bookmark-grid { grid-template-columns: 1fr; }
+.hero-action:focus-visible,
+.buddha-card:focus-visible,
+.ancestor-banner:focus-visible,
+.guide-links a:focus-visible,
+.faq-item summary:focus-visible,
+.path-card a:focus-visible,
+.topic-row:focus-visible {
+  outline: 3px solid rgba(212, 168, 67, 0.55);
+  outline-offset: 3px;
 }
 
-@media (max-width: 600px) {
-  .site-header h1 { font-size: 1.9rem; }
-  .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 960px) {
+  .home-shell {
+    padding: 0 14px 56px;
+    gap: 28px;
+  }
+
+  .hero-section {
+    grid-template-columns: 1fr;
+    padding: 34px 22px 30px;
+  }
+
+  .hero-actions,
+  .guide-grid,
+  .insight-layout,
+  .record-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ancestor-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .ancestor-banner__media {
+    min-height: 220px;
+  }
+
+  .topic-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-lead,
+  .section-sub,
+  .ancestor-banner__content p {
+    font-size: 0.94rem;
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .guide-section,
+  .ancestor-banner__content,
+  .topic-row,
+  .path-card,
+  .faq-item {
+    padding-inline: 16px;
+  }
+
+  .buddha-info h3 {
+    font-size: 1rem;
+  }
+
+  .hero-action {
+    padding: 18px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section,
+  .catalog-section,
+  .ancestor-banner,
+  .wishes-section,
+  .guide-section,
+  .topics-section,
+  .hero-action,
+  .buddha-card,
+  .topic-row,
+  .guide-links a {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
 }
 </style>

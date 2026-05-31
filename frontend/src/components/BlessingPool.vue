@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
@@ -11,45 +11,77 @@ const router = useRouter()
 const active = ref(null)
 const toast = ref('')
 const stage = ref('select')
-
-const form = ref({ name: '', age: '', target: '' })
 const loading = ref(false)
 const resultWish = ref('')
+const modalCloseButton = ref(null)
+const previousOverflow = ref('')
 
-onMounted(() => {
-  const viewer = getViewerProfile()
-  form.value.name = viewer.username || ''
-  form.value.age = viewer.age ? String(viewer.age) : '30'
+const form = ref({
+  name: '',
+  age: '',
+  target: '',
 })
+
+const RITUALS = [
+  { name: '上香', icon: '🪔', toast: '心香一瓣，供养十方。' },
+  { name: '点灯', icon: '🕯️', toast: '慧灯常明，照破无明。' },
+  { name: '叩拜', icon: '🙏', toast: '三叩首，礼敬祈福。' },
+]
+
+const doneRituals = ref(new Set())
+const popRitual = ref('')
+const floats = ref([])
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
-  const i = BLESSINGS.findIndex((b) => b.key === active.value.key)
-  return i >= 0 && i < BLESSINGS.length - 1 ? BLESSINGS[i + 1] : null
+  const currentIndex = BLESSINGS.findIndex((item) => item.key === active.value.key)
+  return currentIndex >= 0 && currentIndex < BLESSINGS.length - 1 ? BLESSINGS[currentIndex + 1] : null
 })
 
-function open(b) {
-  active.value = b
+function hydrateProfile() {
+  const viewer = getViewerProfile()
+  form.value.name = viewer.username || ''
+  form.value.age = viewer.age ? String(viewer.age) : '30'
+  form.value.target = ''
+}
+
+function resetTransientState() {
+  resultWish.value = ''
+  stage.value = 'select'
+  doneRituals.value = new Set()
+  popRitual.value = ''
+  floats.value = []
+  loading.value = false
+}
+
+function open(blessing) {
+  active.value = blessing
   stage.value = 'form'
   resultWish.value = ''
-  form.value.target = ''
   doneRituals.value = new Set()
+  popRitual.value = ''
+  floats.value = []
+  hydrateProfile()
 }
 
 function close() {
   active.value = null
-  stage.value = 'select'
-  form.value = { name: '', age: '', target: '' }
+  resetTransientState()
+  hydrateProfile()
+}
+
+function clearToastSoon() {
+  setTimeout(() => {
+    toast.value = ''
+  }, 2500)
 }
 
 async function submit() {
   if (loading.value) return
 
   if (!form.value.name.trim()) {
-    toast.value = '请填写祈福者姓名'
-    setTimeout(() => {
-      toast.value = ''
-    }, 2500)
+    toast.value = '请填写祈福者姓名。'
+    clearToastSoon()
     return
   }
 
@@ -66,14 +98,12 @@ async function submit() {
         wish: active.value.wish,
         buddha: '',
         blessing: active.value.label,
-        target: form.value.target,
+        target: form.value.target.trim(),
       }),
     })
   } catch {
     toast.value = '提交失败，请稍后重试。'
-    setTimeout(() => {
-      toast.value = ''
-    }, 2500)
+    clearToastSoon()
     loading.value = false
     return
   }
@@ -84,167 +114,221 @@ async function submit() {
   emit('wish-submitted')
 }
 
-const RITUALS = [
-  { name: '上香', icon: '🪔', toast: '心香一瓣，供养十方。' },
-  { name: '点灯', icon: '🕯️', toast: '慧灯常明，照破无明。' },
-  { name: '叩拜', icon: '🙏', toast: '三叩首，礼敬祈福。' },
-]
+function doRitual(ritual) {
+  if (doneRituals.value.has(ritual.name)) return
 
-const doneRituals = ref(new Set())
-const popRitual = ref('')
-const floats = ref([])
+  doneRituals.value = new Set([...doneRituals.value, ritual.name])
+  toast.value = ritual.toast
+  clearToastSoon()
 
-function doRitual(r) {
-  if (doneRituals.value.has(r.name)) return
-
-  doneRituals.value = new Set([...doneRituals.value, r.name])
-  toast.value = r.toast
-  setTimeout(() => {
-    toast.value = ''
-  }, 2500)
-
-  popRitual.value = r.name
+  popRitual.value = ritual.name
   setTimeout(() => {
     popRitual.value = ''
   }, 400)
 
-  const count = 3
-  for (let i = 0; i < count; i += 1) {
-    const id = Date.now() + i
-    const left = 30 + Math.random() * 40
-    const delay = i * 180
+  for (let index = 0; index < 3; index += 1) {
+    const id = Date.now() + index
+    const left = 28 + Math.random() * 44
+    const delay = index * 180
     setTimeout(() => {
-      floats.value.push({ id, icon: r.icon, left })
+      floats.value.push({ id, icon: ritual.icon, left })
       setTimeout(() => {
-        floats.value = floats.value.filter((f) => f.id !== id)
+        floats.value = floats.value.filter((item) => item.id !== id)
       }, 1500)
     }, delay)
   }
 }
+
+function lockBodyScroll() {
+  previousOverflow.value = document.body.style.overflow
+  document.body.style.overflow = 'hidden'
+}
+
+function unlockBodyScroll() {
+  document.body.style.overflow = previousOverflow.value
+}
+
+watch(active, async (value) => {
+  if (value) {
+    lockBodyScroll()
+    await nextTick()
+    modalCloseButton.value?.focus()
+    return
+  }
+  unlockBodyScroll()
+})
+
+onMounted(() => {
+  hydrateProfile()
+})
+
+onBeforeUnmount(() => {
+  unlockBodyScroll()
+})
 </script>
 
 <template>
-  <section class="blessing-section card">
-    <h2 class="section-title">祈福池</h2>
-    <p class="section-sub">心诚则灵，选择一项，虔诚发愿，功德回向。</p>
+  <section class="blessing-section card" aria-labelledby="blessing-pool-title">
+    <div class="section-head">
+      <p class="section-kicker">祈愿场景</p>
+      <h2 id="blessing-pool-title" class="section-title">祈福池</h2>
+      <p class="section-sub">先选择一项愿望主题，再进入仪式页面留下心愿。每一个入口都尽量保持简单、可亲近，也保留应有的敬意。</p>
+    </div>
 
     <div class="blessing-grid">
       <button
-        v-for="b in BLESSINGS"
-        :key="b.key"
+        v-for="blessing in BLESSINGS"
+        :key="blessing.key"
         class="blessing-item"
-        @click="open(b)"
+        type="button"
+        :aria-label="`进入${blessing.label}祈福池`"
+        @click="open(blessing)"
       >
         <img
           class="blessing-icon"
-          :src="b.icon"
-          :alt="b.label"
+          :src="blessing.icon"
+          :alt="blessing.label"
           loading="lazy"
           decoding="async"
         />
-        <span class="blessing-label">{{ b.label }}</span>
+        <span class="blessing-label">{{ blessing.label }}</span>
       </button>
     </div>
 
     <Teleport to="body">
-      <div v-if="active" class="blessing-modal" @click.self="close">
-        <div class="modal-shell">
+      <div v-if="active" class="blessing-modal" @click.self="close" @keydown.esc="close">
+        <div
+          class="modal-shell"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="blessing-dialog-title"
+          aria-describedby="blessing-dialog-desc"
+        >
           <div class="modal-scene">
             <div class="scene-img-wrap">
-              <img :src="active.bg" :alt="active.label" class="scene-img" />
+              <img :src="active.bg" :alt="`${active.label}场景图`" class="scene-img" />
             </div>
           </div>
 
           <div class="scene-overlay">
             <div class="overlay-head">
               <p class="overlay-kicker">祈福主题</p>
-              <h3 class="overlay-title">{{ active.label }}</h3>
-              <p v-if="stage === 'form'" class="form-wish-hint">{{ active.wish }}</p>
-              <p v-if="stage === 'done'" class="result-wish">{{ resultWish }}</p>
+              <h3 id="blessing-dialog-title" class="overlay-title">{{ active.label }}</h3>
+              <p id="blessing-dialog-desc" class="form-wish-hint">
+                <template v-if="stage === 'form'">{{ active.wish }}</template>
+                <template v-else>{{ resultWish }}</template>
+              </p>
             </div>
 
-            <div v-if="stage === 'form'" class="scene-rituals">
+            <div v-if="stage === 'form'" class="scene-rituals" aria-label="可选礼仪动作">
               <TransitionGroup name="float-group">
                 <span
-                  v-for="f in floats"
-                  :key="f.id"
+                  v-for="item in floats"
+                  :key="item.id"
                   class="float-emoji"
-                  :style="{ left: `${f.left}%` }"
-                >{{ f.icon }}</span>
+                  :style="{ left: `${item.left}%` }"
+                  aria-hidden="true"
+                >{{ item.icon }}</span>
               </TransitionGroup>
 
               <button
-                v-for="r in RITUALS"
-                :key="r.name"
+                v-for="ritual in RITUALS"
+                :key="ritual.name"
                 class="ritual-btn"
-                :class="{ done: doneRituals.has(r.name), pop: popRitual === r.name }"
-                :disabled="doneRituals.has(r.name)"
-                @click="doRitual(r)"
+                type="button"
+                :class="{ done: doneRituals.has(ritual.name), pop: popRitual === ritual.name }"
+                :disabled="doneRituals.has(ritual.name)"
+                :aria-pressed="doneRituals.has(ritual.name)"
+                @click="doRitual(ritual)"
               >
-                <span class="ritual-icon">{{ r.icon }}</span>
+                <span class="ritual-icon" aria-hidden="true">{{ ritual.icon }}</span>
                 <span class="ritual-name">
-                  {{ r.name }}{{ doneRituals.has(r.name) ? ' ✓' : '' }}
+                  {{ ritual.name }}{{ doneRituals.has(ritual.name) ? ' 已完成' : '' }}
                 </span>
               </button>
             </div>
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
-                {{ form.age }}岁的{{ form.name }}敬上{{ form.target ? `，祈愿${form.target}` : '' }}
+                {{ form.age }} 岁的 {{ form.name }} {{ form.target ? `，为 ${form.target}` : '' }} 留下了这份祈愿。
               </p>
               <div class="result-btns">
                 <button
                   v-if="nextBlessing"
                   class="back-home-btn next-btn"
+                  type="button"
                   @click="open(nextBlessing)"
                 >
                   进入下一个祈福池
                 </button>
-                <button class="back-home-btn" @click="close(); router.push('/')">
+                <button class="back-home-btn" type="button" @click="close(); router.push('/')">
                   返回首页
                 </button>
               </div>
             </div>
 
-            <div v-if="stage === 'form'" class="scene-form">
+            <form v-if="stage === 'form'" class="scene-form" @submit.prevent="submit">
               <div class="form-row">
+                <div class="field-block">
+                  <label class="field-label" for="blessing-name">祈福者姓名</label>
+                  <input
+                    id="blessing-name"
+                    v-model="form.name"
+                    type="text"
+                    class="field"
+                    maxlength="20"
+                    autocomplete="name"
+                    placeholder="请输入姓名"
+                  />
+                </div>
+
+                <div class="field-block field-block--age">
+                  <label class="field-label" for="blessing-age">年龄</label>
+                  <input
+                    id="blessing-age"
+                    v-model="form.age"
+                    type="number"
+                    class="field age-field"
+                    min="1"
+                    max="150"
+                    inputmode="numeric"
+                    placeholder="年龄"
+                  />
+                </div>
+              </div>
+
+              <div class="field-block">
+                <label class="field-label" for="blessing-target">为谁祈福</label>
                 <input
-                  v-model="form.name"
+                  id="blessing-target"
+                  v-model="form.target"
                   type="text"
-                  placeholder="祈福者姓名（必填）"
-                  class="field"
-                  maxlength="20"
-                />
-                <input
-                  v-model="form.age"
-                  type="number"
-                  placeholder="年龄"
-                  class="field age-field"
-                  min="1"
-                  max="150"
+                  class="field target-field"
+                  maxlength="50"
+                  placeholder="可选，例如：父亲健康、家人平安"
                 />
               </div>
 
-              <input
-                v-model="form.target"
-                type="text"
-                placeholder="为谁祈福（可选，如：父亲健康）"
-                class="field target-field"
-                maxlength="50"
-              />
-
-              <button class="submit-btn" :disabled="loading" @click="submit">
+              <button class="submit-btn" type="submit" :disabled="loading">
                 <span v-if="loading">祈福中...</span>
-                <span v-else>🙏 递交祈福</span>
+                <span v-else>提交祈福</span>
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
-        <button class="modal-close" @click="close">✕</button>
+        <button
+          ref="modalCloseButton"
+          class="modal-close"
+          type="button"
+          aria-label="关闭祈福池弹窗"
+          @click="close"
+        >
+          ✕
+        </button>
 
         <transition name="toast-fade">
-          <div v-if="toast" class="modal-toast">{{ toast }}</div>
+          <div v-if="toast" class="modal-toast" aria-live="polite">{{ toast }}</div>
         </transition>
       </div>
     </Teleport>
@@ -253,12 +337,52 @@ function doRitual(r) {
 
 <style scoped>
 .blessing-section {
-  animation: fadeInUp 0.7s 0.15s ease both;
+  position: relative;
+  animation: fadeInUp 0.7s 0.12s ease both;
+  overflow: hidden;
+}
+
+.blessing-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top right, rgba(240, 208, 128, 0.14), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 18%);
+  pointer-events: none;
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.section-kicker {
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.section-sub {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.72;
+  max-width: 760px;
 }
 
 .blessing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -266,36 +390,55 @@ function doRitual(r) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 14px 10px 12px;
-  background: rgba(252, 246, 230, 0.82);
-  border: 1px solid rgba(180, 140, 80, 0.18);
-  border-radius: 12px;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 10px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 239, 0.96), rgba(244, 232, 208, 0.82));
+  border: 1px solid rgba(180, 140, 80, 0.2);
+  border-radius: 16px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow:
+    0 12px 24px rgba(96, 64, 24, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .blessing-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(100, 60, 20, 0.14);
+  box-shadow: 0 12px 28px rgba(100, 60, 20, 0.16);
   border-color: var(--gold);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 242, 1), rgba(245, 234, 212, 0.9));
+}
+
+.blessing-item:focus-visible,
+.ritual-btn:focus-visible,
+.submit-btn:focus-visible,
+.back-home-btn:focus-visible,
+.modal-close:focus-visible,
+.field:focus-visible {
+  outline: 3px solid rgba(212, 168, 67, 0.55);
+  outline-offset: 3px;
 }
 
 .blessing-icon {
-  width: 88px;
-  height: 118px;
+  width: 92px;
+  height: 124px;
   object-fit: cover;
   object-position: top center;
   border-radius: 14px;
   border: 2px solid rgba(212, 168, 67, 0.25);
-  box-shadow: 0 8px 18px rgba(96, 64, 24, 0.12);
+  box-shadow: 0 10px 22px rgba(96, 64, 24, 0.14);
 }
 
 .blessing-label {
+  text-align: center;
   font-size: 0.82rem;
+  font-weight: 600;
   color: var(--accent);
-  opacity: 0.85;
-  line-height: 1.2;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
 }
 
 .blessing-modal {
@@ -349,7 +492,6 @@ function doRitual(r) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
   overflow: hidden;
 }
 
@@ -372,7 +514,6 @@ function doRitual(r) {
   border-left: 1px solid rgba(212, 168, 67, 0.22);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   gap: 18px;
 }
 
@@ -393,7 +534,7 @@ function doRitual(r) {
 }
 
 .overlay-title {
-  font-size: 2rem;
+  font-size: clamp(1.7rem, 3vw, 2rem);
   line-height: 1.1;
   color: var(--accent);
   letter-spacing: 0.08em;
@@ -404,6 +545,7 @@ function doRitual(r) {
   color: rgba(127, 90, 54, 0.86);
   text-align: center;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
 .scene-rituals {
@@ -441,7 +583,7 @@ function doRitual(r) {
 }
 
 .float-group-leave-active {
-  transition: opacity 0.2s;
+  transition: opacity 0.2s ease;
 }
 
 .float-group-leave-to {
@@ -463,18 +605,7 @@ function doRitual(r) {
   font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  transition: background 0.2s, transform 0.15s, border-color 0.2s;
-}
-
-.ritual-icon {
-  font-size: 1.6rem;
-  line-height: 1;
-  display: block;
-}
-
-.ritual-name {
-  font-size: 0.88rem;
-  display: block;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
 }
 
 .ritual-btn:hover:not(:disabled) {
@@ -492,17 +623,28 @@ function doRitual(r) {
   animation: ritualPop 0.38s ease;
 }
 
+.ritual-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.ritual-name {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
 @keyframes ritualPop {
   0% {
     transform: scale(1);
   }
 
   40% {
-    transform: scale(1.22) translateY(-4px);
+    transform: scale(1.12) translateY(-4px);
   }
 
   70% {
-    transform: scale(0.96);
+    transform: scale(0.98);
   }
 
   100% {
@@ -510,77 +652,45 @@ function doRitual(r) {
   }
 }
 
-.scene-result {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.result-wish {
-  font-size: 1.12rem;
-  color: var(--accent);
-  line-height: 1.9;
-}
-
-.result-user {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.result-btns {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  align-items: center;
-}
-
-.back-home-btn {
-  margin-top: 4px;
-  padding: 10px 28px;
-  border-radius: 22px;
-  border: 2px solid rgba(127, 90, 54, 0.4);
-  background: rgba(127, 90, 54, 0.08);
-  color: var(--accent);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.back-home-btn:hover {
-  background: rgba(212, 168, 67, 0.2);
-  border-color: var(--gold);
-}
-
-.next-btn {
-  background: rgba(212, 168, 67, 0.25);
-  border-color: #f0d080;
-}
-
 .scene-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 90px;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 12px;
+}
+
+.field-block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-block--age {
+  width: 100%;
+}
+
+.field-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
 .field {
   width: 100%;
-  padding: 10px 14px;
+  min-width: 0;
+  padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid rgba(212, 168, 67, 0.4);
   background: rgba(255, 252, 245, 0.92);
   color: var(--text);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   outline: none;
 }
 
@@ -589,18 +699,10 @@ function doRitual(r) {
   box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.12);
 }
 
-.age-field,
-.target-field {
-  width: 100%;
-}
-
-.target-field {
-  grid-column: 1 / -1;
-}
-
 .submit-btn {
   width: 100%;
-  padding: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, #7f5a36, #a07040);
@@ -608,7 +710,7 @@ function doRitual(r) {
   font-size: 1rem;
   letter-spacing: 0.08em;
   box-shadow: 0 4px 16px rgba(127, 90, 54, 0.3);
-  transition: opacity 0.2s, transform 0.15s;
+  transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -621,23 +723,69 @@ function doRitual(r) {
   cursor: not-allowed;
 }
 
+.scene-result {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.result-user {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.result-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
+.back-home-btn {
+  width: min(100%, 320px);
+  min-height: 48px;
+  padding: 10px 24px;
+  border-radius: 22px;
+  border: 2px solid rgba(127, 90, 54, 0.4);
+  background: rgba(127, 90, 54, 0.08);
+  color: var(--accent);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.back-home-btn:hover {
+  background: rgba(212, 168, 67, 0.2);
+  border-color: var(--gold);
+}
+
+.next-btn {
+  background: rgba(212, 168, 67, 0.25);
+  border-color: #f0d080;
+}
+
 .modal-close {
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: rgba(255, 250, 240, 0.15);
   border: 1px solid rgba(255, 250, 240, 0.3);
   color: #fff8ee;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .modal-close:hover {
   background: rgba(255, 250, 240, 0.28);
+  transform: scale(1.04);
 }
 
 .modal-toast {
@@ -645,20 +793,21 @@ function doRitual(r) {
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(50, 30, 10, 0.88);
+  max-width: min(90vw, 460px);
+  background: rgba(50, 30, 10, 0.92);
   color: #f0d080;
-  padding: 10px 22px;
+  padding: 10px 18px;
   border-radius: 24px;
   font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  line-height: 1.6;
+  text-align: center;
   pointer-events: none;
-  white-space: nowrap;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .toast-fade-enter-active,
 .toast-fade-leave-active {
-  transition: opacity 0.35s, transform 0.35s;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .toast-fade-enter-from,
@@ -683,27 +832,17 @@ function doRitual(r) {
     margin: 0 auto;
   }
 
-  .modal-scene {
-    min-height: 0;
-    max-height: none;
-  }
-
-  .scene-img-wrap {
-    padding: 0;
-  }
-
-  .scene-img {
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    object-position: center 62%;
-  }
-
   .scene-overlay {
     border-left: none;
     border-top: 1px solid rgba(212, 168, 67, 0.22);
     padding: 20px 18px 22px;
     overflow: visible;
+  }
+
+  .scene-img {
+    width: 100%;
+    height: 100%;
+    object-position: center 62%;
   }
 
   .overlay-title {
@@ -718,28 +857,24 @@ function doRitual(r) {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .blessing-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
   }
 
   .blessing-icon {
-    width: 70px;
-    height: 94px;
+    width: 74px;
+    height: 100px;
   }
 
-  .blessing-modal {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
+  .form-row,
   .scene-rituals {
     grid-template-columns: 1fr;
   }
 
   .ritual-btn {
-    min-height: 74px;
+    min-height: 76px;
     flex-direction: row;
     justify-content: center;
   }
@@ -763,7 +898,6 @@ function doRitual(r) {
 
   .modal-scene {
     min-height: 320px;
-    max-height: none;
   }
 
   .scene-img {
@@ -777,10 +911,6 @@ function doRitual(r) {
     padding: 18px 18px 20px;
   }
 
-  .scene-rituals {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .ritual-btn {
     min-height: 82px;
     padding: 12px 10px;
@@ -791,6 +921,20 @@ function doRitual(r) {
     top: max(8px, env(safe-area-inset-top));
     right: 10px;
     z-index: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blessing-section,
+  .blessing-item,
+  .ritual-btn,
+  .submit-btn,
+  .back-home-btn,
+  .modal-close,
+  .float-emoji {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
 </style>
