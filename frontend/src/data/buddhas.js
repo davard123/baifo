@@ -16,8 +16,8 @@ export const BUDDHAS = [
     title: '西方极乐世界教主',
     subtitle: '接引导师',
     namo: '南无阿弥陀佛',
-    image: '/a2.png',
-    thumb: '/thumbs/buddha-a2.webp',
+    image: '/a2.png?v=20260531b',
+    thumb: '/thumbs/buddha-a2.webp?v=20260531b',
     desc: '阿弥陀佛，西方极乐世界教主，四十八大愿接引十方一切念佛众生，往生净土，不退成佛。',
     wish: '愿生西方净土中，九品莲花为父母。花开见佛悟无生，不退菩萨为伴侣。愿消三障诸烦恼，愿得智慧真明了，普愿罪障悉消除，世世常行菩萨道。'
   },
@@ -60,8 +60,8 @@ export const BUDDHAS = [
     title: '大行普贤菩萨',
     subtitle: '峨眉山道场',
     namo: '南无大行普贤菩萨',
-    image: '/a6.png',
-    thumb: '/thumbs/buddha-a6.webp',
+    image: '/a6.png?v=20260531b',
+    thumb: '/thumbs/buddha-a6.webp?v=20260531b',
     desc: '普贤菩萨以十大行愿王为修行纲领，乘六牙白象，象征行愿广大无边，引导众生实践菩提道，成就佛果。',
     wish: '愿我行普贤行，礼敬诸佛不退转。愿以十大行愿力，庄严净土利众生。愿我临终无障碍，面见弥陀生极乐，同登普贤广大行，圆满菩提证佛果。'
   },
@@ -71,8 +71,8 @@ export const BUDDHAS = [
     title: '大悲观世音菩萨',
     subtitle: '普陀山道场',
     namo: '南无大悲观世音菩萨',
-    image: '/a7.png',
-    thumb: '/thumbs/buddha-a7.webp',
+    image: '/a7.png?v=20260531b',
+    thumb: '/thumbs/buddha-a7.webp?v=20260531b',
     desc: '观世音菩萨大慈大悲，寻声救苦，三十二应化身广度众生。礼敬观音，消灾解难、求子求财、度亡超荐皆有感应。',
     wish: '愿以此功德。庄严佛净土。上报四重恩。下济三途苦。若有见闻者。悉发菩提心。尽此一报身。同生极乐国。愿消三障诸烦恼，愿得智慧真明了，普愿罪障悉消除，世世常行菩萨道。'
   },
@@ -82,8 +82,8 @@ export const BUDDHAS = [
     title: '大愿地藏王菩萨',
     subtitle: '九华山道场',
     namo: '南无大愿地藏王菩萨',
-    image: '/a8.png',
-    thumb: '/thumbs/buddha-a8.webp',
+    image: '/a8.png?v=20260531b',
+    thumb: '/thumbs/buddha-a8.webp?v=20260531b',
     desc: '地藏王菩萨发宏誓愿："地狱不空，誓不成佛；众生度尽，方证菩提。"慈悲救度幽冥众生，超荐历代祖先。',
     wish: '愿以地藏大愿力，超荐历代诸先亡。愿消一切幽冥苦，早日离苦得安乐。愿我罪障悉消除，福慧双增道业成，临命终时无障碍，往生净土见弥陀。'
   }
