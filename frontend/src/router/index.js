@@ -21,7 +21,17 @@ const router = createRouter({
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage }
   ],
-  scrollBehavior: () => ({ top: 0 })
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+        top: 24,
+      }
+    }
+
+    return { top: 0 }
+  }
 })
 
 // 进入任何可能提交记录的页面前再次预热（即使用户直接打开 /buddha/* 也覆盖）

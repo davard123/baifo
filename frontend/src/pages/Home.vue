@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import BlessingPool from '../components/BlessingPool.vue'
 import WishList from '../components/WishList.vue'
@@ -13,13 +14,14 @@ const myAncestorWishes = ref([])
 const loadingPublic = ref(true)
 const loadingMine = ref(true)
 const viewerName = ref('')
+const router = useRouter()
 
 const primaryPaths = [
   {
     title: '礼佛祈愿',
     body: '进入佛菩萨页面后，可以依次供花、点灯、上香，再写下祈愿并回向众生。',
-    to: '/guide/worship',
-    cta: '查看礼佛指南',
+    to: { path: '/', hash: '#buddha-catalog-title' },
+    cta: '进入礼佛入口',
   },
   {
     title: '祈愿求福',
@@ -118,6 +120,34 @@ const topicPages = [
     to: '/topic/ksitigarbha',
   },
 ]
+
+function resolveHref(target) {
+  return router.resolve(target).href
+}
+
+async function navigateTo(target) {
+  const resolved = router.resolve(target)
+  const current = router.currentRoute.value
+
+  if (resolved.path === current.path && resolved.hash) {
+    await nextTick()
+    const samePageTarget = document.querySelector(resolved.hash)
+    if (samePageTarget) {
+      samePageTarget.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    return
+  }
+
+  await router.push(target)
+
+  if (resolved.hash) {
+    await nextTick()
+    const hashTarget = document.querySelector(resolved.hash)
+    if (hashTarget) {
+      hashTarget.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+}
 
 function normalizeWishRecords(records, type) {
   return records.map((record) => {
@@ -233,11 +263,12 @@ onMounted(() => {
       </div>
 
       <div class="hero-actions" aria-label="首页主要入口">
-        <router-link
+        <a
           v-for="item in primaryPaths"
           :key="item.title"
-          :to="item.to"
+          :href="resolveHref(item.to)"
           class="hero-action"
+          @click.prevent="navigateTo(item.to)"
           @mouseenter="warmApi"
           @mousedown="warmApi"
           @touchstart.passive="warmApi"
@@ -245,11 +276,11 @@ onMounted(() => {
           <span class="hero-action__title">{{ item.title }}</span>
           <span class="hero-action__body">{{ item.body }}</span>
           <span class="hero-action__cta">{{ item.cta }}</span>
-        </router-link>
+        </a>
       </div>
     </header>
 
-    <section class="catalog-section card">
+    <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">礼佛入口</p>
         <h2 class="section-title">诸佛菩萨</h2>
@@ -278,10 +309,11 @@ onMounted(() => {
     </section>
 
     <section class="ritual-stage">
-      <router-link
-        to="/ancestors"
+      <a
+        href="/ancestors"
         class="ancestor-banner"
         aria-label="进入祭祀先人页面，追思祖先并进行回向祈福"
+        @click.prevent="navigateTo('/ancestors')"
         @mouseenter="warmApi"
         @mousedown="warmApi"
         @touchstart.passive="warmApi"
@@ -293,7 +325,7 @@ onMounted(() => {
           <p>追思祖先，超荐亡灵，以克制而温暖的方式安放思念，也为家人留下可持续回访的祭祀入口。</p>
           <span class="ancestor-banner__cta">进入祭祀先人</span>
         </div>
-      </router-link>
+      </a>
     </section>
 
     <BlessingPool @wish-submitted="loadWishes" />
