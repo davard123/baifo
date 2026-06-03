@@ -724,5 +724,6 @@ export function getStaticPages() {
 }
 
 export function getSeoByPath(path) {
-  return getStaticPages().find((page) => page.path === path) ?? homePage()
+  const normalizedPath = !path || path === '/' ? '/' : path.replace(/\/+$/, '')
+  return getStaticPages().find((page) => page.path === normalizedPath) ?? null
 }

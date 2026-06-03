@@ -1,14 +1,13 @@
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { TOPICS, getTopicKey } from '../data/topics.js'
+import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
-const router = useRouter()
 
 const topicKey = computed(() => getTopicKey(route.path, route.params.slug))
 const topic = computed(() => TOPICS[topicKey.value])
-if (!topic.value) router.replace('/')
 
 onMounted(() => {
   if (!topic.value) return
@@ -69,6 +68,11 @@ onMounted(() => {
       </aside>
     </section>
   </main>
+  <NotFoundPage
+    v-else
+    title="专题页面未找到"
+    message="这个专题地址当前没有对应内容，可能是旧链接。你可以返回首页，或从现有专题和指南页面继续浏览。"
+  />
 </template>
 
 <style scoped>

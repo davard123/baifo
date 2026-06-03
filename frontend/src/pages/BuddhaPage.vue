@@ -6,6 +6,7 @@ import PrayerStage from '../components/PrayerStage.vue'
 import RitualButtons from '../components/RitualButtons.vue'
 import WishForm from '../components/WishForm.vue'
 import { apiFetch } from '../api.js'
+import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -33,10 +34,7 @@ function updatePageMeta() {
 watch(
   buddha,
   (current) => {
-    if (!current) {
-      router.replace('/')
-      return
-    }
+    if (!current) return
 
     offeringItems.value = []
     figureItems.value = []
@@ -169,6 +167,11 @@ async function onSubmit(payload) {
       </section>
     </div>
   </div>
+  <NotFoundPage
+    v-else
+    title="礼佛页面未找到"
+    message="这个佛菩萨页面当前不存在，可能是旧链接或地址写法不同。可以返回首页重新选择礼佛页面。"
+  />
 </template>
 
 <style scoped>

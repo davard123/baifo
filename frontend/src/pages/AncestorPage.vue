@@ -7,6 +7,7 @@ import AncestorRituals from '../components/AncestorRituals.vue'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import { apiFetch } from '../api.js'
 import { getPhoto, getName } from '../utils/localPhoto.js'
+import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -39,10 +40,7 @@ const defaultRelationship = computed(() => {
 })
 
 function syncAncestorState() {
-  if (!ancestor.value) {
-    router.replace('/')
-    return
-  }
+  if (!ancestor.value) return
   customPhoto.value = getPhoto(route.params.slug)
   customName.value = getName(route.params.slug)
 }
@@ -176,6 +174,11 @@ async function onSubmit(payload) {
       </section>
     </div>
   </div>
+  <NotFoundPage
+    v-else
+    title="祭祖页面未找到"
+    message="这个牌位页面当前不存在，可能是历史地址。可以返回祭祖总览重新选择对应的先人页面。"
+  />
 </template>
 
 <style scoped>

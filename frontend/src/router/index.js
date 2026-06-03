@@ -7,6 +7,7 @@ const AncestorPage = () => import('../pages/AncestorPage.vue')
 const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
+const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,7 +20,8 @@ const router = createRouter({
     { path: '/texts/:slug', component: TopicPage },
     { path: '/buddha/:slug', component: BuddhaPage },
     { path: '/ancestor/:slug', component: AncestorPage },
-    { path: '/ancestors', component: AncestorsPage }
+    { path: '/ancestors', component: AncestorsPage },
+    { path: '/:pathMatch(.*)*', component: NotFoundPage }
   ],
   scrollBehavior(to) {
     if (to.hash) {

@@ -3,7 +3,7 @@ import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
 import { warmApi } from './api.js'
-import { getSeoByPath, SITE } from '../scripts/seo.config.js'
+import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
 
 const route = useRoute()
 
@@ -37,17 +37,30 @@ function upsertLink(selector, attributes) {
   })
 }
 
+function normalizePath(path) {
+  if (!path) return '/'
+  return path === '/' ? '/' : path.replace(/\/+$/, '')
+}
+
 function applyRouteSeo(path) {
   const page = getSeoByPath(path)
-  const title = page?.title || SITE.name
-  const description = page?.description || ''
+  const isKnownPage = !!page
+  const normalizedPath = normalizePath(path)
+  const title = page?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`
+  const description = page?.description || '这个地址当前没有对应内容。'
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
-  const canonical = `${SITE.baseUrl}${page?.path || path || '/'}`
+  const canonical = isKnownPage ? canonicalUrl(page.path) : `${SITE.baseUrl}${normalizedPath}`
   const schema = Array.isArray(page?.schema) ? page.schema : []
 
   document.title = title
 
   upsertMeta('meta[name="description"]', { name: 'description', content: description })
+  upsertMeta('meta[name="robots"]', {
+    name: 'robots',
+    content: isKnownPage
+      ? 'index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1'
+      : 'noindex,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1',
+  })
   upsertMeta('meta[name="keywords"]', { name: 'keywords', content: SITE.keywords.join(', ') })
   upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' })
   upsertMeta('meta[property="og:title"]', { property: 'og:title', content: title })

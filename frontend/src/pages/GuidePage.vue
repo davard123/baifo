@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
+import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
-const router = useRouter()
 
 const guides = {
   overview: {
@@ -158,7 +158,6 @@ const guides = {
 }
 
 const guide = computed(() => guides[route.params.slug])
-if (!guide.value) router.replace('/')
 
 onMounted(() => {
   if (!guide.value) return
@@ -259,6 +258,11 @@ const quickReference = computed(() => [
       </aside>
     </section>
   </main>
+  <NotFoundPage
+    v-else
+    title="指南页面未找到"
+    message="这个指南地址不存在，可能是旧链接或拼写不同。可以从使用说明、礼佛指南或祭祖总览继续进入。"
+  />
 </template>
 
 <style scoped>
