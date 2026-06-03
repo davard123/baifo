@@ -310,7 +310,7 @@ onMounted(() => {
 
     <section class="ritual-stage">
       <a
-        href="/ancestors"
+        href="/ancestors/"
         class="ancestor-banner"
         aria-label="进入祭祀先人页面，追思祖先并进行回向祈福"
         @click.prevent="navigateTo('/ancestors')"

@@ -1,0 +1,16 @@
+/guide/father /ancestor/father 301
+/guide/father/ /ancestor/father 301
+/guide/mother /ancestor/mother 301
+/guide/mother/ /ancestor/mother 301
+/guide/grandfather /ancestor/grandfather 301
+/guide/grandfather/ /ancestor/grandfather 301
+/guide/grandmother /ancestor/grandmother 301
+/guide/grandmother/ /ancestor/grandmother 301
+/guide/spouse /ancestor/spouse 301
+/guide/spouse/ /ancestor/spouse 301
+/guide/child /ancestor/child 301
+/guide/child/ /ancestor/child 301
+/guide/general /ancestor/general 301
+/guide/general/ /ancestor/general 301
+/guide/ancestor /guide/ancestors 301
+/guide/ancestor/ /guide/ancestors 301

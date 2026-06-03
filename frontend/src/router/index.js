@@ -9,6 +9,24 @@ const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
+function withTrailingSlashTarget(target) {
+  if (typeof target === 'string') {
+    if (!target || target === '/' || target.startsWith('http')) return target
+    const match = target.match(/^([^?#]+)(.*)$/)
+    if (!match) return target
+    const [, path, suffix] = match
+    if (path === '/' || path.endsWith('/')) return target
+    return `${path}/${suffix}`
+  }
+
+  if (target && typeof target === 'object' && 'path' in target && typeof target.path === 'string') {
+    if (!target.path || target.path === '/' || target.path.endsWith('/')) return target
+    return { ...target, path: `${target.path}/` }
+  }
+
+  return target
+}
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -21,7 +39,7 @@ const router = createRouter({
     { path: '/buddha/:slug', component: BuddhaPage },
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage },
-    { path: '/:pathMatch(.*)*', component: NotFoundPage }
+    { path: '/:pathMatch(.*)*', component: NotFoundPage },
   ],
   scrollBehavior(to) {
     if (to.hash) {
@@ -33,11 +51,20 @@ const router = createRouter({
     }
 
     return { top: 0 }
-  }
+  },
 })
 
-// 进入任何可能提交记录的页面前再次预热（即使用户直接打开 /buddha/* 也覆盖）
-const WARMUP_ROUTES = ['/buddha/', '/ancestor/', '/ancestors']
+const originalResolve = router.resolve.bind(router)
+router.resolve = ((to, currentLocation) =>
+  originalResolve(withTrailingSlashTarget(to), currentLocation))
+
+const originalPush = router.push.bind(router)
+router.push = ((to) => originalPush(withTrailingSlashTarget(to)))
+
+const originalReplace = router.replace.bind(router)
+router.replace = ((to) => originalReplace(withTrailingSlashTarget(to)))
+
+const WARMUP_ROUTES = ['/buddha/', '/ancestor/', '/ancestors/']
 router.beforeEach((to) => {
   if (WARMUP_ROUTES.some((p) => to.path.startsWith(p))) {
     warmApi()
