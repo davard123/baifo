@@ -1,22 +1,12 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ANCESTORS } from '../data/ancestors.js'
-import AncestorWishList from '../components/AncestorWishList.vue'
-import { apiFetch } from '../api.js'
 import { useRouter } from 'vue-router'
 import { getPhoto, savePhoto, clearPhoto, getName, saveName } from '../utils/localPhoto.js'
 import { renderTablet } from '../utils/tabletCanvas.js'
-import { getViewerProfile } from '../utils/viewerProfile.js'
 
 const router = useRouter()
 
-const publicWishes = ref([])
-const myWishes = ref([])
-const loadingPublic = ref(true)
-const loadingMine = ref(true)
-const viewerName = ref('')
-const latestWishes = computed(() => publicWishes.value.slice(0, 15))
-const myLatestWishes = computed(() => myWishes.value.slice(0, 5))
 const featuredAncestor = 'father'
 const ancestorFaqs = [
   {
@@ -82,39 +72,11 @@ function entryStatus(ancestor) {
   return localNames.value[ancestor.slug] ? '使用当前自定义牌位文字' : '使用推荐牌位文字进入祭拜页'
 }
 
-async function loadWishes() {
-  loadingPublic.value = true
-  loadingMine.value = true
-  viewerName.value = getViewerProfile().username
-  try {
-    const publicResult = await apiFetch('/ancestor-wishes?limit=15')
-    publicWishes.value = await publicResult.json()
-  } catch {
-    publicWishes.value = []
-  }
-  loadingPublic.value = false
-
-  if (!viewerName.value) {
-    myWishes.value = []
-    loadingMine.value = false
-    return
-  }
-
-  try {
-    const mineResult = await apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`)
-    myWishes.value = await mineResult.json()
-  } catch {
-    myWishes.value = []
-  }
-  loadingMine.value = false
-}
-
 onMounted(() => {
   document.title = '拜祭先人 | 在线祭拜先人 - www.fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', '追思先人，超荐亡灵，虔诚祭拜，庇荫后代。选择一位先人，以虔诚之心祭拜发愿。'
   )
-  loadWishes()
 })
 </script>
 
@@ -228,30 +190,6 @@ onMounted(() => {
         </div>
       </div>
     </Teleport>
-
-    <section class="wishes-section dim-section">
-      <h2 class="section-title">祭拜记录</h2>
-      <div class="record-grid">
-        <section class="record-panel">
-          <h3 class="record-title">最新祭拜记录</h3>
-          <p class="section-sub">显示所有人最近 15 条祭祖与回向记录。</p>
-          <AncestorWishList
-            :wishes="latestWishes"
-            :loading="loadingPublic"
-            empty-message="暂时还没有公开祭拜记录。"
-          />
-        </section>
-        <section class="record-panel">
-          <h3 class="record-title">我的祭拜记录</h3>
-          <p class="section-sub">显示当前设备识别到的最近 5 条个人祭拜记录。</p>
-          <AncestorWishList
-            :wishes="myLatestWishes"
-            :loading="loadingMine"
-            :empty-message="viewerName ? '你最近还没有祭拜记录。' : '先提交一次祭拜，之后这里会显示你的最近 5 条记录。'"
-          />
-        </section>
-      </div>
-    </section>
 
     <section class="guide-section dim-section">
       <h2 class="section-title">祭祖与追思说明</h2>

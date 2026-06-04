@@ -9,10 +9,7 @@ import { getViewerProfile } from '../utils/viewerProfile.js'
 
 const publicWishes = ref([])
 const publicAncestorWishes = ref([])
-const myWishes = ref([])
-const myAncestorWishes = ref([])
 const loadingPublic = ref(true)
-const loadingMine = ref(true)
 const viewerName = ref('')
 const router = useRouter()
 
@@ -182,54 +179,33 @@ const ancestorRecentWishes = computed(() =>
     .slice(0, 5)
 )
 
-const myRecentWishes = computed(() => {
-  const combined = [
-    ...normalizeWishRecords(myWishes.value, 'wish'),
-    ...normalizeWishRecords(myAncestorWishes.value, 'ancestor'),
-  ]
-  return combined
-    .sort((a, b) => (b.record_time - a.record_time) || String(b.record_key).localeCompare(String(a.record_key)))
-    .slice(0, 5)
-})
-
 async function loadWishes() {
   loadingPublic.value = true
-  loadingMine.value = true
   viewerName.value = getViewerProfile().username
 
-  // 未登录(未在任何子页填过名字):4 个面板全部置空,前端给引导文案
+  // 未登录(未在任何子页填过名字):3 个面板全部置空,前端给引导文案
   if (!viewerName.value) {
     publicWishes.value = []
     publicAncestorWishes.value = []
-    myWishes.value = []
-    myAncestorWishes.value = []
     loadingPublic.value = false
-    loadingMine.value = false
     return
   }
 
-  // 拉当前用户的祈愿(覆盖佛/福两类)与祭祀记录,各 limit=20 留余量,
-  // 让后续 buddhaRecentWishes / blessingRecentWishes / ancestorRecentWishes
-  // 这 3 个 computed 各自 slice(0, 5)。myRecentWishes 复用同一份数据。
+  // 拉当前用户的祈愿与祭祀记录,各 limit=20 留余量,
+  // buddhaRecentWishes / blessingRecentWishes / ancestorRecentWishes
+  // 3 个 computed 各自 slice(0, 5)。
   try {
     const results = await Promise.all([
       apiFetch(`/wishes?limit=20&username=${encodeURIComponent(viewerName.value)}`),
       apiFetch(`/ancestor-wishes?limit=20&username=${encodeURIComponent(viewerName.value)}`),
     ])
-    const wishesData = await results[0].json()
-    const ancestorData = await results[1].json()
-    publicWishes.value = wishesData
-    publicAncestorWishes.value = ancestorData
-    myWishes.value = wishesData
-    myAncestorWishes.value = ancestorData
+    publicWishes.value = await results[0].json()
+    publicAncestorWishes.value = await results[1].json()
   } catch {
     publicWishes.value = []
     publicAncestorWishes.value = []
-    myWishes.value = []
-    myAncestorWishes.value = []
   }
   loadingPublic.value = false
-  loadingMine.value = false
 }
 
 onMounted(() => {
@@ -341,20 +317,6 @@ onMounted(() => {
               viewerName
                 ? '你最近还没有求福记录。'
                 : '先到祈福池填写名字并提交一次求福，之后这里会显示你最近的 5 条记录。'
-            "
-          />
-        </section>
-
-        <section class="record-panel" aria-labelledby="mine-wishes-title">
-          <h3 id="mine-wishes-title" class="record-title">我的记录</h3>
-          <p class="record-note">显示当前设备识别到的最近 5 条个人记录，方便你继续回看。</p>
-          <WishList
-            :wishes="myRecentWishes"
-            :loading="loadingMine"
-            :empty-message="
-              viewerName
-                ? '你最近还没有新的祈愿记录。'
-                : '先提交一次祈愿，之后这里会显示你最近的 5 条记录。'
             "
           />
         </section>
