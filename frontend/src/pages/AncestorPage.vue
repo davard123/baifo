@@ -110,7 +110,8 @@ async function onSubmit(payload) {
   if (!res.ok || data.status !== 'success') {
     throw new Error(data.message || '提交失败')
   }
-  router.push('/')
+  // 祭拜成功后回到祭祀先人主列表,方便接着祭拜下一位(而不是退到首页)
+  router.push('/ancestors')
 }
 </script>
 

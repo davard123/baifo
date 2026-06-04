@@ -246,41 +246,6 @@ onMounted(() => {
 
 <template>
   <main class="home-shell">
-    <header class="hero-section">
-      <div class="hero-copy">
-        <div class="hero-emblem" aria-hidden="true">
-          <span class="hero-emblem__ring"></span>
-          <span class="hero-emblem__core"></span>
-        </div>
-        <p class="hero-kicker">线上礼佛与祭祀入口</p>
-        <h1>礼佛祈愿</h1>
-        <p class="hero-lead">
-          以庄严而温和的方式，进入礼佛、祈愿、回向与追思的页面，在现代生活中保留一份敬意与安定。
-        </p>
-        <div class="hero-quote">
-          <span class="hero-quote__line"></span>
-          <p>愿来者先得安定，再明白如何进入。</p>
-        </div>
-      </div>
-
-      <div class="hero-actions" aria-label="首页主要入口">
-        <a
-          v-for="item in primaryPaths"
-          :key="item.title"
-          :href="resolveHref(item.to)"
-          class="hero-action"
-          @click.prevent="navigateTo(item.to)"
-          @mouseenter="warmApi"
-          @mousedown="warmApi"
-          @touchstart.passive="warmApi"
-        >
-          <span class="hero-action__title">{{ item.title }}</span>
-          <span class="hero-action__body">{{ item.body }}</span>
-          <span class="hero-action__cta">{{ item.cta }}</span>
-        </a>
-      </div>
-    </header>
-
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">礼佛入口</p>
@@ -459,6 +424,41 @@ onMounted(() => {
         </router-link>
       </div>
     </section>
+
+    <header class="hero-section">
+      <div class="hero-copy">
+        <div class="hero-emblem" aria-hidden="true">
+          <span class="hero-emblem__ring"></span>
+          <span class="hero-emblem__core"></span>
+        </div>
+        <p class="hero-kicker">线上礼佛与祭祀入口</p>
+        <h1>礼佛祈愿</h1>
+        <p class="hero-lead">
+          以庄严而温和的方式，进入礼佛、祈愿、回向与追思的页面，在现代生活中保留一份敬意与安定。
+        </p>
+        <div class="hero-quote">
+          <span class="hero-quote__line"></span>
+          <p>愿来者先得安定，再明白如何进入。</p>
+        </div>
+      </div>
+
+      <div class="hero-actions" aria-label="首页主要入口">
+        <a
+          v-for="item in primaryPaths"
+          :key="item.title"
+          :href="resolveHref(item.to)"
+          class="hero-action"
+          @click.prevent="navigateTo(item.to)"
+          @mouseenter="warmApi"
+          @mousedown="warmApi"
+          @touchstart.passive="warmApi"
+        >
+          <span class="hero-action__title">{{ item.title }}</span>
+          <span class="hero-action__body">{{ item.body }}</span>
+          <span class="hero-action__cta">{{ item.cta }}</span>
+        </a>
+      </div>
+    </header>
 
     <footer class="site-footer">
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
