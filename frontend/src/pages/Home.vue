@@ -197,37 +197,38 @@ async function loadWishes() {
   loadingMine.value = true
   viewerName.value = getViewerProfile().username
 
-  try {
-    const publicResults = await Promise.all([
-      apiFetch('/wishes?limit=15'),
-      apiFetch('/ancestor-wishes?limit=15'),
-    ])
-    publicWishes.value = await publicResults[0].json()
-    publicAncestorWishes.value = await publicResults[1].json()
-  } catch {
+  // 未登录(未在任何子页填过名字):4 个面板全部置空,前端给引导文案
+  if (!viewerName.value) {
     publicWishes.value = []
     publicAncestorWishes.value = []
-  }
-  loadingPublic.value = false
-
-  if (!viewerName.value) {
     myWishes.value = []
     myAncestorWishes.value = []
+    loadingPublic.value = false
     loadingMine.value = false
     return
   }
 
+  // 拉当前用户的祈愿(覆盖佛/福两类)与祭祀记录,各 limit=20 留余量,
+  // 让后续 buddhaRecentWishes / blessingRecentWishes / ancestorRecentWishes
+  // 这 3 个 computed 各自 slice(0, 5)。myRecentWishes 复用同一份数据。
   try {
-    const mineResults = await Promise.all([
-      apiFetch(`/wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`),
-      apiFetch(`/ancestor-wishes?limit=5&username=${encodeURIComponent(viewerName.value)}`),
+    const results = await Promise.all([
+      apiFetch(`/wishes?limit=20&username=${encodeURIComponent(viewerName.value)}`),
+      apiFetch(`/ancestor-wishes?limit=20&username=${encodeURIComponent(viewerName.value)}`),
     ])
-    myWishes.value = await mineResults[0].json()
-    myAncestorWishes.value = await mineResults[1].json()
+    const wishesData = await results[0].json()
+    const ancestorData = await results[1].json()
+    publicWishes.value = wishesData
+    publicAncestorWishes.value = ancestorData
+    myWishes.value = wishesData
+    myAncestorWishes.value = ancestorData
   } catch {
+    publicWishes.value = []
+    publicAncestorWishes.value = []
     myWishes.value = []
     myAncestorWishes.value = []
   }
+  loadingPublic.value = false
   loadingMine.value = false
 }
 
@@ -333,37 +334,49 @@ onMounted(() => {
     <section class="wishes-section card">
       <div class="section-head">
         <p class="section-kicker">当下回响</p>
-        <h2 class="section-title">祈愿记录</h2>
-        <p class="section-sub">网站内最近的礼佛与回向记录，以及当前设备识别到的个人记录，方便继续回看与追踪。</p>
+        <h2 class="section-title">我的祈愿记录</h2>
+        <p class="section-sub">仅显示当前设备识别到的个人记录，按拜佛、祭祀、求福三类各保留最近 5 条，方便继续回看与追踪。</p>
       </div>
       <div class="record-grid">
         <section class="record-panel" aria-labelledby="buddha-wishes-title">
-          <h3 id="buddha-wishes-title" class="record-title">拜佛记录</h3>
-          <p class="record-note">显示最近 5 条礼佛与回向记录。</p>
+          <h3 id="buddha-wishes-title" class="record-title">我的拜佛记录</h3>
+          <p class="record-note">显示你最近 5 条礼佛与回向记录。</p>
           <WishList
             :wishes="buddhaRecentWishes"
             :loading="loadingPublic"
-            empty-message="暂时还没有公开拜佛记录。"
+            :empty-message="
+              viewerName
+                ? '你最近还没有礼佛记录。'
+                : '先到任一佛菩萨页面填写名字并提交一次礼佛，之后这里会显示你最近的 5 条记录。'
+            "
           />
         </section>
 
         <section class="record-panel" aria-labelledby="ancestor-wishes-title">
-          <h3 id="ancestor-wishes-title" class="record-title">祭祀记录</h3>
-          <p class="record-note">显示最近 5 条祭祀、追思与回向记录。</p>
+          <h3 id="ancestor-wishes-title" class="record-title">我的祭祀记录</h3>
+          <p class="record-note">显示你最近 5 条祭祀、追思与回向记录。</p>
           <WishList
             :wishes="ancestorRecentWishes"
             :loading="loadingPublic"
-            empty-message="暂时还没有公开祭祀记录。"
+            :empty-message="
+              viewerName
+                ? '你最近还没有祭祀记录。'
+                : '先到祭祀先人页面填写名字并提交一次回向，之后这里会显示你最近的 5 条记录。'
+            "
           />
         </section>
 
         <section class="record-panel" aria-labelledby="blessing-wishes-title">
-          <h3 id="blessing-wishes-title" class="record-title">求福记录</h3>
-          <p class="record-note">显示最近 5 条祈福池求福记录。</p>
+          <h3 id="blessing-wishes-title" class="record-title">我的求福记录</h3>
+          <p class="record-note">显示你最近 5 条祈福池求福记录。</p>
           <WishList
             :wishes="blessingRecentWishes"
             :loading="loadingPublic"
-            empty-message="暂时还没有公开求福记录。"
+            :empty-message="
+              viewerName
+                ? '你最近还没有求福记录。'
+                : '先到祈福池填写名字并提交一次求福，之后这里会显示你最近的 5 条记录。'
+            "
           />
         </section>
 
