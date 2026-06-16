@@ -7,6 +7,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/father.png',
     desc: '先父大人，勤劳朴实，恩深似海。虔诚祭拜，祈愿先父安息，庇荫子孙后代平安健康。',
+    themes: '追思父恩、清明与忌日纪念，以及为先父祈愿安息、庇荫子孙',
     wish: '愿先父安息净土，庇护子孙，家族兴盛。',
   },
   {
@@ -17,6 +18,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/mother.png',
     desc: '先母大人，贤良淑德，养育之恩。今生难忘，祈愿先母安息，阖家吉祥如意。',
+    themes: '感念母恩、节日与忌日追思，以及为先母祈愿安息、阖家吉祥',
     wish: '愿先母安息净土，阖家吉祥，子孙孝顺。',
   },
   {
@@ -27,6 +29,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/grandfather.png',
     desc: '祖父大人，积善传家，庇护后代。祭拜先祖，祈愿家业兴隆，子孙贤孝。',
+    themes: '缅怀先祖、家族祭祀，以及祈愿家业兴隆、子孙贤孝',
     wish: '愿先祖安息，庇护后代，家业兴隆。',
   },
   {
@@ -37,6 +40,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/grandmother.png',
     desc: '祖母大人，慈爱长存。祭拜先祖，祈愿子孙平安，学业有成。',
+    themes: '缅怀先祖、家族祭祀，以及祈愿子孙平安、学业有成',
     wish: '愿先祖安息，子孙平安，学业进步。',
   },
   {
@@ -47,6 +51,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/ancestors.png',
     desc: '祭祀历代祖先，不忘根本。承先人之德，启后人之福，祈愿家族兴隆，子孙绵长。',
+    themes: '清明与冬至等节日的家族总祭、慎终追远，以及祈愿家族兴隆绵长',
     wish: '愿列祖列宗安息，庇护子孙，家族兴盛。',
   },
   {
@@ -57,6 +62,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/spouse.png',
     desc: '夫妻情深，阴阳两隔。虔诚祭拜，祈愿亡者安息，生者坚强平安。',
+    themes: '夫妻追思、忌日纪念，以及为亡者祈愿安息、为生者祈愿坚强平安',
     wish: '愿亡者安息，生者平安健康，珍重前行。',
   },
   {
@@ -67,6 +73,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/child.png',
     desc: '稚子早逝，令人心痛。虔诚祭拜，祈愿幼灵安息，往生善处，父母节哀。',
+    themes: '追思早逝子女、寄托哀思，以及祈愿幼灵往生善处、父母节哀',
     wish: '愿幼灵安息，往生善处，父母节哀，承此善念。',
   },
   {
@@ -77,6 +84,7 @@ export const ANCESTORS = [
     namo: '南无地藏王菩萨普施功德',
     image: '/ancestors/general.png',
     desc: '若曾相识，若有牵念，皆可在此追思回向。愿有缘故人离苦得安，心有所归，光明相续。',
+    themes: '追思有缘故人、朋友与师长，以及为其回向、祈愿离苦得安',
     wish: '愿有缘故人离苦得乐，得闻善法，安宁自在。',
   },
 ]

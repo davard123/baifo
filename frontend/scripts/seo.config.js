@@ -412,7 +412,7 @@ function buddhaPage(item) {
     title: `${item.namo} | 在线礼佛祈愿`,
     description: `虔诚礼敬${item.name}，${item.subtitle}。${item.desc}在线发愿祈福，功德回向一切众生。`,
     heading: item.namo,
-    summary: `${item.name}，${item.subtitle}。${item.desc}`,
+    summary: `${item.title}，${item.subtitle}。`,
     image: item.image,
     schema: [
       buildWebPageSchema({
@@ -432,7 +432,7 @@ function buddhaPage(item) {
         name: `${item.name}礼佛指南`,
         description: item.desc,
         about,
-        articleBody: `${item.name}，${item.subtitle}。${item.desc}此页适合在线供花、点灯、上香、填写祈愿内容并提交功德回向。`,
+        articleBody: `在${item.name}页面，可在线完成供花、点灯、上香，并填写祈愿内容、提交功德回向；适合日常礼佛、节日礼敬与发愿祈福。`,
       }),
       {
         '@context': 'https://schema.org',
@@ -446,15 +446,15 @@ function buddhaPage(item) {
       buildFaqSchema(item.name, [
         {
           q: `${item.name}是谁？`,
-          a: `${item.name}，${item.subtitle}。${item.desc}`,
+          a: item.desc,
         },
         {
-          q: `${item.name}适合什么祈愿主题？`,
-          a: `${item.name}${item.subtitle ? `，${item.subtitle}` : ''}。${item.desc}常见祈愿主题包括平安、健康、智慧、消灾、家庭和顺、学业事业以及功德回向。`,
+          q: `${item.name}适合哪些祈愿主题？`,
+          a: `礼敬${item.name}的信众，常见的祈愿侧重包括${item.themes}。`,
         },
         {
-          q: `如何在网上礼敬${item.name}？`,
-          a: `进入${item.name}页面后，可以依次完成供花、点灯、上香，再填写祈愿内容并提交功德回向。`,
+          q: `如何在线礼敬${item.name}？`,
+          a: `进入${item.name}页面后，可依次完成供花、点灯、上香，再填写祈愿内容并提交功德回向；礼敬重在恭敬专注，不拘形式繁简。`,
         },
         {
           q: `${item.name}的道场在哪里？`,
@@ -542,7 +542,7 @@ function ancestorPage(item) {
     title: `${item.name}祭拜 | 在线祭拜先人`,
     description: `虔诚祭拜${item.name}，${item.subtitle}。${item.desc}在线发愿，功德回向先人。`,
     heading: item.title,
-    summary: `${item.name}，${item.subtitle}。${item.desc}`,
+    summary: `${item.title}，${item.subtitle}。`,
     image: item.image,
     schema: [
       buildWebPageSchema({
@@ -566,20 +566,20 @@ function ancestorPage(item) {
       }),
       buildFaqSchema(item.name, [
         {
-          q: `这个页面适合祭拜${item.name}吗？`,
-          a: `${item.name}页面适合追思${item.name}、完成上香献花等供奉动作，并写下回向内容。${item.desc}`,
+          q: `这个页面适合追思${item.name}吗？`,
+          a: item.desc,
         },
         {
-          q: '正式祭拜时一般要做哪些步骤？',
-          a: '正式祭拜时通常可以依次完成上香、献花、奠酒、烧纸，再填写追思或回向内容并提交祭拜记录。',
+          q: `在这里祭拜${item.name}常见于哪些情形？`,
+          a: `常见于${item.themes}。`,
         },
         {
-          q: '页面中的牌位姓名和照片会公开吗？',
-          a: '页面支持提交祭拜祈愿记录，但个性化照片和姓名设置仅保存在当前设备，不会上传到服务器。',
+          q: `正式祭拜${item.name}要做哪些步骤？`,
+          a: `祭拜${item.name}时，通常依次完成上香、献花、奠酒、烧纸，再填写追思或回向内容并提交祭拜记录。`,
         },
         {
-          q: '如果想重新选择不同牌位怎么办？',
-          a: '可以返回先人选择页重新选择牌位，正式祭拜页会自动带入你刚选择的牌位信息。',
+          q: '牌位上的姓名和照片会公开吗？',
+          a: '不会。个性化牌位姓名与照片仅保存在当前设备本地，用于本机显示，不会上传到服务器。',
         },
       ], item.name),
     ],
