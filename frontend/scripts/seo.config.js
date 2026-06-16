@@ -674,7 +674,8 @@ function topicPage({ path, slug }) {
         description: topic.description,
         about,
         step: steps,
-        articleBody: [topic.intro, ...(topic.sections || []).flatMap((section) => [section.title, ...(section.paragraphs || [])])]
+        articleBody: (topic.sections || [])
+          .flatMap((section) => [section.title, ...(section.paragraphs || [])])
           .filter(Boolean)
           .join('\n'),
         totalTime: howToMeta?.totalTime,
