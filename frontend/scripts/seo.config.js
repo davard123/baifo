@@ -176,13 +176,8 @@ export function withTrailingSlash(pagePath) {
   return pagePath.endsWith('/') ? pagePath : `${pagePath}/`
 }
 
-export function withoutTrailingSlash(pagePath) {
-  if (!pagePath || pagePath === '/') return '/'
-  return pagePath.replace(/\/+$/, '')
-}
-
 function absoluteUrl(pagePath) {
-  return `${SITE.baseUrl}${withoutTrailingSlash(pagePath)}`
+  return `${SITE.baseUrl}${withTrailingSlash(pagePath)}`
 }
 
 export function canonicalUrl(pagePath) {
