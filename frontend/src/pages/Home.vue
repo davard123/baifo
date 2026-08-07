@@ -116,6 +116,16 @@ const topicPages = [
     body: '适合查看与超荐、回向、追思先人及亡灵救度相关的常见主题。',
     to: '/topic/ksitigarbha',
   },
+  {
+    title: '海外华人在线礼佛与祭祖指南',
+    body: '整理海外华人无法回国时，如何通过在线礼佛与祭祖平台完成清明扫墓、追思先人与功德回向。',
+    to: '/topic/overseas-chinese',
+  },
+  {
+    title: '清明节网上祭祖指南（2026）',
+    body: '整理清明节网上祭祖、在线扫墓与礼佛回向的常见方式，适合身在海外或异地无法回乡的华人。',
+    to: '/topic/qingming',
+  },
 ]
 
 function resolveHref(target) {
@@ -440,20 +450,21 @@ onMounted(() => {
 
 .hero-section {
   position: relative;
-  padding: 46px 46px 42px;
+  padding: 54px 52px 48px;
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.82fr);
-  gap: 24px;
+  gap: 28px;
   align-items: stretch;
-  border-radius: 30px;
+  border-radius: 36px;
   background:
-    radial-gradient(circle at 18% 12%, rgba(240, 208, 128, 0.22), transparent 18%),
-    radial-gradient(circle at 30% 70%, rgba(196, 154, 108, 0.1), transparent 30%),
-    linear-gradient(135deg, rgba(255, 249, 236, 0.98), rgba(239, 225, 195, 0.92) 54%, rgba(86, 57, 29, 0.96) 54.4%, rgba(46, 28, 13, 0.98));
-  border: 1px solid rgba(180, 132, 72, 0.3);
+    radial-gradient(circle at 15% 18%, rgba(242, 200, 121, 0.18), transparent 22%),
+    radial-gradient(circle at 82% 22%, rgba(137, 99, 195, 0.2), transparent 24%),
+    radial-gradient(circle at 50% 78%, rgba(229, 144, 92, 0.14), transparent 20%),
+    linear-gradient(135deg, rgba(27, 18, 35, 0.96), rgba(20, 15, 33, 0.94) 55%, rgba(11, 9, 18, 0.98));
+  border: 1px solid rgba(242, 200, 121, 0.18);
   box-shadow:
-    0 26px 70px rgba(68, 43, 17, 0.14),
-    inset 0 1px 0 rgba(255, 251, 243, 0.8);
+    0 30px 90px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 244, 220, 0.1);
   animation: fadeInUp 0.7s ease both;
   overflow: hidden;
 }
@@ -463,8 +474,17 @@ onMounted(() => {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(125deg, transparent 0 50%, rgba(255, 255, 255, 0.06) 50.2%, transparent 51%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 22%);
+    linear-gradient(125deg, transparent 0 42%, rgba(255, 255, 255, 0.04) 42.2%, transparent 43%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 24%);
+  pointer-events: none;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(242, 200, 121, 0.1);
   pointer-events: none;
 }
 
@@ -496,20 +516,20 @@ onMounted(() => {
 
 .hero-emblem__ring {
   inset: 0;
-  border: 1px solid rgba(212, 168, 67, 0.55);
+  border: 1px solid rgba(242, 200, 121, 0.52);
   box-shadow:
-    0 0 0 6px rgba(212, 168, 67, 0.08),
-    0 12px 36px rgba(68, 43, 17, 0.08);
+    0 0 0 6px rgba(242, 200, 121, 0.08),
+    0 12px 36px rgba(0, 0, 0, 0.18);
 }
 
 .hero-emblem__core {
   inset: 24px;
   background:
-    radial-gradient(circle at 50% 35%, rgba(240, 208, 128, 0.9), rgba(196, 154, 108, 0.95) 60%, rgba(127, 90, 54, 0.95));
+    radial-gradient(circle at 50% 35%, rgba(249, 228, 171, 0.96), rgba(224, 168, 83, 0.95) 60%, rgba(139, 85, 52, 0.95));
 }
 
 .hero-kicker {
-  color: rgba(110, 74, 45, 0.76);
+  color: rgba(246, 223, 170, 0.72);
   font-size: 0.82rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -518,14 +538,14 @@ onMounted(() => {
 .hero-section h1 {
   font-size: clamp(2.5rem, 5vw, 4.15rem);
   line-height: 1.06;
-  color: #5f3e25;
-  letter-spacing: 0.1em;
-  text-shadow: 0 6px 16px rgba(127, 90, 54, 0.1);
+  color: #fff5dd;
+  letter-spacing: 0.12em;
+  text-shadow: 0 8px 26px rgba(0, 0, 0, 0.34);
 }
 
 .hero-lead {
   max-width: 620px;
-  color: rgba(70, 50, 34, 0.92);
+  color: rgba(246, 236, 214, 0.86);
   font-size: 1rem;
   line-height: 1.88;
 }
@@ -534,7 +554,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: rgba(127, 90, 54, 0.82);
+  color: rgba(246, 223, 170, 0.74);
   font-size: 0.9rem;
   line-height: 1.7;
 }
@@ -542,7 +562,7 @@ onMounted(() => {
 .hero-quote__line {
   width: 58px;
   height: 1px;
-  background: rgba(212, 168, 67, 0.7);
+  background: rgba(242, 200, 121, 0.7);
 }
 
 .hero-actions {
@@ -566,38 +586,38 @@ onMounted(() => {
   text-decoration: none;
   color: inherit;
   background:
-    linear-gradient(145deg, rgba(95, 66, 38, 0.96), rgba(52, 32, 16, 0.98));
-  border: 1px solid rgba(240, 208, 128, 0.24);
+    linear-gradient(145deg, rgba(44, 28, 57, 0.94), rgba(24, 18, 34, 0.98));
+  border: 1px solid rgba(242, 200, 121, 0.18);
   box-shadow:
-    0 16px 34px rgba(20, 10, 0, 0.2),
-    inset 0 1px 0 rgba(255, 240, 214, 0.08);
+    0 18px 38px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 240, 214, 0.05);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .hero-action__title {
-  color: #f3dfba;
+  color: #fff4da;
   font-size: 0.96rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 .hero-action__body {
-  color: rgba(243, 232, 214, 0.82);
+  color: rgba(243, 232, 214, 0.74);
   font-size: 0.84rem;
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
 
 .hero-action__cta {
-  color: #f0d080;
+  color: #f6dfaa;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
 .hero-action:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 44px rgba(20, 10, 0, 0.28);
-  border-color: rgba(240, 208, 128, 0.42);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+  border-color: rgba(242, 200, 121, 0.34);
 }
 
 .section-head {
@@ -621,7 +641,7 @@ onMounted(() => {
 .section-title {
   font-size: clamp(1.45rem, 3vw, 2rem);
   font-weight: 700;
-  color: var(--accent);
+  color: #fff1d0;
   letter-spacing: 0.03em;
 }
 
@@ -633,7 +653,7 @@ onMounted(() => {
 }
 
 .card--soft {
-  background: rgba(255, 252, 245, 0.72);
+  background: rgba(28, 20, 38, 0.72);
 }
 
 .catalog-section {
@@ -656,18 +676,18 @@ onMounted(() => {
   align-items: center;
   min-width: 0;
   border-radius: 16px;
-  background: rgba(255, 250, 240, 0.8);
-  border: 1px solid rgba(212, 168, 67, 0.15);
+  background: linear-gradient(180deg, rgba(33, 22, 44, 0.92), rgba(21, 15, 31, 0.96));
+  border: 1px solid rgba(242, 200, 121, 0.12);
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   text-decoration: none;
-  color: var(--text);
+  color: #fff1d8;
 }
 
 .buddha-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 36px rgba(68, 43, 17, 0.16);
-  border-color: rgba(212, 168, 67, 0.4);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.34);
+  border-color: rgba(242, 200, 121, 0.28);
 }
 
 .buddha-img-wrap {
@@ -676,9 +696,9 @@ onMounted(() => {
   margin: 20px auto 0;
   overflow: hidden;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(245, 233, 208, 1), rgba(237, 224, 192, 1));
-  border: 2px solid rgba(212, 168, 67, 0.35);
-  box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.1);
+  background: linear-gradient(135deg, rgba(62, 37, 84, 1), rgba(31, 23, 48, 1));
+  border: 2px solid rgba(242, 200, 121, 0.28);
+  box-shadow: 0 0 0 4px rgba(242, 200, 121, 0.08);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
@@ -708,14 +728,14 @@ onMounted(() => {
   font-size: 1.12rem;
   font-weight: 700;
   margin-bottom: 4px;
-  color: var(--accent);
+  color: #fff2d5;
   letter-spacing: 0.05em;
 }
 
 .buddha-info span {
   display: block;
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: rgba(244, 230, 204, 0.68);
   line-height: 1.65;
 }
 
@@ -727,9 +747,9 @@ onMounted(() => {
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  background: rgba(30, 20, 10, 0.92);
-  border: 1px solid rgba(212, 168, 67, 0.22);
-  box-shadow: 0 16px 40px rgba(20, 10, 0, 0.18);
+  background: rgba(15, 12, 20, 0.96);
+  border: 1px solid rgba(242, 200, 121, 0.18);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   animation: fadeInUp 0.7s 0.14s ease both;
 }
@@ -753,7 +773,7 @@ onMounted(() => {
   justify-content: center;
   gap: 14px;
   padding: 36px 34px;
-  background: linear-gradient(180deg, rgba(38, 25, 14, 0.96), rgba(58, 38, 22, 0.92));
+  background: linear-gradient(180deg, rgba(31, 20, 42, 0.96), rgba(15, 12, 21, 0.94));
 }
 
 .ancestor-banner__kicker {
@@ -797,9 +817,9 @@ onMounted(() => {
   padding: 16px 16px 14px;
   border-radius: 16px;
   background:
-    linear-gradient(180deg, rgba(255, 251, 242, 0.86), rgba(248, 240, 224, 0.72));
-  border: 1px solid rgba(212, 168, 67, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    linear-gradient(180deg, rgba(31, 21, 41, 0.88), rgba(23, 16, 31, 0.82));
+  border: 1px solid rgba(242, 200, 121, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .record-title {
@@ -820,9 +840,9 @@ onMounted(() => {
 .guide-section {
   padding: 30px 32px 32px;
   background:
-    linear-gradient(180deg, rgba(244, 236, 220, 0.9), rgba(233, 220, 196, 0.72));
-  border: 1px solid rgba(212, 168, 67, 0.16);
-  border-left: 4px solid rgba(212, 168, 67, 0.5);
+    linear-gradient(180deg, rgba(30, 22, 40, 0.92), rgba(20, 15, 28, 0.82));
+  border: 1px solid rgba(242, 200, 121, 0.14);
+  border-left: 4px solid rgba(242, 200, 121, 0.5);
   border-radius: 22px;
   animation: fadeInUp 0.7s 0.2s ease both;
 }
@@ -841,8 +861,8 @@ onMounted(() => {
   min-width: 0;
   padding: 15px 16px;
   border-radius: 16px;
-  background: rgba(255, 251, 242, 0.8);
-  border: 1px solid rgba(212, 168, 67, 0.12);
+  background: rgba(255, 248, 233, 0.06);
+  border: 1px solid rgba(242, 200, 121, 0.1);
 }
 
 .guide-card h3 {
@@ -869,10 +889,10 @@ onMounted(() => {
 .guide-links a {
   padding: 11px 15px;
   border-radius: 999px;
-  border: 1px solid rgba(212, 168, 67, 0.22);
-  color: var(--accent);
+  border: 1px solid rgba(242, 200, 121, 0.16);
+  color: var(--accent-light);
   text-decoration: none;
-  background: rgba(255, 250, 240, 0.92);
+  background: rgba(255, 248, 233, 0.04);
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
@@ -892,8 +912,8 @@ onMounted(() => {
   min-width: 0;
   padding: 13px 15px;
   border-radius: 14px;
-  background: rgba(255, 250, 242, 0.72);
-  border: 1px solid rgba(212, 168, 67, 0.1);
+  background: rgba(255, 248, 233, 0.04);
+  border: 1px solid rgba(242, 200, 121, 0.08);
 }
 
 .faq-item summary {
@@ -923,8 +943,8 @@ onMounted(() => {
 .path-card {
   padding: 15px 16px;
   border-radius: 14px;
-  background: rgba(255, 251, 242, 0.72);
-  border: 1px solid rgba(212, 168, 67, 0.1);
+  background: rgba(255, 248, 233, 0.04);
+  border: 1px solid rgba(242, 200, 121, 0.08);
 }
 
 .path-card h3 {
@@ -969,8 +989,8 @@ onMounted(() => {
   text-decoration: none;
   color: inherit;
   background:
-    linear-gradient(90deg, rgba(255, 252, 246, 0.85), rgba(247, 238, 220, 0.76));
-  border: 1px solid rgba(212, 168, 67, 0.14);
+    linear-gradient(90deg, rgba(32, 22, 42, 0.9), rgba(20, 15, 31, 0.8));
+  border: 1px solid rgba(242, 200, 121, 0.1);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -981,7 +1001,7 @@ onMounted(() => {
 }
 
 .topic-row__title {
-  color: var(--accent);
+  color: #fff0cf;
   font-weight: 600;
   line-height: 1.5;
 }
@@ -994,7 +1014,7 @@ onMounted(() => {
 }
 
 .topic-row__cta {
-  color: var(--accent-light);
+  color: #f6dfaa;
   font-size: 0.84rem;
   font-weight: 600;
   white-space: nowrap;
