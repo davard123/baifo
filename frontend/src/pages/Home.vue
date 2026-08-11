@@ -15,6 +15,13 @@ const router = useRouter()
 
 const primaryPaths = [
   {
+    title: '念佛计数',
+    body: '每日功课。轻触木鱼计一声佛号，记录今日数量与连续天数，计数只保存在本机。',
+    to: '/nianfo',
+    cta: '开始今日功课',
+    daily: true,
+  },
+  {
     title: '礼佛祈愿',
     body: '进入佛菩萨页面后，可以依次供花、点灯、上香，再写下祈愿并回向众生。',
     to: { path: '/', hash: '#buddha-catalog-title' },
@@ -37,13 +44,6 @@ const primaryPaths = [
     body: '第一次来到这里时，先了解礼佛、回向与祭祀页面的差别，会更容易找到适合的入口。',
     to: '/guide/overview',
     cta: '阅读使用说明',
-  },
-  {
-    title: '念佛计数',
-    body: '每日功课。轻触木鱼计一声佛号，记录今日数量与连续天数，计数只保存在本机。',
-    to: '/nianfo',
-    cta: '开始今日功课',
-    daily: true,
   },
 ]
 

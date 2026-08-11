@@ -66,9 +66,11 @@ function toggle() {
 <style scoped>
 .audio-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999;
+  /* 念佛抽屉的触发器占了右下角最顺手的位置，音乐按钮上移一格；
+     right 取 30px 是为了和 56px 的念佛按钮中心对齐 */
+  bottom: 92px;
+  right: 30px;
+  z-index: 998;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -84,5 +86,10 @@ function toggle() {
 .audio-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(68, 43, 17, 0.25);
+}
+
+@media (max-width: 640px) {
+  /* 跟随念佛按钮在手机上的位置一起内收 */
+  .audio-btn { bottom: 84px; right: 22px; }
 }
 </style>

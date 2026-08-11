@@ -1,62 +1,17 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import {
-  CHANTS, GOALS, createWoodblock, effectiveStreak,
-  increment, loadState, recentDays, saveState, todayCount,
-} from '../utils/nianfo.js'
+import { computed, onMounted } from 'vue'
+import WoodenFish from '../components/WoodenFish.vue'
+import { useNianfo } from '../composables/useNianfo.js'
 
 // 站内其余功能都是低频的（礼佛、祭祖一年来几次）。
-// 这一页是唯一一个「今天也值得打开一下」的入口 —— 每日功课。
+// 这一页是每日功课的完整视图；顺手念一声用全站抽屉（NianfoDrawer）。
+const {
+  CHANTS, GOALS, state, floats, pressed,
+  chant, today, streak, goal, progress, reached, days,
+  tap, pickChant, pickGoal, toggleSound,
+} = useNianfo()
 
-const state = ref(loadState())
-const floats = ref([])
-const pressed = ref(false)
-const play = createWoodblock()
-
-const chant = computed(() => CHANTS.find((c) => c.key === state.value.chant) ?? CHANTS[0])
-const today = computed(() => todayCount(state.value))
-const streak = computed(() => effectiveStreak(state.value))
-const goal = computed(() => state.value.goal || 108)
-const progress = computed(() => Math.min(1, today.value / goal.value))
-const reached = computed(() => today.value >= goal.value)
-const days = computed(() => recentDays(state.value, 14))
 const peak = computed(() => Math.max(1, ...days.value.map((d) => d.count)))
-
-function persist() {
-  saveState(state.value)
-}
-
-function tap() {
-  state.value = increment(state.value)
-  persist()
-
-  if (state.value.sound) play()
-
-  pressed.value = true
-  setTimeout(() => { pressed.value = false }, 110)
-
-  const id = Date.now() + Math.random()
-  floats.value.push({ id, left: 42 + Math.random() * 16 })
-  setTimeout(() => {
-    floats.value = floats.value.filter((f) => f.id !== id)
-  }, 1100)
-}
-
-function pickChant(key) {
-  state.value = { ...state.value, chant: key }
-  persist()
-}
-
-function pickGoal(value) {
-  state.value = { ...state.value, goal: value }
-  persist()
-}
-
-function toggleSound() {
-  state.value = { ...state.value, sound: !state.value.sound }
-  persist()
-  if (state.value.sound) play()
-}
 
 onMounted(() => {
   document.title = '念佛计数器 | 在线木鱼与每日功课 - www.fopusha.com'
@@ -118,33 +73,9 @@ onMounted(() => {
           aria-hidden="true"
         >{{ chant.text }}</span>
 
-        <button
-          type="button"
-          class="fish"
-          :class="{ pressed }"
-          :aria-label="`念一声${chant.text}，当前今日 ${today} 声`"
-          @click="tap"
-        >
-          <svg viewBox="0 0 120 120" aria-hidden="true">
-            <defs>
-              <radialGradient id="fishBody" cx="38%" cy="32%" r="72%">
-                <stop offset="0%" stop-color="#8a5f34" />
-                <stop offset="55%" stop-color="#5d3d21" />
-                <stop offset="100%" stop-color="#33200f" />
-              </radialGradient>
-            </defs>
-            <circle cx="60" cy="62" r="46" fill="url(#fishBody)" />
-            <path
-              d="M28 46c10-14 26-20 42-18"
-              fill="none" stroke="rgba(255,236,200,.34)" stroke-width="5" stroke-linecap="round"
-            />
-            <path
-              d="M42 84c14 8 32 6 44-6"
-              fill="none" stroke="rgba(0,0,0,.34)" stroke-width="7" stroke-linecap="round"
-            />
-            <ellipse cx="60" cy="40" rx="20" ry="7" fill="rgba(0,0,0,.32)" />
-          </svg>
-        </button>
+        <div class="fish-wrap">
+          <WoodenFish :pressed="pressed" :label="`念一声${chant.text}，当前今日 ${today} 声`" @tap="tap" />
+        </div>
       </div>
 
       <p class="chant-text">{{ chant.text }}</p>
@@ -326,21 +257,7 @@ onMounted(() => {
   padding-top: 8px;
 }
 
-.fish {
-  width: min(210px, 58vw);
-  aspect-ratio: 1;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
-  transition: transform 0.11s ease;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.fish svg { width: 100%; height: 100%; display: block; }
-.fish.pressed { transform: scale(0.94); }
-.fish:focus-visible { outline: 3px solid rgba(242, 200, 121, 0.6); outline-offset: 6px; border-radius: 50%; }
+.fish-wrap { width: min(210px, 58vw); }
 
 .float-chant {
   position: absolute;
@@ -444,6 +361,5 @@ onMounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .nianfo-head, .counter-card, .settings, .history, .explain { animation: none; }
   .float-chant { animation-duration: 0.01ms; }
-  .fish { transition: none; }
 }
 </style>

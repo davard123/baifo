@@ -2,6 +2,7 @@
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
+import NianfoDrawer from './components/NianfoDrawer.vue'
 import { warmApi } from './api.js'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
 
@@ -108,6 +109,7 @@ onMounted(() => {
   <img src="/music/hidden-figure.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
   <img src="/devotee-og.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
   <AudioPlayer />
+  <NianfoDrawer />
 </template>
 
 <style>
