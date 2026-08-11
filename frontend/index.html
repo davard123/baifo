@@ -28,9 +28,8 @@
     <script type="application/ld+json" id="ld-webpage"></script>
   </head>
   <body>
-    <!-- 供搜索引擎爬取的 H1 SSR 层（Vue 渲染后会被替换，视觉上隐藏） -->
-    <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap">礼佛祈愿 · 海外华人在线礼佛 · 祭祖 · 清明扫墓</h1>
-    <div id="app"></div>
+    <!-- 预渲染回退内容：放在 #app 内，Vue mount 时整体替换；对无 JS 的爬虫与访客是真实可见内容。 -->
+    <div id="app"><div class="prerender-fallback"><h1>礼佛祈愿 · 海外华人在线礼佛 · 祭祖 · 清明扫墓</h1></div></div>
     <script type="module" src="/src/main.js"></script>
     <script>
       const baseUrl = 'https://www.fopusha.com/';

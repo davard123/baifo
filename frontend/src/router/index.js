@@ -7,6 +7,7 @@ const AncestorPage = () => import('../pages/AncestorPage.vue')
 const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
+const NianfoPage = () => import('../pages/NianfoPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
 function withTrailingSlashTarget(target) {
@@ -39,6 +40,7 @@ const router = createRouter({
     { path: '/buddha/:slug', component: BuddhaPage },
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage },
+    { path: '/nianfo', component: NianfoPage },
     { path: '/:pathMatch(.*)*', component: NotFoundPage },
   ],
   scrollBehavior(to) {

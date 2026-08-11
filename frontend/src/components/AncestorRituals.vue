@@ -49,7 +49,7 @@ const RITUALS = [
   {
     key: 'paper',
     label: '🧧 烧纸',
-    images: ['/04-1.png'],
+    images: ['/04-1.webp'],
     once: true,
     isFigure: false,
     isCandle: false,
@@ -144,7 +144,7 @@ function act(ritual) {
   font-size: 0.8rem;
   border-radius: 10px;
   border: 1px solid var(--accent-light);
-  background: rgba(255, 250, 240, 0.8);
+  background: rgba(255, 248, 233, 0.07);
   color: var(--text);
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   white-space: nowrap;
@@ -152,15 +152,15 @@ function act(ritual) {
 
 .ritual-btn:hover:not(:disabled) {
   background: var(--accent);
-  color: #fff8ee;
+  color: #2a1c0c;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(127, 90, 54, 0.25);
 }
 
 .ritual-btn.done {
-  background: rgba(200, 190, 170, 0.12);
-  color: #8a7a6a;
-  border-color: #8a7a6a;
+  background: rgba(242, 200, 121, 0.1);
+  color: var(--text-muted);
+  border-color: var(--text-muted);
   cursor: default;
 }
 
@@ -170,7 +170,7 @@ function act(ritual) {
   left: 50%;
   transform: translateX(-50%);
   background: rgba(30, 20, 10, 0.88);
-  color: #d0c8b0;
+  color: var(--text-muted);
   padding: 10px 22px;
   border-radius: 24px;
   font-size: 0.92rem;

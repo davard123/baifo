@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { handleUnsubscribe, runDailyReminders } from './reminders'
 
 type Bindings = {
   SUPABASE_URL: string
@@ -322,6 +323,31 @@ app.post('/ancestor-wishes', async (c) => {
   if (!res.ok) return c.json({ detail: await res.text() }, 500)
 
   const email = asStr(body.email)
+
+  // 年度追思提醒：只有用户明确勾选 + 填了忌日月/日，才建立订阅。
+  // 没勾选就绝不入库邮箱 —— 这是主动发信，默认必须是关的。
+  const wantsReminder = body.remind === true || body.remind === 'true'
+  const rm = asInt(body.death_month, 0)
+  const rd = asInt(body.death_day, 0)
+  if (wantsReminder && email && isValidEmail(email) && rm >= 1 && rm <= 12 && rd >= 1 && rd <= 31) {
+    c.executionCtx.waitUntil(
+      sb(c.env, 'reminder_subscriptions', {
+        method: 'POST',
+        headers: { Prefer: 'resolution=merge-duplicates' },
+        body: JSON.stringify({
+          email,
+          username: payload.username,
+          ancestor_name: payload.ancestor_name || payload.ancestor,
+          relationship: payload.relationship,
+          death_month: rm,
+          death_day: rd,
+          death_year: asInt(body.death_year, 0) || null,
+          unsub_token: crypto.randomUUID(),
+        }),
+      }).then(() => undefined),
+    )
+  }
+
   if (email && isValidEmail(email)) {
     c.executionCtx.waitUntil(sendEmail(c.env, {
       to: email,
@@ -365,4 +391,17 @@ app.post('/contact', async (c) => {
   return c.json({ status: 'success' })
 })
 
-export default app
+// ---- 年度提醒 ---------------------------------------------------------------
+// 退订链接从提醒邮件里点进来，必须无需登录即可生效。
+app.get('/reminders/unsubscribe', (c) =>
+  handleUnsubscribe(c.env, c.req.query('token') ?? ''),
+)
+
+export default {
+  fetch: app.fetch,
+  // 定时任务：需要在 wrangler.toml 打开 [triggers] crons 才会真正触发。
+  // 未开启时这段代码不会运行，属于「已就绪但未启用」。
+  async scheduled(_event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
+    ctx.waitUntil(runDailyReminders(env).then(() => undefined))
+  },
+}

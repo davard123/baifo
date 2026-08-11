@@ -57,38 +57,58 @@ async function handleSubmit() {
     <p class="form-hint">发愿回向</p>
     <form @submit.prevent="handleSubmit">
       <div class="row-two">
+        <div class="field-block">
+          <label class="field-label" for="wish-name">您的法名 / 姓名</label>
+          <input
+            id="wish-name"
+            v-model="username"
+            type="text"
+            placeholder="如：慧明"
+            maxlength="20"
+            class="field"
+            autocomplete="nickname"
+            required
+          />
+        </div>
+        <div class="field-block">
+          <label class="field-label" for="wish-age">年龄</label>
+          <input
+            id="wish-age"
+            v-model="age"
+            type="number"
+            min="1"
+            max="150"
+            inputmode="numeric"
+            placeholder="年龄"
+            class="field age-field"
+            autocomplete="off"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="wish-text">愿文（可修改）</label>
+        <textarea
+          id="wish-text"
+          v-model="wish"
+          placeholder="写下你此刻的祈愿"
+          maxlength="300"
+          class="field wish-field"
+        ></textarea>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="wish-email">邮箱（选填）</label>
         <input
-          v-model="username"
-          type="text"
-          placeholder="您的法名/姓名"
-          maxlength="20"
-          class="field"
-          autocomplete="nickname"
-        />
-        <input
-          v-model="age"
-          type="number"
-          min="1"
-          max="150"
-          placeholder="年龄"
-          class="field age-field"
-          autocomplete="off"
+          id="wish-email"
+          v-model="email"
+          type="email"
+          placeholder="填写后可收到祈愿确认邮件"
+          class="field email-field"
+          autocomplete="email"
         />
       </div>
-      <textarea
-        v-model="wish"
-        placeholder="愿文（可修改）"
-        maxlength="300"
-        class="field wish-field"
-      ></textarea>
-
-      <input
-        v-model="email"
-        type="email"
-        placeholder="邮箱（选填）— 填写后可收到祈愿确认邮件"
-        class="field email-field"
-        autocomplete="email"
-      />
 
       <p v-if="error" class="error-msg">{{ error }}</p>
 
@@ -114,6 +134,27 @@ async function handleSubmit() {
   grid-template-columns: 1fr 90px;
   gap: 10px;
   margin-bottom: 10px;
+  align-items: end;
+}
+
+/* 之前四个输入框只有 placeholder：一开始输入提示就消失了，
+   年龄那格填完只剩一个数字，回头也看不出是什么；屏幕阅读器同样拿不到字段名。 */
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+
+.row-two .field-block {
+  margin-bottom: 0;
+}
+
+.field-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
 }
 
 .field {
@@ -121,7 +162,7 @@ async function handleSubmit() {
   padding: 10px 14px;
   border: 1px solid rgba(196, 154, 108, 0.4);
   border-radius: 10px;
-  background: rgba(255, 250, 240, 0.7);
+  background: rgba(255, 248, 233, 0.07);
   color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
@@ -148,7 +189,7 @@ async function handleSubmit() {
 }
 
 .error-msg {
-  color: #c0392b;
+  color: #f2a3a3;
   font-size: 0.85rem;
   margin-bottom: 10px;
   text-align: center;
@@ -159,8 +200,8 @@ async function handleSubmit() {
   padding: 13px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #7f5a36, #a07040);
-  color: #fff8ee;
+  background: linear-gradient(135deg, #e0b76e, #f0d091);
+  color: #2a1c0c;
   font-size: 1rem;
   letter-spacing: 0.08em;
   transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;

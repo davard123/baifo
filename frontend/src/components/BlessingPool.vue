@@ -394,22 +394,22 @@ onBeforeUnmount(() => {
   min-width: 0;
   padding: 16px 10px 12px;
   background:
-    linear-gradient(180deg, rgba(255, 250, 239, 0.96), rgba(244, 232, 208, 0.82));
-  border: 1px solid rgba(180, 140, 80, 0.2);
+    linear-gradient(180deg, rgba(33, 22, 44, 0.92), rgba(21, 15, 31, 0.96));
+  border: 1px solid rgba(242, 200, 121, 0.14);
   border-radius: 16px;
   cursor: pointer;
   box-shadow:
-    0 12px 24px rgba(96, 64, 24, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    0 12px 24px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 240, 214, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .blessing-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(100, 60, 20, 0.16);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.36);
   border-color: var(--gold);
   background:
-    linear-gradient(180deg, rgba(255, 251, 242, 1), rgba(245, 234, 212, 0.9));
+    linear-gradient(180deg, rgba(45, 30, 59, 0.96), rgba(28, 20, 40, 0.98));
 }
 
 .blessing-item:focus-visible,
@@ -463,7 +463,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(420px, 1.15fr) minmax(320px, 0.85fr);
-  background: linear-gradient(135deg, rgba(255, 249, 238, 0.96), rgba(246, 234, 212, 0.94));
+  background: linear-gradient(135deg, rgba(31, 21, 42, 0.98), rgba(18, 13, 26, 0.98));
   border: 1px solid rgba(212, 168, 67, 0.22);
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
 }
@@ -480,7 +480,7 @@ onBeforeUnmount(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(127, 90, 54, 0.06));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(10, 6, 16, 0.28));
   pointer-events: none;
 }
 
@@ -510,7 +510,7 @@ onBeforeUnmount(() => {
   min-height: 0;
   overflow-y: auto;
   padding: 28px 28px 30px;
-  background: linear-gradient(180deg, rgba(255, 251, 245, 0.92), rgba(246, 235, 216, 0.98));
+  background: linear-gradient(180deg, rgba(30, 20, 41, 0.96), rgba(19, 13, 27, 0.98));
   border-left: 1px solid rgba(212, 168, 67, 0.22);
   display: flex;
   flex-direction: column;
@@ -530,7 +530,7 @@ onBeforeUnmount(() => {
   font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(127, 90, 54, 0.58);
+  color: var(--accent);
 }
 
 .overlay-title {
@@ -542,7 +542,7 @@ onBeforeUnmount(() => {
 
 .form-wish-hint {
   font-size: 0.96rem;
-  color: rgba(127, 90, 54, 0.86);
+  color: var(--accent);
   text-align: center;
   line-height: 1.8;
   overflow-wrap: anywhere;
@@ -599,8 +599,8 @@ onBeforeUnmount(() => {
   min-height: 104px;
   padding: 16px 12px;
   border-radius: 18px;
-  border: 1px solid rgba(127, 90, 54, 0.24);
-  background: linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(244, 232, 212, 0.9));
+  border: 1px solid rgba(242, 200, 121, 0.2);
+  background: linear-gradient(180deg, rgba(44, 30, 58, 0.94), rgba(26, 18, 37, 0.96));
   color: var(--accent);
   font-size: 0.92rem;
   font-weight: 600;
@@ -687,7 +687,7 @@ onBeforeUnmount(() => {
   padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid rgba(212, 168, 67, 0.4);
-  background: rgba(255, 252, 245, 0.92);
+  background: rgba(24, 16, 33, 0.94);
   color: var(--text);
   font-family: inherit;
   font-size: 0.92rem;
@@ -705,8 +705,8 @@ onBeforeUnmount(() => {
   padding: 12px 16px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #7f5a36, #a07040);
-  color: #fff8ee;
+  background: linear-gradient(135deg, #e0b76e, #f0d091);
+  color: #2a1c0c;
   font-size: 1rem;
   letter-spacing: 0.08em;
   box-shadow: 0 4px 16px rgba(127, 90, 54, 0.3);
@@ -775,16 +775,16 @@ onBeforeUnmount(() => {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: rgba(255, 250, 240, 0.15);
+  background: rgba(255, 248, 233, 0.12);
   border: 1px solid rgba(255, 250, 240, 0.3);
-  color: #fff8ee;
+  color: var(--text);
   font-size: 1.2rem;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .modal-close:hover {
-  background: rgba(255, 250, 240, 0.28);
+  background: rgba(242, 200, 121, 0.24);
   transform: scale(1.04);
 }
 

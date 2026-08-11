@@ -125,16 +125,16 @@ onMounted(() => {
   max-width: 980px;
   margin: 0 auto 96px;
   padding: 0 20px;
-  color: rgba(103, 83, 60, 0.78);
+  color: var(--text-muted);
   font-size: 0.82rem;
   line-height: 1.8;
   text-align: center;
 }
 .site-disclaimer p {
   padding: 16px 18px;
-  border: 1px solid rgba(212, 168, 67, 0.16);
+  border: 1px solid rgba(242, 200, 121, 0.14);
   border-radius: 14px;
-  background: rgba(255, 251, 242, 0.62);
+  background: rgba(27, 18, 35, 0.62);
 }
 @media (max-width: 600px) {
   .site-disclaimer {

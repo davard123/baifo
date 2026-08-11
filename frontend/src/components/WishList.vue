@@ -1,4 +1,14 @@
 <script setup>
+import { BUDDHAS } from '../data/buddhas.js'
+
+// 后端存的是 slug（如 guanyin），直接渲染会让用户在自己的记录里看到英文。
+const BUDDHA_NAME_BY_SLUG = Object.fromEntries(BUDDHAS.map((b) => [b.slug, b.name]))
+
+function buddhaLabel(value) {
+  if (!value) return ''
+  return BUDDHA_NAME_BY_SLUG[value] || value
+}
+
 function formatWishTime(value) {
   if (!value) return ''
   const date = new Date(typeof value === 'string' ? value.replace(' ', 'T') : value)
@@ -49,7 +59,7 @@ defineProps({
             <time v-if="wish.created_at" class="wish-time">{{ formatWishTime(wish.created_at) }}</time>
             <span v-if="wish.ancestor" class="wish-tag ancestor-tag">{{ wish.ancestor_name }}</span>
             <span v-else-if="wish.blessing" class="wish-tag">{{ wish.blessing }}</span>
-            <span v-else-if="wish.buddha" class="wish-tag">{{ wish.buddha }}</span>
+            <span v-else-if="wish.buddha" class="wish-tag">{{ buddhaLabel(wish.buddha) }}</span>
           </div>
         </div>
         <p class="wish-text">{{ wish.wish }}</p>
@@ -75,7 +85,7 @@ defineProps({
 }
 
 .wish-item {
-  background: rgba(255, 250, 240, 0.6);
+  background: rgba(255, 248, 233, 0.05);
   border: 1px solid rgba(212, 168, 67, 0.15);
   border-radius: 12px;
   padding: 14px 18px;
@@ -93,7 +103,7 @@ defineProps({
 }
 
 .wish-item.ancestor .wish-user {
-  color: #5a4a3a;
+  color: var(--text);
 }
 
 .wish-meta {
@@ -144,7 +154,7 @@ defineProps({
 
 .ancestor-tag {
   background: rgba(120, 100, 80, 0.12);
-  color: #5a4a3a;
+  color: var(--text);
 }
 
 .wish-text {

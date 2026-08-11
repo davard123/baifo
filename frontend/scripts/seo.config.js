@@ -702,6 +702,68 @@ function topicPage({ path, slug }) {
   }
 }
 
+
+function nianfoPage() {
+  const path = '/nianfo'
+  return {
+    path,
+    title: '念佛计数器 | 在线木鱼与每日功课',
+    description:
+      '在线念佛计数器与电子木鱼，支持南无阿弥陀佛、观世音菩萨、地藏王菩萨等佛号，记录每日念诵数量、连续天数与每日目标，计数仅保存在本机。',
+    heading: '念佛计数器与在线木鱼',
+    summary:
+      '每日念佛计数工具，轻触木鱼记一声佛号，可选佛号与每日目标，记录今日数量、累计数量与连续天数。',
+    image: SITE.defaultImage,
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: '念佛计数器',
+        description: '在线念佛计数与电子木鱼，用于记录每日称念佛号的数量。',
+        breadcrumbItems: [
+          { name: '礼佛祈愿', path: '/' },
+          { name: '念佛计数', path },
+        ],
+        about: {
+          '@type': 'Thing',
+          name: '念佛计数',
+          description: '称念佛号并计数的日常修持方式，传统上以一百零八颗念珠计数。',
+        },
+        selectors: ['h1', '.lead', '.explain p:first-child'],
+      }),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        '@id': `${absoluteUrl(path)}#app`,
+        name: '念佛计数器',
+        url: absoluteUrl(path),
+        applicationCategory: 'LifestyleApplication',
+        operatingSystem: 'Web',
+        inLanguage: 'zh-CN',
+        description: '在线念佛计数器与电子木鱼，记录每日念诵数量与连续天数，数据保存在本机。',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
+      },
+      buildFaqSchema('念佛计数器', [
+        {
+          q: '念佛计数器怎么用？',
+          a: '选择佛号后，每轻触一次木鱼即计一声。页面会显示今日数量、累计数量与连续天数，也可以设置每日目标。',
+        },
+        {
+          q: '每日念多少声合适？',
+          a: '传统念珠一串一百零八颗，因此常以 108 声为一个基本单位。念多念少不必计较，重在每天相续。',
+        },
+        {
+          q: '计数会上传到服务器吗？',
+          a: '不会。念佛计数只保存在当前设备的浏览器中，不需要注册，也不会上传到服务器。',
+        },
+        {
+          q: '木鱼有声音吗？',
+          a: '默认关闭，可以在页面上手动开启。开启后每次轻触会有一声木鱼响。',
+        },
+      ]),
+    ],
+  }
+}
+
 export function getStaticPages() {
   return [
     homePage(),
@@ -726,6 +788,7 @@ export function getStaticPages() {
     ...getTopicEntries().map(topicPage),
     ...BUDDHAS.map(buddhaPage),
     ancestorsPage(),
+    nianfoPage(),
     ...ANCESTORS.map(ancestorPage),
   ]
 }

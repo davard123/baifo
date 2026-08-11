@@ -1,19 +1,22 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorStage from '../components/AncestorStage.vue'
 import AncestorRituals from '../components/AncestorRituals.vue'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
+import DedicationDone from '../components/DedicationDone.vue'
 import { apiFetch } from '../api.js'
 import { getPhoto, getName } from '../utils/localPhoto.js'
 import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
-const router = useRouter()
 
 const ancestor = computed(() => ANCESTORS.find(a => a.slug === route.params.slug))
 const relatedAncestors = computed(() => ANCESTORS.filter(a => a.slug !== route.params.slug).slice(0, 4))
+
+// 提交成功后停在本页展示回向确认，而不是直接跳回列表
+const submitted = ref(null)
 
 const customPhoto = ref(null)
 const customName = ref(null)
@@ -69,6 +72,7 @@ watch(
   () => {
     syncAncestorState()
     resetStageState()
+    submitted.value = null
     applyPageMeta()
   },
   { immediate: true }
@@ -110,9 +114,17 @@ async function onSubmit(payload) {
   if (!res.ok || data.status !== 'success') {
     throw new Error(data.message || '提交失败')
   }
-  // 祭拜成功后回到祭祀先人主列表,方便接着祭拜下一位(而不是退到首页)
-  router.push('/ancestors')
+  submitted.value = payload
 }
+
+const doneActions = computed(() => {
+  const next = relatedAncestors.value[0]
+  return [
+    ...(next ? [{ label: `继续祭拜${next.name}`, to: `/ancestor/${next.slug}`, primary: true }] : []),
+    { label: '返回先人牌位', to: '/ancestors' },
+    { label: '返回首页', to: '/' },
+  ]
+})
 </script>
 
 <template>
@@ -163,15 +175,28 @@ async function onSubmit(payload) {
           <p>个性化姓名和照片只保存在当前设备，不会公开给其他人。</p>
         </section>
         <hr class="divider" />
-        <AncestorRituals @ritual="onRitual" />
-        <hr class="divider" />
-        <AncestorWishForm
-          :slug="ancestor.slug"
-          :default-wish="ancestor.wish"
-          :default-ancestor-name="displayAncestorName"
-          :default-relationship="defaultRelationship"
-          :on-submit="onSubmit"
+        <DedicationDone
+          v-if="submitted"
+          kind="ancestor"
+          :subject-name="displayAncestorName"
+          :name="submitted.username"
+          :age="submitted.age"
+          :wish="submitted.wish"
+          :email="submitted.email || ''"
+          :actions="doneActions"
         />
+
+        <template v-else>
+          <AncestorRituals @ritual="onRitual" />
+          <hr class="divider" />
+          <AncestorWishForm
+            :slug="ancestor.slug"
+            :default-wish="ancestor.wish"
+            :default-ancestor-name="displayAncestorName"
+            :default-relationship="defaultRelationship"
+            :on-submit="onSubmit"
+          />
+        </template>
       </section>
     </div>
   </div>
@@ -275,7 +300,7 @@ async function onSubmit(payload) {
     overflow-y: auto;
     padding: 10px 16px 16px;
     border-radius: 0;
-    border-top: 1px solid rgba(120, 100, 80, 0.2);
+    border-top: 1px solid rgba(242, 200, 121, 0.16);
     box-shadow: none;
   }
 
@@ -330,8 +355,8 @@ async function onSubmit(payload) {
 .page-tags span {
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(120, 100, 80, 0.12);
-  color: #8a7a6a;
+  background: rgba(242, 200, 121, 0.1);
+  color: var(--text-muted);
   font-size: 0.78rem;
 }
 
@@ -342,7 +367,7 @@ async function onSubmit(payload) {
 
 .entry-summary h2,
 .privacy-note p {
-  color: #8a7a6a;
+  color: var(--text-muted);
 }
 
 .entry-summary h2 {
@@ -367,8 +392,8 @@ async function onSubmit(payload) {
 .summary-chips span {
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(120, 100, 80, 0.12);
-  color: #8a7a6a;
+  background: rgba(242, 200, 121, 0.1);
+  color: var(--text-muted);
   font-size: 0.8rem;
 }
 
@@ -378,16 +403,16 @@ async function onSubmit(payload) {
   margin-top: 10px;
   padding: 9px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(120, 100, 80, 0.18);
-  background: rgba(255, 252, 245, 0.78);
-  color: #7a6a5a;
+  border: 1px solid rgba(242, 200, 121, 0.2);
+  background: rgba(255, 248, 233, 0.06);
+  color: var(--text-muted);
   font-size: 0.84rem;
   text-decoration: none;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid rgba(120, 100, 80, 0.2);
+  border-top: 1px solid rgba(242, 200, 121, 0.16);
   margin: 16px 0;
 }
 </style>

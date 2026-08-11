@@ -73,8 +73,9 @@ function toggle() {
   height: 44px;
   border-radius: 50%;
   border: 1px solid rgba(212, 168, 67, 0.4);
-  background: rgba(255, 250, 240, 0.92);
+  background: rgba(24, 16, 33, 0.94);
   backdrop-filter: blur(8px);
+  color: var(--text);
   font-size: 1.1rem;
   box-shadow: 0 4px 16px rgba(68, 43, 17, 0.18);
   transition: transform 0.2s, box-shadow 0.2s;

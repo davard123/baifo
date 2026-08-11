@@ -368,8 +368,8 @@ const quickReference = computed(() => [
 .faq-item {
   padding: 16px;
   border-radius: 14px;
-  background: rgba(255, 251, 242, 0.75);
-  border: 1px solid rgba(212, 168, 67, 0.14);
+  background: rgba(255, 248, 233, 0.05);
+  border: 1px solid rgba(242, 200, 121, 0.14);
 }
 
 .reference-item h3,

@@ -47,9 +47,12 @@ function buildJsonLd(page) {
   return `<script type="application/ld+json" id="ld-webpage">${JSON.stringify(page.schema)}</script>`
 }
 
-function buildHiddenContent(page) {
+function buildFallbackContent(page) {
+  // 放在 #app 内部，Vue mount 时整体替换；对无 JS 的爬虫/访客是真实可见内容。
+  // 之前是 position:absolute;left:-9999px 的离屏隐藏块 —— 属于 Google 明确
+  // 列为作弊信号的 hidden text，且内容与页面可见 FAQ 重复。
   const lines = [
-    '<section aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">',
+    '<div class="prerender-fallback">',
     `  <h1>${page.heading}</h1>`,
     `  <p>${page.summary}</p>`,
   ]
@@ -81,14 +84,14 @@ function buildHiddenContent(page) {
 function renderPage(page) {
   const head = buildMetaTags(page)
   const jsonLd = buildJsonLd(page)
-  const hiddenContent = buildHiddenContent(page)
+  const fallbackContent = buildFallbackContent(page)
 
   return template
     .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)
     .replace(/<script type="application\/ld\+json" id="ld-webpage">[\s\S]*?<\/script>/, jsonLd)
     .replace(/<script>\s*const baseUrl = 'https:\/\/www\.fopusha\.com\/'[\s\S]*?document\.getElementById\('ld-webpage'\)\.textContent = JSON\.stringify\(schema\);\s*<\/script>/, '')
-    .replace(/<h1 style="position:absolute;[\s\S]*?<\/h1>/, hiddenContent)
+    .replace(/<div id="app">[\s\S]*?<\/div><\/div>/, `<div id="app">${fallbackContent}</div>`)
 }
 
 for (const page of getStaticPages()) {

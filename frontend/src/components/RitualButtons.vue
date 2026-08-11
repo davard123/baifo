@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const RITUALS = [
   { key: 'flower',  label: '🌸 献花',   images: ['/02.gif',   '/02.gif'],   once: true,  isFigure: false, isCandle: false, isIncense: false },
-  { key: 'gift',    label: '🍑 献贡品', images: ['/04-1.png', '/04-2.png'], once: true,  isFigure: false, isCandle: false, isIncense: false },
+  { key: 'gift',    label: '🍑 献贡品', images: ['/04-1.webp', '/04-2.webp'], once: true,  isFigure: false, isCandle: false, isIncense: false },
   { key: 'light',   label: '🕯️ 点灯',   images: [],                         once: true,  isFigure: false, isCandle: true,  isIncense: false },
   { key: 'incense', label: '🪔 上香',   images: [],                         once: true,  isFigure: false, isCandle: false, isIncense: true  },
   { key: 'fruit',   label: '🍓 供果',   images: ['/01-1.gif', '/01-2.gif'], once: true,  isFigure: false, isCandle: false, isIncense: false },
@@ -83,14 +83,14 @@ function act(ritual) {
   font-size: 0.85rem;
   border-radius: 10px;
   border: 1px solid var(--accent-light);
-  background: rgba(255, 250, 240, 0.8);
+  background: rgba(255, 248, 233, 0.07);
   color: var(--text);
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   white-space: nowrap;
 }
 .ritual-btn:hover:not(:disabled) {
   background: var(--accent);
-  color: #fff8ee;
+  color: #2a1c0c;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(127, 90, 54, 0.25);
 }

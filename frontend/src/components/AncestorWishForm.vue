@@ -19,6 +19,14 @@ const email        = ref('')
 const loading      = ref(false)
 const error        = ref('')
 
+// 年度追思提醒。默认关闭：后端订阅表和定时任务上线前，
+// 不能先在界面上给用户一个兑现不了的承诺。
+// 启用方式：构建时设置 VITE_REMINDERS=on
+const remindersEnabled = import.meta.env.VITE_REMINDERS === 'on'
+const remind      = ref(false)
+const deathMonth  = ref('')
+const deathDay    = ref('')
+
 onMounted(() => {
   const viewer = getViewerProfile()
   username.value = viewer.username || getGlobal('username') || ''
@@ -54,7 +62,10 @@ async function handleSubmit() {
       ancestor_name: props.defaultAncestorName.trim(),
       relationship:  props.defaultRelationship,
       wish:          wish.value.trim(),
-      ...(email.value.trim() ? { email: email.value.trim() } : {})
+      ...(email.value.trim() ? { email: email.value.trim() } : {}),
+      ...(remindersEnabled && remind.value && deathMonth.value && deathDay.value
+        ? { remind: true, death_month: Number(deathMonth.value), death_day: Number(deathDay.value) }
+        : {})
     }
 
     if (props.onSubmit) {
@@ -86,42 +97,82 @@ async function handleSubmit() {
       </div>
 
       <div class="row-two">
+        <div class="field-block">
+          <label class="field-label" for="ancestor-name">您的姓名</label>
+          <input
+            id="ancestor-name"
+            v-model="username"
+            type="text"
+            placeholder="如：张明"
+            maxlength="20"
+            class="field"
+            autocomplete="nickname"
+            required
+            @input="onUsernameChange"
+          />
+        </div>
+        <div class="field-block">
+          <label class="field-label" for="ancestor-age">年龄</label>
+          <input
+            id="ancestor-age"
+            v-model="age"
+            type="number"
+            min="1"
+            max="150"
+            inputmode="numeric"
+            placeholder="年龄"
+            class="field age-field"
+            autocomplete="off"
+            required
+            @change="onAgeChange"
+          />
+        </div>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="ancestor-wish">祈祷文（可修改）</label>
+        <textarea
+          id="ancestor-wish"
+          v-model="wish"
+          placeholder="写下想对先人说的话"
+          maxlength="300"
+          class="field wish-field"
+          @input="onWishChange"
+        ></textarea>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label" for="ancestor-email">邮箱（选填）</label>
         <input
-          v-model="username"
-          type="text"
-          placeholder="您的姓名"
-          maxlength="20"
-          class="field"
-          autocomplete="nickname"
-          @input="onUsernameChange"
-        />
-        <input
-          v-model="age"
-          type="number"
-          min="1"
-          max="150"
-          placeholder="年龄"
-          class="field age-field"
-          autocomplete="off"
-          @change="onAgeChange"
+          id="ancestor-email"
+          v-model="email"
+          type="email"
+          placeholder="填写后可收到祭祖确认邮件"
+          class="field email-field"
+          autocomplete="email"
         />
       </div>
 
-      <textarea
-        v-model="wish"
-        placeholder="祈祷文（可修改）"
-        maxlength="300"
-        class="field wish-field"
-        @input="onWishChange"
-      ></textarea>
-
-      <input
-        v-model="email"
-        type="email"
-        placeholder="邮箱（选填）— 填写后可收到祭祖确认邮件"
-        class="field email-field"
-        autocomplete="email"
-      />
+      <div v-if="remindersEnabled" class="remind-block">
+        <label class="remind-check">
+          <input v-model="remind" type="checkbox" />
+          <span>每年忌日与清明提醒我回来祭拜</span>
+        </label>
+        <div v-if="remind" class="remind-date">
+          <label class="field-label" for="death-month">忌日</label>
+          <div class="remind-date-row">
+            <select id="death-month" v-model="deathMonth" class="field">
+              <option value="">月</option>
+              <option v-for="m in 12" :key="m" :value="m">{{ m }} 月</option>
+            </select>
+            <select id="death-day" v-model="deathDay" class="field" aria-label="忌日（日）">
+              <option value="">日</option>
+              <option v-for="d in 31" :key="d" :value="d">{{ d }} 日</option>
+            </select>
+          </div>
+          <p class="remind-note">需要填写上面的邮箱。每年最多两封，随时可在邮件里一键退订。</p>
+        </div>
+      </div>
 
       <p v-if="error" class="error-msg">{{ error }}</p>
 
@@ -173,6 +224,70 @@ async function handleSubmit() {
   grid-template-columns: 1fr 90px;
   gap: 10px;
   margin-bottom: 10px;
+  align-items: end;
+}
+
+/* 之前四个输入框只有 placeholder：一开始输入提示就消失了，
+   年龄那格填完只剩一个数字，回头也看不出是什么；屏幕阅读器同样拿不到字段名。 */
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+
+.row-two .field-block {
+  margin-bottom: 0;
+}
+
+.field-label {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.remind-block {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(242, 200, 121, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 248, 233, 0.04);
+}
+
+.remind-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.84rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.remind-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--gold);
+  flex-shrink: 0;
+}
+
+.remind-date {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.remind-date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.remind-note {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 .field {
@@ -180,7 +295,7 @@ async function handleSubmit() {
   padding: 10px 14px;
   border: 1px solid rgba(120, 100, 80, 0.4);
   border-radius: 10px;
-  background: rgba(240, 235, 225, 0.7);
+  background: rgba(255, 248, 233, 0.07);
   color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
@@ -188,7 +303,7 @@ async function handleSubmit() {
   outline: none;
 }
 .field:focus {
-  border-color: #8a7a6a;
+  border-color: var(--text-muted);
   box-shadow: 0 0 0 3px rgba(120, 100, 80, 0.12);
 }
 .age-field { text-align: center; }
@@ -206,7 +321,7 @@ async function handleSubmit() {
 }
 
 .error-msg {
-  color: #8b2020;
+  color: #f2a3a3;
   font-size: 0.85rem;
   margin-bottom: 10px;
   text-align: center;
@@ -217,8 +332,8 @@ async function handleSubmit() {
   padding: 13px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #5a4030, #7a5840);
-  color: #f0ece4;
+  background: linear-gradient(135deg, #e0b76e, #f0d091);
+  color: #2a1c0c;
   font-size: 1rem;
   letter-spacing: 0.08em;
   transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;

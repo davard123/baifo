@@ -74,7 +74,7 @@ h1 {
   border-radius: 999px;
   text-decoration: none;
   background: var(--accent);
-  color: #fffaf0;
+  color: #2a1c0c;
 }
 
 .action-link.secondary {

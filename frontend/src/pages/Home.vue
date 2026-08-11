@@ -38,6 +38,13 @@ const primaryPaths = [
     to: '/guide/overview',
     cta: '阅读使用说明',
   },
+  {
+    title: '念佛计数',
+    body: '每日功课。轻触木鱼计一声佛号，记录今日数量与连续天数，计数只保存在本机。',
+    to: '/nianfo',
+    cta: '开始今日功课',
+    daily: true,
+  },
 ]
 
 const guideCards = [
@@ -420,6 +427,7 @@ onMounted(() => {
           :key="item.title"
           :href="resolveHref(item.to)"
           class="hero-action"
+          :class="{ 'hero-action--daily': item.daily }"
           @click.prevent="navigateTo(item.to)"
           @mouseenter="warmApi"
           @mousedown="warmApi"
@@ -592,6 +600,17 @@ onMounted(() => {
     0 18px 38px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 240, 214, 0.05);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.hero-action--daily {
+  grid-column: 1 / -1;
+  border-color: rgba(242, 200, 121, 0.36);
+  background:
+    linear-gradient(145deg, rgba(58, 38, 74, 0.96), rgba(30, 21, 43, 0.98));
+}
+
+.hero-action--daily .hero-action__cta {
+  color: var(--gold-light);
 }
 
 .hero-action__title {

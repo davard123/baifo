@@ -1,15 +1,18 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
 import RitualButtons from '../components/RitualButtons.vue'
 import WishForm from '../components/WishForm.vue'
+import DedicationDone from '../components/DedicationDone.vue'
 import { apiFetch } from '../api.js'
 import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
-const router = useRouter()
+
+// 提交成功后停在本页展示回向确认，而不是直接跳走
+const submitted = ref(null)
 
 const buddha = computed(() => BUDDHAS.find((item) => item.slug === route.params.slug))
 const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== route.params.slug).slice(0, 3))
@@ -41,6 +44,7 @@ watch(
     hasCandles.value = false
     hasIncense.value = false
     drawerOpen.value = false
+    submitted.value = null
     updatePageMeta()
   },
   { immediate: true }
@@ -77,8 +81,18 @@ async function onSubmit(payload) {
     throw new Error(data.message || '提交失败')
   }
 
-  router.push('/')
+  submitted.value = payload
+  drawerOpen.value = true
 }
+
+const doneActions = computed(() => {
+  const next = relatedBuddhas.value[0]
+  return [
+    ...(next ? [{ label: `再礼敬 ${next.name}`, to: `/buddha/${next.slug}`, primary: true }] : []),
+    { label: '为先人回向', to: '/ancestors' },
+    { label: '返回首页', to: '/' },
+  ]
+})
 </script>
 
 <template>
@@ -123,9 +137,24 @@ async function onSubmit(payload) {
         <h1 class="namo-title">{{ buddha.namo }}</h1>
 
         <hr class="divider" />
-        <RitualButtons @ritual="onRitual" />
-        <hr class="divider" />
-        <WishForm :default-wish="buddha.wish" :on-submit="onSubmit" />
+
+        <DedicationDone
+          v-if="submitted"
+          kind="buddha"
+          :subject-name="buddha.name"
+          :name="submitted.username"
+          :age="submitted.age"
+          :wish="submitted.wish"
+          :email="submitted.email || ''"
+          :actions="doneActions"
+        />
+
+        <template v-else>
+          <RitualButtons @ritual="onRitual" />
+          <hr class="divider" />
+          <WishForm :default-wish="buddha.wish" :on-submit="onSubmit" />
+        </template>
+
         <hr class="divider" />
 
         <p class="buddha-desc">{{ buddha.desc }}</p>
@@ -248,7 +277,7 @@ async function onSubmit(payload) {
   border: 1px solid rgba(212, 168, 67, 0.36);
   border-right: none;
   border-radius: 16px 0 0 16px;
-  background: rgba(255, 248, 235, 0.96);
+  background: rgba(30, 20, 42, 0.96);
   color: var(--accent);
   font-size: 0.86rem;
   letter-spacing: 0.1em;
