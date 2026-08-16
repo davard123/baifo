@@ -1,6 +1,6 @@
 import { onMounted } from 'vue'
 
-const BASE = 'https://www.fopusha.com'
+const BASE = 'https://fopusha.com'
 const DEFAULT_IMAGE = `${BASE}/devotee-og.jpg`
 
 function setMeta({ title, description, path, image }) {
@@ -41,3 +41,4 @@ function setMeta({ title, description, path, image }) {
 export function useSeo({ title, description, path, image }) {
   onMounted(() => setMeta({ title, description, path, image }))
 }
+

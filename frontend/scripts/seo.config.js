@@ -5,7 +5,7 @@ import { TOPICS, getTopicEntries } from '../src/data/topics.js'
 export const SITE = {
   name: '礼佛祈愿',
   shortName: 'Fopusha',
-  baseUrl: 'https://www.fopusha.com',
+  baseUrl: 'https://fopusha.com',
   defaultImage: '/devotee-og.jpg',
   defaultLocale: 'zh_CN',
   themeColor: '#2f2216',
@@ -797,3 +797,4 @@ export function getSeoByPath(path) {
   const normalizedPath = !path || path === '/' ? '/' : path.replace(/\/+$/, '')
   return getStaticPages().find((page) => page.path === normalizedPath) ?? null
 }
+

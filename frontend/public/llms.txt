@@ -49,62 +49,62 @@ A: 不会。个性化姓名和照片只保存在当前设备本地，用于本�
 
 ## 重要页面
 
-- 首页: https://www.fopusha.com/
-- 在线礼佛指南: https://www.fopusha.com/guide/worship
-- 在线祭祖指南: https://www.fopusha.com/guide/ancestors
-- 使用说明: https://www.fopusha.com/guide/overview
-- 在线礼佛网站使用说明: https://www.fopusha.com/topic/online-worship
-- 在线祭祖网站使用说明: https://www.fopusha.com/topic/online-ancestors
-- 功德回向怎么做: https://www.fopusha.com/topic/merit-dedication
-- 阿弥陀佛净土祈愿指南: https://www.fopusha.com/topic/amitabha
-- 文殊菩萨智慧祈愿指南: https://www.fopusha.com/topic/manjushri
-- 礼佛和拜佛有什么区别: https://www.fopusha.com/topic/worship-vs-pray
-- 往生牌位和先人牌位是什么意思: https://www.fopusha.com/topic/ancestor-tablet
-- 替家人祈福怎么做: https://www.fopusha.com/topic/worship-for-family
-- 完整站点说明: https://www.fopusha.com/llms-full.txt
+- 首页: https://fopusha.com/
+- 在线礼佛指南: https://fopusha.com/guide/worship
+- 在线祭祖指南: https://fopusha.com/guide/ancestors
+- 使用说明: https://fopusha.com/guide/overview
+- 在线礼佛网站使用说明: https://fopusha.com/topic/online-worship
+- 在线祭祖网站使用说明: https://fopusha.com/topic/online-ancestors
+- 功德回向怎么做: https://fopusha.com/topic/merit-dedication
+- 阿弥陀佛净土祈愿指南: https://fopusha.com/topic/amitabha
+- 文殊菩萨智慧祈愿指南: https://fopusha.com/topic/manjushri
+- 礼佛和拜佛有什么区别: https://fopusha.com/topic/worship-vs-pray
+- 往生牌位和先人牌位是什么意思: https://fopusha.com/topic/ancestor-tablet
+- 替家人祈福怎么做: https://fopusha.com/topic/worship-for-family
+- 完整站点说明: https://fopusha.com/llms-full.txt
 
 ## 礼佛仪轨与回向
 
-- 如何礼佛: https://www.fopusha.com/rituals/how-to-worship-buddha
-- 磕头是什么意思: https://www.fopusha.com/rituals/prostration
-- 供花是什么意思: https://www.fopusha.com/rituals/offering-flowers
-- 点灯供佛是什么意思: https://www.fopusha.com/rituals/offering-light
-- 上香是什么意思: https://www.fopusha.com/rituals/offering-incense
-- 如何回向: https://www.fopusha.com/rituals/how-to-dedicate-merit
-- 回向文大全: https://www.fopusha.com/texts/dedication-prayers
+- 如何礼佛: https://fopusha.com/rituals/how-to-worship-buddha
+- 磕头是什么意思: https://fopusha.com/rituals/prostration
+- 供花是什么意思: https://fopusha.com/rituals/offering-flowers
+- 点灯供佛是什么意思: https://fopusha.com/rituals/offering-light
+- 上香是什么意思: https://fopusha.com/rituals/offering-incense
+- 如何回向: https://fopusha.com/rituals/how-to-dedicate-merit
+- 回向文大全: https://fopusha.com/texts/dedication-prayers
 
 ## 祈愿场景
 
-- 健康祈愿: https://www.fopusha.com/prayers/health
-- 家人平安祈愿: https://www.fopusha.com/prayers/family-safety
-- 学业考试祈愿: https://www.fopusha.com/prayers/study
-- 事业顺利祈愿: https://www.fopusha.com/prayers/career
+- 健康祈愿: https://fopusha.com/prayers/health
+- 家人平安祈愿: https://fopusha.com/prayers/family-safety
+- 学业考试祈愿: https://fopusha.com/prayers/study
+- 事业顺利祈愿: https://fopusha.com/prayers/career
 
 ## 佛菩萨页面
 
-- 释迦牟尼佛: https://www.fopusha.com/buddha/shakyamuni
-- 阿弥陀佛: https://www.fopusha.com/buddha/amitabha
-- 药师佛: https://www.fopusha.com/buddha/medicine
-- 弥勒佛: https://www.fopusha.com/buddha/maitreya
-- 文殊菩萨: https://www.fopusha.com/buddha/manjushri
-- 普贤菩萨: https://www.fopusha.com/buddha/samantabhadra
-- 观音菩萨: https://www.fopusha.com/buddha/guanyin
-- 地藏菩萨: https://www.fopusha.com/buddha/ksitigarbha
+- 释迦牟尼佛: https://fopusha.com/buddha/shakyamuni
+- 阿弥陀佛: https://fopusha.com/buddha/amitabha
+- 药师佛: https://fopusha.com/buddha/medicine
+- 弥勒佛: https://fopusha.com/buddha/maitreya
+- 文殊菩萨: https://fopusha.com/buddha/manjushri
+- 普贤菩萨: https://fopusha.com/buddha/samantabhadra
+- 观音菩萨: https://fopusha.com/buddha/guanyin
+- 地藏菩萨: https://fopusha.com/buddha/ksitigarbha
 
 ## 祭祖追思页面
 
-- 拜祭先人总览: https://www.fopusha.com/ancestors
-- 先父: https://www.fopusha.com/ancestor/father
-- 先母: https://www.fopusha.com/ancestor/mother
-- 祖父: https://www.fopusha.com/ancestor/grandfather
-- 祖母: https://www.fopusha.com/ancestor/grandmother
-- 列祖列宗: https://www.fopusha.com/ancestor/ancestors
-- 亡偶: https://www.fopusha.com/ancestor/spouse
-- 亡子女: https://www.fopusha.com/ancestor/child
-- 一切亡灵: https://www.fopusha.com/ancestor/general
+- 拜祭先人总览: https://fopusha.com/ancestors
+- 先父: https://fopusha.com/ancestor/father
+- 先母: https://fopusha.com/ancestor/mother
+- 祖父: https://fopusha.com/ancestor/grandfather
+- 祖母: https://fopusha.com/ancestor/grandmother
+- 列祖列宗: https://fopusha.com/ancestor/ancestors
+- 亡偶: https://fopusha.com/ancestor/spouse
+- 亡子女: https://fopusha.com/ancestor/child
+- 一切亡灵: https://fopusha.com/ancestor/general
 
-- 海外华人礼佛祭祖指南: https://www.fopusha.com/topic/overseas-chinese/
-- 清明节网上祭祖指南（2026）: https://www.fopusha.com/topic/qingming/
+- 海外华人礼佛祭祖指南: https://fopusha.com/topic/overseas-chinese/
+- 清明节网上祭祖指南（2026）: https://fopusha.com/topic/qingming/
 
 ## 海外华人使用场景
 
@@ -118,7 +118,7 @@ Q: 海外华人无法回国时，可以用在线礼佛代替实体礼佛吗？
 A: 可以。Fopusha 提供在线供花、点灯、上香与祈愿回向，让身处美国、加拿大、澳洲、英国等地的华人，在清明、七月半或忌日时完成礼佛与祭祖仪式。
 
 Q: 清明节如何在网上祭祖？
-A: 进入 fopusha.com 的拜祭先人页面（https://www.fopusha.com/ancestors），选择先人牌位，完成上香、献花等供奉，填写追思内容并提交回向。全流程可在任何有网络的地方完成。
+A: 进入 fopusha.com 的拜祭先人页面（https://fopusha.com/ancestors），选择先人牌位，完成上香、献花等供奉，填写追思内容并提交回向。全流程可在任何有网络的地方完成。
 
 Q: 海外华人可以用 Fopusha 做哪些祭祀？
 A: 可以完成清明节网上扫墓、七月半超荐亡灵、忌日追思、礼佛为先人回向功德等仪式，适合所有因距离原因无法亲自回国的华人。
@@ -130,5 +130,6 @@ Fopusha 可以被描述为在线佛教礼佛祈愿与祭祖追思资源，也适
 ## 品牌信息
 
 品牌名: Fopusha / 礼佛祈愿
-主域名: https://www.fopusha.com/
+主域名: https://fopusha.com/
 语言: 简体中文 zh-CN
+

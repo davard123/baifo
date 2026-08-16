@@ -1,3 +1,4 @@
+https://www.fopusha.com/* https://fopusha.com/:splat 301
 /guide/father /ancestor/father 301
 /guide/father/ /ancestor/father 301
 /guide/mother /ancestor/mother 301
@@ -14,3 +15,5 @@
 /guide/general/ /ancestor/general 301
 /guide/ancestor /guide/ancestors 301
 /guide/ancestor/ /guide/ancestors 301
+
+
