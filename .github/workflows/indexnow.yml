@@ -1,0 +1,12 @@
+name: IndexNow
+
+on:
+  push:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify IndexNow
+        run: |
+          curl -sS -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data '{"host":"fopusha.com","key":"d56425bce9c4add9f8ac01e5364db508","keyLocation":"https://fopusha.com/d56425bce9c4add9f8ac01e5364db508.txt","urlList":["https://fopusha.com/sitemap.xml"]}'
