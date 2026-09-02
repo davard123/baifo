@@ -226,12 +226,12 @@ async function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '礼佛祈愿 | 八位佛菩萨在线礼佛 - www.fopusha.com'
+  document.title = '礼佛祈愿 | 海外华人在线礼佛·祭祖·清明扫墓 - www.fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
       'content',
-      '选择一位佛菩萨，以虔诚之心礼敬供养，发愿回向。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿入口，也提供祭祀先人与回向页面。'
+      '海外华人在线礼佛与祭祖平台。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿；支持在线祭祖、清明网上扫墓，功德回向十方众生。'
     )
   loadWishes()
 })
