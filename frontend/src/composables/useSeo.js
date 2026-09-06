@@ -1,7 +1,7 @@
 import { onMounted } from 'vue'
 
 const BASE = 'https://fopusha.com'
-const DEFAULT_IMAGE = `${BASE}/devotee-og.jpg`
+const DEFAULT_IMAGE = `${BASE}/fopusha-share-20260906.png`
 
 function setMeta({ title, description, path, image }) {
   document.title = title

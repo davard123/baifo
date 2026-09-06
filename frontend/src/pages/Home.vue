@@ -694,7 +694,7 @@ onMounted(() => {
   min-height: 100%;
   background:
     linear-gradient(90deg, rgba(20, 10, 0, 0.08), rgba(20, 10, 0, 0.52)),
-    url('/jizhu/b1.png') center / cover no-repeat;
+    url('/jizhu/remembrance-20260906.webp') 32% center / cover no-repeat;
 }
 
 .ancestor-banner__content {

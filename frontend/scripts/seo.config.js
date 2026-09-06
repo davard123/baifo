@@ -7,7 +7,7 @@ export const SITE = {
   name: '礼佛祈愿',
   shortName: 'Fopusha',
   baseUrl: 'https://fopusha.com',
-  defaultImage: '/devotee-og.jpg',
+  defaultImage: '/fopusha-share-20260906.png',
   defaultLocale: 'zh_CN',
   themeColor: '#2f2216',
   keywords: [
@@ -140,7 +140,7 @@ function publisherRef() {
     url: SITE.baseUrl,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE.baseUrl}/favicon.svg`,
+      url: `${SITE.baseUrl}/fopusha-icon-20260906.svg`,
     },
   }
 }
@@ -351,7 +351,7 @@ function ancestorsPage() {
     description: '追思先人，超荐亡灵，虔诚祭拜，祈愿庇佑后代。可选择不同亲属牌位，完成在线祭祖、追思回向与祈愿记录。',
     heading: '拜祭先人',
     summary: '在线祭祖追思页面，覆盖先父、先母、祖父、祖母、列祖列宗、亡偶、亡子女与一切亡灵。',
-    image: '/ancestors/ancestors.png',
+    image: '/ancestors/ancestors-20260906.webp',
     schema: [
       buildWebPageSchema({
         path: '/ancestors',

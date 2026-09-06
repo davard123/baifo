@@ -106,8 +106,6 @@ onMounted(() => {
       祈愿不构成对现实结果的保证，也不能替代医疗、心理、法律、财务或紧急专业帮助。
     </p>
   </section>
-  <img src="/music/hidden-figure.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
-  <img src="/devotee-og.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" class="hidden-figure" />
   <AudioPlayer />
   <NianfoDrawer />
 </template>

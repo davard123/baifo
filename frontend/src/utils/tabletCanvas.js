@@ -66,7 +66,7 @@ const cache = new Map()
 const VERSION = 16
 
 function getTabletSlot(imageSrc) {
-  const filename = String(imageSrc || '').split('/').pop()
+  const filename = String(imageSrc || '').split('?')[0].split('/').pop().replace(/-20260906\.webp$/, '.png')
   return { ...DEFAULT_SLOT, ...(TABLET_SLOTS[filename] || {}) }
 }
 

@@ -37,3 +37,5 @@ jobs:
       # Do not run a second, unauthenticated deploy or upload competing builds.
       - name: Verify all generated pages
         run: node scripts/check-seo-output.mjs
+      - name: Verify image assets and tablet alignment
+        run: npm run check:images

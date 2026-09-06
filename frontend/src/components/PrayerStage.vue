@@ -34,11 +34,15 @@ const stageScaleMap = {
   ksitigarbha: { desktop: 1.12, mobile: 1.08 },
 }
 
+// Intrinsic alpha-bound widths measured from the unchanged original artwork.
+// On narrow screens fit the figure, rather than its wide transparent canvas.
+const mobileFigureFit = { shakyamuni: 87.3, amitabha: 130.7, medicine: 141.5, maitreya: 75.3, manjushri: 132.7, samantabhadra: 157.7, guanyin: 151.5, ksitigarbha: 146.1 }
 const stageImageStyle = computed(() => {
   const scale = stageScaleMap[props.buddha?.slug] || { desktop: 0.92, mobile: 0.9 }
   return {
     '--buddha-scale': String(scale.desktop),
     '--buddha-scale-mobile': String(scale.mobile),
+    '--buddha-mobile-fit': `${mobileFigureFit[props.buddha?.slug] || 86}vw`,
   }
 })
 </script>
@@ -260,8 +264,14 @@ const stageImageStyle = computed(() => {
 
 @media (max-width: 900px) {
   .buddha-img {
-    transform: scale(var(--buddha-scale-mobile, 0.9));
-    object-position: center top;
+    position: absolute;
+    width: auto;
+    max-width: none;
+    height: min(100%, var(--buddha-mobile-fit, 86vw));
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    object-position: center;
   }
 
   .altar-row {
