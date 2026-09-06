@@ -48,13 +48,12 @@ const pages = getStaticPages().map((page) => ({
   ...getPageConfig(page.path),
 }))
 
-const lastmod = new Date().toISOString().slice(0, 10)
+// Omit lastmod until a per-page content change date is available; a build is not an editorial update.
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages.map((page) => `  <url>
     <loc>${canonicalUrl(page.url)}</loc>
-    <lastmod>${lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`).join('\n')}

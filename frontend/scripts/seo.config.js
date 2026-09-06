@@ -1,3 +1,4 @@
+import { GUIDES } from '../src/data/guides.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
 import { ANCESTORS } from '../src/data/ancestors.js'
 import { TOPICS, getTopicEntries } from '../src/data/topics.js'
@@ -9,7 +10,6 @@ export const SITE = {
   defaultImage: '/devotee-og.jpg',
   defaultLocale: 'zh_CN',
   themeColor: '#2f2216',
-  datePublished: '2024-10-01',
   keywords: [
     '拜佛',
     '祈愿',
@@ -42,7 +42,6 @@ export const SITE = {
   ],
 }
 
-const BUILD_DATE = new Date().toISOString().split('T')[0]
 
 const BUDDHA_WIKI = {
   shakyamuni: 'https://zh.wikipedia.org/wiki/释迦牟尼',
@@ -86,72 +85,6 @@ const BUDDHA_LOCATIONS = {
   samantabhadra: '普贤菩萨在汉传佛教中常与峨眉山道场相联系，象征大行、大愿与实践菩提道。',
   guanyin: '观音菩萨在汉传佛教中常与普陀山道场相联系，最常见的主题是慈悲救苦、护念平安与寻声应愿。',
   ksitigarbha: '地藏菩萨在汉传佛教中常与九华山道场相联系，常见礼敬主题包括超荐回向、追思先人和救度亡灵。',
-}
-
-const GUIDE_FAQS = {
-  overview: [
-    {
-      q: '第一次使用 Fopusha 应该先看哪里？',
-      a: '第一次使用 Fopusha，建议先看使用说明页，再根据自己是想礼佛祈愿还是想祭祖追思，进入对应的功能页面。',
-    },
-    {
-      q: '功能页和专题说明页有什么区别？',
-      a: '功能页更适合直接完成礼佛、祭祖与回向操作；专题说明页更适合先了解某个主题是什么意思、适合什么场景以及应该怎样开始。',
-    },
-    {
-      q: '祭祖页面里的姓名和照片会公开吗？',
-      a: '不会。个性化姓名和照片只保存在当前设备本地，用于本机显示，不会上传到服务器。',
-    },
-    {
-      q: 'Fopusha 更适合礼佛还是祭祖？',
-      a: 'Fopusha 同时覆盖在线礼佛祈愿与在线祭祖追思，两类入口都可以独立使用，也可以结合功德回向一起完成。',
-    },
-  ],
-  worship: [
-    {
-      q: '在线礼佛网站通常可以做什么？',
-      a: '在线礼佛网站通常可以选择佛菩萨页面，完成供花、点灯、上香等供养动作，并填写祈愿内容后提交功德回向。',
-    },
-    {
-      q: '第一次在线礼佛建议先从哪个页面开始？',
-      a: '如果没有特别明确的祈愿主题，可以先从释迦牟尼佛页面开始，再根据健康、平安、智慧、超荐等主题进入相应佛菩萨页面。',
-    },
-    {
-      q: '观音菩萨、药师佛、地藏菩萨分别适合什么主题？',
-      a: '观音菩萨常见于慈悲、平安、消灾与求助；药师佛更常见于健康、延寿、消灾；地藏菩萨则更常见于超荐、回向与亡灵救度。',
-    },
-    {
-      q: '在线礼佛的基本步骤是什么？',
-      a: '在线礼佛通常分为四步：选择佛菩萨页面、完成供花点灯上香、填写祈愿内容、提交功德回向。',
-    },
-  ],
-  ancestors: [
-    {
-      q: '在线祭祖页面一般怎么使用？',
-      a: '在线祭祖通常先选择对应先人牌位或相关页面，再完成供奉动作，填写追思或回向内容，最后提交祭拜记录。',
-    },
-    {
-      q: '照片和姓名会不会上传到服务器？',
-      a: '不会。个性化照片和姓名设置仅保存在本地设备，用于当前设备显示。',
-    },
-    {
-      q: '在线祭祖和在线礼佛有什么不同？',
-      a: '在线礼佛更偏向佛菩萨礼敬与日常祈福；在线祭祖更偏向追思祖先、超荐亡灵和家族回向。',
-    },
-    {
-      q: '在线祭祖的基本步骤是什么？',
-      a: '在线祭祖通常分为四步：选择先人牌位、完成上香献花等供奉、填写追思或回向内容、提交祭拜记录。',
-    },
-  ],
-}
-
-const GUIDE_ARTICLE_BODIES = {
-  overview:
-    '使用说明页用于帮助第一次使用 Fopusha 的访客理解礼佛祈愿页面、祭祖追思页面和专题说明页分别适合什么场景，并快速找到正确入口。',
-  worship:
-    '在线礼佛指南说明如何在 Fopusha 中选择佛菩萨、完成供花点灯上香等供养动作、填写祈愿内容并提交功德回向，也说明不同佛菩萨常见的祈愿主题。',
-  ancestors:
-    '在线祭祖指南说明如何在 Fopusha 中选择先人牌位、完成上香献花奠酒烧纸等祭拜动作、填写追思或回向内容，并解释个性化姓名与照片设置的隐私边界。',
 }
 
 const HOWTO_META = {
@@ -219,26 +152,6 @@ function buildSpeakable(cssSelector) {
   }
 }
 
-function buildFaqSchema(title, items = [], aboutName = title) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    name: `${title}常见问题`,
-    mainEntity: items.map((item) => ({
-      '@type': 'Question',
-      name: item.question || item.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer || item.a,
-      },
-    })),
-    about: {
-      '@type': 'Thing',
-      name: aboutName,
-    },
-  }
-}
-
 function breadcrumb(items) {
   return {
     '@context': 'https://schema.org',
@@ -299,8 +212,6 @@ function buildArticleSchema({
     url: absoluteUrl(path),
     description,
     inLanguage: 'zh-CN',
-    datePublished: SITE.datePublished,
-    dateModified: BUILD_DATE,
     author: orgRef(),
     publisher: publisherRef(),
     isPartOf: { '@id': `${SITE.baseUrl}/#website` },
@@ -331,10 +242,10 @@ function buildArticleSchema({
 function homePage() {
   return {
     path: '/',
-    title: '礼佛祈愿 | 八位佛菩萨在线礼佛祈愿平台',
-    description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站。站内覆盖释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨，也提供在线祭祖、供花、点灯、上香和功德回向。',
+    title: '礼佛祈愿 | 在线礼佛、念佛计数与祭祖追思',
+    description: '选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。',
     heading: '礼佛祈愿',
-    summary: '在线礼佛祈愿平台，提供八位佛菩萨礼敬、供花、点灯、上香、祈愿回向与在线祭祖追思。',
+    summary: '选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。',
     image: SITE.defaultImage,
     schema: [
       {
@@ -345,11 +256,7 @@ function homePage() {
         alternateName: SITE.shortName,
         url: absoluteUrl('/'),
         inLanguage: 'zh-CN',
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: `${SITE.baseUrl}/?q={search_term_string}`,
-          'query-input': 'required name=search_term_string',
-        },
+
       },
       {
         '@context': 'https://schema.org',
@@ -381,24 +288,7 @@ function homePage() {
           })),
         },
       },
-      buildFaqSchema('礼佛祈愿', [
-        {
-          q: 'Fopusha 是什么网站？',
-          a: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，用户可以选择佛菩萨页面完成供花、点灯、上香与回向，也可以进入先人牌位页面进行追思祭拜。',
-        },
-        {
-          q: '这个网站可以做什么？',
-          a: '这个网站可以完成在线礼佛、供花、点灯、上香、填写祈愿、提交功德回向，以及在线祭祖追思等操作。',
-        },
-        {
-          q: '这个网站适合哪些祈愿主题？',
-          a: '常见祈愿主题包括平安、健康、智慧、学业、事业、家庭和顺、祭祖追思、超荐回向以及为家人和众生发愿。',
-        },
-        {
-          q: '第一次使用这个网站应该先看哪里？',
-          a: '第一次使用这个网站，建议先看使用说明页，再根据需要进入礼佛祈愿页面或在线祭祖追思页面。',
-        },
-      ]),
+
     ],
   }
 }
@@ -449,24 +339,7 @@ function buddhaPage(item) {
         inDefinedTermSet: { '@type': 'DefinedTermSet', name: '佛教词汇' },
         sameAs,
       },
-      buildFaqSchema(item.name, [
-        {
-          q: `${item.name}是谁？`,
-          a: item.desc,
-        },
-        {
-          q: `${item.name}适合哪些祈愿主题？`,
-          a: `礼敬${item.name}的信众，常见的祈愿侧重包括${item.themes}。`,
-        },
-        {
-          q: `如何在线礼敬${item.name}？`,
-          a: `进入${item.name}页面后，可依次完成供花、点灯、上香，再填写祈愿内容并提交功德回向；礼敬重在恭敬专注，不拘形式繁简。`,
-        },
-        {
-          q: `${item.name}的道场在哪里？`,
-          a: BUDDHA_LOCATIONS[item.slug],
-        },
-      ], item.name),
+
     ],
   }
 }
@@ -514,24 +387,7 @@ function ancestorsPage() {
           })),
         },
       },
-      buildFaqSchema('拜祭先人', [
-        {
-          q: '在线祭祖适合哪些场景？',
-          a: '在线祭祖适合追思父母、祖父祖母、列祖列宗、亡偶、亡子女以及一切亡灵，也适合日常追思、忌日纪念、家族回向和超荐亡灵。',
-        },
-        {
-          q: '牌位上的姓名和照片会上传吗？',
-          a: '个性化牌位姓名和照片设置仅保存在当前设备本地，用于本机显示，不会上传到服务器。',
-        },
-        {
-          q: '第一次使用在线祭祖应该怎么开始？',
-          a: '可以先进入先人选择页，选择对应牌位，再进入正式祭拜页面完成上香、献花、奠酒、烧纸和回向。',
-        },
-        {
-          q: '在线祭祖和礼佛祈愿有什么区别？',
-          a: '在线祭祖更偏向追思祖先、家族回向和超荐亡灵；礼佛祈愿则更偏向佛菩萨礼敬、发愿祈福与日常修持。',
-        },
-      ]),
+
     ],
   }
 }
@@ -570,31 +426,18 @@ function ancestorPage(item) {
         description: item.desc,
         about,
       }),
-      buildFaqSchema(item.name, [
-        {
-          q: `这个页面适合追思${item.name}吗？`,
-          a: item.desc,
-        },
-        {
-          q: `在这里祭拜${item.name}常见于哪些情形？`,
-          a: `常见于${item.themes}。`,
-        },
-        {
-          q: `正式祭拜${item.name}要做哪些步骤？`,
-          a: `祭拜${item.name}时，通常依次完成上香、献花、奠酒、烧纸，再填写追思或回向内容并提交祭拜记录。`,
-        },
-        {
-          q: '牌位上的姓名和照片会公开吗？',
-          a: '不会。个性化牌位姓名与照片仅保存在当前设备本地，用于本机显示，不会上传到服务器。',
-        },
-      ], item.name),
+
     ],
   }
 }
 
 function guidePage({ slug, title, description, heading }) {
   const pagePath = `/guide/${slug}`
-  const faqs = GUIDE_FAQS[slug] || []
+  const content = GUIDES[slug]
+  title = content.title
+  heading = content.heading
+  description = content.description
+  const faqs = content.faqs
   const about = {
     '@type': 'Thing',
     name: heading,
@@ -626,9 +469,9 @@ function guidePage({ slug, title, description, heading }) {
         name: title,
         description,
         about,
-        articleBody: GUIDE_ARTICLE_BODIES[slug] || description,
+        articleBody: content.sections.flatMap(section => [section.title, ...section.paragraphs]).join("\n"),
       }),
-      buildFaqSchema(title, faqs, heading),
+
     ],
   }
 }
@@ -672,32 +515,24 @@ function topicPage({ path, slug }) {
         selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
       }),
       buildArticleSchema({
-        type: isRitual ? 'HowTo' : 'Article',
+        type: 'Article',
         idSuffix: 'main',
         path,
         headline: topic.heading,
         name: topic.title,
         description: topic.description,
         about,
-        step: steps,
+
         articleBody: (topic.sections || [])
           .flatMap((section) => [section.title, ...(section.paragraphs || [])])
           .filter(Boolean)
           .join('\n'),
-        totalTime: howToMeta?.totalTime,
-        supply: howToMeta?.supply,
-        tool: isRitual ? ['Fopusha 在线礼佛平台'] : undefined,
+
+
+
       }),
-      ...(isDefinitionPage
-        ? [{
-            '@context': 'https://schema.org',
-            '@type': 'DefinedTerm',
-            name: topic.title,
-            description: topic.intro,
-            inDefinedTermSet: { '@type': 'DefinedTermSet', name: '礼佛祈愿术语与仪式说明' },
-          }]
-        : []),
-      buildFaqSchema(topic.title, topic.faqs, topic.heading),
+
+
     ],
   }
 }
@@ -742,24 +577,7 @@ function nianfoPage() {
         description: '在线念佛计数器与电子木鱼，记录每日念诵数量与连续天数，数据保存在本机。',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
       },
-      buildFaqSchema('念佛计数器', [
-        {
-          q: '念佛计数器怎么用？',
-          a: '选择佛号后，每轻触一次木鱼即计一声。页面会显示今日数量、累计数量与连续天数，也可以设置每日目标。',
-        },
-        {
-          q: '每日念多少声合适？',
-          a: '传统念珠一串一百零八颗，因此常以 108 声为一个基本单位。念多念少不必计较，重在每天相续。',
-        },
-        {
-          q: '计数会上传到服务器吗？',
-          a: '不会。念佛计数只保存在当前设备的浏览器中，不需要注册，也不会上传到服务器。',
-        },
-        {
-          q: '木鱼有声音吗？',
-          a: '默认关闭，可以在页面上手动开启。开启后每次轻触会有一声木鱼响。',
-        },
-      ]),
+
     ],
   }
 }

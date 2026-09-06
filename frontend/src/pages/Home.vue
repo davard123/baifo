@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { TOPICS } from '../data/topics.js'
 import { BUDDHAS } from '../data/buddhas.js'
 import BlessingPool from '../components/BlessingPool.vue'
 import WishList from '../components/WishList.vue'
@@ -29,13 +30,13 @@ const primaryPaths = [
   },
   {
     title: '祈愿求福',
-    body: '如果此刻更想直接为平安、健康、学业、姻缘等主题发愿，可先进入祈福池再继续下行。',
+    body: '选择一项心愿，写下给自己或家人的祝愿。',
     to: { path: '/', hash: '#blessing-pool-title' },
     cta: '进入祈福池',
   },
   {
     title: '祭祀先人',
-    body: '追思祖先、祭拜先人、回向亡灵，也支持本地个性化牌位照片与姓名显示。',
+    body: '为思念的亲人设置牌位、供花、上香，写下想说的话。',
     to: '/ancestors',
     cta: '进入祭祀先人',
   },
@@ -54,86 +55,19 @@ const guideCards = [
   },
   {
     title: '适合哪些祈愿主题',
-    body: '常见祈愿包括平安健康、学业事业、智慧增长、家庭和顺、超荐回向与消灾延寿。',
+    body: '可以为自己或家人祝愿平安、表达感谢，也可以追思亲人。祈愿不保证健康、学业或事业结果。',
   },
   {
     title: '祭祀页面与礼佛页面的区别',
-    body: '祭祀先人更适合追思祖先、超荐亡灵与家族祈愿，礼佛页面则更适合日常发愿与供养。',
+    body: '纪念亲人请进入祭祀先人；日常礼敬佛菩萨，可以从首页的佛像中选择。',
   },
 ]
 
-const faqs = [
-  {
-    q: '礼佛祈愿网站可以做什么？',
-    a: '这里提供在线礼佛、祭祀追思与祈福回向入口，方便你在不同场景下找到合适的页面表达心意。',
-  },
-  {
-    q: '祭祀时会公开我的照片吗？',
-    a: '祭祀先人使用的个性化照片与姓名设置仅保存在当前设备本地，不会上传到服务器。',
-  },
-  {
-    q: '第一次使用建议先去哪一个页面？',
-    a: '如果是日常祈福，可以先从礼佛指南或佛菩萨页面开始；如果是追思亲人，则建议直接进入祭祀先人页面。',
-  },
-]
 
-const featuredPaths = [
-  {
-    title: '日常祈福入口',
-    body: '适合从首页开始，选择释迦牟尼佛、观音菩萨、药师佛等页面进行礼佛祈愿。',
-    to: '/guide/worship',
-    cta: '查看礼佛动线',
-  },
-  {
-    title: '超荐与回向入口',
-    body: '如果重点是超荐祭祖、追思先人或为家人回向，可以直接进入祭祀先人总览页面。',
-    to: '/guide/ancestors',
-    cta: '查看祭祀动线',
-  },
-]
 
-const topicPages = [
-  {
-    title: '在线礼佛网站使用说明',
-    body: '整理在线礼佛的常见用法、页面入口与供养步骤，方便第一次使用时快速了解。',
-    to: '/topic/online-worship',
-  },
-  {
-    title: '在线祭祀网站使用说明',
-    body: '说明在线祭祀、追思先人与个性化牌位设置的常见用法与注意事项。',
-    to: '/topic/online-ancestors',
-  },
-  {
-    title: '功德回向怎么做',
-    body: '整理礼佛、祭祀与超荐场景中常见的回向方式与表达思路。',
-    to: '/topic/merit-dedication',
-  },
-  {
-    title: '观音菩萨祈福指南',
-    body: '适合查看与平安、慈悲、消灾和求助相关的观音祈愿主题。',
-    to: '/topic/guanyin',
-  },
-  {
-    title: '药师佛健康祈愿指南',
-    body: '适合查看与健康、延寿、消灾和身心安乐相关的药师佛祈愿主题。',
-    to: '/topic/medicine',
-  },
-  {
-    title: '地藏菩萨超荐回向指南',
-    body: '适合查看与超荐、回向、追思先人及亡灵救度相关的常见主题。',
-    to: '/topic/ksitigarbha',
-  },
-  {
-    title: '海外华人在线礼佛与祭祖指南',
-    body: '整理海外华人无法回国时，如何通过在线礼佛与祭祖平台完成清明扫墓、追思先人与功德回向。',
-    to: '/topic/overseas-chinese',
-  },
-  {
-    title: '清明节网上祭祖指南（2026）',
-    body: '整理清明节网上祭祖、在线扫墓与礼佛回向的常见方式，适合身在海外或异地无法回乡的华人。',
-    to: '/topic/qingming',
-  },
-]
+
+
+const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'health', 'overseas-chinese', 'qingming'].map(key => ({ title: TOPICS[key].heading, body: TOPICS[key].intro, to: '/topic/' + key }))
 
 function resolveHref(target) {
   return router.resolve(target).href
@@ -239,6 +173,42 @@ onMounted(() => {
 
 <template>
   <main class="home-shell">
+    <header class="hero-section">
+      <div class="hero-copy">
+        <div class="hero-emblem" aria-hidden="true">
+          <span class="hero-emblem__ring"></span>
+          <span class="hero-emblem__core"></span>
+        </div>
+        <p class="hero-kicker">线上礼佛与祭祀入口</p>
+        <h1>礼佛祈愿</h1>
+        <p class="hero-lead">
+          选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。
+        </p>
+        <div class="hero-quote">
+          <span class="hero-quote__line"></span>
+          <p>愿你与家人平安。</p>
+        </div>
+      </div>
+
+      <div class="hero-actions" aria-label="首页主要入口">
+        <a
+          v-for="item in primaryPaths"
+          :key="item.title"
+          :href="resolveHref(item.to)"
+          class="hero-action"
+          :class="{ 'hero-action--daily': item.daily }"
+          @click.prevent="navigateTo(item.to)"
+          @mouseenter="warmApi"
+          @mousedown="warmApi"
+          @touchstart.passive="warmApi"
+        >
+          <span class="hero-action__title">{{ item.title }}</span>
+          <span class="hero-action__body">{{ item.body }}</span>
+          <span class="hero-action__cta">{{ item.cta }}</span>
+        </a>
+      </div>
+    </header>
+
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">礼佛入口</p>
@@ -281,7 +251,7 @@ onMounted(() => {
         <div class="ancestor-banner__content">
           <p class="ancestor-banner__kicker">追思与祭祀</p>
           <h2>祭祀先人</h2>
-          <p>追思祖先，超荐亡灵，以克制而温暖的方式安放思念，也为家人留下可持续回访的祭祀入口。</p>
+          <p>为亲人供一束花、点一盏灯，写下思念与祝愿。</p>
           <span class="ancestor-banner__cta">进入祭祀先人</span>
         </div>
       </a>
@@ -344,7 +314,7 @@ onMounted(() => {
       <div class="guide-section__intro">
         <p class="section-kicker">初次进入</p>
         <h2 class="section-title">礼佛与回向指南</h2>
-        <p class="section-sub">如果你是第一次使用，建议先了解礼佛、回向和祭祀页面的区别，再决定从哪一条路径开始。</p>
+        <p class="section-sub">不熟悉操作时，可以先看下面的说明。不必一次完成所有步骤。</p>
       </div>
       <div class="guide-grid">
         <article v-for="item in guideCards" :key="item.title" class="guide-card">
@@ -360,40 +330,16 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="insight-layout">
-      <section class="faq-section card card--soft">
-        <div class="section-head section-head--compact">
-          <p class="section-kicker">常见问题</p>
-          <h2 class="section-title">首次使用前，你可能想知道</h2>
-        </div>
-        <div class="faq-list">
-          <details v-for="faq in faqs" :key="faq.q" class="faq-item">
-            <summary>{{ faq.q }}</summary>
-            <p>{{ faq.a }}</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="path-section card card--soft">
-        <div class="section-head section-head--compact">
-          <p class="section-kicker">推荐路径</p>
-          <h2 class="section-title">按心愿方向继续进入</h2>
-        </div>
-        <div class="path-grid">
-          <article v-for="item in featuredPaths" :key="item.title" class="path-card">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.body }}</p>
-            <router-link :to="item.to">{{ item.cta }}</router-link>
-          </article>
-        </div>
-      </section>
+    <section class="card privacy-note" aria-labelledby="privacy-note-title">
+      <h2 id="privacy-note-title" class="section-title">提交前，请留意个人信息</h2>
+      <p>牌位照片和自定义姓名保存在当前设备。你主动提交的祈愿或回向文字会发送到服务器，请不要填写住址、电话或其他私密信息。</p>
     </section>
 
     <section class="topics-section">
       <div class="section-head">
         <p class="section-kicker">专题说明</p>
-        <h2 class="section-title">先看主题，再决定进入哪一页</h2>
-        <p class="section-sub">如果你想先理解不同主题之间的区别，再决定从哪一条礼佛或祭祀路径进入，可以从这里开始。</p>
+        <h2 class="section-title">供养、回向与追思</h2>
+        <p class="section-sub">供花、上香或回向时有疑问，可以查阅这些说明。</p>
       </div>
       <div class="topics-list">
         <router-link v-for="item in topicPages" :key="item.title" :to="item.to" class="topic-row">
@@ -404,41 +350,6 @@ onMounted(() => {
       </div>
     </section>
 
-    <header class="hero-section">
-      <div class="hero-copy">
-        <div class="hero-emblem" aria-hidden="true">
-          <span class="hero-emblem__ring"></span>
-          <span class="hero-emblem__core"></span>
-        </div>
-        <p class="hero-kicker">线上礼佛与祭祀入口</p>
-        <h1>礼佛祈愿</h1>
-        <p class="hero-lead">
-          以庄严而温和的方式，进入礼佛、祈愿、回向与追思的页面，在现代生活中保留一份敬意与安定。
-        </p>
-        <div class="hero-quote">
-          <span class="hero-quote__line"></span>
-          <p>愿来者先得安定，再明白如何进入。</p>
-        </div>
-      </div>
-
-      <div class="hero-actions" aria-label="首页主要入口">
-        <a
-          v-for="item in primaryPaths"
-          :key="item.title"
-          :href="resolveHref(item.to)"
-          class="hero-action"
-          :class="{ 'hero-action--daily': item.daily }"
-          @click.prevent="navigateTo(item.to)"
-          @mouseenter="warmApi"
-          @mousedown="warmApi"
-          @touchstart.passive="warmApi"
-        >
-          <span class="hero-action__title">{{ item.title }}</span>
-          <span class="hero-action__body">{{ item.body }}</span>
-          <span class="hero-action__cta">{{ item.cta }}</span>
-        </a>
-      </div>
-    </header>
 
     <footer class="site-footer">
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
@@ -1138,5 +1049,20 @@ onMounted(() => {
     transition: none !important;
     transform: none !important;
   }
+}
+/* Keep the first screen about choosing an action, not decorative copy. */
+.hero-section { padding: 32px; border-radius: 24px; }
+.hero-emblem, .hero-quote { display: none; }
+.hero-action { padding: 14px 18px; }
+.hero-action__body { line-height: 1.75; }
+.privacy-note p { margin-top: 16px; max-width: 42em; line-height: 1.9; color: var(--text-muted); }
+.topic-row__body { line-height: 1.8; }
+@media(max-width: 700px) {
+  .hero-section { padding: 24px 20px; grid-template-columns: 1fr; gap: 20px; }
+  .hero-actions { grid-template-columns: 1fr 1fr; }
+  .hero-action { padding: 14px 12px; }
+  .hero-action__body { display: none; }
+  .hero-action__title { font-size: 1rem; }
+  .home-shell { padding-inline: 16px; }
 }
 </style>

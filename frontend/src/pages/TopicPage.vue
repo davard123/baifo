@@ -28,9 +28,7 @@ onMounted(() => {
       <p class="eyebrow">专题指南</p>
       <h1>{{ topic.heading }}</h1>
       <p class="hero-text">{{ topic.intro }}</p>
-      <div class="tag-row">
-        <span v-for="tag in topic.tags" :key="tag">{{ tag }}</span>
-      </div>
+
     </header>
 
     <section class="content-grid">
@@ -40,8 +38,8 @@ onMounted(() => {
           <p v-for="paragraph in section.paragraphs" :key="paragraph">{{ paragraph }}</p>
         </section>
 
-        <section class="copy-section">
-          <h2>常见问题</h2>
+        <section v-if="topic.faqs.length" class="copy-section">
+          <h2>使用时可能遇到的问题</h2>
           <div class="faq-list">
             <article v-for="faq in topic.faqs" :key="faq.q" class="faq-item">
               <h3>{{ faq.q }}</h3>
@@ -61,11 +59,7 @@ onMounted(() => {
           </div>
         </section>
 
-        <section class="side-section">
-          <h2>阅读建议</h2>
-          <p>如果你想先弄清楚不同主题之间的区别，再决定进入哪个页面，可以先看这一栏内容。</p>
-        </section>
-      </aside>
+</aside>
     </section>
   </main>
   <NotFoundPage
@@ -212,4 +206,9 @@ onMounted(() => {
     font-size: 1.6rem;
   }
 }
+.copy-section p, .faq-item p, .side-section p { font-size: 1.0625rem; line-height: 1.95; }
+.copy-section p + p { margin-top: 1em; }
+.copy-section h2, .side-section h2 { font-size: 1.25rem; line-height: 1.55; }
+.side-links a { padding: 10px 0; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+@media(max-width: 900px) { .card { padding: 24px 20px; } }
 </style>

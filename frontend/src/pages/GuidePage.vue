@@ -3,159 +3,11 @@ import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import NotFoundPage from './NotFoundPage.vue'
+import { GUIDES } from '../data/guides.js'
 
 const route = useRoute()
 
-const guides = {
-  overview: {
-    title: '使用说明',
-    heading: '礼佛、祭祖与回向的使用说明',
-    description: '这份说明页集中介绍网站的三类常用入口：礼佛祈愿、祭祖追思和常见回向说明。',
-    intro: '如果你是第一次使用，可以先从这里了解礼佛页面、祭祖页面和专题说明页分别适合做什么，再决定从哪个入口开始。',
-    tags: ['使用说明', '礼佛入口', '祭祖入口'],
-    sections: [
-      {
-        title: '礼佛祈愿页面适合什么情况',
-        paragraphs: [
-          '如果你想礼敬佛菩萨、供花点灯、填写祈愿并回向众生，适合先进入礼佛祈愿页面。',
-          '常见主题包括平安健康、学业事业、慈悲回向、消灾延寿与福慧增长。'
-        ]
-      },
-      {
-        title: '祭祖追思页面适合什么情况',
-        paragraphs: [
-          '如果你想追思先人、祭祖超荐、回向祖先或为家人祈愿，可以进入拜祭先人页面。',
-          '先人页面还支持本地保存个性化姓名与照片，用来做更贴近个人纪念感受的牌位显示。'
-        ]
-      },
-      {
-        title: '什么时候再去看专题页',
-        paragraphs: [
-          '如果你已经知道自己想礼佛或祭祖，但还想进一步了解某位佛菩萨适合什么祈愿、功德回向怎么表达，或者不同主题之间有什么区别，可以再去看专题页。',
-          '专题页更像补充说明，不需要一开始就先全部看完。'
-        ]
-      }
-    ],
-    faqs: [
-      {
-        q: '第一次使用建议先从哪里开始？',
-        a: '如果是礼佛祈愿，可以先看在线礼佛指南；如果是追思先人，可以直接进入拜祭先人页面。'
-      },
-      {
-        q: '专题页和功能页有什么区别？',
-        a: '功能页更适合直接操作，专题页更适合先了解不同主题、常见问题和使用思路。'
-      },
-      {
-        q: '祭祖页面里的姓名和照片会公开吗？',
-        a: '不会。个性化姓名和照片只保存在当前设备本地，不会上传到服务器。'
-      },
-      {
-        q: 'Fopusha 更适合礼佛还是祭祖？',
-        a: 'Fopusha 同时覆盖在线礼佛祈愿与在线祭祖追思，两类入口都可以独立使用，也可以结合功德回向一起完成。'
-      }
-    ],
-    related: [
-      { label: '在线礼佛指南', to: '/guide/worship' },
-      { label: '在线祭祖指南', to: '/guide/ancestors' },
-      { label: '拜祭先人总览', to: '/ancestors' },
-      { label: '首页', to: '/' }
-    ]
-  },
-  worship: {
-    title: '在线礼佛指南',
-    heading: '在线礼佛步骤与适用祈愿指南',
-    description: '这份指南说明如何在线礼佛、供花、点灯、上香和发愿回向，也整理不同佛菩萨更常见的祈愿侧重。',
-    intro: '这页把在线礼佛的常见步骤、不同佛菩萨的常见祈愿主题，以及第一次使用时的进入方式整理成了一份总览。',
-    tags: ['在线礼佛', '礼佛步骤', '祈愿回向'],
-    sections: [
-      {
-        title: '在线礼佛一般怎么进行',
-        paragraphs: [
-          '在线礼佛通常分为四步：先选择佛菩萨页面，再完成供花、点灯、上香等供养动作，然后填写姓名、年龄和祈愿内容，最后提交回向。',
-          '这种流程适合第一次接触佛教祈愿的人，因为页面已经把常见动作集中在一个地方，用户不需要自己整理仪轨，也更容易理解礼佛的基本步骤。'
-        ]
-      },
-      {
-        title: '常见祈愿主题怎么对应',
-        paragraphs: [
-          '如果主题偏向平安、慈悲、消灾与普门应感，很多人会优先礼敬观音菩萨；如果主题偏向超荐祖先、回向亡灵与大愿救度，通常更适合地藏菩萨；如果主题偏向健康长寿与消灾延寿，则常见对应药师佛。',
-          '如果用户希望从更基础、更全面的礼佛入口开始，可以先从释迦牟尼佛页面进入，再根据自己具体心愿继续浏览其他佛菩萨页面。'
-        ]
-      }
-    ],
-    faqs: [
-      {
-        q: '在线礼佛网站通常能做什么？',
-        a: '通常可以选择佛菩萨页面，完成供花、点灯、上香等动作，并填写祈愿内容后提交回向。'
-      },
-      {
-        q: '第一次礼佛建议先从哪个页面开始？',
-        a: '如果没有特别明确的祈愿主题，可以先从释迦牟尼佛页面开始，再根据健康、平安、智慧、超荐等主题进入相应佛菩萨页面。'
-      },
-      {
-        q: '观音菩萨、药师佛、地藏菩萨分别适合什么主题？',
-        a: '观音菩萨常见于慈悲、平安、消灾与求助；药师佛更常见于健康、延寿、消灾；地藏菩萨则更常见于超荐、回向与亡灵救度。'
-      },
-      {
-        q: '在线礼佛的基本步骤是什么？',
-        a: '在线礼佛通常分为四步：选择佛菩萨页面、完成供花点灯上香、填写祈愿内容、提交功德回向。'
-      }
-    ],
-    related: [
-      { label: '本师释迦牟尼佛', to: '/buddha/shakyamuni' },
-      { label: '观音菩萨', to: '/buddha/guanyin' },
-      { label: '药师佛', to: '/buddha/medicine' },
-      { label: '地藏菩萨', to: '/buddha/ksitigarbha' }
-    ]
-  },
-  ancestors: {
-    title: '在线祭祖指南',
-    heading: '拜祭先人、追思回向与隐私说明',
-    description: '这份指南说明如何在线祭祖、拜祭先人、进行追思回向，以及个性化照片与姓名设置的隐私边界。',
-    intro: '这页集中说明在线祭祖、追思回向、牌位使用场景，以及个性化照片和姓名的保存方式。',
-    tags: ['在线祭祖', '拜祭先人', '追思回向'],
-    sections: [
-      {
-        title: '在线祭祖适合哪些场景',
-        paragraphs: [
-          '在线祭祖页面适合追思先父、先母、祖父、祖母、列祖列宗，也适合为亡偶、亡子女与一切亡灵做超荐回向。',
-          '这类页面更偏向纪念、回向、祭祖和家族祈愿，与日常礼佛祈福页面的使用目的不同。'
-        ]
-      },
-      {
-        title: '个性化照片和姓名如何处理',
-        paragraphs: [
-          '先人页面支持在本地设备中设置个性化照片和姓名，用于生成更贴近个人情感的牌位显示效果。',
-          '这些个性化设置只保存在当前设备，不会上传到服务器，因此更适合包含私密家庭纪念信息的使用场景。'
-        ]
-      }
-    ],
-    faqs: [
-      {
-        q: '在线祭祖页面一般怎么使用？',
-        a: '通常先选择对应先人或相关页面，再完成供奉动作，填写祈愿内容，最后提交回向。'
-      },
-      {
-        q: '照片和姓名会不会上传到服务器？',
-        a: '不会。个性化照片和姓名设置仅保存在本地设备，用于当前设备显示。'
-      },
-      {
-        q: '在线祭祖和在线礼佛有什么不同？',
-        a: '在线礼佛更偏向佛菩萨礼敬与日常祈福；在线祭祖更偏向追思祖先、超荐亡灵和家族回向。'
-      },
-      {
-        q: '在线祭祖的基本步骤是什么？',
-        a: '在线祭祖通常分为四步：选择先人牌位、完成上香献花等供奉、填写追思或回向内容、提交祭拜记录。'
-      }
-    ],
-    related: [
-      { label: '拜祭先人总览', to: '/ancestors' },
-      { label: '列祖列宗', to: '/ancestor/ancestors' },
-      { label: '一切亡灵', to: '/ancestor/general' },
-      { label: '先父', to: '/ancestor/father' }
-    ]
-  }
-}
+const guides = GUIDES
 
 const guide = computed(() => guides[route.params.slug])
 
@@ -168,7 +20,7 @@ onMounted(() => {
 const quickReference = computed(() => [
   {
     name: '释迦牟尼佛',
-    point: '适合作为通用礼佛入口，帮助初次使用者理解网站结构与礼佛流程。',
+    point: '进入本师释迦牟尼佛页面礼敬、发愿。',
   },
   {
     name: '观音菩萨',
@@ -198,9 +50,7 @@ const quickReference = computed(() => [
         <p class="eyebrow">使用指南</p>
         <h1>{{ guide.heading }}</h1>
         <p class="hero-text">{{ guide.intro }}</p>
-        <div class="tag-row">
-          <span v-for="tag in guide.tags" :key="tag">{{ tag }}</span>
-        </div>
+
       </div>
     </header>
 
@@ -221,8 +71,8 @@ const quickReference = computed(() => [
           </div>
         </section>
 
-        <section class="copy-section">
-          <h2>常见问题</h2>
+        <section v-if="guide.faqs.length" class="copy-section">
+          <h2>使用时可能遇到的问题</h2>
           <div class="faq-list">
             <article v-for="faq in guide.faqs" :key="faq.q" class="faq-item">
               <h3>{{ faq.q }}</h3>
@@ -240,11 +90,6 @@ const quickReference = computed(() => [
               {{ item.label }}
             </router-link>
           </div>
-        </section>
-
-        <section class="side-section">
-          <h2>阅读建议</h2>
-          <p>如果你是第一次使用，可以先看这页，再进入对应的礼佛或祭祖页面操作。</p>
         </section>
 
         <section class="side-section" v-if="route.params.slug === 'worship'">
@@ -407,4 +252,9 @@ const quickReference = computed(() => [
     font-size: 1.6rem;
   }
 }
+.copy-section p, .faq-item p, .side-section p { font-size: 1.0625rem; line-height: 1.95; }
+.copy-section p + p { margin-top: 1em; }
+.copy-section h2, .side-section h2 { font-size: 1.25rem; line-height: 1.55; }
+.side-links a { padding: 10px 0; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+@media(max-width: 900px) { .card { padding: 24px 20px; } }
 </style>

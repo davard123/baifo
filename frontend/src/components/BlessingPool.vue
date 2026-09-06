@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
     <div class="section-head">
       <p class="section-kicker">祈愿场景</p>
       <h2 id="blessing-pool-title" class="section-title">祈福池</h2>
-      <p class="section-sub">先选择一项愿望主题，再进入仪式页面留下心愿。每一个入口都尽量保持简单、可亲近，也保留应有的敬意。</p>
+      <p class="section-sub">选择一项心愿，按页面提示写下祝愿。祈愿不能代替实际行动或专业帮助。</p>
     </div>
 
     <div class="blessing-grid">

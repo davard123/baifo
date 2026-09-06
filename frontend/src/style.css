@@ -113,3 +113,9 @@ summary:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Readable controls without changing the existing ceremonial palette. */
+input, textarea, select { font-size: 16px; }
+button, .page-link { min-height: 44px; }
+textarea:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+:root { --text-muted: #d8cbb8; }

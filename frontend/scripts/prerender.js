@@ -12,7 +12,7 @@ if (!fs.existsSync(indexPath)) {
   throw new Error(`Cannot prerender without build output: ${indexPath}`)
 }
 
-const template = fs.readFileSync(indexPath, 'utf8')
+const template = fs.readFileSync(indexPath, 'utf8').replace(/\r\n/g, '\n').replace(/^[ \t]+$/gm, '')
 
 function ensureTrailingSlashless(url) {
   return url === '/' ? '/' : url.replace(/\/+$/, '')
@@ -110,5 +110,5 @@ for (const page of getStaticPages()) {
     : path.join(distDir, normalizedPath.slice(1), 'index.html')
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
-  fs.writeFileSync(filePath, renderPage(page), 'utf8')
+  fs.writeFileSync(filePath, renderPage(page).replace(/^[ \t]+$/gm, ''), 'utf8')
 }
