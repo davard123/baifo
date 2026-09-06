@@ -1,4 +1,4 @@
-name: Deploy Frontend To Cloudflare Pages
+name: Validate Frontend (Cloudflare Git deploys production)
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
@@ -33,9 +33,7 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=baifo
+      # Production is already deployed by the Cloudflare Git integration.
+      # Do not run a second, unauthenticated deploy or upload competing builds.
+      - name: Verify all generated pages
+        run: node scripts/check-seo-output.mjs
