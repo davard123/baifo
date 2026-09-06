@@ -77,7 +77,16 @@ function buildFallbackContent(page) {
     lines.push('  </dl>')
   }
 
-  lines.push('</section>')
+  // Keep useful navigation available before JavaScript loads, using existing routes.
+  const links = getStaticPages().filter((entry) =>
+    entry.path !== page.path && (entry.path === '/' || entry.path === '/ancestors' || entry.path.startsWith('/guide/'))
+  )
+  lines.push('  <nav aria-label="使用说明与主要入口"><ul>')
+  for (const entry of links) {
+    lines.push(`    <li><a href="${canonicalUrl(entry.path)}">${entry.heading}</a></li>`)
+  }
+  lines.push('  </ul></nav>')
+  lines.push('</div>')
   return lines.join('\n')
 }
 
@@ -90,7 +99,7 @@ function renderPage(page) {
     .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)
     .replace(/<script type="application\/ld\+json" id="ld-webpage">[\s\S]*?<\/script>/, jsonLd)
-    .replace(/<script>\s*const baseUrl = 'https:\/\/www\.fopusha\.com\/'[\s\S]*?document\.getElementById\('ld-webpage'\)\.textContent = JSON\.stringify\(schema\);\s*<\/script>/, '')
+    .replace(/<script>\s*const baseUrl = 'https:\/\/(?:www\.)?fopusha\.com\/'[\s\S]*?document\.getElementById\('ld-webpage'\)\.textContent = JSON\.stringify\(schema\);\s*<\/script>/, '')
     .replace(/<div id="app">[\s\S]*?<\/div><\/div>/, `<div id="app">${fallbackContent}</div>`)
 }
 
