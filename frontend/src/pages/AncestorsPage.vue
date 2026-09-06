@@ -7,7 +7,6 @@ import { renderTablet } from '../utils/tabletCanvas.js'
 
 const router = useRouter()
 
-const featuredAncestor = 'father'
 const ancestorFaqs = [
   {
     q: '拜祭先人页面适合哪些情况？',
@@ -69,7 +68,7 @@ function openAncestor(slug) {
 }
 
 function entryStatus(ancestor) {
-  return localNames.value[ancestor.slug] ? '使用当前自定义牌位文字' : '使用推荐牌位文字进入祭拜页'
+  return localNames.value[ancestor.slug] ? '使用当前自定义牌位文字' : '使用默认牌位文字进入祭拜页'
 }
 
 onMounted(() => {
@@ -113,7 +112,6 @@ onMounted(() => {
         >
           <div class="card-topline">
             <span class="card-index">{{ index + 1 }}</span>
-            <span v-if="a.slug === featuredAncestor" class="card-badge">推荐</span>
           </div>
           <div class="buddha-img-wrap ancestor-img-wrap">
             <img
@@ -449,8 +447,7 @@ onMounted(() => {
   pointer-events: none;
 }
 
-.card-index,
-.card-badge {
+.card-index {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -467,12 +464,6 @@ onMounted(() => {
   font-weight: 700;
 }
 
-.card-badge {
-  background: rgba(124, 84, 30, 0.96);
-  color: #fff5e7;
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-}
 
 .buddha-img-wrap {
   width: 100%;
