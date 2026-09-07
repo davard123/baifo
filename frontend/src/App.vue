@@ -100,12 +100,6 @@ onMounted(() => {
 
 <template>
   <router-view />
-  <section class="site-disclaimer" aria-label="网站说明">
-    <p>
-      本站提供在线礼佛、祈愿、供养、回向与祭祖追思内容，旨在帮助用户静心、发愿、纪念与了解相关佛教文化。
-      祈愿不构成对现实结果的保证，也不能替代医疗、心理、法律、财务或紧急专业帮助。
-    </p>
-  </section>
   <AudioPlayer />
   <NianfoDrawer />
 </template>
