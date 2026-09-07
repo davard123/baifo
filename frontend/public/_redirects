@@ -1,4 +1,12 @@
-https://www.fopusha.com/* https://fopusha.com/:splat 301!
+https://www.fopusha.com/guide/overview/ https://fopusha.com/guide/overview/ 301!
+https://www.fopusha.com/guide/worship/ https://fopusha.com/guide/worship/ 301!
+https://www.fopusha.com/guide/ancestors/ https://fopusha.com/guide/ancestors/ 301!
+https://www.fopusha.com/rituals/prostration/ https://fopusha.com/topic/prostration/ 301!
+https://www.fopusha.com/rituals/how-to-worship-buddha/ https://fopusha.com/topic/how-to-worship-buddha/ 301!
+https://www.fopusha.com/rituals/offering-flowers/ https://fopusha.com/topic/offering-flowers/ 301!
+https://www.fopusha.com/rituals/offering-light/ https://fopusha.com/topic/offering-light/ 301!
+https://www.fopusha.com/rituals/offering-incense/ https://fopusha.com/topic/offering-incense/ 301!
+https://www.fopusha.com/rituals/how-to-dedicate-merit/ https://fopusha.com/topic/how-to-dedicate-merit/ 301!https://www.fopusha.com/* https://fopusha.com/:splat 301!
 /guide/father /ancestor/father 301
 /guide/father/ /ancestor/father 301
 /guide/mother /ancestor/mother 301
@@ -15,4 +23,5 @@ https://www.fopusha.com/* https://fopusha.com/:splat 301!
 /guide/general/ /ancestor/general 301
 /guide/ancestor /guide/ancestors 301
 /guide/ancestor/ /guide/ancestors 301
+
 
