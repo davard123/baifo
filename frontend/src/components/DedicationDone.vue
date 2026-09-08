@@ -24,6 +24,18 @@ defineProps({
       {{ kind === 'ancestor' ? '回向已完成' : '祈愿已送达' }}
     </h2>
 
+    <div class="done-actions" aria-label="下一步">
+      <router-link
+        v-for="action in actions"
+        :key="action.label"
+        :to="action.to"
+        class="done-btn"
+        :class="{ 'done-btn--primary': action.primary }"
+      >
+        {{ action.label }}
+      </router-link>
+    </div>
+
     <p class="done-who">
       <template v-if="age">{{ age }} 岁的 </template>{{ name }}
       <template v-if="kind === 'ancestor'">向 {{ subjectName }} 敬献了这份追思</template>
@@ -36,17 +48,6 @@ defineProps({
       确认邮件将发送至 {{ email }}
     </p>
 
-    <div class="done-actions">
-      <router-link
-        v-for="action in actions"
-        :key="action.to"
-        :to="action.to"
-        class="done-btn"
-        :class="{ 'done-btn--primary': action.primary }"
-      >
-        {{ action.label }}
-      </router-link>
-    </div>
   </div>
 </template>
 
@@ -109,20 +110,25 @@ defineProps({
 }
 
 .done-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
   gap: 10px;
-  margin-top: 6px;
+  margin: 2px 0 6px;
 }
 
 .done-btn {
-  padding: 10px 18px;
-  border-radius: 999px;
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border-radius: 12px;
   border: 1px solid rgba(242, 200, 121, 0.3);
   background: rgba(255, 248, 233, 0.06);
   color: var(--accent);
   font-size: 0.88rem;
+  line-height: 1.35;
   text-decoration: none;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
@@ -141,6 +147,12 @@ defineProps({
 
 .done-btn--primary:hover {
   background: linear-gradient(135deg, #e8c47e, #f5daa2);
+}
+
+@media (max-width: 520px) {
+  .done-actions {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

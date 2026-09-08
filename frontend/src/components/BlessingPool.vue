@@ -13,6 +13,7 @@ const toast = ref('')
 const stage = ref('select')
 const loading = ref(false)
 const resultWish = ref('')
+const resultEmail = ref('')
 const modalCloseButton = ref(null)
 const previousOverflow = ref('')
 
@@ -20,6 +21,7 @@ const form = ref({
   name: '',
   age: '',
   target: '',
+  email: '',
 })
 
 const RITUALS = [
@@ -35,7 +37,7 @@ const floats = ref([])
 const nextBlessing = computed(() => {
   if (!active.value) return null
   const currentIndex = BLESSINGS.findIndex((item) => item.key === active.value.key)
-  return currentIndex >= 0 && currentIndex < BLESSINGS.length - 1 ? BLESSINGS[currentIndex + 1] : null
+  return currentIndex >= 0 ? BLESSINGS[(currentIndex + 1) % BLESSINGS.length] : BLESSINGS[0]
 })
 
 function hydrateProfile() {
@@ -43,10 +45,12 @@ function hydrateProfile() {
   form.value.name = viewer.username || ''
   form.value.age = viewer.age ? String(viewer.age) : '30'
   form.value.target = ''
+  form.value.email = ''
 }
 
 function resetTransientState() {
   resultWish.value = ''
+  resultEmail.value = ''
   stage.value = 'select'
   doneRituals.value = new Set()
   popRitual.value = ''
@@ -99,6 +103,7 @@ async function submit() {
         buddha: '',
         blessing: active.value.label,
         target: form.value.target.trim(),
+        ...(form.value.email.trim() ? { email: form.value.email.trim() } : {}),
       }),
     })
   } catch {
@@ -110,6 +115,7 @@ async function submit() {
 
   loading.value = false
   resultWish.value = active.value.wish
+  resultEmail.value = form.value.email.trim()
   stage.value = 'done'
   emit('wish-submitted')
 }
@@ -252,17 +258,21 @@ onBeforeUnmount(() => {
               <p class="result-user">
                 {{ form.age }} 岁的 {{ form.name }} {{ form.target ? `，为 ${form.target}` : '' }} 留下了这份祈愿。
               </p>
+              <p v-if="resultEmail" class="result-email">祈愿确认已发送至 {{ resultEmail }}</p>
               <div class="result-btns">
+                <button class="back-home-btn" type="button" @click="close(); router.push('/')">
+                  返回首页
+                </button>
                 <button
                   v-if="nextBlessing"
                   class="back-home-btn next-btn"
                   type="button"
                   @click="open(nextBlessing)"
                 >
-                  进入下一个祈福池
+                  进入下一页
                 </button>
-                <button class="back-home-btn" type="button" @click="close(); router.push('/')">
-                  返回首页
+                <button class="back-home-btn" type="button" @click="close(); router.push('/buddha/shakyamuni/')">
+                  进入拜佛
                 </button>
               </div>
             </div>
@@ -306,6 +316,18 @@ onBeforeUnmount(() => {
                   class="field target-field"
                   maxlength="50"
                   placeholder="可选，例如：父亲健康、家人平安"
+                />
+              </div>
+
+              <div class="field-block">
+                <label class="field-label" for="blessing-email">邮箱（选填）</label>
+                <input
+                  id="blessing-email"
+                  v-model="form.email"
+                  type="email"
+                  class="field email-field"
+                  autocomplete="email"
+                  placeholder="填写后可收到祈福确认邮件"
                 />
               </div>
 
@@ -737,16 +759,23 @@ onBeforeUnmount(() => {
   line-height: 1.8;
 }
 
+.result-email {
+  margin: -4px 0 0;
+  color: var(--accent-light);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
 .result-btns {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   width: 100%;
-  align-items: center;
 }
 
 .back-home-btn {
-  width: min(100%, 320px);
+  width: 100%;
   min-height: 48px;
   padding: 10px 24px;
   border-radius: 22px;
@@ -877,6 +906,12 @@ onBeforeUnmount(() => {
     min-height: 76px;
     flex-direction: row;
     justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .result-btns {
+    grid-template-columns: 1fr;
   }
 }
 

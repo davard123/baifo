@@ -13,7 +13,10 @@ import NotFoundPage from './NotFoundPage.vue'
 const route = useRoute()
 
 const ancestor = computed(() => ANCESTORS.find(a => a.slug === route.params.slug))
-const relatedAncestors = computed(() => ANCESTORS.filter(a => a.slug !== route.params.slug).slice(0, 4))
+const nextAncestor = computed(() => {
+  const index = ANCESTORS.findIndex((item) => item.slug === route.params.slug)
+  return ANCESTORS[(index + 1) % ANCESTORS.length]
+})
 
 // 提交成功后停在本页展示回向确认，而不是直接跳回列表
 const submitted = ref(null)
@@ -118,27 +121,17 @@ async function onSubmit(payload) {
 }
 
 const doneActions = computed(() => {
-  const next = relatedAncestors.value[0]
+  const next = nextAncestor.value
   return [
-    ...(next ? [{ label: `继续祭拜${next.name}`, to: `/ancestor/${next.slug}`, primary: true }] : []),
-    { label: '返回先人牌位', to: '/ancestors' },
     { label: '返回首页', to: '/' },
+    ...(next ? [{ label: `进入下一页：${next.name}`, to: `/ancestor/${next.slug}/`, primary: true }] : []),
+    { label: '进入祈福', to: { path: '/', hash: '#blessing-pool-title' } },
   ]
 })
 </script>
 
 <template>
   <div v-if="ancestor" class="prayer-shell">
-    <nav class="prayer-nav">
-      <div class="breadcrumb-row">
-        <router-link to="/" class="page-link">← 返回首页</router-link>
-        <span class="crumb-sep">/</span>
-        <router-link to="/ancestors" class="page-link small-link">拜祭先人</router-link>
-        <span class="crumb-sep">/</span>
-        <span class="crumb-current">{{ ancestor.name }}</span>
-      </div>
-    </nav>
-
     <div class="prayer-layout">
       <section class="stage-section card">
         <AncestorStage
@@ -215,30 +208,6 @@ const doneActions = computed(() => {
   flex-direction: column;
   overflow: hidden;
   animation: fadeIn 0.5s ease;
-}
-
-.prayer-nav {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  background: var(--surface);
-  border-bottom: 1px solid rgba(120, 100, 80, 0.15);
-}
-
-.breadcrumb-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.crumb-sep,
-.crumb-current {
-  color: var(--text-muted);
-  font-size: 0.86rem;
-}
-
-.small-link {
-  font-size: 0.86rem;
 }
 
 .prayer-layout {

@@ -90,26 +90,17 @@ async function onSubmit(payload) {
 }
 
 const doneActions = computed(() => {
-  const next = relatedBuddhas.value[0]
+  const next = nextBuddha.value
   return [
-    ...(next ? [{ label: `再礼敬 ${next.name}`, to: `/buddha/${next.slug}`, primary: true }] : []),
-    { label: '为先人回向', to: '/ancestors' },
     { label: '返回首页', to: '/' },
+    ...(next ? [{ label: `进入下一页：${next.name}`, to: `/buddha/${next.slug}/`, primary: true }] : []),
+    { label: '进入拜祭', to: '/ancestors/' },
   ]
 })
 </script>
 
 <template>
   <div v-if="buddha" class="prayer-shell">
-    <nav class="prayer-nav" aria-label="拜佛页面导航">
-      <div class="prayer-page-links">
-        <router-link to="/" class="page-link">去首页</router-link>
-        <router-link :to="`/buddha/${nextBuddha.slug}/`" class="page-link" :title="`下一页：${nextBuddha.name}`">去下页</router-link>
-        <router-link to="/buddha/shakyamuni/" class="page-link" title="礼敬本师释迦牟尼佛">去拜如来</router-link>
-      </div>
-      <p class="crumb-current">{{ buddha.name }}</p>
-    </nav>
-
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
         <PrayerStage
@@ -446,12 +437,4 @@ const doneActions = computed(() => {
     line-height: 1.65;
   }
 }
-</style>
-
-<style scoped>
-.prayer-page-links { display:flex; gap:8px; flex-wrap:wrap; }
-.prayer-page-links .page-link { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:8px 16px; color:var(--accent); border:1px solid rgba(212,168,67,.35); border-radius:10px; white-space:nowrap; }
-.prayer-page-links .page-link:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
-.prayer-nav .crumb-current { margin:6px 0 0; }
-@media(max-width:480px) { .prayer-page-links { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); } .prayer-page-links .page-link { padding-inline:8px; } }
 </style>
