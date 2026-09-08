@@ -188,6 +188,12 @@ onMounted(() => {
           <span class="hero-quote__line"></span>
           <p>愿你与家人平安。</p>
         </div>
+        <div class="hero-intent-strip" aria-label="快速选择入口">
+          <span>礼佛</span>
+          <span>念佛</span>
+          <span>祭祖</span>
+          <span>祈福</span>
+        </div>
       </div>
 
       <div class="hero-actions" aria-label="首页主要入口">
@@ -1064,5 +1070,32 @@ onMounted(() => {
   .hero-action__body { display: none; }
   .hero-action__title { font-size: 1rem; }
   .home-shell { padding-inline: 16px; }
+}
+
+/* Homepage prototype: a warmer, clearer first screen for older overseas Chinese readers. */
+.hero-section {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(247, 221, 168, 0.55), transparent 28%),
+    linear-gradient(135deg, #fffaf0 0%, #f6eee1 58%, #efe3d2 100%);
+  border: 1px solid rgba(144, 100, 48, 0.24);
+  box-shadow: 0 22px 56px rgba(21, 13, 23, 0.22);
+}
+.hero-section::after { background: linear-gradient(125deg, transparent 0 42%, rgba(121, 78, 36, 0.05) 42.2%, transparent 43%); }
+.hero-section::before { border-color: rgba(144, 100, 48, 0.18); }
+.hero-kicker { color: #83623c; }
+.hero-section h1 { color: #3d2a23; text-shadow: none; }
+.hero-lead { color: #5b4a40; font-size: 1.06rem; }
+.hero-quote { color: #7b5d38; }
+.hero-quote__line { background: #b58a51; }
+.hero-intent-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.hero-intent-strip span { min-height: 36px; display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; color: #704c2a; background: rgba(255,255,255,.62); border: 1px solid rgba(144,100,48,.2); font-size: .86rem; font-weight: 700; }
+.hero-action { background: rgba(255, 252, 246, 0.88); border-color: rgba(144, 100, 48, 0.22); box-shadow: 0 12px 24px rgba(87, 54, 25, .11); }
+.hero-action__title { color: #3d2a23; }
+.hero-action__body { color: #6c5a4f; }
+.hero-action__cta { color: #8a5d27; }
+.hero-action:hover { border-color: rgba(144,100,48,.48); box-shadow: 0 18px 34px rgba(87,54,25,.16); }
+@media (max-width: 700px) {
+  .hero-intent-strip { gap: 6px; }
+  .hero-intent-strip span { min-height: 34px; padding-inline: 10px; font-size: .82rem; }
 }
 </style>
