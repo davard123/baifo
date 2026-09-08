@@ -119,3 +119,111 @@ input, textarea, select { font-size: 16px; }
 button, .page-link { min-height: 44px; }
 textarea:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 :root { --text-muted: #d8cbb8; }
+
+/* ── FULL-SITE READING SYSTEM · 2026-09 ───────────────────────────
+   The homepage introduces the warm parchment palette; these shared
+   surfaces carry the same hierarchy through guides, catalogs and FAQs
+   without changing the darker ritual stage used for the prayer canvas. */
+:root {
+  --paper: #f7f0e6;
+  --paper-strong: #fffaf2;
+  --ink-warm: #392b24;
+  --ink-soft: #756558;
+  --line-warm: rgba(122, 86, 51, .18);
+  --shadow-warm: 0 18px 48px rgba(72, 42, 18, .12);
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.75;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(230, 184, 102, .18), transparent 24%),
+    radial-gradient(circle at 84% 34%, rgba(123, 89, 177, .12), transparent 26%),
+    linear-gradient(180deg, #15101a 0%, #1b1224 54%, #100b15 100%);
+}
+
+/* Editorial pages: generous white space and a clear reading column. */
+.guide-shell,
+.topic-shell,
+.ancestors-shell {
+  min-height: 100dvh;
+  padding: 18px clamp(16px, 4vw, 48px) 72px;
+  color: var(--ink-warm);
+  background: linear-gradient(180deg, var(--paper) 0%, #efe3d3 100%);
+}
+.guide-shell .top-nav,
+.topic-shell .top-nav,
+.ancestors-shell .top-nav { max-width: 1180px; margin: 0 auto 18px; }
+.guide-shell .hero,
+.topic-shell .hero,
+.ancestors-shell .site-header,
+.guide-shell .main-column,
+.topic-shell .main-column,
+.guide-shell .side-column,
+.topic-shell .side-column,
+.ancestors-shell .catalog-section {
+  background: rgba(255, 250, 242, .94);
+  border: 1px solid var(--line-warm);
+  box-shadow: var(--shadow-warm);
+  color: var(--ink-warm);
+}
+.guide-shell .hero,
+.topic-shell .hero { padding: clamp(24px, 5vw, 56px); }
+.guide-shell .hero h1,
+.topic-shell .hero h1,
+.guide-shell .hero .hero-text,
+.topic-shell .hero .hero-text,
+.guide-shell .hero .eyebrow,
+.topic-shell .hero .eyebrow { color: var(--ink-warm); }
+.guide-shell .main-column h2,
+.topic-shell .main-column h2,
+.guide-shell .main-column h3,
+.topic-shell .main-column h3,
+.guide-shell .faq-item h3,
+.topic-shell .faq-item h3 { color: var(--ink-warm); }
+.guide-shell .main-column p,
+.topic-shell .main-column p,
+.guide-shell .faq-item p,
+.topic-shell .faq-item p { color: var(--ink-soft); }
+.guide-shell .content-grid,
+.topic-shell .content-grid { max-width: 1180px; margin: 0 auto; gap: 24px; }
+.guide-shell .copy-section,
+.topic-shell .copy-section { border-top-color: var(--line-warm); }
+.guide-shell h1, .topic-shell h1,
+.ancestors-shell h1, .guide-shell h2, .topic-shell h2,
+.ancestors-shell h2, .guide-shell h3, .topic-shell h3,
+.ancestors-shell h3 { color: var(--ink-warm); }
+.guide-shell p, .topic-shell p,
+.ancestors-shell p { color: var(--ink-soft); }
+.guide-shell .back-link, .topic-shell .back-link,
+.ancestors-shell .back-link { color: #7a5633; }
+.ancestors-shell .catalog-grid { gap: 18px; }
+.ancestors-shell .ancestor-card,
+.ancestors-shell .buddha-card { background: var(--paper-strong); border-color: var(--line-warm); box-shadow: 0 10px 26px rgba(72,42,18,.08); }
+
+/* Homepage sections now read like a calm, physical booklet instead of a
+   collection of disconnected dark panels. */
+.home-shell { background: var(--paper); color: var(--ink-warm); }
+.home-shell .catalog-section,
+.home-shell .wishes-section,
+.home-shell .card { border-color: var(--line-warm); box-shadow: var(--shadow-warm); }
+.home-shell .catalog-section,
+.home-shell .wishes-section { background: rgba(255, 250, 242, .94); }
+.home-shell .section-title { color: var(--ink-warm); }
+.home-shell .section-sub,
+.home-shell .record-note { color: var(--ink-soft); }
+.home-shell .buddha-card { background: var(--paper-strong); border-color: var(--line-warm); }
+.home-shell .buddha-card:hover,
+.home-shell .buddha-card:focus-visible { border-color: rgba(173, 117, 48, .55); box-shadow: 0 16px 30px rgba(72, 42, 18, .15); }
+
+/* Shared control language: all actions remain comfortable on a phone. */
+.card { border-radius: 22px; }
+button, input, select, textarea { border-radius: 12px; }
+button, .page-link, .back-link, .entry-btn, .setup-btn { min-height: 44px; }
+.page-link:hover { box-shadow: 0 8px 18px rgba(0,0,0,.16); }
+
+@media (max-width: 700px) {
+  .guide-shell, .topic-shell, .ancestors-shell { padding-inline: 14px; }
+  .guide-shell .hero, .topic-shell .hero { padding: 26px 20px; }
+  .home-shell .catalog-section, .home-shell .wishes-section { border-radius: 18px; }
+}
