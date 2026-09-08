@@ -140,7 +140,7 @@ function publisherRef() {
     url: SITE.baseUrl,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE.baseUrl}/fopusha-icon-20260906.svg`,
+      url: `${SITE.baseUrl}/fopusha-icon-20260908.svg`,
     },
   }
 }
@@ -615,4 +615,3 @@ export function getSeoByPath(path) {
   const normalizedPath = !path || path === '/' ? '/' : path.replace(/\/+$/, '')
   return getStaticPages().find((page) => page.path === normalizedPath) ?? null
 }
-
