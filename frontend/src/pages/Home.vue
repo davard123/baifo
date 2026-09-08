@@ -1093,6 +1093,7 @@ onMounted(() => {
 .hero-action__title { color: #3d2a23; }
 .hero-action__body { color: #6c5a4f; }
 .hero-action__cta { color: #8a5d27; }
+.hero-action--daily .hero-action__cta { color: #8a5d27; }
 .hero-action:hover { border-color: rgba(144,100,48,.48); box-shadow: 0 18px 34px rgba(87,54,25,.16); }
 @media (max-width: 700px) {
   .hero-intent-strip { gap: 6px; }
