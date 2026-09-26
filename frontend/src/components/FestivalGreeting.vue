@@ -14,7 +14,14 @@ onMounted(() => {
 })
 
 const festival = computed(() => (today.value ? findActiveFestival(today.value) : null))
-const isToday = computed(() => festival.value && festival.value.date === today.value)
+// 节日前：将至；当天：今日；节日后两天：时节
+const kicker = computed(() => {
+  const f = festival.value
+  if (!f) return ''
+  if (today.value < f.date) return `${f.name}将至`
+  if (today.value === f.date) return `今日${f.name}`
+  return `${f.name}时节`
+})
 
 function go(target) {
   const resolved = router.resolve(target)
@@ -70,7 +77,7 @@ function go(target) {
     </div>
 
     <div class="festival-copy">
-      <p class="festival-kicker">{{ isToday ? `今日${festival.name}` : `${festival.name}将至` }}</p>
+      <p class="festival-kicker">{{ kicker }}</p>
       <h2 class="festival-title">{{ festival.title }}</h2>
       <p v-for="line in festival.lines" :key="line" class="festival-line">{{ line }}</p>
       <a

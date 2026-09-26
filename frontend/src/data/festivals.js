@@ -1,6 +1,6 @@
 // 首页节日祝福数据。日期均为公历 YYYY-MM-DD，按访客本地日期比较。
 // 农历节日日期由 lunar-javascript 计算后写入（2026–2035）。
-// start ~ end 为显示区间：一般为节日前 2 天至节日当天。
+// start ~ end 为显示区间：节日前 2 天至节日后 2 天；区间重叠时，日期靠后的新节日顶掉旧的。
 //
 // tone: 'celebrate' 团圆吉祥类 | 'remember' 追思类（不写"快乐"）| 'devotion' 佛菩萨圣诞
 // anim: 'moon' | 'lantern' | 'lotus' | 'candle' | 'glow'
@@ -38,7 +38,7 @@ export const FESTIVALS = MID_AUTUMN_DATES.map((date) => ({
   ...MID_AUTUMN,
   date,
   start: shiftDate(date, -2),
-  end: date,
+  end: shiftDate(date, 2),
 }))
 
 export function localYmd(now = new Date()) {
@@ -47,5 +47,7 @@ export function localYmd(now = new Date()) {
 }
 
 export function findActiveFestival(ymd) {
-  return FESTIVALS.find((item) => item.start <= ymd && ymd <= item.end) || null
+  const active = FESTIVALS.filter((item) => item.start <= ymd && ymd <= item.end)
+  // 重叠时取日期最晚的那个：新节日一进入显示期就替换旧节日
+  return active.sort((a, b) => (a.date < b.date ? 1 : -1))[0] || null
 }
