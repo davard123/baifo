@@ -9,7 +9,7 @@ const props = defineProps({
 const emit = defineEmits(['submit'])
 
 const username = ref('')
-const age = ref(50)
+const age = ref('') // 不给默认值，避免用户顺手提交错误年龄；填过一次后会从本地资料带入
 const wish = ref(props.defaultWish)
 const email = ref('')
 const loading = ref(false)
