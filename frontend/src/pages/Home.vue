@@ -1,5 +1,6 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue'
+import FestivalGreeting from '../components/FestivalGreeting.vue'
 import { useRouter } from 'vue-router'
 import { TOPICS } from '../data/topics.js'
 import { BUDDHAS } from '../data/buddhas.js'
@@ -184,6 +185,7 @@ onMounted(() => {
         <p class="hero-lead">
           选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。
         </p>
+        <FestivalGreeting />
         <div class="hero-quote">
           <span class="hero-quote__line"></span>
           <p>愿你与家人平安。</p>
