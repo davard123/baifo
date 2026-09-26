@@ -6,6 +6,7 @@ import PrayerStage from '../components/PrayerStage.vue'
 import RitualButtons from '../components/RitualButtons.vue'
 import WishForm from '../components/WishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
+import RitualNav from '../components/RitualNav.vue'
 import { apiFetch } from '../api.js'
 import NotFoundPage from './NotFoundPage.vue'
 
@@ -89,6 +90,7 @@ async function onSubmit(payload) {
   drawerOpen.value = true
 }
 
+// 顶部导航与提交后右侧面板共用同一组按钮，保证两处一致
 const doneActions = computed(() => {
   const next = nextBuddha.value
   return [
@@ -101,6 +103,9 @@ const doneActions = computed(() => {
 
 <template>
   <div v-if="buddha" class="prayer-shell">
+    <div class="prayer-frame">
+    <RitualNav :actions="doneActions" label="礼佛页面导航" />
+
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
         <PrayerStage
@@ -191,6 +196,7 @@ const doneActions = computed(() => {
         </section>
       </section>
     </div>
+    </div>
   </div>
   <NotFoundPage
     v-else
@@ -202,33 +208,22 @@ const doneActions = computed(() => {
 <style scoped>
 .prayer-shell {
   width: 100%;
+  /* 文档比可视区多出一截浏览器工具栏的高度，手机/iPad Safari 上滑时才能收起地址栏 */
+  min-height: 100vh;
+  min-height: 100lvh;
+  animation: fadeIn 0.5s ease;
+}
+
+.prayer-frame {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeIn 0.5s ease;
-}
-
-.prayer-nav {
-  flex-shrink: 0;
-  padding: 8px 16px;
-  background: var(--surface);
-  border-bottom: 1px solid rgba(212, 168, 67, 0.15);
-}
-
-.breadcrumb-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.page-link,
-.crumb-sep,
-.crumb-current {
-  color: var(--text-muted);
-  font-size: 0.86rem;
-  text-decoration: none;
+  background: #160800;
 }
 
 .prayer-layout {

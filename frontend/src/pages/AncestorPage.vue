@@ -6,6 +6,7 @@ import AncestorStage from '../components/AncestorStage.vue'
 import AncestorRituals from '../components/AncestorRituals.vue'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
+import RitualNav from '../components/RitualNav.vue'
 import { apiFetch } from '../api.js'
 import { getPhoto, getName } from '../utils/localPhoto.js'
 import NotFoundPage from './NotFoundPage.vue'
@@ -120,6 +121,7 @@ async function onSubmit(payload) {
   submitted.value = payload
 }
 
+// 顶部导航与提交后面板共用同一组按钮
 const doneActions = computed(() => {
   const next = nextAncestor.value
   return [
@@ -132,6 +134,8 @@ const doneActions = computed(() => {
 
 <template>
   <div v-if="ancestor" class="prayer-shell">
+    <div class="prayer-frame">
+    <RitualNav :actions="doneActions" label="拜祭页面导航" />
     <div class="prayer-layout">
       <section class="stage-section card">
         <AncestorStage
@@ -192,6 +196,7 @@ const doneActions = computed(() => {
         </template>
       </section>
     </div>
+    </div>
   </div>
   <NotFoundPage
     v-else
@@ -203,11 +208,22 @@ const doneActions = computed(() => {
 <style scoped>
 .prayer-shell {
   width: 100%;
+  /* 文档比可视区多出一截浏览器工具栏的高度，手机/iPad Safari 上滑时才能收起地址栏 */
+  min-height: 100vh;
+  min-height: 100lvh;
+  animation: fadeIn 0.5s ease;
+}
+
+.prayer-frame {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeIn 0.5s ease;
+  background: #0a0805;
 }
 
 .prayer-layout {
