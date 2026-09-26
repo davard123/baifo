@@ -359,6 +359,7 @@ onMounted(() => {
 
     <footer class="site-footer">
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
+      <p class="footer-contact">意见反馈与联系：<a href="mailto:fopushacom@gmail.com">fopushacom@gmail.com</a></p>
     </footer>
   </main>
 </template>
@@ -963,6 +964,18 @@ onMounted(() => {
   font-size: 0.86rem;
   letter-spacing: 0.04em;
 }
+
+.footer-contact {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.footer-contact a {
+  color: var(--accent);
+  text-decoration: none;
+  word-break: break-all;
+}
+
 
 .hero-action:focus-visible,
 .buddha-card:focus-visible,
