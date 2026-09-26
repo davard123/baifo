@@ -30,10 +30,21 @@ function go(target) {
   <aside
     v-if="festival"
     class="festival-card"
-    :class="[`festival-card--${festival.anim}`, `festival-card--${festival.tone}`]"
+    :class="[`festival-card--${festival.anim}`, `festival-card--${festival.tone}`, { 'festival-card--image': festival.image }]"
     :aria-label="`${festival.name}祝福`"
   >
-    <div class="festival-art" aria-hidden="true">
+    <template v-if="festival.image">
+      <img
+        class="festival-bg"
+        :src="festival.image.large"
+        :srcset="`${festival.image.small} 720w, ${festival.image.large} 1200w`"
+        sizes="(max-width: 700px) 100vw, 640px"
+        alt=""
+        decoding="async"
+      />
+      <div class="festival-shade" aria-hidden="true"></div>
+    </template>
+    <div v-else class="festival-art" aria-hidden="true">
       <svg v-if="festival.anim === 'moon'" viewBox="0 0 96 96" class="moon-svg">
         <defs>
           <radialGradient id="fg-moon" cx="42%" cy="38%" r="62%">
@@ -167,6 +178,41 @@ function go(target) {
   outline-offset: 3px;
 }
 
+/* 有背景图时：图铺满卡片，月亮在左，文字在右侧深色区域 */
+.festival-card--image {
+  display: block;
+  min-height: 210px;
+  padding: 24px 24px 24px 44%;
+  background: #1b1a3d;
+}
+
+.festival-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 20% 22%;
+  animation: bg-drift 24s ease-in-out infinite alternate;
+}
+
+.festival-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(20, 18, 52, 0) 28%, rgba(20, 18, 52, 0.55) 46%, rgba(20, 18, 52, 0.82) 100%);
+}
+
+.festival-card--image .festival-copy {
+  position: relative;
+  z-index: 1;
+  animation: festival-in 1s ease 0.3s both;
+}
+
+@keyframes bg-drift {
+  from { transform: scale(1.02) translateX(0); }
+  to { transform: scale(1.1) translateX(-2%); }
+}
+
 @keyframes festival-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: none; }
@@ -206,6 +252,18 @@ function go(target) {
   .festival-line {
     font-size: 0.86rem;
   }
+
+  .festival-card--image {
+    padding: 150px 16px 18px;
+  }
+
+  .festival-bg {
+    object-position: 15% 20%;
+  }
+
+  .festival-shade {
+    background: linear-gradient(180deg, rgba(20, 18, 52, 0) 30%, rgba(20, 18, 52, 0.7) 52%, rgba(20, 18, 52, 0.9) 100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -213,7 +271,9 @@ function go(target) {
   .moon-rise,
   .moon-halo,
   .cloud-a,
-  .cloud-b {
+  .cloud-b,
+  .festival-bg,
+  .festival-card--image .festival-copy {
     animation: none;
   }
 }

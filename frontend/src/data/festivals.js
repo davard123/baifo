@@ -26,6 +26,11 @@ const MID_AUTUMN = {
   ],
   tone: 'celebrate',
   anim: 'moon',
+  // 背景图由 ChatGPT 生成：月亮在左、右侧留白放文字
+  image: {
+    large: '/festivals/mid-autumn-2026-1200.webp',
+    small: '/festivals/mid-autumn-2026-720.webp',
+  },
   cta: { label: '为家人祈福', to: { path: '/', hash: '#blessing-pool-title' } },
 }
 
