@@ -2,7 +2,7 @@
 // 供台动画层：盖在礼佛 / 祭祀 / 祈福舞台上，根据仪式状态摆出器物并播放动画。
 // 器物素材由 ChatGPT 生成（透明背景工笔画），火苗、青烟、火星、光环都由 CSS 实时生成。
 // 尺寸单位 --u 取舞台高、宽中较紧的一边，手机竖屏和电脑横屏都能保持比例。
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   ritual: { type: Object, required: true },
@@ -13,37 +13,8 @@ const A = (name) => `/ritual/${name}.webp`
 
 const done = (key) => Boolean(props.ritual.state.done[key])
 
-// ── 叩拜：三叩首（跪直 → 俯身 → 跪直，三次），之后保持跪姿 ──
-const bowing = ref(false)
-const figuresShown = ref(false)
-let bowTimers = []
-
-function clearBowTimers() {
-  bowTimers.forEach(clearTimeout)
-  bowTimers = []
-}
-
-watch(
-  () => props.ritual.state.bowRun,
-  (run) => {
-    clearBowTimers()
-    if (!run) {
-      figuresShown.value = false
-      bowing.value = false
-      return
-    }
-    figuresShown.value = true
-    bowing.value = false
-    // 出场 0.6s 后开始：每次叩首 = 俯身 1.1s + 起身 0.9s
-    for (let i = 0; i < 3; i += 1) {
-      const start = 600 + i * 2000
-      bowTimers.push(setTimeout(() => (bowing.value = true), start))
-      bowTimers.push(setTimeout(() => (bowing.value = false), start + 1100))
-    }
-  }
-)
-
-onBeforeUnmount(clearBowTimers)
+// ── 叩拜：点过一次后，两人循环叩首不停（动画由 CSS 控制） ──
+const figuresShown = computed(() => props.ritual.state.bowRun > 0)
 </script>
 
 <template>
@@ -112,12 +83,12 @@ onBeforeUnmount(clearBowTimers)
       </template>
     </div>
 
-    <!-- 两侧跪拜的人 -->
-    <div class="worshipper worshipper--l" :class="{ shown: figuresShown, bowing }">
+    <!-- 两侧跪拜的人（背影，面朝佛像） -->
+    <div class="worshipper worshipper--l" :class="{ shown: figuresShown }">
       <img class="pose kneel" :src="A('man-kneel')" alt="" />
       <img class="pose bow" :src="A('man-bow')" alt="" />
     </div>
-    <div class="worshipper worshipper--r" :class="{ shown: figuresShown, bowing }">
+    <div class="worshipper worshipper--r" :class="{ shown: figuresShown }">
       <img class="pose kneel" :src="A('woman-kneel')" alt="" />
       <img class="pose bow" :src="A('woman-bow')" alt="" />
     </div>
@@ -468,8 +439,9 @@ onBeforeUnmount(clearBowTimers)
   filter: drop-shadow(0 calc(var(--u) * 0.6) calc(var(--u) * 1) rgba(10, 4, 0, 0.5));
 }
 .pose.bow { opacity: 0; }
-.bowing .pose.kneel { opacity: 0; }
-.bowing .pose.bow { opacity: 1; }
+/* 出场 0.6s 后开始循环：跪直 → 俯身叩首 → 起身，每次 2.6s */
+.worshipper.shown .pose.kneel { animation: pose-kneel 2.6s ease-in-out 0.6s infinite; }
+.worshipper.shown .pose.bow { animation: pose-bow 2.6s ease-in-out 0.6s infinite; }
 
 /* ── keyframes ── */
 @keyframes glow-breathe {
@@ -529,6 +501,16 @@ onBeforeUnmount(clearBowTimers)
   0% { transform: translate(0, 0); opacity: 0; }
   10% { opacity: 1; }
   100% { transform: translate(calc((var(--i) - 5) * var(--u) * 0.8), calc(var(--u) * -20)); opacity: 0; }
+}
+@keyframes pose-kneel {
+  0%, 30% { opacity: 1; }
+  42%, 72% { opacity: 0; }
+  84%, 100% { opacity: 1; }
+}
+@keyframes pose-bow {
+  0%, 30% { opacity: 0; }
+  42%, 72% { opacity: 1; }
+  84%, 100% { opacity: 0; }
 }
 @keyframes orbit-spin {
   to { transform: rotate(360deg); }

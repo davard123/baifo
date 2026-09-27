@@ -29,7 +29,7 @@ const TOASTS = {
     light: '灯烛已燃，愿慧灯常明。',
     flower: '鲜花供佛，愿心地清净。',
     fruit: '鲜果已供，愿福慧双增。',
-    bow: '三叩首，礼敬十方诸佛。',
+    bow: '顶礼叩拜，礼敬十方诸佛。',
     circle: '绕佛三匝，消业增福。',
   },
   ancestor: {
@@ -39,21 +39,21 @@ const TOASTS = {
     fruit: '鲜果已供，聊表孝心。',
     wine: '清酒一杯，敬奠先人。',
     paper: '纸钱已化，愿先人安乐。',
-    bow: '三叩首，慎终追远。',
+    bow: '叩首拜祭，慎终追远。',
   },
   blessing: {
     incense: '心香一瓣，供养十方。',
     light: '慧灯常明，照破无明。',
     flower: '鲜花供养，愿所求如意。',
     fruit: '鲜果已供，愿福报圆满。',
-    bow: '三叩首，诚心祈福。',
+    bow: '叩首礼拜，诚心祈福。',
   },
 }
 
 export function useRitual(mode = 'buddha') {
   const state = reactive({
     done: {},
-    // 每次点叩拜 / 绕佛递增，动画层据此重播
+    // 叩拜：大于 0 即开始循环叩首；绕佛：每点一次重播光环
     bowRun: 0,
     circleRun: 0,
     toast: '',
