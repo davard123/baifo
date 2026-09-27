@@ -92,4 +92,17 @@ function toggle() {
   /* 跟随念佛按钮在手机上的位置一起内收 */
   .audio-btn { bottom: 84px; right: 22px; }
 }
+
+</style>
+
+<style>
+/* 拜佛 / 祭祀页：挪到左上角导航条下方，排在念佛按钮右边 */
+html.ritual-route .audio-btn {
+  top: calc(env(safe-area-inset-top) + 70px);
+  bottom: auto;
+  left: 62px;
+  right: auto;
+  width: 38px;
+  height: 38px;
+}
 </style>

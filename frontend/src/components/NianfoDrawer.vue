@@ -358,10 +358,23 @@ onBeforeUnmount(() => {
   .slide-enter-from, .slide-leave-to { transform: translateY(28px); opacity: 0; }
 }
 
+
 @media (prefers-reduced-motion: reduce) {
   .fade-enter-active, .fade-leave-active,
   .slide-enter-active, .slide-leave-active { transition: none; }
   .float-chant { animation-duration: 0.01ms; }
   .nianfo-trigger { transition: none; }
+}
+</style>
+
+<style>
+/* 拜佛 / 祭祀页：挪到左上角导航条下方，缩小一号 */
+html.ritual-route .nianfo-trigger {
+  top: calc(env(safe-area-inset-top) + 66px);
+  bottom: auto;
+  left: 12px;
+  right: auto;
+  width: 44px;
+  height: 44px;
 }
 </style>

@@ -89,7 +89,11 @@ function applyRouteSeo(path) {
 
 watch(
   () => route.path,
-  (path) => applyRouteSeo(path),
+  (path) => {
+    applyRouteSeo(path)
+    // 拜佛 / 祭祀页：悬浮按钮移到左上角，避免挡住右下方跪拜的人和供养面板
+    document.documentElement.classList.toggle('ritual-route', /^\/(buddha|ancestor)\//.test(path))
+  },
   { immediate: true }
 )
 
