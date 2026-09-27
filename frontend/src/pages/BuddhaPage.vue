@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
-import RitualButtons from '../components/RitualButtons.vue'
+import RitualPanel from '../components/ritual/RitualPanel.vue'
+import { useRitual } from '../composables/useRitual.js'
 import WishForm from '../components/WishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
@@ -22,10 +23,7 @@ const nextBuddha = computed(() => {
 })
 const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== route.params.slug).slice(0, 3))
 
-const offeringItems = ref([])
-const figureItems = ref([])
-const hasCandles = ref(false)
-const hasIncense = ref(false)
+const ritual = useRitual('buddha')
 const drawerOpen = ref(false)
 
 function updatePageMeta() {
@@ -44,35 +42,13 @@ watch(
   (current) => {
     if (!current) return
 
-    offeringItems.value = []
-    figureItems.value = []
-    hasCandles.value = false
-    hasIncense.value = false
+    ritual.reset()
     drawerOpen.value = false
     submitted.value = null
     updatePageMeta()
   },
   { immediate: true }
 )
-
-function onRitual({ images, isFigure, isCandle, isIncense }) {
-  if (isCandle) {
-    hasCandles.value = true
-    return
-  }
-
-  if (isIncense) {
-    hasIncense.value = true
-    return
-  }
-
-  const items = images.map((src) => ({ src, id: Date.now() + Math.random() }))
-  if (isFigure) {
-    figureItems.value = items
-  } else {
-    offeringItems.value.push(...items)
-  }
-}
 
 async function onSubmit(payload) {
   const response = await apiFetch('/wishes', {
@@ -108,13 +84,7 @@ const doneActions = computed(() => {
 
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
-        <PrayerStage
-          :buddha="buddha"
-          :offering-items="offeringItems"
-          :figure-items="figureItems"
-          :has-candles="hasCandles"
-          :has-incense="hasIncense"
-        />
+        <PrayerStage :buddha="buddha" :ritual="ritual" />
       </section>
 
       <button
@@ -151,7 +121,7 @@ const doneActions = computed(() => {
         />
 
         <template v-else>
-          <RitualButtons @ritual="onRitual" />
+          <RitualPanel :ritual="ritual" homage-title="礼敬" />
           <hr class="divider" />
           <WishForm :default-wish="buddha.wish" :on-submit="onSubmit" />
         </template>

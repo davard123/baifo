@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ANCESTORS } from '../data/ancestors.js'
 import AncestorStage from '../components/AncestorStage.vue'
-import AncestorRituals from '../components/AncestorRituals.vue'
+import RitualPanel from '../components/ritual/RitualPanel.vue'
+import { useRitual } from '../composables/useRitual.js'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
@@ -24,12 +25,7 @@ const submitted = ref(null)
 
 const customPhoto = ref(null)
 const customName = ref(null)
-const offeringItems = ref([])
-const figureItems = ref([])
-const hasCandles = ref(false)
-const hasIncense = ref(false)
-const hasWine = ref(false)
-const hasPaper = ref(false)
+const ritual = useRitual('ancestor')
 
 const displayAncestorName = computed(() => customName.value || ancestor.value?.title || '')
 const defaultRelationship = computed(() => {
@@ -53,12 +49,7 @@ function syncAncestorState() {
 }
 
 function resetStageState() {
-  offeringItems.value = []
-  figureItems.value = []
-  hasCandles.value = false
-  hasIncense.value = false
-  hasWine.value = false
-  hasPaper.value = false
+  ritual.reset()
 }
 
 function applyPageMeta() {
@@ -81,32 +72,6 @@ watch(
   },
   { immediate: true }
 )
-
-function onRitual({ images, isFigure, isCandle, isIncense, isWine, isPaper }) {
-  if (isCandle) {
-    hasCandles.value = true
-    return
-  }
-  if (isIncense) {
-    hasIncense.value = true
-    return
-  }
-  if (isWine) {
-    hasWine.value = true
-    return
-  }
-  if (isPaper) {
-    hasPaper.value = true
-    return
-  }
-
-  const items = images.map(src => ({ src, id: Date.now() + Math.random() }))
-  if (isFigure) {
-    figureItems.value = items
-  } else {
-    offeringItems.value.push(...items)
-  }
-}
 
 async function onSubmit(payload) {
   const res = await apiFetch('/ancestor-wishes', {
@@ -142,17 +107,14 @@ const doneActions = computed(() => {
           :ancestor="ancestor"
           :custom-photo="customPhoto"
           :custom-name="customName"
-          :offering-items="offeringItems"
-          :figure-items="figureItems"
-          :has-candles="hasCandles"
-          :has-incense="hasIncense"
-          :has-wine="hasWine"
-          :has-paper="hasPaper"
+          :ritual="ritual"
         />
       </section>
 
       <section class="panel-section card">
         <h1 class="namo-title">{{ ancestor.namo }}</h1>
+        <RitualPanel v-if="!submitted" :ritual="ritual" homage-title="祭奠" />
+        <hr v-if="!submitted" class="divider" />
         <p class="ancestor-desc">{{ ancestor.desc }}</p>
         <div class="page-tags">
           <span>{{ ancestor.subtitle }}</span>
@@ -184,8 +146,6 @@ const doneActions = computed(() => {
         />
 
         <template v-else>
-          <AncestorRituals @ritual="onRitual" />
-          <hr class="divider" />
           <AncestorWishForm
             :slug="ancestor.slug"
             :default-wish="ancestor.wish"
@@ -266,7 +226,7 @@ const doneActions = computed(() => {
   }
 
   .stage-section {
-    flex: 4;
+    flex: 5;
     min-height: 0;
     padding: 0;
     border-radius: 0;
@@ -280,7 +240,7 @@ const doneActions = computed(() => {
   }
 
   .panel-section {
-    flex: 1;
+    flex: 3;
     min-height: 0;
     overflow-y: auto;
     padding: 10px 16px 16px;

@@ -4,6 +4,9 @@ import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
+import AltarLayer from './ritual/AltarLayer.vue'
+import RitualPanel from './ritual/RitualPanel.vue'
+import { useRitual } from '../composables/useRitual.js'
 
 const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
@@ -24,15 +27,9 @@ const form = ref({
   email: '',
 })
 
-const RITUALS = [
-  { name: '上香', icon: '🪔', toast: '心香一瓣，供养十方。' },
-  { name: '点灯', icon: '🕯️', toast: '慧灯常明，照破无明。' },
-  { name: '叩拜', icon: '🙏', toast: '三叩首，礼敬祈福。' },
-]
-
-const doneRituals = ref(new Set())
-const popRitual = ref('')
-const floats = ref([])
+// 供养按钮、供台动画与拜佛 / 祭祀页共用
+const ritual = useRitual('blessing')
+const drawerOpen = ref(false)
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
@@ -43,7 +40,7 @@ const nextBlessing = computed(() => {
 function hydrateProfile() {
   const viewer = getViewerProfile()
   form.value.name = viewer.username || ''
-  form.value.age = viewer.age ? String(viewer.age) : '30'
+  form.value.age = viewer.age ? String(viewer.age) : ''
   form.value.target = ''
   form.value.email = ''
 }
@@ -52,9 +49,8 @@ function resetTransientState() {
   resultWish.value = ''
   resultEmail.value = ''
   stage.value = 'select'
-  doneRituals.value = new Set()
-  popRitual.value = ''
-  floats.value = []
+  ritual.reset()
+  drawerOpen.value = false
   loading.value = false
 }
 
@@ -62,9 +58,8 @@ function open(blessing) {
   active.value = blessing
   stage.value = 'form'
   resultWish.value = ''
-  doneRituals.value = new Set()
-  popRitual.value = ''
-  floats.value = []
+  ritual.reset()
+  drawerOpen.value = false
   hydrateProfile()
 }
 
@@ -89,6 +84,12 @@ async function submit() {
     return
   }
 
+  if (!Number(form.value.age) || Number(form.value.age) <= 0) {
+    toast.value = '请填写正确的年龄。'
+    clearToastSoon()
+    return
+  }
+
   loading.value = true
   saveViewerProfile(form.value.name.trim(), form.value.age)
 
@@ -98,7 +99,7 @@ async function submit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: form.value.name.trim(),
-        age: Number(form.value.age) || 30,
+        age: Number(form.value.age),
         wish: active.value.wish,
         buddha: '',
         blessing: active.value.label,
@@ -117,32 +118,8 @@ async function submit() {
   resultWish.value = active.value.wish
   resultEmail.value = form.value.email.trim()
   stage.value = 'done'
+  drawerOpen.value = true
   emit('wish-submitted')
-}
-
-function doRitual(ritual) {
-  if (doneRituals.value.has(ritual.name)) return
-
-  doneRituals.value = new Set([...doneRituals.value, ritual.name])
-  toast.value = ritual.toast
-  clearToastSoon()
-
-  popRitual.value = ritual.name
-  setTimeout(() => {
-    popRitual.value = ''
-  }, 400)
-
-  for (let index = 0; index < 3; index += 1) {
-    const id = Date.now() + index
-    const left = 28 + Math.random() * 44
-    const delay = index * 180
-    setTimeout(() => {
-      floats.value.push({ id, icon: ritual.icon, left })
-      setTimeout(() => {
-        floats.value = floats.value.filter((item) => item.id !== id)
-      }, 1500)
-    }, delay)
-  }
 }
 
 function lockBodyScroll() {
@@ -202,57 +179,54 @@ onBeforeUnmount(() => {
     </div>
 
     <Teleport to="body">
-      <div v-if="active" class="blessing-modal" @click.self="close" @keydown.esc="close">
-        <div
-          class="modal-shell"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="blessing-dialog-title"
-          aria-describedby="blessing-dialog-desc"
-        >
-          <div class="modal-scene">
-            <div class="scene-img-wrap">
-              <img :src="active.bg" :alt="`${active.label}场景图`" class="scene-img" />
-            </div>
+      <div
+        v-if="active"
+        class="blessing-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="blessing-dialog-title"
+        @keydown.esc="close"
+      >
+        <div class="bm-top">
+          <button ref="modalCloseButton" class="bm-back" type="button" @click="close">← 返回祈福池</button>
+          <p class="bm-top-title">{{ active.label }}</p>
+        </div>
+
+        <div class="bm-body">
+          <div class="bm-stage">
+            <img :src="active.bg" :alt="`${active.label}场景图`" class="bm-scene-img" />
+            <AltarLayer :ritual="ritual" mode="blessing" />
           </div>
 
-          <div class="scene-overlay">
-            <div class="overlay-head">
-              <p class="overlay-kicker">祈福主题</p>
-              <h3 id="blessing-dialog-title" class="overlay-title">{{ active.label }}</h3>
-              <p id="blessing-dialog-desc" class="form-wish-hint">
-                <template v-if="stage === 'form'">{{ active.wish }}</template>
-                <template v-else>{{ resultWish }}</template>
-              </p>
-            </div>
+          <button
+            type="button"
+            class="bm-toggle"
+            :class="{ open: drawerOpen }"
+            @click="drawerOpen = !drawerOpen"
+          >
+            {{ drawerOpen ? '收起' : '祈福供养' }}
+          </button>
 
-            <div v-if="stage === 'form'" class="scene-rituals" aria-label="可选礼仪动作">
-              <TransitionGroup name="float-group">
-                <span
-                  v-for="item in floats"
-                  :key="item.id"
-                  class="float-emoji"
-                  :style="{ left: `${item.left}%` }"
-                  aria-hidden="true"
-                >{{ item.icon }}</span>
-              </TransitionGroup>
+          <button
+            v-if="drawerOpen"
+            type="button"
+            class="bm-backdrop"
+            aria-label="收起祈福面板"
+            @click="drawerOpen = false"
+          ></button>
 
-              <button
-                v-for="ritual in RITUALS"
-                :key="ritual.name"
-                class="ritual-btn"
-                type="button"
-                :class="{ done: doneRituals.has(ritual.name), pop: popRitual === ritual.name }"
-                :disabled="doneRituals.has(ritual.name)"
-                :aria-pressed="doneRituals.has(ritual.name)"
-                @click="doRitual(ritual)"
-              >
-                <span class="ritual-icon" aria-hidden="true">{{ ritual.icon }}</span>
-                <span class="ritual-name">
-                  {{ ritual.name }}{{ doneRituals.has(ritual.name) ? ' 已完成' : '' }}
-                </span>
-              </button>
-            </div>
+          <section class="bm-drawer" :class="{ open: drawerOpen }">
+            <p class="overlay-kicker">祈福主题</p>
+            <h3 id="blessing-dialog-title" class="overlay-title">{{ active.label }}</h3>
+            <p class="form-wish-hint">
+              <template v-if="stage === 'form'">{{ active.wish }}</template>
+              <template v-else>{{ resultWish }}</template>
+            </p>
+
+            <template v-if="stage === 'form'">
+              <RitualPanel :ritual="ritual" homage-title="礼敬" />
+              <hr class="bm-divider" />
+            </template>
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
@@ -336,18 +310,8 @@ onBeforeUnmount(() => {
                 <span v-else>提交祈福</span>
               </button>
             </form>
-          </div>
+          </section>
         </div>
-
-        <button
-          ref="modalCloseButton"
-          class="modal-close"
-          type="button"
-          aria-label="关闭祈福池弹窗"
-          @click="close"
-        >
-          ✕
-        </button>
 
         <transition name="toast-fade">
           <div v-if="toast" class="modal-toast" aria-live="polite">{{ toast }}</div>
@@ -463,214 +427,199 @@ onBeforeUnmount(() => {
   overflow-wrap: anywhere;
 }
 
+/* ── 祈福：全屏舞台 + 右侧弹出面板（与拜佛页一致） ── */
 .blessing-modal {
   position: fixed;
   inset: 0;
-  z-index: 900;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  background: #160800;
+  color: var(--text);
+}
+
+.bm-top {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background:
-    radial-gradient(circle at center, rgba(151, 108, 56, 0.18), transparent 30%),
-    rgba(20, 8, 0, 0.88);
-  backdrop-filter: blur(10px);
+  gap: 12px;
+  padding: 8px 12px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: var(--surface);
+  border-bottom: 1px solid rgba(212, 168, 67, 0.15);
 }
 
-.modal-shell {
-  width: min(1120px, 92vw);
-  min-height: min(760px, 86vh);
-  max-height: 86vh;
-  border-radius: 28px;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: minmax(420px, 1.15fr) minmax(320px, 0.85fr);
-  background: linear-gradient(135deg, rgba(31, 21, 42, 0.98), rgba(18, 13, 26, 0.98));
-  border: 1px solid rgba(212, 168, 67, 0.22);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+.bm-back {
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid rgba(212, 168, 67, 0.35);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
 }
 
-.modal-scene {
+.bm-top-title {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.bm-body {
   position: relative;
+  flex: 1;
   min-height: 0;
-  background:
-    radial-gradient(circle at center, rgba(255, 220, 150, 0.26), transparent 46%),
-    linear-gradient(180deg, #f5ead3 0%, #ecd8b5 100%);
+  overflow: hidden;
 }
 
-.modal-scene::before {
-  content: '';
+.bm-stage {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(10, 6, 16, 0.28));
-  pointer-events: none;
-}
-
-.scene-img-wrap {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(241, 193, 88, 0.16), transparent 40%),
+    linear-gradient(180deg, #180700 0%, #341100 40%, #592107 78%, #7c3f10 100%);
 }
 
-.scene-img {
-  width: 108%;
-  height: 108%;
-  max-width: none;
-  max-height: none;
-  display: block;
-  object-fit: cover;
-  object-position: center 68%;
-  filter: drop-shadow(0 24px 36px rgba(96, 62, 24, 0.18));
+.bm-scene-img {
+  /* 神像图收在上方，下方留给供台 */
+  position: absolute;
+  inset: 1.5% 0 29% 0;
+  width: 100%;
+  height: 69.5%;
+  object-fit: contain;
+  /* 神像贴着供台摆放，空白留在顶部 */
+  object-position: center bottom;
 }
 
-.scene-overlay {
-  min-height: 0;
+.bm-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 25;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  padding: 18px 10px;
+  border: 1px solid rgba(212, 168, 67, 0.36);
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+  background: rgba(30, 20, 42, 0.96);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: right 0.28s ease;
+}
+
+.bm-toggle.open {
+  right: min(400px, 88vw);
+}
+
+.bm-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  border: none;
+  background: rgba(18, 6, 0, 0.28);
+}
+
+.bm-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(400px, 88vw);
   overflow-y: auto;
-  padding: 28px 28px 30px;
-  background: linear-gradient(180deg, rgba(30, 20, 41, 0.96), rgba(19, 13, 27, 0.98));
-  border-left: 1px solid rgba(212, 168, 67, 0.22);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  padding: 20px 20px 32px;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-left: 1px solid rgba(212, 168, 67, 0.18);
+  box-shadow: -10px 0 28px rgba(24, 9, 2, 0.22);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
 }
 
-.overlay-head {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: center;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(212, 168, 67, 0.18);
+.bm-drawer.open {
+  transform: translateX(0);
+}
+
+.bm-divider {
+  border: none;
+  border-top: 1px solid rgba(212, 168, 67, 0.2);
+  margin: 16px 0;
 }
 
 .overlay-kicker {
-  font-size: 0.78rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
 }
 
 .overlay-title {
-  font-size: clamp(1.7rem, 3vw, 2rem);
-  line-height: 1.1;
+  margin: 4px 0 6px;
   color: var(--accent);
-  letter-spacing: 0.08em;
+  font-size: 1.6rem;
+  letter-spacing: 0.1em;
 }
 
 .form-wish-hint {
-  font-size: 0.96rem;
-  color: var(--accent);
-  text-align: center;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
 }
 
-.scene-rituals {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.float-emoji {
-  position: absolute;
-  bottom: 100%;
-  font-size: 2rem;
-  pointer-events: none;
-  animation: floatUp 1.4s ease-out forwards;
+.modal-toast {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 64px);
+  left: 50%;
+  z-index: 3100;
   transform: translateX(-50%);
-  z-index: 10;
-}
-
-@keyframes floatUp {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-  }
-
-  50% {
-    opacity: 0.9;
-    transform: translateX(-50%) translateY(-50px) scale(1.3);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-110px) scale(0.7);
-  }
-}
-
-.float-group-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.float-group-leave-to {
-  opacity: 0;
-}
-
-.ritual-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 104px;
-  padding: 16px 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(242, 200, 121, 0.2);
-  background: linear-gradient(180deg, rgba(44, 30, 58, 0.94), rgba(26, 18, 37, 0.96));
-  color: var(--accent);
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
-}
-
-.ritual-btn:hover:not(:disabled) {
-  background: rgba(212, 168, 67, 0.2);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-}
-
-.ritual-btn.done {
-  opacity: 0.55;
-  background: rgba(212, 168, 67, 0.12);
-}
-
-.ritual-btn.pop {
-  animation: ritualPop 0.38s ease;
-}
-
-.ritual-icon {
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.ritual-name {
-  font-size: 0.88rem;
-  line-height: 1.4;
+  max-width: calc(100vw - 32px);
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(40, 24, 8, 0.92);
+  color: #f0d080;
+  font-size: 0.95rem;
   text-align: center;
+  pointer-events: none;
 }
 
-@keyframes ritualPop {
-  0% {
-    transform: scale(1);
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-8px);
+}
+
+@media (max-width: 768px) {
+  .bm-toggle {
+    top: auto;
+    bottom: 18px;
+    transform: none;
   }
 
-  40% {
-    transform: scale(1.12) translateY(-4px);
+  .bm-drawer {
+    width: min(420px, 100vw);
+    padding: 14px 16px 18px;
   }
 
-  70% {
-    transform: scale(0.98);
+  .bm-toggle.open {
+    right: min(420px, 100vw);
   }
 
-  100% {
-    transform: scale(1);
+  .overlay-title {
+    font-size: 1.3rem;
   }
 }
 
@@ -797,95 +746,6 @@ onBeforeUnmount(() => {
   border-color: #f0d080;
 }
 
-.modal-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: rgba(255, 248, 233, 0.12);
-  border: 1px solid rgba(255, 250, 240, 0.3);
-  color: var(--text);
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.modal-close:hover {
-  background: rgba(242, 200, 121, 0.24);
-  transform: scale(1.04);
-}
-
-.modal-toast {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: min(90vw, 460px);
-  background: rgba(50, 30, 10, 0.92);
-  color: #f0d080;
-  padding: 10px 18px;
-  border-radius: 24px;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  text-align: center;
-  pointer-events: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.toast-fade-enter-active,
-.toast-fade-leave-active {
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-.toast-fade-enter-from,
-.toast-fade-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) translateY(-8px);
-}
-
-@media (max-width: 980px) and (orientation: portrait) {
-  .blessing-modal {
-    display: block;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: max(16px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
-  }
-
-  .modal-shell {
-    width: min(92vw, 520px);
-    min-height: auto;
-    max-height: none;
-    grid-template-columns: 1fr;
-    margin: 0 auto;
-  }
-
-  .scene-overlay {
-    border-left: none;
-    border-top: 1px solid rgba(212, 168, 67, 0.22);
-    padding: 20px 18px 22px;
-    overflow: visible;
-  }
-
-  .scene-img {
-    width: 100%;
-    height: 100%;
-    object-position: center 62%;
-  }
-
-  .overlay-title {
-    font-size: 1.7rem;
-  }
-
-  .modal-close {
-    position: fixed;
-    top: max(12px, env(safe-area-inset-top));
-    right: 12px;
-    z-index: 2;
-  }
-}
-
 @media (max-width: 760px) {
   .blessing-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -897,15 +757,8 @@ onBeforeUnmount(() => {
     height: 100px;
   }
 
-  .form-row,
-  .scene-rituals {
-    grid-template-columns: 1fr;
-  }
-
-  .ritual-btn {
-    min-height: 76px;
-    flex-direction: row;
-    justify-content: center;
+  .form-row {
+    grid-template-columns: minmax(0, 1fr) 96px;
   }
 }
 
@@ -915,58 +768,13 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 980px) and (orientation: landscape) {
-  .blessing-modal {
-    align-items: flex-start;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: max(10px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom));
-  }
-
-  .modal-shell {
-    width: min(96vw, 920px);
-    min-height: auto;
-    max-height: none;
-    grid-template-columns: minmax(240px, 0.95fr) minmax(300px, 1.05fr);
-    margin: 0 auto;
-  }
-
-  .modal-scene {
-    min-height: 320px;
-  }
-
-  .scene-img {
-    width: 106%;
-    height: 106%;
-    object-position: center 58%;
-  }
-
-  .scene-overlay {
-    overflow: visible;
-    padding: 18px 18px 20px;
-  }
-
-  .ritual-btn {
-    min-height: 82px;
-    padding: 12px 10px;
-  }
-
-  .modal-close {
-    position: fixed;
-    top: max(8px, env(safe-area-inset-top));
-    right: 10px;
-    z-index: 2;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .blessing-section,
   .blessing-item,
-  .ritual-btn,
   .submit-btn,
   .back-home-btn,
-  .modal-close,
-  .float-emoji {
+  .bm-drawer,
+  .bm-toggle {
     animation: none !important;
     transition: none !important;
     transform: none !important;
