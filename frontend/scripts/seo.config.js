@@ -189,6 +189,21 @@ function buildWebPageSchema({
   }
 }
 
+// 常见问答 → FAQPage；预渲染时也会把问答写进静态 HTML，爬虫和 AI 不执行 JS 也能读到
+function buildFaqSchema(path, faqs = []) {
+  if (!faqs || !faqs.length) return null
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${absoluteUrl(path)}#faq`,
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  }
+}
+
 function buildArticleSchema({
   type = 'Article',
   idSuffix = 'article',
@@ -471,29 +486,18 @@ function guidePage({ slug, title, description, heading }) {
         about,
         articleBody: content.sections.flatMap(section => [section.title, ...section.paragraphs]).join("\n"),
       }),
-
-    ],
+      buildFaqSchema(pagePath, faqs),
+    ].filter(Boolean),
   }
 }
 
 function topicPage({ path, slug }) {
   const topic = TOPICS[slug]
-  const isRitual = path.startsWith('/rituals/')
-  const isDefinitionPage = isRitual || path.startsWith('/prayers/') || path.startsWith('/texts/')
-  const howToMeta = HOWTO_META[slug]
   const about = {
     '@type': 'Thing',
     name: topic.heading,
     description: topic.description,
   }
-  const steps = isRitual
-    ? (topic.sections || []).map((section, index) => ({
-        '@type': 'HowToStep',
-        position: index + 1,
-        name: section.title,
-        text: (section.paragraphs || []).join(' '),
-      }))
-    : undefined
 
   return {
     path,
@@ -527,13 +531,9 @@ function topicPage({ path, slug }) {
           .flatMap((section) => [section.title, ...(section.paragraphs || [])])
           .filter(Boolean)
           .join('\n'),
-
-
-
       }),
-
-
-    ],
+      buildFaqSchema(path, topic.faqs),
+    ].filter(Boolean),
   }
 }
 
@@ -603,6 +603,7 @@ export function getStaticPages() {
       heading: '祭祖追思、回向步骤与隐私说明',
       description: '说明如何在线祭祖、追思先人、进行回向，以及个性化照片与姓名设置的隐私边界。',
     }),
+    guidePage({ slug: 'dongzhi-2026' }),
     ...getTopicEntries().map(topicPage),
     ...BUDDHAS.map(buddhaPage),
     ancestorsPage(),
