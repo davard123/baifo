@@ -2,6 +2,7 @@ import { GUIDES } from '../src/data/guides.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
 import { ANCESTORS } from '../src/data/ancestors.js'
 import { TOPICS, getTopicEntries } from '../src/data/topics.js'
+import { HOME_ABOUT, HOME_FAQS } from '../src/data/homeContent.js'
 
 export const SITE = {
   name: '礼佛祈愿',
@@ -257,8 +258,8 @@ function buildArticleSchema({
 function homePage() {
   return {
     path: '/',
-    title: '礼佛祈愿 | 在线礼佛、念佛计数与祭祖追思',
-    description: '选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。',
+    title: '礼佛祈愿 | 在线拜佛、网上祭祖与清明扫墓',
+    description: '免费的在线拜佛与网上祭祖网站：礼敬八位佛菩萨，上香、点灯、献花、供果、叩拜；为先人设立牌位，清明、冬至在线扫墓追思，写下祈愿与回向。适合海外华人。',
     heading: '礼佛祈愿',
     summary: '选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。',
     image: SITE.defaultImage,
@@ -303,7 +304,15 @@ function homePage() {
           })),
         },
       },
-
+      buildArticleSchema({
+        path: '/',
+        idSuffix: 'about',
+        headline: '在线礼佛与网上祭祖',
+        name: '关于礼佛祈愿',
+        description: HOME_ABOUT[0],
+        articleBody: HOME_ABOUT.join('\n'),
+      }),
+      buildFaqSchema('/', HOME_FAQS),
     ],
   }
 }

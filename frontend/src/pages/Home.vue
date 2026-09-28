@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue'
 import FestivalGreeting from '../components/FestivalGreeting.vue'
+import { HOME_ABOUT, HOME_FAQS } from '../data/homeContent.js'
 import { useRouter } from 'vue-router'
 import { TOPICS } from '../data/topics.js'
 import { BUDDHAS } from '../data/buddhas.js'
@@ -161,7 +162,7 @@ async function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '礼佛祈愿 | 海外华人在线礼佛·祭祖·清明扫墓 - fopusha.com'
+  document.title = '礼佛祈愿 | 在线拜佛、网上祭祖与清明扫墓 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
@@ -358,6 +359,22 @@ onMounted(() => {
       </div>
     </section>
 
+
+    <section class="card about-section" aria-labelledby="about-site-title">
+      <div class="section-head">
+        <p class="section-kicker">关于本站</p>
+        <h2 id="about-site-title" class="section-title">在线礼佛与网上祭祖</h2>
+      </div>
+      <p v-for="line in HOME_ABOUT" :key="line" class="about-text">{{ line }}</p>
+
+      <h3 class="faq-heading">常见问题</h3>
+      <div class="faq-list">
+        <details v-for="faq in HOME_FAQS" :key="faq.q" class="faq-item">
+          <summary>{{ faq.q }}</summary>
+          <p>{{ faq.a }}</p>
+        </details>
+      </div>
+    </section>
 
     <footer class="site-footer">
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
@@ -839,6 +856,22 @@ onMounted(() => {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 18px;
+}
+
+.about-section {
+  padding: 28px;
+}
+
+.about-text {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  line-height: 1.85;
+}
+
+.faq-heading {
+  margin: 20px 0 10px;
+  color: var(--accent);
+  font-size: 1.05rem;
 }
 
 .faq-list {
