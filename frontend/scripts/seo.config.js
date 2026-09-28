@@ -282,7 +282,7 @@ function homePage() {
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
         inLanguage: 'zh-CN',
-        description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
+        description: 'fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
       },
       {
         '@context': 'https://schema.org',
@@ -290,7 +290,7 @@ function homePage() {
         '@id': `${absoluteUrl('/')}#collection`,
         name: SITE.name,
         url: absoluteUrl('/'),
-        description: 'www.fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供八位佛菩萨礼佛祈愿与功德回向入口。',
+        description: 'fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供八位佛菩萨礼佛祈愿与功德回向入口。',
         inLanguage: 'zh-CN',
         speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child']),
         mainEntity: {

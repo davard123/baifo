@@ -55,7 +55,7 @@ function resetStageState() {
 function applyPageMeta() {
   if (!ancestor.value) return
   const a = ancestor.value
-  document.title = `${a.name} 拜祭 | 在线祭拜先人 - www.fopusha.com`
+  document.title = `${a.name} 拜祭 | 在线祭拜先人 - fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
     `虔诚祭拜${a.name}，${a.subtitle}。${a.desc} 在线发愿，功德回向先人。`

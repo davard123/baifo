@@ -161,7 +161,7 @@ async function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '礼佛祈愿 | 海外华人在线礼佛·祭祖·清明扫墓 - www.fopusha.com'
+  document.title = '礼佛祈愿 | 海外华人在线礼佛·祭祖·清明扫墓 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(

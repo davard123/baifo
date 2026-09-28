@@ -30,7 +30,7 @@ function updatePageMeta() {
   if (!buddha.value) return
 
   const current = buddha.value
-  document.title = `${current.namo} | 在线礼佛祈愿 - www.fopusha.com`
+  document.title = `${current.namo} | 在线礼佛祈愿 - fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
     `礼敬${current.name}，围绕${current.subtitle}发愿修行。页面支持献花、点灯、上香、礼拜与回向，帮助按顺序完成在线礼佛。`

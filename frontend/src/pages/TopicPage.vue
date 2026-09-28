@@ -11,7 +11,7 @@ const topic = computed(() => TOPICS[topicKey.value])
 
 onMounted(() => {
   if (!topic.value) return
-  document.title = `${topic.value.title} | www.fopusha.com`
+  document.title = `${topic.value.title} - fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute('content', topic.value.description)
 })
 </script>

@@ -13,7 +13,7 @@ const guide = computed(() => guides[route.params.slug])
 
 onMounted(() => {
   if (!guide.value) return
-  document.title = `${guide.value.title} | www.fopusha.com`
+  document.title = `${guide.value.title} - fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute('content', guide.value.description)
 })
 

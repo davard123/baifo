@@ -14,7 +14,7 @@ const {
 const peak = computed(() => Math.max(1, ...days.value.map((d) => d.count)))
 
 onMounted(() => {
-  document.title = '念佛计数器 | 在线木鱼与每日功课 - www.fopusha.com'
+  document.title = '念佛计数器 | 在线木鱼与每日功课 - fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
     '在线念佛计数器与电子木鱼，支持南无阿弥陀佛、观世音菩萨等佛号，记录每日念诵数量、连续天数与每日目标。计数只保存在本机。',

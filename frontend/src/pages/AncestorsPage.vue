@@ -72,7 +72,7 @@ function entryStatus(ancestor) {
 }
 
 onMounted(() => {
-  document.title = '拜祭先人 | 在线祭拜先人 - www.fopusha.com'
+  document.title = '拜祭先人 | 在线祭拜先人 - fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content', '追思先人，超荐亡灵，虔诚祭拜，庇荫后代。选择一位先人，以虔诚之心祭拜发愿。'
   )
