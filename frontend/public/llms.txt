@@ -65,20 +65,20 @@ A: 不会。个性化姓名和照片只保存在当前设备本地，用于本�
 
 ## 礼佛仪轨与回向
 
-- 如何礼佛: https://fopusha.com/rituals/how-to-worship-buddha
-- 磕头是什么意思: https://fopusha.com/rituals/prostration
-- 供花是什么意思: https://fopusha.com/rituals/offering-flowers
-- 点灯供佛是什么意思: https://fopusha.com/rituals/offering-light
-- 上香是什么意思: https://fopusha.com/rituals/offering-incense
-- 如何回向: https://fopusha.com/rituals/how-to-dedicate-merit
-- 回向文大全: https://fopusha.com/texts/dedication-prayers
+- 如何礼佛: https://fopusha.com/topic/how-to-worship-buddha
+- 磕头是什么意思: https://fopusha.com/topic/prostration
+- 供花是什么意思: https://fopusha.com/topic/offering-flowers
+- 点灯供佛是什么意思: https://fopusha.com/topic/offering-light
+- 上香是什么意思: https://fopusha.com/topic/offering-incense
+- 如何回向: https://fopusha.com/topic/how-to-dedicate-merit
+- 回向文大全: https://fopusha.com/topic/dedication-prayers
 
 ## 祈愿场景
 
-- 健康祈愿: https://fopusha.com/prayers/health
-- 家人平安祈愿: https://fopusha.com/prayers/family-safety
-- 学业考试祈愿: https://fopusha.com/prayers/study
-- 事业顺利祈愿: https://fopusha.com/prayers/career
+- 健康祈愿: https://fopusha.com/topic/health
+- 家人平安祈愿: https://fopusha.com/topic/family-safety
+- 学业考试祈愿: https://fopusha.com/topic/study
+- 事业顺利祈愿: https://fopusha.com/topic/career
 
 ## 佛菩萨页面
 

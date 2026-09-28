@@ -6,7 +6,8 @@ https://www.fopusha.com/rituals/how-to-worship-buddha/ https://fopusha.com/topic
 https://www.fopusha.com/rituals/offering-flowers/ https://fopusha.com/topic/offering-flowers/ 301!
 https://www.fopusha.com/rituals/offering-light/ https://fopusha.com/topic/offering-light/ 301!
 https://www.fopusha.com/rituals/offering-incense/ https://fopusha.com/topic/offering-incense/ 301!
-https://www.fopusha.com/rituals/how-to-dedicate-merit/ https://fopusha.com/topic/how-to-dedicate-merit/ 301!https://www.fopusha.com/* https://fopusha.com/:splat 301!
+https://www.fopusha.com/rituals/how-to-dedicate-merit/ https://fopusha.com/topic/how-to-dedicate-merit/ 301!
+https://www.fopusha.com/* https://fopusha.com/:splat 301!
 /guide/father /ancestor/father 301
 /guide/father/ /ancestor/father 301
 /guide/mother /ancestor/mother 301
@@ -23,5 +24,26 @@ https://www.fopusha.com/rituals/how-to-dedicate-merit/ https://fopusha.com/topic
 /guide/general/ /ancestor/general 301
 /guide/ancestor /guide/ancestors 301
 /guide/ancestor/ /guide/ancestors 301
-
-
+# 重复页面合并：别名网址统一跳到 /topic
+/rituals/prostration /topic/prostration/ 301
+/rituals/prostration/ /topic/prostration/ 301
+/rituals/how-to-worship-buddha /topic/how-to-worship-buddha/ 301
+/rituals/how-to-worship-buddha/ /topic/how-to-worship-buddha/ 301
+/rituals/offering-flowers /topic/offering-flowers/ 301
+/rituals/offering-flowers/ /topic/offering-flowers/ 301
+/rituals/offering-light /topic/offering-light/ 301
+/rituals/offering-light/ /topic/offering-light/ 301
+/rituals/offering-incense /topic/offering-incense/ 301
+/rituals/offering-incense/ /topic/offering-incense/ 301
+/rituals/how-to-dedicate-merit /topic/how-to-dedicate-merit/ 301
+/rituals/how-to-dedicate-merit/ /topic/how-to-dedicate-merit/ 301
+/prayers/health /topic/health/ 301
+/prayers/health/ /topic/health/ 301
+/prayers/family-safety /topic/family-safety/ 301
+/prayers/family-safety/ /topic/family-safety/ 301
+/prayers/study /topic/study/ 301
+/prayers/study/ /topic/study/ 301
+/prayers/career /topic/career/ 301
+/prayers/career/ /topic/career/ 301
+/texts/dedication-prayers /topic/dedication-prayers/ 301
+/texts/dedication-prayers/ /topic/dedication-prayers/ 301

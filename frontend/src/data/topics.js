@@ -31,7 +31,7 @@ export const TOPICS = {
       },
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       },
       {
         "label": "观音菩萨祈福指南",
@@ -107,11 +107,11 @@ export const TOPICS = {
     "related": [
       {
         "label": "回向文",
-        "to": "/texts/dedication-prayers"
+        "to": "/topic/dedication-prayers"
       },
       {
         "label": "如何回向",
-        "to": "/rituals/how-to-dedicate-merit"
+        "to": "/topic/how-to-dedicate-merit"
       },
       {
         "label": "在线祭祖指南",
@@ -155,7 +155,7 @@ export const TOPICS = {
       },
       {
         "label": "家人平安祈愿",
-        "to": "/prayers/family-safety"
+        "to": "/topic/family-safety"
       }
     ]
   },
@@ -191,7 +191,7 @@ export const TOPICS = {
       },
       {
         "label": "健康祈愿",
-        "to": "/prayers/health"
+        "to": "/topic/health"
       },
       {
         "label": "观音菩萨祈福指南",
@@ -311,11 +311,11 @@ export const TOPICS = {
       },
       {
         "label": "学业考试祈愿",
-        "to": "/prayers/study"
+        "to": "/topic/study"
       },
       {
         "label": "点灯供佛",
-        "to": "/rituals/offering-light"
+        "to": "/topic/offering-light"
       }
     ]
   },
@@ -351,7 +351,7 @@ export const TOPICS = {
       },
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       },
       {
         "label": "在线礼佛指南",
@@ -387,7 +387,7 @@ export const TOPICS = {
     "related": [
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       },
       {
         "label": "礼佛和拜佛有什么区别",
@@ -467,7 +467,7 @@ export const TOPICS = {
     "related": [
       {
         "label": "家人平安祈愿",
-        "to": "/prayers/family-safety"
+        "to": "/topic/family-safety"
       },
       {
         "label": "观音菩萨祈福指南",
@@ -511,11 +511,11 @@ export const TOPICS = {
       },
       {
         "label": "供花的意义",
-        "to": "/rituals/offering-flowers"
+        "to": "/topic/offering-flowers"
       },
       {
         "label": "如何回向",
-        "to": "/rituals/how-to-dedicate-merit"
+        "to": "/topic/how-to-dedicate-merit"
       }
     ]
   },
@@ -547,11 +547,11 @@ export const TOPICS = {
     "related": [
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       },
       {
         "label": "点灯的意义",
-        "to": "/rituals/offering-light"
+        "to": "/topic/offering-light"
       },
       {
         "label": "在线礼佛网站使用说明",
@@ -587,15 +587,15 @@ export const TOPICS = {
     "related": [
       {
         "label": "学业祈愿",
-        "to": "/prayers/study"
+        "to": "/topic/study"
       },
       {
         "label": "事业祈愿",
-        "to": "/prayers/career"
+        "to": "/topic/career"
       },
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       }
     ]
   },
@@ -627,15 +627,15 @@ export const TOPICS = {
     "related": [
       {
         "label": "回向文",
-        "to": "/texts/dedication-prayers"
+        "to": "/topic/dedication-prayers"
       },
       {
         "label": "如何回向",
-        "to": "/rituals/how-to-dedicate-merit"
+        "to": "/topic/how-to-dedicate-merit"
       },
       {
         "label": "家人平安祈愿",
-        "to": "/prayers/family-safety"
+        "to": "/topic/family-safety"
       }
     ]
   },
@@ -667,7 +667,7 @@ export const TOPICS = {
     "related": [
       {
         "label": "回向文大全",
-        "to": "/texts/dedication-prayers"
+        "to": "/topic/dedication-prayers"
       },
       {
         "label": "功德回向怎么做",
@@ -715,7 +715,7 @@ export const TOPICS = {
       },
       {
         "label": "如何回向",
-        "to": "/rituals/how-to-dedicate-merit"
+        "to": "/topic/how-to-dedicate-merit"
       }
     ]
   },
@@ -755,7 +755,7 @@ export const TOPICS = {
       },
       {
         "label": "回向文",
-        "to": "/texts/dedication-prayers"
+        "to": "/topic/dedication-prayers"
       }
     ]
   },
@@ -791,11 +791,11 @@ export const TOPICS = {
       },
       {
         "label": "点灯供佛",
-        "to": "/rituals/offering-light"
+        "to": "/topic/offering-light"
       },
       {
         "label": "如何礼佛",
-        "to": "/rituals/how-to-worship-buddha"
+        "to": "/topic/how-to-worship-buddha"
       }
     ]
   },
@@ -835,7 +835,7 @@ export const TOPICS = {
       },
       {
         "label": "点灯供佛",
-        "to": "/rituals/offering-light"
+        "to": "/topic/offering-light"
       }
     ]
   },
@@ -867,7 +867,7 @@ export const TOPICS = {
     "related": [
       {
         "label": "如何回向",
-        "to": "/rituals/how-to-dedicate-merit"
+        "to": "/topic/how-to-dedicate-merit"
       },
       {
         "label": "功德回向怎么做",
@@ -983,8 +983,8 @@ export function getTopicKey(path, slug) {
   return TOPIC_ALIASES[path] || slug
 }
 
+// 别名网址（/rituals、/prayers、/texts）与 /topic 内容相同，已在 _redirects 里 301 到 /topic，
+// 这里只返回 /topic 页面，避免重复页面进入预渲染和站点地图。
 export function getTopicEntries() {
-  const topicPaths = Object.keys(TOPICS).map((slug) => ({ path: `/topic/${slug}`, slug }))
-  const aliasPaths = Object.entries(TOPIC_ALIASES).map(([path, slug]) => ({ path, slug }))
-  return [...topicPaths, ...aliasPaths]
+  return Object.keys(TOPICS).map((slug) => ({ path: `/topic/${slug}`, slug }))
 }
