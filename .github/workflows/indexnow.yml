@@ -19,6 +19,7 @@ jobs:
           INDEXNOW_HOST: fopusha.com
           INDEXNOW_KEY: d56425bce9c4add9f8ac01e5364db508
           INDEXNOW_ALL: "1"
+          SITEMAP_FILE: frontend/public/sitemap.xml
           BEFORE: ${{ github.event.before }}
         run: |
           if git cat-file -e "$BEFORE" 2>/dev/null; then
