@@ -6,7 +6,22 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Notify IndexNow
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Notify IndexNow of changed pages
+        env:
+          INDEXNOW_HOST: fopusha.com
+          INDEXNOW_KEY: d56425bce9c4add9f8ac01e5364db508
+          INDEXNOW_ALL: "1"
+          BEFORE: ${{ github.event.before }}
         run: |
-          curl -sS -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data '{"host":"fopusha.com","key":"d56425bce9c4add9f8ac01e5364db508","keyLocation":"https://fopusha.com/d56425bce9c4add9f8ac01e5364db508.txt","urlList":["https://fopusha.com/sitemap.xml"]}'
+          if git cat-file -e "$BEFORE" 2>/dev/null; then
+            export CHANGED_FILES="$(git diff --name-only "$BEFORE" "$GITHUB_SHA")"
+          fi
+          node .github/scripts/indexnow.mjs
