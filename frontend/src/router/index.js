@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { warmApi } from '../api.js'
+import { HANT_PREFIX, isHantPath, stripHant, toHant } from '../i18n/hant.js'
 
 const Home = () => import('../pages/Home.vue')
 const BuddhaPage = () => import('../pages/BuddhaPage.vue')
@@ -28,9 +29,7 @@ function withTrailingSlashTarget(target) {
   return target
 }
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
+const PAGE_ROUTES = [
     { path: '/', component: Home },
     { path: '/guide/:slug', component: GuidePage },
     { path: '/topic/:slug', component: TopicPage },
@@ -41,6 +40,19 @@ const router = createRouter({
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage },
     { path: '/nianfo', component: NianfoPage },
+]
+
+// 繁体版：每个页面在 /zh-hant 下各有一份，组件相同，文字在显示时转换
+const HANT_ROUTES = PAGE_ROUTES.map((route) => ({
+  ...route,
+  path: route.path === '/' ? `${HANT_PREFIX}/` : `${HANT_PREFIX}${route.path}`,
+}))
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    ...PAGE_ROUTES,
+    ...HANT_ROUTES,
     { path: '/:pathMatch(.*)*', component: NotFoundPage },
   ],
   scrollBehavior(to) {
@@ -67,9 +79,13 @@ const originalReplace = router.replace.bind(router)
 router.replace = ((to) => originalReplace(withTrailingSlashTarget(to)))
 
 const WARMUP_ROUTES = ['/buddha/', '/ancestor/', '/ancestors/']
-router.beforeEach((to) => {
-  if (WARMUP_ROUTES.some((p) => to.path.startsWith(p))) {
+router.beforeEach((to, from) => {
+  if (WARMUP_ROUTES.some((p) => stripHant(to.path).startsWith(p))) {
     warmApi()
+  }
+  // 在繁体页面里点站内链接，留在繁体版
+  if (isHantPath(from.path) && !isHantPath(to.path)) {
+    return toHant(to.fullPath)
   }
 })
 

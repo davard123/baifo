@@ -12,6 +12,27 @@ if (!fs.existsSync(indexPath)) {
   throw new Error(`Cannot prerender without build output: ${indexPath}`)
 }
 
+// 繁体版：内容与简体共用，构建时用 OpenCC 转成台湾正体，输出到 dist/zh-hant/
+const OpenCC = (await import('opencc-js/cn2t')).default
+const toHantText = OpenCC.Converter({ from: 'cn', to: 'tw' })
+const HANT_DIR = 'zh-hant'
+
+function hantUrl(url) {
+  return url.replace(SITE.baseUrl, `${SITE.baseUrl}/${HANT_DIR}`)
+}
+
+function toHantPage(page) {
+  return {
+    ...page,
+    hant: true,
+    title: toHantText(page.title),
+    description: toHantText(page.description),
+    heading: toHantText(page.heading),
+    summary: toHantText(page.summary || ''),
+    schema: JSON.parse(toHantText(JSON.stringify(page.schema ?? []))),
+  }
+}
+
 const template = fs.readFileSync(indexPath, 'utf8').replace(/\r\n/g, '\n').replace(/^[ \t]+$/gm, '')
 
 function ensureTrailingSlashless(url) {
@@ -19,7 +40,8 @@ function ensureTrailingSlashless(url) {
 }
 
 function buildMetaTags(page) {
-  const canonical = canonicalUrl(page.path)
+  const hansCanonical = canonicalUrl(page.path)
+  const canonical = page.hant ? hantUrl(hansCanonical) : hansCanonical
   const image = `${SITE.baseUrl}${page.image || SITE.defaultImage}`
   const keywords = SITE.keywords.join(',')
 
@@ -29,7 +51,7 @@ function buildMetaTags(page) {
     `<meta name="keywords" content="${keywords}" />`,
     `<meta name="author" content="${SITE.baseUrl.replace(/^https?:\/\//, '')}" />`,
     `<meta property="og:site_name" content="${SITE.name}" />`,
-    `<meta property="og:locale" content="${SITE.defaultLocale}" />`,
+    `<meta property="og:locale" content="${page.hant ? 'zh_TW' : SITE.defaultLocale}" />`,
     `<meta property="og:title" content="${page.title}" />`,
     `<meta property="og:description" content="${page.description}" />`,
     `<meta property="og:type" content="website" />`,
@@ -40,6 +62,9 @@ function buildMetaTags(page) {
     `<meta name="twitter:description" content="${page.description}" />`,
     `<meta name="twitter:image" content="${image}" />`,
     `<link rel="canonical" href="${canonical}" />`,
+    `<link rel="alternate" hreflang="zh-Hans" href="${hansCanonical}" />`,
+    `<link rel="alternate" hreflang="zh-Hant" href="${hantUrl(hansCanonical)}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${hansCanonical}" />`,
   ].join('\n    ')
 }
 
@@ -83,7 +108,9 @@ function buildFallbackContent(page) {
   )
   lines.push('  <nav aria-label="使用说明与主要入口"><ul>')
   for (const entry of links) {
-    lines.push(`    <li><a href="${canonicalUrl(entry.path)}">${entry.heading}</a></li>`)
+    const href = page.hant ? hantUrl(canonicalUrl(entry.path)) : canonicalUrl(entry.path)
+    const label = page.hant ? toHantText(entry.heading) : entry.heading
+    lines.push(`    <li><a href="${href}">${label}</a></li>`)
   }
   lines.push('  </ul></nav>')
   lines.push('</div>')
@@ -96,6 +123,7 @@ function renderPage(page) {
   const fallbackContent = buildFallbackContent(page)
 
   return template
+    .replace('<html lang="zh-CN">', page.hant ? '<html lang="zh-Hant">' : '<html lang="zh-CN">')
     .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)
     .replace(/<script type="application\/ld\+json" id="ld-webpage">[\s\S]*?<\/script>/, jsonLd)
@@ -111,4 +139,10 @@ for (const page of getStaticPages()) {
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
   fs.writeFileSync(filePath, renderPage(page).replace(/^[ \t]+$/gm, ''), 'utf8')
+
+  const hantPath = normalizedPath === '/'
+    ? path.join(distDir, HANT_DIR, 'index.html')
+    : path.join(distDir, HANT_DIR, normalizedPath.slice(1), 'index.html')
+  fs.mkdirSync(path.dirname(hantPath), { recursive: true })
+  fs.writeFileSync(hantPath, renderPage(toHantPage(page)).replace(/^[ \t]+$/gm, ''), 'utf8')
 }

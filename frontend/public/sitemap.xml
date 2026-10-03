@@ -1,252 +1,802 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://fopusha.com/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/" />
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/" />
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://fopusha.com/guide/overview/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overview/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overview/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overview/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/overview/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overview/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overview/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overview/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://fopusha.com/guide/worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/worship/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://fopusha.com/guide/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/ancestors/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/ancestors/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://fopusha.com/guide/dongzhi-2026/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/dongzhi-2026/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/dongzhi-2026/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/dongzhi-2026/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/dongzhi-2026/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/dongzhi-2026/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/dongzhi-2026/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/dongzhi-2026/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/online-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/online-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/online-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/online-worship/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/online-ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/online-ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/online-ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/online-ancestors/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/online-ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/online-ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/online-ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/online-ancestors/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/merit-dedication/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/merit-dedication/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/merit-dedication/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/merit-dedication/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/merit-dedication/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/merit-dedication/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/merit-dedication/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/merit-dedication/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/guanyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/guanyin/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/guanyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/guanyin/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/medicine/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/medicine/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/medicine/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/medicine/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/medicine/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/medicine/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/medicine/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/medicine/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/ksitigarbha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/ksitigarbha/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/ksitigarbha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/ksitigarbha/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/amitabha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/amitabha/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/amitabha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/amitabha/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/manjushri/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/manjushri/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/manjushri/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/manjushri/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/shakyamuni/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/shakyamuni/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/shakyamuni/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/shakyamuni/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/maitreya/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/maitreya/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/maitreya/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/maitreya/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/samantabhadra/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/samantabhadra/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/samantabhadra/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/samantabhadra/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/worship-vs-pray/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/worship-vs-pray/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/worship-vs-pray/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/worship-vs-pray/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/worship-vs-pray/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/worship-vs-pray/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/worship-vs-pray/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/worship-vs-pray/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/prostration/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/prostration/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/prostration/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/prostration/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/prostration/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/prostration/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/prostration/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/prostration/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/ancestor-tablet/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/ancestor-tablet/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/ancestor-tablet/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/ancestor-tablet/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/ancestor-tablet/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/ancestor-tablet/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/ancestor-tablet/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/ancestor-tablet/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/worship-for-family/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/worship-for-family/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/worship-for-family/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/worship-for-family/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/worship-for-family/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/worship-for-family/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/worship-for-family/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/worship-for-family/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/how-to-worship-buddha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/how-to-worship-buddha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/how-to-worship-buddha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/how-to-worship-buddha/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/how-to-worship-buddha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/how-to-worship-buddha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/how-to-worship-buddha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/how-to-worship-buddha/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/offering-flowers/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-flowers/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-flowers/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-flowers/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/offering-flowers/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-flowers/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-flowers/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-flowers/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/offering-light/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-light/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-light/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-light/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/offering-light/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-light/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-light/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-light/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/offering-incense/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-incense/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-incense/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-incense/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/offering-incense/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/offering-incense/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/offering-incense/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/offering-incense/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/how-to-dedicate-merit/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/how-to-dedicate-merit/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/how-to-dedicate-merit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/how-to-dedicate-merit/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/how-to-dedicate-merit/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/how-to-dedicate-merit/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/how-to-dedicate-merit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/how-to-dedicate-merit/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/health/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/health/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/health/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/health/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/health/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/health/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/health/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/health/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/family-safety/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/family-safety/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/family-safety/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/family-safety/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/family-safety/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/family-safety/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/family-safety/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/family-safety/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/study/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/study/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/study/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/study/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/study/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/study/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/study/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/study/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/career/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/career/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/career/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/career/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/career/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/career/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/career/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/career/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/dedication-prayers/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/dedication-prayers/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/dedication-prayers/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/dedication-prayers/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/dedication-prayers/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/dedication-prayers/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/dedication-prayers/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/dedication-prayers/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/overseas-chinese/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/overseas-chinese/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/overseas-chinese/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/overseas-chinese/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/overseas-chinese/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/overseas-chinese/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/overseas-chinese/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/overseas-chinese/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/topic/qingming/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/qingming/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/qingming/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/qingming/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/qingming/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/qingming/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/qingming/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/qingming/" />
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/shakyamuni/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/shakyamuni/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/shakyamuni/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/shakyamuni/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/shakyamuni/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/amitabha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/amitabha/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/amitabha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/amitabha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/amitabha/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/medicine/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/medicine/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/medicine/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/medicine/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/medicine/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/medicine/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/medicine/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/medicine/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/maitreya/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/maitreya/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/maitreya/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/maitreya/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/maitreya/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/manjushri/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/manjushri/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/manjushri/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/manjushri/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/manjushri/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/samantabhadra/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/samantabhadra/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/samantabhadra/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/samantabhadra/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/samantabhadra/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/guanyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/guanyin/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/guanyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/guanyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/guanyin/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/buddha/ksitigarbha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/ksitigarbha/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/buddha/ksitigarbha/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/ksitigarbha/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/buddha/ksitigarbha/" />
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestors/" />
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestors/" />
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://fopusha.com/nianfo/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/nianfo/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/nianfo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/nianfo/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/nianfo/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/nianfo/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/nianfo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/nianfo/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/father/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/father/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/father/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/father/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/father/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/father/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/father/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/father/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/mother/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/mother/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/mother/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/mother/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/mother/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/mother/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/mother/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/mother/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/grandfather/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/grandfather/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/grandfather/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/grandfather/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/grandfather/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/grandfather/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/grandfather/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/grandfather/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/grandmother/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/grandmother/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/grandmother/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/grandmother/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/grandmother/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/grandmother/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/grandmother/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/grandmother/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/ancestors/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/ancestors/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/ancestors/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/ancestors/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/spouse/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/spouse/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/spouse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/spouse/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/spouse/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/spouse/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/spouse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/spouse/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/child/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/child/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/child/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/child/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/child/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/child/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/child/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/child/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://fopusha.com/ancestor/general/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/general/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/general/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/general/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/ancestor/general/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/general/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/general/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/ancestor/general/" />
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>

@@ -1,4 +1,5 @@
 <script setup>
+import { stripHant } from '../i18n/hant.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import WoodenFish from './WoodenFish.vue'
@@ -19,7 +20,7 @@ const trigger = ref(null)
 let previousOverflow = ''
 
 // /nianfo/ 整页本身就是这个工具，再浮一个入口是重复的
-const hidden = computed(() => route.path.replace(/\/+$/, '') === '/nianfo')
+const hidden = computed(() => stripHant(route.path).replace(/\/+$/, '') === '/nianfo')
 
 function toggle() {
   open.value = !open.value

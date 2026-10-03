@@ -1,4 +1,5 @@
 <script setup>
+import { stripHant } from '../i18n/hant.js'
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { TOPICS, getTopicKey } from '../data/topics.js'
@@ -6,7 +7,7 @@ import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
 
-const topicKey = computed(() => getTopicKey(route.path, route.params.slug))
+const topicKey = computed(() => getTopicKey(stripHant(route.path), route.params.slug))
 const topic = computed(() => TOPICS[topicKey.value])
 
 onMounted(() => {

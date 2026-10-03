@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
 import NianfoDrawer from './components/NianfoDrawer.vue'
 import { warmApi } from './api.js'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
+import { isHantPath, stripHant, toHant, startHant, loadConverter } from './i18n/hant.js'
 
 const route = useRoute()
 
@@ -43,15 +44,30 @@ function normalizePath(path) {
   return path === '/' ? '/' : path.replace(/\/+$/, '')
 }
 
-function applyRouteSeo(path) {
+function hantUrl(url) {
+  return url.replace(SITE.baseUrl, `${SITE.baseUrl}${toHant('/').replace(/\/$/, '')}`)
+}
+
+async function applyRouteSeo(fullPath) {
+  const hant = isHantPath(fullPath)
+  const path = stripHant(fullPath)
   const page = getSeoByPath(path)
   const isKnownPage = !!page
   const normalizedPath = normalizePath(path)
-  const title = page?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`
-  const description = page?.description || '这个地址当前没有对应内容。'
+  const convert = hant ? await loadConverter() : (text) => text
+  const title = convert(page?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`)
+  const description = convert(page?.description || '这个地址当前没有对应内容。')
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
-  const canonical = isKnownPage ? canonicalUrl(page.path) : `${SITE.baseUrl}${normalizedPath}`
-  const schema = Array.isArray(page?.schema) ? page.schema : []
+  const hansCanonical = isKnownPage ? canonicalUrl(page.path) : `${SITE.baseUrl}${normalizedPath}`
+  const canonical = hant ? hantUrl(hansCanonical) : hansCanonical
+  const schema = Array.isArray(page?.schema) ? JSON.parse(convert(JSON.stringify(page.schema))) : []
+
+  document.documentElement.lang = hant ? 'zh-Hant' : 'zh-CN'
+  if (isKnownPage) {
+    upsertLink('link[rel="alternate"][hreflang="zh-Hans"]', { rel: 'alternate', hreflang: 'zh-Hans', href: hansCanonical })
+    upsertLink('link[rel="alternate"][hreflang="zh-Hant"]', { rel: 'alternate', hreflang: 'zh-Hant', href: hantUrl(hansCanonical) })
+    upsertLink('link[rel="alternate"][hreflang="x-default"]', { rel: 'alternate', hreflang: 'x-default', href: hansCanonical })
+  }
 
   document.title = title
 
@@ -91,11 +107,18 @@ watch(
   () => route.path,
   (path) => {
     applyRouteSeo(path)
+    if (isHantPath(path)) startHant()
     // 拜佛 / 祭祀页：悬浮按钮移到左上角，避免挡住右下方跪拜的人和供养面板
-    document.documentElement.classList.toggle('ritual-route', /^\/(buddha|ancestor)\//.test(path))
+    document.documentElement.classList.toggle('ritual-route', /^\/(buddha|ancestor)\//.test(stripHant(path)))
   },
   { immediate: true }
 )
+
+// 页面底部的简繁切换（普通 <a>，整页刷新切换，不受繁体链接改写影响）
+const isHant = computed(() => isHantPath(route.path))
+const hansHref = computed(() => stripHant(route.path))
+const hantHref = computed(() => toHant(route.path))
+const showSwitch = computed(() => !/^\/(buddha|ancestor)\//.test(stripHant(route.path)))
 
 onMounted(() => {
   warmApi()
@@ -104,12 +127,22 @@ onMounted(() => {
 
 <template>
   <router-view />
+  <p v-if="showSwitch" class="script-switch" data-keep-script>
+    <a v-if="isHant" :href="hansHref" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
+    <a v-else :href="hantHref" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
+  </p>
   <AudioPlayer />
   <NianfoDrawer />
 </template>
 
 <style>
 #app { min-height: 100vh; }
+.script-switch {
+  text-align: center;
+  margin: 0 auto 72px;
+  font-size: 0.9rem;
+}
+.script-switch a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; }
 .hidden-figure {
   position: absolute;
   opacity: 0;
