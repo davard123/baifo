@@ -66,6 +66,21 @@
     <priority>0.78</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/topic/shakyamuni/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/topic/maitreya/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/topic/samantabhadra/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/topic/worship-vs-pray/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.78</priority>

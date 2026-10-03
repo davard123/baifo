@@ -142,6 +142,9 @@ const doneActions = computed(() => {
             {{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。
             你可以先完成供花、点灯、上香与礼拜，再填写祈愿内容，按顺序完成这一页的礼佛过程。
           </p>
+          <p>
+            <router-link :to="`/topic/${buddha.slug}`">了解{{ buddha.name }}：纪念日、圣号与礼敬方法 →</router-link>
+          </p>
         </section>
 
         <section class="faq-mini">
