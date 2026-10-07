@@ -246,6 +246,17 @@ onMounted(() => {
       </div>
     </section>
 
+    <section class="intro-video card" aria-labelledby="intro-video-title">
+      <div class="section-head">
+        <p class="section-kicker">80 秒看懂</p>
+        <h2 id="intro-video-title" class="section-title">晨钟暮鼓，在家也能礼佛</h2>
+        <p class="section-sub">上香、点灯、献花、供果，写下祈愿；想念亲人，就进拜祭先人。看一遍就会用。</p>
+      </div>
+      <video class="intro-video__player" controls playsinline preload="none" poster="/video/fopusha-intro.jpg" width="1280" height="720">
+        <source src="/video/fopusha-intro.mp4" type="video/mp4" />
+      </video>
+    </section>
+
     <section class="ritual-stage">
       <a
         href="/ancestors/"
@@ -618,6 +629,17 @@ onMounted(() => {
 
 .ritual-stage {
   display: block;
+}
+
+.intro-video__player {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  margin: 18px auto 0;
+  border-radius: 16px;
+  background: #0b0f1a;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 
 .catalog-grid {
