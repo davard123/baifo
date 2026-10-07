@@ -346,6 +346,8 @@ onMounted(() => {
         <router-link to="/guide/worship">查看在线礼佛指南</router-link>
         <router-link to="/guide/ancestors">查看在线祭祀指南</router-link>
         <router-link to="/ancestors">查看祭祀先人总览</router-link>
+        <router-link to="/guide/dongzhi-2026">冬至祭祖指南</router-link>
+        <router-link to="/guide/qingming-2027">清明祭祖指南</router-link>
         <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
       </div>
     </section>

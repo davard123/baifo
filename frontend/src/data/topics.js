@@ -154,6 +154,14 @@ export const TOPICS = {
       {
         "label": "地藏菩萨超荐回向指南",
         "to": "/topic/ksitigarbha"
+      },
+      {
+        "label": "冬至祭祖指南（2026）",
+        "to": "/guide/dongzhi-2026"
+      },
+      {
+        "label": "清明祭祖指南（2027）",
+        "to": "/guide/qingming-2027"
       }
     ]
   },
@@ -1890,6 +1898,22 @@ export const TOPICS = {
       {
         "label": "地藏菩萨超荐回向指南",
         "to": "/topic/ksitigarbha"
+      },
+      {
+        "label": "冬至祭祖指南（2026）",
+        "to": "/guide/dongzhi-2026"
+      },
+      {
+        "label": "春节祭祖指南（2027）",
+        "to": "/guide/chunjie-2027"
+      },
+      {
+        "label": "清明祭祖指南（2027）",
+        "to": "/guide/qingming-2027"
+      },
+      {
+        "label": "中元节祭祖指南",
+        "to": "/guide/zhongyuan-2027"
       }
     ]
   }

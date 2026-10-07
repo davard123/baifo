@@ -146,6 +146,22 @@ export const GUIDES = {
       {
         "label": "先父",
         "to": "/ancestor/father"
+      },
+      {
+        "label": "冬至祭祖指南（2026）",
+        "to": "/guide/dongzhi-2026"
+      },
+      {
+        "label": "春节祭祖指南（2027）",
+        "to": "/guide/chunjie-2027"
+      },
+      {
+        "label": "清明祭祖指南（2027）",
+        "to": "/guide/qingming-2027"
+      },
+      {
+        "label": "中元节祭祖指南",
+        "to": "/guide/zhongyuan-2027"
       }
     ]
   }

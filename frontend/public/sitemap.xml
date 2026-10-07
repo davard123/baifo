@@ -81,6 +81,54 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/guide/chunjie-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/chunjie-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/chunjie-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/chunjie-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/chunjie-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/chunjie-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/chunjie-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/chunjie-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/qingming-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/qingming-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/qingming-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/qingming-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/qingming-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/qingming-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/qingming-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/qingming-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/zhongyuan-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/zhongyuan-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/zhongyuan-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/zhongyuan-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/zhongyuan-2027/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/zhongyuan-2027/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/zhongyuan-2027/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/zhongyuan-2027/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/topic/online-worship/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/online-worship/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/online-worship/" />
