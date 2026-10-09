@@ -44,9 +44,6 @@ defineProps({
 
     <blockquote class="done-wish">{{ wish }}</blockquote>
 
-    <p v-if="email" class="done-email">
-      确认邮件将发送至 {{ email }}
-    </p>
 
   </div>
 </template>

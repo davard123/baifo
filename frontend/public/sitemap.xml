@@ -17,6 +17,22 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/qiucai/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/qiucai/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/guide/overview/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overview/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overview/" />

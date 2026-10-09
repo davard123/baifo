@@ -141,7 +141,8 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
-      <div class="field-block">
+      <!-- 后端暂未存邮箱、未发信；只在忌日提醒功能开启时收邮箱 -->
+      <div v-if="remindersEnabled" class="field-block">
         <label class="field-label" for="ancestor-email">邮箱（选填）</label>
         <input
           id="ancestor-email"

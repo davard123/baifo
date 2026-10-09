@@ -9,6 +9,7 @@ const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
 const NianfoPage = () => import('../pages/NianfoPage.vue')
+const QiucaiPage = () => import('../pages/QiucaiPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
 function withTrailingSlashTarget(target) {
@@ -40,6 +41,7 @@ const PAGE_ROUTES = [
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage },
     { path: '/nianfo', component: NianfoPage },
+    { path: '/qiucai', component: QiucaiPage },
 ]
 
 // 繁体版：每个页面在 /zh-hant 下各有一份，组件相同，文字在显示时转换

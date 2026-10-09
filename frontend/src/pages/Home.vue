@@ -18,6 +18,13 @@ const router = useRouter()
 
 const primaryPaths = [
   {
+    title: '求财祈福',
+    body: '在线拜财神：上香、献元宝、投金币、摇钱树，领一张专属求财祝福卡。',
+    to: '/qiucai',
+    cta: '进入求财专区',
+    featured: true,
+  },
+  {
     title: '念佛计数',
     body: '每日功课。轻触木鱼计一声佛号，记录今日数量与连续天数，计数只保存在本机。',
     to: '/nianfo',
@@ -205,7 +212,7 @@ onMounted(() => {
           :key="item.title"
           :href="resolveHref(item.to)"
           class="hero-action"
-          :class="{ 'hero-action--daily': item.daily }"
+          :class="{ 'hero-action--daily': item.daily, 'hero-action--featured': item.featured }"
           @click.prevent="navigateTo(item.to)"
           @mouseenter="warmApi"
           @mousedown="warmApi"
@@ -217,6 +224,24 @@ onMounted(() => {
         </a>
       </div>
     </header>
+
+    <a
+      href="/qiucai/"
+      class="qiucai-banner"
+      aria-label="进入求财专区，在线拜财神"
+      @click.prevent="navigateTo('/qiucai')"
+      @mouseenter="warmApi"
+      @mousedown="warmApi"
+      @touchstart.passive="warmApi"
+    >
+      <div class="qiucai-banner__media" aria-hidden="true"></div>
+      <div class="qiucai-banner__content">
+        <p class="qiucai-banner__kicker">求财专区 · 主推</p>
+        <h2>求财祈福 · 福禄寿临门</h2>
+        <p>赵公明、关公、文财神、五路财神，福星、禄星、寿星，黄财神、土地公。求财、升官、纳福、长寿，上香、献元宝、投金币、摇钱树，领取专属祝福卡。</p>
+        <span class="qiucai-banner__cta">进入求财专区 →</span>
+      </div>
+    </a>
 
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
@@ -722,6 +747,64 @@ onMounted(() => {
   line-height: 1.65;
 }
 
+.qiucai-banner {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: clamp(320px, 42vw, 520px);
+  border-radius: 24px;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(120deg, #6d0a0d, #b8161b 55%, #5a0b0e);
+  border: 1px solid rgba(255, 216, 107, 0.5);
+  box-shadow: 0 20px 56px rgba(120, 10, 10, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.qiucai-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(160, 20, 20, 0.45);
+}
+
+.qiucai-banner__media {
+  position: absolute;
+  inset: 0;
+  background: url('/qiucai/caishen-hero.webp?v=1') center 30% / cover no-repeat;
+}
+
+.qiucai-banner__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(40, 4, 6, 0.95) 0%, rgba(40, 4, 6, 0.6) 38%, transparent 70%);
+}
+
+.qiucai-banner__content {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 28px 32px;
+  max-width: 760px;
+}
+
+.qiucai-banner__kicker { color: #ffd86b; letter-spacing: 0.18em; font-size: 14px; }
+.qiucai-banner__content h2 { font-size: clamp(28px, 4vw, 40px); color: #ffe08a; }
+.qiucai-banner__content p { color: #fbe9c8; line-height: 1.8; }
+.qiucai-banner__cta {
+  justify-self: start;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd86b, #e6a92e);
+  color: #4a0a0c;
+  font-weight: 700;
+}
+
+.hero-action--featured {
+  background: linear-gradient(160deg, rgba(184, 22, 27, 0.85), rgba(90, 11, 14, 0.9)) !important;
+  border-color: rgba(255, 216, 107, 0.6) !important;
+}
+
 .ancestor-banner {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
@@ -1070,6 +1153,10 @@ onMounted(() => {
 
   .ancestor-banner {
     grid-template-columns: 1fr;
+  }
+
+  .qiucai-banner__content {
+    padding: 22px;
   }
 
   .ancestor-banner__media {

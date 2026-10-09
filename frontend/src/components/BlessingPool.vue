@@ -55,6 +55,10 @@ function resetTransientState() {
 }
 
 function open(blessing) {
+  if (blessing.key === 'caishen') {
+    router.push('/qiucai/')
+    return
+  }
   active.value = blessing
   stage.value = 'form'
   resultWish.value = ''
@@ -232,7 +236,6 @@ onBeforeUnmount(() => {
               <p class="result-user">
                 {{ form.age }} 岁的 {{ form.name }} {{ form.target ? `，为 ${form.target}` : '' }} 留下了这份祈愿。
               </p>
-              <p v-if="resultEmail" class="result-email">祈愿确认已发送至 {{ resultEmail }}</p>
               <div class="result-btns">
                 <button class="back-home-btn" type="button" @click="close(); router.push('/')">
                   返回首页
@@ -290,18 +293,6 @@ onBeforeUnmount(() => {
                   class="field target-field"
                   maxlength="50"
                   placeholder="可选，例如：父亲健康、家人平安"
-                />
-              </div>
-
-              <div class="field-block">
-                <label class="field-label" for="blessing-email">邮箱（选填）</label>
-                <input
-                  id="blessing-email"
-                  v-model="form.email"
-                  type="email"
-                  class="field email-field"
-                  autocomplete="email"
-                  placeholder="填写后可收到祈福确认邮件"
                 />
               </div>
 

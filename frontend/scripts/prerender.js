@@ -104,7 +104,7 @@ function buildFallbackContent(page) {
 
   // Keep useful navigation available before JavaScript loads, using existing routes.
   const links = getStaticPages().filter((entry) =>
-    entry.path !== page.path && (entry.path === '/' || entry.path === '/ancestors' || entry.path.startsWith('/guide/'))
+    entry.path !== page.path && (entry.path === '/' || entry.path === '/qiucai' || entry.path === '/ancestors' || entry.path.startsWith('/guide/'))
   )
   lines.push('  <nav aria-label="使用说明与主要入口"><ul>')
   for (const entry of links) {

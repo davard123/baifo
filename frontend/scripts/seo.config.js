@@ -1,4 +1,5 @@
 import { GUIDES } from '../src/data/guides.js'
+import { CAISHEN, QIUCAI_ARTICLE, QIUCAI_FAQS } from '../src/data/qiucai.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
 import { ANCESTORS } from '../src/data/ancestors.js'
 import { TOPICS, getTopicEntries } from '../src/data/topics.js'
@@ -258,8 +259,8 @@ function buildArticleSchema({
 function homePage() {
   return {
     path: '/',
-    title: '礼佛祈愿 | 在线拜佛、网上祭祖与清明扫墓',
-    description: '免费的在线拜佛与网上祭祖网站：礼敬八位佛菩萨，上香、点灯、献花、供果、叩拜；为先人设立牌位，清明、冬至在线扫墓追思，写下祈愿与回向。适合海外华人。',
+    title: '求财祈福 · 在线拜财神 | 礼佛祈愿与网上祭祖',
+    description: '求财祈福专区：在线拜财神，上香、献元宝、投金币、摇钱树，领取求财祝福卡。也可以免费在线拜佛与网上祭祖：礼敬八位佛菩萨，上香、点灯、献花、供果、叩拜；为先人设立牌位，清明、冬至在线扫墓追思，写下祈愿与回向。适合海外华人。',
     heading: '礼佛祈愿',
     summary: '选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。',
     image: SITE.defaultImage,
@@ -547,6 +548,46 @@ function topicPage({ path, slug }) {
 }
 
 
+function qiucaiPage() {
+  const path = '/qiucai'
+  const heading = '求财祈福 · 在线拜财神'
+  const description = '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福禄寿、黄财神或土地公，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
+  const about = { '@type': 'Thing', name: '求财祈福', description }
+  return {
+    path,
+    title: '求财祈福｜在线拜财神、祈求财运亨通',
+    description,
+    heading,
+    summary: '选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。',
+    image: '/qiucai/caishen-hero.webp',
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: heading,
+        description,
+        breadcrumbItems: [
+          { name: SITE.shortName, path: '/' },
+          { name: '求财祈福', path },
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        path,
+        headline: heading,
+        name: '求财祈福',
+        description,
+        about,
+        articleBody: [
+          ...QIUCAI_ARTICLE.flatMap((block) => [block.title, ...block.paragraphs]),
+          ...CAISHEN.map((item) => `${item.name}（${item.title}）：${item.desc}`),
+        ].join('\n'),
+      }),
+      buildFaqSchema(path, QIUCAI_FAQS),
+    ].filter(Boolean),
+  }
+}
+
 function nianfoPage() {
   const path = '/nianfo'
   return {
@@ -594,6 +635,7 @@ function nianfoPage() {
 export function getStaticPages() {
   return [
     homePage(),
+    qiucaiPage(),
     guidePage({
       slug: 'overview',
       title: '使用说明 | 礼佛祈愿',

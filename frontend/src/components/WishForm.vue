@@ -98,18 +98,6 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
-      <div class="field-block">
-        <label class="field-label" for="wish-email">邮箱（选填）</label>
-        <input
-          id="wish-email"
-          v-model="email"
-          type="email"
-          placeholder="填写后可收到祈愿确认邮件"
-          class="field email-field"
-          autocomplete="email"
-        />
-      </div>
-
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
