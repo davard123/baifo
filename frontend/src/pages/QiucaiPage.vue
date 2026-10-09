@@ -453,7 +453,7 @@ onBeforeUnmount(() => {
           <span class="qc-aura__rays"></span>
           <span class="qc-aura__ring"></span>
         </div>
-        <Transition name="pose" mode="out-in">
+        <Transition name="pose" type="transition" :duration="400">
           <img
             :key="deity.key + (showPose ? '-pose' : '')"
             :src="showPose ? deity.pose : deity.image"
