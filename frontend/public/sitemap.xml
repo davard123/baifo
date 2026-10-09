@@ -65,6 +65,102 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/guide/online-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/online-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/online-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/online-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/online-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/overseas-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overseas-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overseas-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overseas-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/overseas-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overseas-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overseas-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overseas-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/home-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/home-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/home-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/home-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/home-worship/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/home-worship/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/home-worship/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/home-worship/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/online-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/online-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/online-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/online-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/online-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/online-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/online-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/online-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/overseas-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overseas-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overseas-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overseas-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/overseas-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/overseas-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/overseas-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/overseas-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/guide/home-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/home-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/home-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/home-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/guide/home-worship-benefits/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/home-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/home-worship-benefits/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/guide/home-worship-benefits/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/guide/dongzhi-2026/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/guide/dongzhi-2026/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/guide/dongzhi-2026/" />
