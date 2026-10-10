@@ -448,6 +448,19 @@ onBeforeUnmount(() => {
           />
         </Transition>
         <div class="qc-stage__smoke" aria-hidden="true"></div>
+        <!-- 两侧叩拜的人（背影，面朝财神）：点一次叩拜，叩首一次后跪着停住 -->
+        <div
+          v-for="side in ['l', 'r']"
+          :key="side"
+          class="qc-worshipper"
+          :class="[`qc-worshipper--${side}`, { shown: bowCount > 0 }]"
+          aria-hidden="true"
+        >
+          <div :key="bowCount" class="qc-worshipper__poses" :class="{ bowing: bowCount > 0 }">
+            <img class="qc-pose qc-pose--kneel" :src="`/ritual/${side === 'l' ? 'man' : 'woman'}-kneel.webp`" alt="" />
+            <img class="qc-pose qc-pose--bow" :src="`/ritual/${side === 'l' ? 'man' : 'woman'}-bow.webp`" alt="" />
+          </div>
+        </div>
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-l" aria-hidden="true" />
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-r" aria-hidden="true" />
         <div class="qc-stage__offerings" aria-hidden="true">
@@ -859,6 +872,33 @@ onBeforeUnmount(() => {
 @keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 @keyframes nod { 0%, 100% { transform: translateX(-50%); } 50% { transform: translateX(-50%) translateY(6px) scale(0.99); } }
 @keyframes appear { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%); } }
+
+/* 叩拜的人：拜一下停一下（每次点击只播一遍：跪直 → 叩首 → 跪直） */
+.qc-worshipper {
+  position: absolute;
+  bottom: 0;
+  height: 30%;
+  aspect-ratio: 0.75;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+.qc-worshipper--l { left: 2%; }
+.qc-worshipper--r { right: 2%; }
+.qc-worshipper.shown { opacity: 1; transform: none; }
+.qc-worshipper__poses { position: absolute; inset: 0; }
+.qc-pose {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; object-position: bottom center;
+  filter: drop-shadow(0 4px 8px rgba(90, 50, 0, 0.3));
+}
+.qc-pose--bow { opacity: 0; }
+.qc-worshipper__poses.bowing .qc-pose--kneel { animation: qc-kneel-once 1.6s ease-in-out both; }
+.qc-worshipper__poses.bowing .qc-pose--bow { animation: qc-bow-once 1.6s ease-in-out both; }
+@keyframes qc-kneel-once { 0%, 15% { opacity: 1; } 30%, 70% { opacity: 0; } 85%, 100% { opacity: 1; } }
+@keyframes qc-bow-once { 0%, 15% { opacity: 0; } 30%, 70% { opacity: 1; } 85%, 100% { opacity: 0; } }
 
 @media (max-width: 380px) {
   .qc-way { font-size: 11px; }
