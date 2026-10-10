@@ -169,12 +169,12 @@ async function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '礼佛祈愿 | 在线拜佛、网上祭祖与清明扫墓 - fopusha.com'
+  document.title = '求财祈福 · 在线拜财神 | 礼佛祈愿与网上祭祖 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
       'content',
-      '海外华人在线礼佛与祭祖平台。收录释迦牟尼佛、阿弥陀佛、药师佛、观音菩萨等八位佛菩萨在线礼佛祈愿；支持在线祭祖、清明网上扫墓，功德回向十方众生。'
+      '求财祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
     )
   loadWishes()
 })
