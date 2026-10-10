@@ -58,7 +58,9 @@ async function viaWorkersAI(env, prompt, photo) {
     multipart: { body: packed.body, contentType: packed.headers.get('content-type') },
   })
   if (!result?.image) throw new Error('workers ai returned no image')
-  return `data:image/png;base64,${result.image}`
+  // Workers AI 返回的是 JPEG 或 PNG 的 base64，按文件头判断类型
+  const mime = result.image.startsWith('/9j/') ? 'image/jpeg' : 'image/png'
+  return `data:${mime};base64,${result.image}`
 }
 
 async function toBase64(blob) {

@@ -62,7 +62,7 @@ export const PROFESSIONS = [
       {
         key: 'closing',
         label: '成交交钥匙',
-        prompt: 'is a successful real estate agent handing a set of house keys to a delighted young family in front of a beautiful house with a manicured lawn, everyone smiling, sunny day.',
+        prompt: 'is a successful real estate agent handing a set of house keys to a delighted young couple holding their small child, standing in front of a beautiful house with a manicured lawn, everyone smiling, sunny day.',
         blessing: '单单成交，客户满意，业绩长红',
       },
       {
