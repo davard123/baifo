@@ -19,7 +19,7 @@ const router = useRouter()
 const primaryPaths = [
   {
     title: '求财祈福',
-    body: '在线拜财神：上香、献元宝、投金币、摇钱树，领一张专属求财祝福卡。',
+    body: '求财运、求升官、求福寿，拜完领一张写着你名字的祝福卡。',
     to: '/qiucai',
     cta: '进入求财专区',
     featured: true,
@@ -191,12 +191,18 @@ onMounted(() => {
       @mousedown="warmApi"
       @touchstart.passive="warmApi"
     >
-      <div class="qiucai-banner__media" aria-hidden="true"></div>
+      <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" />
       <div class="qiucai-banner__content">
-        <p class="qiucai-banner__kicker">求财专区 · 主推</p>
-        <h2>求财祈福 · 福禄寿临门</h2>
-        <p>赵公明、关公、文财神、五路财神，福星、禄星、寿星，黄财神。求财、升官、纳福、长寿，上香、献元宝、投金币、摇钱树，领取专属祝福卡。</p>
-        <span class="qiucai-banner__cta">进入求财专区 →</span>
+        <p class="qiucai-banner__kicker">在线拜财神 · 求财 · 升官 · 纳福 · 长寿</p>
+        <h2>拜一拜，给自己添一份财气</h2>
+        <ul class="qiucai-banner__gains">
+          <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
+          <li><strong>神仙会回应你</strong>上香、献元宝、投金币，叩拜三下，财神显灵撒金币、赐福放金光。</li>
+          <li><strong>带走一张祝福卡</strong>写下心愿，领一张印着你名字和财神像的祝福卡，可以保存分享。</li>
+          <li><strong>天天来添财气</strong>记录你的连拜天数和财气值，坚持越久，祝福越满。</li>
+        </ul>
+        <span class="qiucai-banner__cta">现在去拜财神 →</span>
+        <span class="qiucai-banner__note">免费 · 不用注册 · 几分钟拜完</span>
       </div>
     </a>
 
@@ -748,57 +754,70 @@ onMounted(() => {
 }
 
 .qiucai-banner {
-  position: relative;
   display: grid;
-  align-items: end;
-  min-height: clamp(320px, 42vw, 520px);
   border-radius: 24px;
   overflow: hidden;
-  color: inherit;
+  color: #5a1a12;
   text-decoration: none;
-  background: linear-gradient(120deg, #6d0a0d, #b8161b 55%, #5a0b0e);
-  border: 1px solid rgba(255, 216, 107, 0.5);
-  box-shadow: 0 20px 56px rgba(120, 10, 10, 0.35);
+  background: #fffbf2;
+  border: 1px solid rgba(201, 154, 46, 0.45);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .qiucai-banner:hover {
   transform: translateY(-4px);
-  box-shadow: 0 24px 60px rgba(160, 20, 20, 0.45);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
 .qiucai-banner__media {
-  position: absolute;
-  inset: 0;
-  background: url('/qiucai/caishen-hero.webp?v=1') center 30% / cover no-repeat;
-}
-
-.qiucai-banner__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(40, 4, 6, 0.96) 0%, rgba(40, 4, 6, 0.78) 45%, rgba(40, 4, 6, 0.25) 85%);
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .qiucai-banner__content {
-  position: relative;
   display: grid;
-  gap: 10px;
-  padding: 28px 32px;
-  max-width: 760px;
+  gap: 12px;
+  padding: 22px 28px 26px;
+  border-top: 1px solid rgba(201, 154, 46, 0.3);
 }
 
-.qiucai-banner__kicker { color: #ffd86b; letter-spacing: 0.18em; font-size: 14px; }
-.qiucai-banner__content h2 { font-size: clamp(28px, 4vw, 40px); color: #ffe08a; }
-.qiucai-banner__content p { color: #fbe9c8; line-height: 1.8; }
+.qiucai-banner__kicker { color: #b07a1c; letter-spacing: 0.12em; font-size: 14px; }
+.qiucai-banner__content h2 { font-size: clamp(26px, 4vw, 38px); color: #9e1b1f; }
+.qiucai-banner__gains {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px 18px;
+}
+.qiucai-banner__gains li {
+  padding-left: 26px;
+  position: relative;
+  line-height: 1.7;
+  color: #6b3a1e;
+}
+.qiucai-banner__gains li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  background: url('/qiucai/prop-coin.webp?v=1') center / contain no-repeat;
+}
+.qiucai-banner__gains strong { display: block; color: #9e1b1f; }
 .qiucai-banner__cta {
   justify-self: start;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ffd86b, #e6a92e);
-  color: #4a0a0c;
+  background: linear-gradient(180deg, #c8282d, #9e1b1f);
+  color: #fff3d6;
   font-weight: 700;
+  font-size: 17px;
 }
+.qiucai-banner__note { font-size: 13px; color: #9a7a55; }
 
 .hero-action--featured {
   background: linear-gradient(160deg, rgba(184, 22, 27, 0.85), rgba(90, 11, 14, 0.9)) !important;
