@@ -33,6 +33,19 @@ function buildPrompt({ profession, scene, custom, gender, age, hasPhoto }) {
   return `${STYLE} ${who} ${what} ${NO_TEXT}`
 }
 
+// 人机验证（Turnstile）：后台配置了 TURNSTILE_SECRET_KEY 时必须通过，本地开发未配置则跳过
+async function verifyTurnstile(env, token, ip) {
+  if (!env.TURNSTILE_SECRET_KEY) return true
+  if (!token) return false
+  const body = new FormData()
+  body.append('secret', env.TURNSTILE_SECRET_KEY)
+  body.append('response', token)
+  body.append('remoteip', ip)
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body })
+  const data = await res.json().catch(() => ({}))
+  return data.success === true
+}
+
 // 只有生成成功才计数，失败不占用当天名额
 async function readLimit(env, ip) {
   const day = new Date().toISOString().slice(0, 10)
@@ -118,6 +131,9 @@ export async function onRequestPost({ request, env }) {
   if (!prompt) return json({ error: '请先选择你的职业。' }, 400)
 
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown'
+  if (!(await verifyTurnstile(env, String(form.get('cf-turnstile-response') || ''), ip))) {
+    return json({ error: '人机验证没有通过，请重新勾选验证后再试。' }, 403)
+  }
   const limit = await readLimit(env, ip)
   if (!limit.ok) return json({ error: `每人每天可以生成 ${DAILY_LIMIT} 张愿景图，明天再来吧。` }, 429)
 

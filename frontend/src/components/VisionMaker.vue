@@ -1,7 +1,7 @@
 <script setup>
 // 愿景图：拜完全部财神后解锁。选职业和场景、填年龄（可上传本人照片），
 // 由 /api/vision 生成一张没有文字的成功场景图，再在下方印上名字、祝福语和日期，供下载。
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { PROFESSIONS } from '../data/vision.js'
 
 const props = defineProps({
@@ -28,6 +28,57 @@ const cardUrl = ref('')
 const left = ref(null)
 let waitTimer = null
 
+// 人机验证（Cloudflare Turnstile）：生成按钮只有在验证通过后才可用；每次请求后令牌作废，需要重置
+const TURNSTILE_SITEKEY = '0x4AAAAAAFTPZcHYy05xhtbB'
+const turnstileBox = ref(null)
+const turnstileToken = ref('')
+let turnstileId = null
+
+function loadTurnstile() {
+  if (window.turnstile) return Promise.resolve(window.turnstile)
+  if (!window.__turnstileLoading) {
+    window.__turnstileLoading = new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+      script.async = true
+      script.defer = true
+      script.onload = () => resolve(window.turnstile)
+      script.onerror = reject
+      document.head.appendChild(script)
+    })
+  }
+  return window.__turnstileLoading
+}
+
+async function renderTurnstile() {
+  await nextTick()
+  if (!turnstileBox.value || turnstileId !== null) return
+  try {
+    const turnstile = await loadTurnstile()
+    turnstileId = turnstile.render(turnstileBox.value, {
+      sitekey: TURNSTILE_SITEKEY,
+      action: 'turnstile-spin-v1',
+      language: 'zh-cn',
+      callback: (token) => { turnstileToken.value = token },
+      'expired-callback': () => { turnstileToken.value = '' },
+      'error-callback': () => { turnstileToken.value = '' },
+    })
+  } catch {
+    error.value = '人机验证加载失败，请刷新页面再试。'
+  }
+}
+
+function resetTurnstile() {
+  turnstileToken.value = ''
+  if (window.turnstile && turnstileId !== null) window.turnstile.reset(turnstileId)
+}
+
+function removeTurnstile() {
+  if (window.turnstile && turnstileId !== null) window.turnstile.remove(turnstileId)
+  turnstileId = null
+  turnstileToken.value = ''
+}
+
 const current = computed(() => PROFESSIONS.find((p) => p.key === profession.value))
 const currentScene = computed(() => current.value.scenes.find((s) => s.key === scene.value) || current.value.scenes[0])
 const waitText = computed(() => {
@@ -38,6 +89,13 @@ const waitText = computed(() => {
 watch(profession, () => {
   scene.value = current.value.scenes[0].key
 })
+// 表单出现时渲染验证框，表单消失（出结果）时移除
+watch(
+  () => props.unlocked && !cardUrl.value,
+  (visible) => (visible ? renderTurnstile() : removeTurnstile()),
+  { immediate: true }
+)
+
 watch(() => props.defaultName, (value) => {
   if (!name.value) name.value = value
 })
@@ -150,6 +208,10 @@ async function generate() {
     error.value = '请写一下你做的是哪一行。'
     return
   }
+  if (!turnstileToken.value) {
+    error.value = '请先完成下方的人机验证。'
+    return
+  }
   if (photoBlob.value && !consent.value) {
     error.value = '上传照片前，请勾选确认这是你本人或已获本人同意。'
     return
@@ -160,6 +222,7 @@ async function generate() {
   form.append('custom', custom.value.trim())
   form.append('gender', gender.value)
   form.append('age', String(ageNum))
+  form.append('cf-turnstile-response', turnstileToken.value)
   if (photoBlob.value) {
     form.append('photo', photoBlob.value, 'photo.jpg')
     form.append('consent', consent.value ? 'yes' : 'no')
@@ -181,10 +244,14 @@ async function generate() {
   } finally {
     clearInterval(waitTimer)
     loading.value = false
+    resetTurnstile()
   }
 }
 
-onBeforeUnmount(() => clearInterval(waitTimer))
+onBeforeUnmount(() => {
+  clearInterval(waitTimer)
+  removeTurnstile()
+})
 </script>
 
 <template>
@@ -241,8 +308,9 @@ onBeforeUnmount(() => clearInterval(waitTimer))
           </label>
         </div>
 
+        <div ref="turnstileBox" class="vision-turnstile" data-action="turnstile-spin-v1"></div>
         <p v-if="error" class="error-msg">{{ error }}</p>
-        <button type="submit" class="submit-btn" :disabled="loading">
+        <button type="submit" class="submit-btn" :disabled="loading || !turnstileToken">
           {{ loading ? waitText + '（' + waitSeconds + ' 秒）' : '生成我的愿景图' }}
         </button>
         <p class="qc-note">愿景图由 AI 生成，是祝福和心愿的寄托，不代表任何结果。每人每天可生成 2 张。</p>
@@ -295,6 +363,7 @@ onBeforeUnmount(() => clearInterval(waitTimer))
 .ghost-btn { padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255, 216, 107, 0.4); background: transparent; color: #ffe9b0; }
 .error-msg { color: #ff9f8f; font-size: 14px; }
 .qc-note { font-size: 13px; color: var(--text-muted); }
+.vision-turnstile { min-height: 65px; }
 .vision-result { display: grid; gap: 10px; justify-items: center; }
 .vision-result img { width: 100%; max-width: 420px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
 .vision-result__btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
