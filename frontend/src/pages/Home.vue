@@ -16,47 +16,6 @@ const loadingPublic = ref(true)
 const viewerName = ref('')
 const router = useRouter()
 
-const primaryPaths = [
-  {
-    title: '求财祈福',
-    body: '求财运、求升官、求福寿，拜完领一张写着你名字的祝福卡。',
-    to: '/qiucai',
-    cta: '进入求财专区',
-    featured: true,
-  },
-  {
-    title: '念佛计数',
-    body: '每日功课。轻触木鱼计一声佛号，记录今日数量与连续天数，计数只保存在本机。',
-    to: '/nianfo',
-    cta: '开始今日功课',
-    daily: true,
-  },
-  {
-    title: '礼佛祈愿',
-    body: '进入佛菩萨页面后，可以依次供花、点灯、上香，再写下祈愿并回向众生。',
-    to: { path: '/', hash: '#buddha-catalog-title' },
-    cta: '进入礼佛入口',
-  },
-  {
-    title: '祈愿求福',
-    body: '选择一项心愿，写下给自己或家人的祝愿。',
-    to: { path: '/', hash: '#blessing-pool-title' },
-    cta: '进入祈福池',
-  },
-  {
-    title: '祭祀先人',
-    body: '为思念的亲人设置牌位、供花、上香，写下想说的话。',
-    to: '/ancestors',
-    cta: '进入祭祀先人',
-  },
-  {
-    title: '初次使用说明',
-    body: '第一次来到这里时，先了解礼佛、回向与祭祀页面的差别，会更容易找到适合的入口。',
-    to: '/guide/overview',
-    cta: '阅读使用说明',
-  },
-]
-
 const guideCards = [
   {
     title: '在线礼佛怎么开始',
@@ -206,54 +165,12 @@ onMounted(() => {
       </div>
     </a>
 
-    <header class="hero-section">
-      <div class="hero-copy">
-        <div class="hero-emblem" aria-hidden="true">
-          <span class="hero-emblem__ring"></span>
-          <span class="hero-emblem__core"></span>
-        </div>
-        <p class="hero-kicker">线上礼佛与祭祀入口</p>
-        <h1>礼佛祈愿</h1>
-        <p class="hero-lead">
-          选择佛菩萨供花、点灯、上香，或为思念的亲人设立牌位。也可以用念佛计数器记录今日功课。
-        </p>
-        <FestivalGreeting />
-        <div class="hero-quote">
-          <span class="hero-quote__line"></span>
-          <p>愿你与家人平安。</p>
-        </div>
-        <div class="hero-intent-strip" aria-label="快速选择入口">
-          <span>礼佛</span>
-          <span>念佛</span>
-          <span>祭祖</span>
-          <span>祈福</span>
-        </div>
-      </div>
-
-      <div class="hero-actions" aria-label="首页主要入口">
-        <a
-          v-for="item in primaryPaths"
-          :key="item.title"
-          :href="resolveHref(item.to)"
-          class="hero-action"
-          :class="{ 'hero-action--daily': item.daily, 'hero-action--featured': item.featured }"
-          @click.prevent="navigateTo(item.to)"
-          @mouseenter="warmApi"
-          @mousedown="warmApi"
-          @touchstart.passive="warmApi"
-        >
-          <span class="hero-action__title">{{ item.title }}</span>
-          <span class="hero-action__body">{{ item.body }}</span>
-          <span class="hero-action__cta">{{ item.cta }}</span>
-        </a>
-      </div>
-    </header>
-
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
-        <p class="section-kicker">礼佛入口</p>
-        <h2 class="section-title">诸佛菩萨</h2>
-        <p class="section-sub">八位佛菩萨，各具大愿。选择与你此刻心意最相应的一页，安静进入礼敬与回向。</p>
+        <p class="section-kicker">在线礼佛 · 诸佛菩萨</p>
+        <h1 class="section-title">礼佛祈愿</h1>
+        <p class="section-sub">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。</p>
+        <FestivalGreeting />
       </div>
       <div class="catalog-grid">
         <router-link
@@ -275,17 +192,10 @@ onMounted(() => {
           </div>
         </router-link>
       </div>
-    </section>
-
-    <section class="intro-video card" aria-labelledby="intro-video-title">
-      <div class="section-head">
-        <p class="section-kicker">80 秒看懂</p>
-        <h2 id="intro-video-title" class="section-title">晨钟暮鼓，在家也能礼佛</h2>
-        <p class="section-sub">上香、点灯、献花、供果，写下祈愿；想念亲人，就进拜祭先人。看一遍就会用。</p>
+      <div class="catalog-links">
+        <router-link to="/nianfo/">念佛计数 · 开始今日功课 →</router-link>
+        <router-link to="/guide/overview/">第一次来？看使用说明 →</router-link>
       </div>
-      <video class="intro-video__player" controls playsinline preload="none" poster="/video/fopusha-intro.jpg" width="1280" height="720">
-        <source src="/video/fopusha-intro.mp4" type="video/mp4" />
-      </video>
     </section>
 
     <section class="ritual-stage">
@@ -309,6 +219,17 @@ onMounted(() => {
     </section>
 
     <BlessingPool @wish-submitted="loadWishes" />
+
+    <section class="intro-video card" aria-labelledby="intro-video-title">
+      <div class="section-head">
+        <p class="section-kicker">80 秒看懂</p>
+        <h2 id="intro-video-title" class="section-title">晨钟暮鼓，在家也能礼佛</h2>
+        <p class="section-sub">上香、点灯、献花、供果，写下祈愿；想念亲人，就进拜祭先人。看一遍就会用。</p>
+      </div>
+      <video class="intro-video__player" controls playsinline preload="none" poster="/video/fopusha-intro.jpg" width="1280" height="720">
+        <source src="/video/fopusha-intro.mp4" type="video/mp4" />
+      </video>
+    </section>
 
     <section class="wishes-section card">
       <div class="section-head">
@@ -818,6 +739,18 @@ onMounted(() => {
   font-size: 17px;
 }
 .qiucai-banner__note { font-size: 13px; color: #9a7a55; }
+
+.catalog-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 18px;
+}
+
+.catalog-links a {
+  color: var(--accent-light);
+  font-size: 15px;
+}
 
 .hero-action--featured {
   background: linear-gradient(160deg, rgba(184, 22, 27, 0.85), rgba(90, 11, 14, 0.9)) !important;
