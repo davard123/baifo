@@ -16,8 +16,36 @@ import {
 } from '../data/qiucai.js'
 import { apiFetch, warmApi } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
+import VisionMaker from '../components/VisionMaker.vue'
 
 const STORE_KEY = 'fopusha-qiucai-v1'
+// 已拜圆满的神仙（供养四样 + 叩拜三下），全部圆满后解锁愿景图
+const DEITY_DONE_KEY = 'fopusha-qiucai-deities-v1'
+const FULL_OFFERINGS = ['incense', 'lamp', 'fruit', 'ingot']
+const completedDeities = ref([])
+const visionPreview = ref(false)
+
+function loadCompleted() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DEITY_DONE_KEY) || '[]')
+    if (Array.isArray(saved)) completedDeities.value = saved
+  } catch {
+    completedDeities.value = []
+  }
+  // 测试用：网址带 ?vision-preview=1 时直接解锁
+  visionPreview.value = new URLSearchParams(window.location.search).get('vision-preview') === '1'
+}
+
+function markDeityComplete(key) {
+  if (completedDeities.value.includes(key)) return false
+  completedDeities.value = [...completedDeities.value, key]
+  try {
+    localStorage.setItem(DEITY_DONE_KEY, JSON.stringify(completedDeities.value))
+  } catch {
+    // 存不了就只在本次页面内生效
+  }
+  return true
+}
 
 const deity = ref(CAISHEN[0])
 const done = ref({})
@@ -180,6 +208,14 @@ function act(way) {
     showToast(`第 ${bowCount.value} 拜 · ${pickGreeting()}`)
   } else {
     showToast(way.toast)
+  }
+
+  if (FULL_OFFERINGS.every((key) => done.value[key]) && bowCount.value >= 3 && markDeityComplete(deity.value.key)) {
+    const count = completedDeities.value.length
+    const total = CAISHEN.length
+    setTimeout(() => showToast(count >= total
+      ? '八位神仙全部拜圆满！往下看，可以生成你的成功愿景图了。'
+      : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`), 1400)
   }
 
   if (bowlFull.value && !bowlCelebrated.value) {
@@ -409,6 +445,7 @@ onMounted(() => {
     '网上求财、网上祈福，在线拜财神：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
   )
   loadStats()
+  loadCompleted()
   preloadPose(deity.value)
   form.value.name = getViewerProfile()?.username || ''
   warmApi()
@@ -575,6 +612,13 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </section>
+
+    <VisionMaker
+      :unlocked="visionPreview || completedDeities.length >= CAISHEN.length"
+      :done-count="completedDeities.length"
+      :total="CAISHEN.length"
+      :default-name="form.name"
+    />
 
     <section class="card qc-info">
       <h2>{{ deity.name }} · {{ deity.title }}</h2>

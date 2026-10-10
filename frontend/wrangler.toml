@@ -1,3 +1,11 @@
 name = "baifo"
 pages_build_output_dir = "./dist"
 compatibility_date = "2026-05-04"
+
+# 求财专区愿景图：Workers AI 生图 + 每人每天限量计数
+[ai]
+binding = "AI"
+
+[[kv_namespaces]]
+binding = "QIUCAI_LIMIT"
+id = "6dae0a6cc1324e839c75fdceb4822a7c"
