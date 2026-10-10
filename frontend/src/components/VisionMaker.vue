@@ -1,6 +1,6 @@
 <script setup>
-// 愿景图：拜完全部财神后解锁。选职业和祥瑞主题、填年龄（可上传本人照片），
-// 由 /api/vision 生成一张没有文字的成功场景图，再在下方印上名字、祝福语和日期，供下载。
+// 愿景图：拜完全部财神后解锁。选职业和祥瑞主题，由 /api/vision 生成一张不带人物、不带文字的祥瑞图
+// （职业是画面主角，如餐馆、房子），再在下方印上名字、祝福语和日期，供下载。
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { PROFESSIONS, THEMES } from '../data/vision.js'
 
@@ -14,12 +14,7 @@ const props = defineProps({
 const profession = ref(PROFESSIONS[0].key)
 const theme = ref(THEMES[0].key)
 const custom = ref('')
-const gender = ref('male')
-const age = ref('')
 const name = ref(props.defaultName)
-const photoBlob = ref(null)
-const photoPreview = ref('')
-const consent = ref(false)
 
 const loading = ref(false)
 const waitSeconds = ref(0)
@@ -97,42 +92,6 @@ watch(() => props.defaultName, (value) => {
   if (!name.value) name.value = value
 })
 
-// 照片在本地先缩到 512px 以内再上传（模型要求，也省流量）；只用于这一次生成
-function pickPhoto(event) {
-  const file = event.target.files?.[0]
-  error.value = ''
-  if (!file) return
-  if (!/^image\//.test(file.type)) {
-    error.value = '请选择一张图片。'
-    return
-  }
-  const url = URL.createObjectURL(file)
-  const img = new Image()
-  img.onload = () => {
-    const scale = Math.min(1, 512 / Math.max(img.width, img.height))
-    const canvas = document.createElement('canvas')
-    canvas.width = Math.round(img.width * scale)
-    canvas.height = Math.round(img.height * scale)
-    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
-    canvas.toBlob((blob) => {
-      photoBlob.value = blob
-      photoPreview.value = canvas.toDataURL('image/jpeg', 0.85)
-      URL.revokeObjectURL(url)
-    }, 'image/jpeg', 0.88)
-  }
-  img.onerror = () => {
-    error.value = '这张照片读不出来，请换一张。'
-    URL.revokeObjectURL(url)
-  }
-  img.src = url
-}
-
-function clearPhoto() {
-  photoBlob.value = null
-  photoPreview.value = ''
-  consent.value = false
-}
-
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -196,11 +155,6 @@ async function composeCard(imageSrc) {
 
 async function generate() {
   error.value = ''
-  const ageNum = Number(age.value)
-  if (!ageNum || ageNum < 18 || ageNum > 100) {
-    error.value = '愿景图需要年满 18 岁，请填写年龄。'
-    return
-  }
   if (profession.value === 'other' && !custom.value.trim()) {
     error.value = '请写一下你做的是哪一行。'
     return
@@ -209,21 +163,11 @@ async function generate() {
     error.value = '请先完成下方的人机验证。'
     return
   }
-  if (photoBlob.value && !consent.value) {
-    error.value = '上传照片前，请勾选确认这是你本人或已获本人同意。'
-    return
-  }
   const form = new FormData()
   form.append('profession', profession.value)
   form.append('theme', theme.value)
   form.append('custom', custom.value.trim())
-  form.append('gender', gender.value)
-  form.append('age', String(ageNum))
   form.append('cf-turnstile-response', turnstileToken.value)
-  if (photoBlob.value) {
-    form.append('photo', photoBlob.value, 'photo.jpg')
-    form.append('consent', consent.value ? 'yes' : 'no')
-  }
   loading.value = true
   cardUrl.value = ''
   waitSeconds.value = 0
@@ -257,13 +201,13 @@ onBeforeUnmount(() => {
     <h2 id="vision-title">生成你的成功愿景图</h2>
 
     <div v-if="!unlocked" class="vision-locked">
-      <p>八位神仙都拜圆满（供养四样、叩拜三下），就能解锁：为你画一张专属的祥瑞愿景图，龙凤呈祥、黄袍加身、金银满屋……再把你的行业化作画中的吉祥象征。</p>
+      <p>八位神仙都拜圆满（供养四样、叩拜三下），就能解锁：为你画一张专属的祥瑞愿景图。画面主角就是你的事业，开餐馆的是一座金光闪闪的酒楼，做房产的是一栋好房子，四周是龙凤呈祥、金银满屋这样的祥瑞。</p>
       <div class="vision-progress"><span :style="{ width: (doneCount / total) * 100 + '%' }"></span></div>
       <p class="vision-progress__text">已圆满 {{ doneCount }} / {{ total }} 位</p>
     </div>
 
     <template v-else>
-      <p class="vision-lead">选一个祥瑞主题和你的职业，财神为你画一张专属愿景图。图上的字由我们另外印上，可以下载保存。</p>
+      <p class="vision-lead">选你的职业和一个祥瑞主题，财神为你画一张专属愿景图：你的事业在中央，祥瑞环绕四周。图上的字由我们另外印上，可以下载保存。</p>
 
       <form v-if="!cardUrl" class="vision-form" @submit.prevent="generate">
         <span class="field-label">你的职业</span>
@@ -277,33 +221,9 @@ onBeforeUnmount(() => {
           <button v-for="t in THEMES" :key="t.key" type="button" class="chip" :class="{ active: theme === t.key }" @click="theme = t.key">{{ t.label }}</button>
         </div>
 
-        <div class="vision-row">
-          <label class="field-label">名字（印在图下方）
-            <input v-model="name" class="field" maxlength="12" placeholder="例如：王先生" />
-          </label>
-          <label class="field-label">年龄
-            <input v-model="age" class="field" inputmode="numeric" maxlength="3" placeholder="例如：45" />
-          </label>
-          <div class="field-label">性别
-            <div class="chips">
-              <button type="button" class="chip" :class="{ active: gender === 'male' }" @click="gender = 'male'">男</button>
-              <button type="button" class="chip" :class="{ active: gender === 'female' }" @click="gender = 'female'">女</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="vision-photo">
-          <span class="field-label">上传一张本人照片（选填，画出来更像你）</span>
-          <div v-if="photoPreview" class="vision-photo__preview">
-            <img :src="photoPreview" alt="已选择的照片" />
-            <button type="button" class="ghost-btn" @click="clearPhoto">换一张 / 不用照片</button>
-          </div>
-          <input v-else type="file" accept="image/*" class="field" @change="pickPhoto" />
-          <label v-if="photoPreview" class="vision-consent">
-            <input v-model="consent" type="checkbox" />
-            这是我本人的照片，或已获得本人同意。照片只用于这一次生成，不会保存。
-          </label>
-        </div>
+        <label class="field-label">名字（印在图下方）
+          <input v-model="name" class="field" maxlength="12" placeholder="例如：王先生" />
+        </label>
 
         <div ref="turnstileBox" class="vision-turnstile" data-action="turnstile-spin-v1"></div>
         <p v-if="error" class="error-msg">{{ error }}</p>
@@ -347,11 +267,6 @@ onBeforeUnmount(() => {
   background: transparent; color: var(--text); font-size: 14px;
 }
 .chip.active { background: #b8161b; border-color: #ffd86b; color: #ffe9b0; }
-.vision-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.vision-photo { display: grid; gap: 8px; }
-.vision-photo__preview { display: flex; align-items: center; gap: 12px; }
-.vision-photo__preview img { width: 72px; height: 72px; object-fit: cover; border-radius: 12px; }
-.vision-consent { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: #fbe9c8; line-height: 1.6; }
 .submit-btn {
   display: inline-block; text-align: center; padding: 12px 18px; border: 0; border-radius: 12px;
   background: linear-gradient(180deg, #ffd86b, #e6a92e); color: #4a0a0c; font-weight: 700; font-size: 16px;

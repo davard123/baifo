@@ -1,12 +1,14 @@
 // 求财专区「愿景图」生成接口：POST /api/vision（multipart/form-data）
-// 字段：profession, theme, custom（职业为「其他」时的行业描述）, gender, age, consent, photo（可选，≤512px 的 JPEG）
+// 字段：profession, theme, custom（职业为「其他」时的行业描述）, cf-turnstile-response
+// 画面里不放人：职业是画面主角（餐馆、房子……随机一种风格），祥瑞主题是环绕它的氛围。
 // 生图：Cloudflare Workers AI（FLUX.2 klein 4B）为主，MiniMax image-01 备用；顺序可用 VISION_PRIMARY 环境变量调换。
-// 照片只在本次请求里使用，不落盘、不进数据库。图上不生成任何文字，名字和祝福语由前端另外印。
+// 图上不生成任何文字，名字和祝福语由前端另外印。
 import { PROFESSIONS, THEMES } from '../../src/data/vision.js'
 
 const DAILY_LIMIT = 2
-const BLOCKED = /(裸|色情|性感|暴力|血|枪|毒品|赌|政治|习近平|特朗普|支票特写|证件|身份证|护照|nude|naked|sex|gun|blood|drug)/i
+const BLOCKED = /(裸|色情|性感|暴力|血|枪|毒品|赌|政治|习近平|特朗普|支票|证件|身份证|护照|nude|naked|sex|gun|blood|drug)/i
 const NO_TEXT = 'Absolutely no text, no letters, no numbers, no Chinese characters, no signs with writing anywhere in the image.'
+const NO_PEOPLE = 'No people, no human figures, no faces anywhere in the image.'
 const STYLE = 'Grand symbolic Chinese auspicious artwork, epic mythical scale, ultra detailed 3D render like a premium CG poster, rich red and gold palette, glowing golden light, festive and triumphant.'
 
 function json(data, status = 200) {
@@ -16,24 +18,16 @@ function json(data, status = 200) {
   })
 }
 
-// 人物只是画中的小身影，主角是祥瑞象征；上传照片时保留本人面貌，但仍只占画面一小部分
-function personPhrase({ gender, age, hasPhoto }) {
-  if (hasPhoto) {
-    return 'The person from the reference photo (same face) appears small in the scene, about one quarter of the image height, facing the viewer joyfully; the symbolic scene is the main subject.'
-  }
-  const g = gender === 'female' ? 'woman' : 'man'
-  return `A tiny figure of an East Asian ${g} around ${age} stands small in the scene with arms raised in joy; the symbolic scene is the main subject.`
-}
-
-function buildPrompt({ profession, theme, custom, gender, age, hasPhoto }) {
+function buildPrompt({ profession, theme, custom }) {
   const p = PROFESSIONS.find((item) => item.key === profession)
   const t = THEMES.find((item) => item.key === theme)
   if (!p || !t) return null
   const industry = custom.replace(/[^\p{L}\p{N}\s]/gu, ' ').slice(0, 30) || 'their own field'
-  const symbol = p.symbol.replace('{industry}', industry)
-  return `${STYLE} ${t.prompt} ${symbol} ${personPhrase({ gender, age, hasPhoto })} ${NO_TEXT}`
+  const subject = p.subjects[Math.floor(Math.random() * p.subjects.length)].replace('{industry}', industry)
+  return `${STYLE} The main subject, large and centered, is ${subject}. All around it: ${t.prompt} ${NO_PEOPLE} ${NO_TEXT}`
 }
 
+// 人机验证（Turnstile）：后台配置了 TURNSTILE_SECRET_KEY 时必须通过，本地开发未配置则跳过
 async function verifyTurnstile(env, token, ip) {
   if (!env.TURNSTILE_SECRET_KEY) return true
   if (!token) return false
@@ -59,13 +53,12 @@ async function countUse(env, limit) {
   await env.QIUCAI_LIMIT.put(limit.key, String(limit.used + 1), { expirationTtl: 60 * 60 * 26 })
 }
 
-async function viaWorkersAI(env, prompt, photo) {
+async function viaWorkersAI(env, prompt) {
   if (!env.AI) throw new Error('no AI binding')
   const form = new FormData()
   form.append('prompt', prompt)
   form.append('width', '768')
   form.append('height', '1024')
-  if (photo) form.append('input_image_0', photo, 'photo.jpg')
   const packed = new Response(form)
   const result = await env.AI.run('@cf/black-forest-labs/flux-2-klein-4b', {
     multipart: { body: packed.body, contentType: packed.headers.get('content-type') },
@@ -76,28 +69,19 @@ async function viaWorkersAI(env, prompt, photo) {
   return `data:${mime};base64,${result.image}`
 }
 
-async function toBase64(blob) {
-  const bytes = new Uint8Array(await blob.arrayBuffer())
-  let binary = ''
-  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
-  return btoa(binary)
-}
-
-async function viaMiniMax(env, prompt, photo) {
+async function viaMiniMax(env, prompt) {
   if (!env.MINIMAX_API_KEY) throw new Error('no MINIMAX_API_KEY')
-  const body = {
-    model: 'image-01',
-    prompt,
-    aspect_ratio: '3:4',
-    response_format: 'base64',
-    n: 1,
-    prompt_optimizer: false,
-  }
-  if (photo) body.subject_reference = [{ type: 'character', image_file: `data:image/jpeg;base64,${await toBase64(photo)}` }]
   const res = await fetch(`${env.MINIMAX_BASE || 'https://api.minimaxi.com'}/v1/image_generation`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.MINIMAX_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      model: 'image-01',
+      prompt,
+      aspect_ratio: '3:4',
+      response_format: 'base64',
+      n: 1,
+      prompt_optimizer: false,
+    }),
   })
   const data = await res.json().catch(() => ({}))
   const image = data?.data?.image_base64?.[0]
@@ -115,19 +99,9 @@ export async function onRequestPost({ request, env }) {
   const profession = String(form.get('profession') || '')
   const theme = String(form.get('theme') || '')
   const custom = String(form.get('custom') || '').trim()
-  const gender = form.get('gender') === 'female' ? 'female' : 'male'
-  const age = Math.round(Number(form.get('age')))
-  const photo = form.get('photo')
-  const hasPhoto = photo && typeof photo === 'object' && photo.size > 0
 
-  if (!Number.isFinite(age) || age < 18 || age > 100) return json({ error: '愿景图需要年满 18 岁，请填写真实年龄。' }, 400)
   if (BLOCKED.test(custom)) return json({ error: '行业描述里有不适合生成的内容，请换个说法。' }, 400)
-  if (hasPhoto) {
-    if (form.get('consent') !== 'yes') return json({ error: '上传照片前，请先确认这是你本人或已获本人同意。' }, 400)
-    if (photo.size > 600 * 1024 || !/^image\/(jpeg|png|webp)$/.test(photo.type)) return json({ error: '照片格式不对或太大，请换一张。' }, 400)
-  }
-
-  const prompt = buildPrompt({ profession, theme, custom, gender, age, hasPhoto })
+  const prompt = buildPrompt({ profession, theme, custom })
   if (!prompt) return json({ error: '请先选择你的职业和祥瑞主题。' }, 400)
 
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown'
@@ -141,7 +115,7 @@ export async function onRequestPost({ request, env }) {
   const errors = []
   for (const run of order) {
     try {
-      const image = await run(env, prompt, hasPhoto ? photo : null)
+      const image = await run(env, prompt)
       await countUse(env, limit)
       return json({ image, left: DAILY_LIMIT - limit.used - 1 })
     } catch (err) {
