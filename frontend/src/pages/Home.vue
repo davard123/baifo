@@ -777,7 +777,7 @@ onMounted(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(40, 4, 6, 0.95) 0%, rgba(40, 4, 6, 0.6) 38%, transparent 70%);
+  background: linear-gradient(0deg, rgba(40, 4, 6, 0.96) 0%, rgba(40, 4, 6, 0.78) 45%, rgba(40, 4, 6, 0.25) 85%);
 }
 
 .qiucai-banner__content {
@@ -804,6 +804,10 @@ onMounted(() => {
   background: linear-gradient(160deg, rgba(184, 22, 27, 0.85), rgba(90, 11, 14, 0.9)) !important;
   border-color: rgba(255, 216, 107, 0.6) !important;
 }
+
+.hero-action--featured .hero-action__title,
+.hero-action--featured .hero-action__body { color: #fff3d6 !important; }
+.hero-action--featured .hero-action__cta { color: #ffd86b !important; }
 
 .ancestor-banner {
   display: grid;
