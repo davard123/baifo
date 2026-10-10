@@ -453,7 +453,7 @@ onBeforeUnmount(() => {
         <p v-if="toast" class="qc-toast" role="status">{{ toast }}</p>
         <div class="qc-stage__label">
           <strong>{{ deity.name }}</strong>
-          <span>{{ deity.title }} · {{ deity.short }}</span>
+          <span>{{ deity.title }}</span>
         </div>
         <div class="qc-bowl-mini" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <img :src="PROP('bowl')" alt="" />
@@ -486,7 +486,7 @@ onBeforeUnmount(() => {
           :aria-pressed="deity.key === item.key"
           @click="chooseDeity(item)"
         >
-          <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" loading="lazy" decoding="async" />
+          <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" decoding="async" />
           <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
           <span class="qc-deity__name">{{ item.name }}</span>
         </button>
@@ -715,8 +715,8 @@ onBeforeUnmount(() => {
 }
 
 .qc-stage__label {
-  position: absolute; left: 12px; top: 12px;
-  display: grid; gap: 2px; max-width: 46%;
+  position: absolute; left: 12px; top: 64px;
+  display: grid; gap: 2px; max-width: 30%;
 }
 .qc-stage__label strong { font-size: 20px; color: var(--red); }
 .qc-stage__label span { font-size: 12px; color: #8a5a2b; line-height: 1.4; }

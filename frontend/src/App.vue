@@ -108,8 +108,8 @@ watch(
   (path) => {
     applyRouteSeo(path)
     if (isHantPath(path)) startHant()
-    // 拜佛 / 祭祀页：悬浮按钮移到左上角，避免挡住右下方跪拜的人和供养面板
-    document.documentElement.classList.toggle('ritual-route', /^\/(buddha|ancestor)\//.test(stripHant(path)))
+    // 拜佛 / 祭祀 / 求财页：悬浮按钮移到左上角，避免挡住右下方跪拜的人、供养面板和财神选择栏
+    document.documentElement.classList.toggle('ritual-route', /^\/(buddha|ancestor|qiucai)(\/|$)/.test(stripHant(path)))
   },
   { immediate: true }
 )
