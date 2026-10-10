@@ -403,10 +403,10 @@ function resetAll() {
 }
 
 onMounted(() => {
-  document.title = '求财祈福｜在线拜财神、祈求财运亨通 - fopusha.com'
+  document.title = '网上求财祈福｜在线拜财神、求财运求福寿 - fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
-    '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
+    '网上求财、网上祈福，在线拜财神：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
   )
   loadStats()
   preloadPose(deity.value)
@@ -506,7 +506,7 @@ onBeforeUnmount(() => {
     <section class="qc-altar card">
       <div class="qc-panel">
         <p class="hero-text">
-          选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
+          不用跑庙，网上求财、网上祈福几分钟就能完成：选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
         </p>
         <div class="qc-bowl" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <div class="qc-bowl__head">

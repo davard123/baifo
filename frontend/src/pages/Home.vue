@@ -128,12 +128,12 @@ async function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '求财祈福 · 在线拜财神 | 礼佛祈愿与网上祭祖 - fopusha.com'
+  document.title = '网上求财 · 网上祈福 | 在线拜财神、礼佛祈愿与网上祭祖 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
       'content',
-      '求财祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
+      '网上求财、网上祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
     )
   loadWishes()
 })
@@ -141,6 +141,8 @@ onMounted(() => {
 
 <template>
   <main class="home-shell">
+    <FestivalGreeting />
+
     <a
       href="/qiucai/"
       class="qiucai-banner"
@@ -152,7 +154,7 @@ onMounted(() => {
     >
       <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" />
       <div class="qiucai-banner__content">
-        <p class="qiucai-banner__kicker">在线拜财神 · 求财 · 升官 · 纳福 · 长寿</p>
+        <p class="qiucai-banner__kicker">网上求财 · 网上祈福 · 在线拜财神</p>
         <h2>拜一拜，给自己添一份财气</h2>
         <ul class="qiucai-banner__gains">
           <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
@@ -170,7 +172,6 @@ onMounted(() => {
         <p class="section-kicker">在线礼佛 · 诸佛菩萨</p>
         <h1 class="section-title">礼佛祈愿</h1>
         <p class="section-sub">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。</p>
-        <FestivalGreeting />
       </div>
       <div class="catalog-grid">
         <router-link
