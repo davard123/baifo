@@ -191,7 +191,24 @@ function act(way) {
 
 const fullRef = ref(null)
 
+// 换一位神仙就重新开始：供养、财气、叩拜、赐福状态和已提交的心愿全部清掉，连拜天数保留
+function resetRitual() {
+  done.value = {}
+  qi.value = 0
+  bowCount.value = 0
+  bowlCelebrated.value = false
+  blessingUntil.value = 0
+  clearTimeout(poseTimer)
+  aura.value = 0
+  effect.value = ''
+  particles.value = []
+  result.value = null
+  cardUrl.value = ''
+  form.value.wish = ''
+}
+
 function chooseDeity(item, scroll = false) {
+  if (item.key !== deity.value.key) resetRitual()
   deity.value = item
   preloadPose(item)
   if (scroll) fullRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -381,13 +398,7 @@ async function drawCard(data) {
 }
 
 function resetAll() {
-  done.value = {}
-  qi.value = 0
-  bowCount.value = 0
-  bowlCelebrated.value = false
-  result.value = null
-  cardUrl.value = ''
-  form.value.wish = ''
+  resetRitual()
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
