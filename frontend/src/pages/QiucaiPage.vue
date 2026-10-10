@@ -32,8 +32,9 @@ function loadCompleted() {
   } catch {
     completedDeities.value = []
   }
-  // 测试用：网址带 ?vision-preview=1 时直接解锁
-  visionPreview.value = new URLSearchParams(window.location.search).get('vision-preview') === '1'
+  // 测试用：仅在预览站（*.pages.dev / localhost），网址带 ?vision-preview=1 时直接解锁
+  const isPreviewHost = /\.pages\.dev$|^localhost$|^127\.0\.0\.1$/.test(window.location.hostname)
+  visionPreview.value = isPreviewHost && new URLSearchParams(window.location.search).get('vision-preview') === '1'
 }
 
 function markDeityComplete(key) {
