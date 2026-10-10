@@ -427,7 +427,10 @@ onBeforeUnmount(() => {
       <div class="qc-full__bar">
         <router-link to="/" class="qc-full__back">← 首页</router-link>
         <h1>求财祈福</h1>
-        <span class="qc-full__today">今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
+        <span class="qc-full__today">
+          <strong class="qc-full__deity">{{ deity.name }} · {{ deity.title }}</strong>
+          <span>今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
+        </span>
       </div>
 
       <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]">
@@ -462,10 +465,6 @@ onBeforeUnmount(() => {
           ><img v-if="p.symbol.length > 2" :src="PROP(p.symbol)" alt="" /><template v-else>{{ p.symbol }}</template></span>
         </div>
         <p v-if="toast" class="qc-toast" role="status">{{ toast }}</p>
-        <div class="qc-stage__label">
-          <strong>{{ deity.name }}</strong>
-          <span>{{ deity.title }}</span>
-        </div>
         <div class="qc-bowl-mini" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <img :src="PROP('bowl')" alt="" />
           <span class="qc-bowl-mini__bar"><span :style="{ width: bowlPercent + '%' }"></span></span>
@@ -652,7 +651,8 @@ onBeforeUnmount(() => {
 }
 .qc-full__back { color: var(--red); font-size: 14px; white-space: nowrap; }
 .qc-full__bar h1 { font-size: 20px; color: var(--red); letter-spacing: 0.1em; }
-.qc-full__today { margin-left: auto; font-size: 12px; color: #8a5a2b; text-align: right; }
+.qc-full__today { margin-left: auto; display: grid; gap: 1px; font-size: 12px; color: #8a5a2b; text-align: right; }
+.qc-full__deity { font-size: 15px; }
 .qc-full__today strong { color: var(--red); }
 
 .qc-stage {
