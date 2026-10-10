@@ -1,154 +1,55 @@
-// 愿景图：按职业给不同的成功场景。prompt 是给生图模型的英文描述（图上不出字），
-// blessing 是印在图片下方的中文祝福语（由前端画上去）。
+// 愿景图：画面以祥瑞寓意为主（龙凤、祥云、金光、元宝……），人物只是画中一个小身影。
+// THEMES 决定整体画面，PROFESSIONS 在画面里加一个与职业相关的象征物。
+// prompt 是给生图模型的英文描述（图上不出字），blessing / wish 由前端印在图片下方。
+
+export const THEMES = [
+  {
+    key: 'longfeng',
+    label: '龙凤呈祥',
+    prompt: 'A majestic golden dragon and a radiant phoenix spiral together through the sky above a celebrating city, fireworks bursting, red lanterns, a rain of gold coins and confetti.',
+    blessing: '龙凤呈祥，喜事连连，好运当头',
+  },
+  {
+    key: 'huangpao',
+    label: '黄袍加身',
+    prompt: 'Heavenly beams of golden light break through swirling auspicious clouds, flying cranes, glowing ruyi scepters and floating golden ingots, a sacred sunrise behind; the person wears a flowing golden imperial robe and stands on a cloud platform.',
+    blessing: '天降祥瑞，鸿运当头，贵人相助',
+  },
+  {
+    key: 'jinyin',
+    label: '金银满屋',
+    prompt: 'A vast treasure hall overflowing with mountains of gold ingots, gold coins, jewels and open treasure chests, a giant glowing cornucopia bowl in the center radiating light, golden coins pouring like a waterfall from the ceiling.',
+    blessing: '金银满屋，财源广进，富贵满堂',
+  },
+  {
+    key: 'liyu',
+    label: '鲤跃龙门',
+    prompt: 'A giant golden carp leaps over a glowing dragon gate above a waterfall of light, auspicious clouds and golden sparks all around, a sense of soaring breakthrough.',
+    blessing: '鲤跃龙门，步步高升，一飞冲天',
+  },
+  {
+    key: 'ziqi',
+    label: '紫气东来',
+    prompt: 'Purple and golden auspicious clouds roll in from the east at sunrise, a magnificent golden palace rises on the clouds, rays of light and flying cranes, everything glowing with good fortune.',
+    blessing: '紫气东来，吉星高照，万事亨通',
+  },
+  {
+    key: 'caiyuan',
+    label: '财源滚滚',
+    prompt: 'A shining river of gold coins and gold ingots flows from the horizon through red and gold auspicious clouds, a golden cornucopia overflowing, coins tumbling like waves of light.',
+    blessing: '财源滚滚，日进斗金，生生不息',
+  },
+]
+
 export const PROFESSIONS = [
-  {
-    key: 'office',
-    label: '上班族',
-    scenes: [
-      {
-        key: 'promotion',
-        label: '升职加薪',
-        prompt: 'stands in a bright modern office being congratulated on a promotion, colleagues applauding and shaking hands, a bouquet of flowers on the desk, city skyline through the windows.',
-        blessing: '步步高升，升职加薪，前程似锦',
-      },
-      {
-        key: 'award',
-        label: '年度表彰',
-        prompt: 'stands on a stage at a company annual gala holding a golden trophy, confetti falling, the audience cheering, festive red and gold decorations.',
-        blessing: '才华被看见，年年拿大奖',
-      },
-    ],
-  },
-  {
-    key: 'restaurant',
-    label: '餐馆老板',
-    scenes: [
-      {
-        key: 'opening',
-        label: '开业大吉',
-        prompt: 'is the owner of a newly opened restaurant, standing at the entrance on grand opening day cutting a red ribbon with smiling staff, flower baskets, red lanterns, lion dance performers and a line of happy customers.',
-        blessing: '开业大吉，生意兴隆，客似云来',
-      },
-      {
-        key: 'fullhouse',
-        label: '天天满座',
-        prompt: 'is the owner of a busy restaurant, standing proudly in the dining room where every table is full of happy diners, waiters carrying delicious dishes, warm lively evening.',
-        blessing: '日日满座，口碑传四方',
-      },
-    ],
-  },
-  {
-    key: 'shop',
-    label: '开店做生意',
-    scenes: [
-      {
-        key: 'busy',
-        label: '顾客盈门',
-        prompt: 'is the owner of a beautiful small shop, smiling behind the counter while a crowd of happy customers shop and line up to pay, shelves full of goods.',
-        blessing: '顾客盈门，财源滚滚',
-      },
-      {
-        key: 'opening',
-        label: '新店开张',
-        prompt: 'is opening a new shop, standing at the shop door with a big smile on opening day, festive flower baskets and red balloons, neighbours and customers celebrating.',
-        blessing: '新店开张，红红火火',
-      },
-    ],
-  },
-  {
-    key: 'realestate',
-    label: '房地产经纪',
-    scenes: [
-      {
-        key: 'closing',
-        label: '成交交钥匙',
-        prompt: 'is a successful real estate agent handing a set of house keys to a delighted young couple holding their small child, standing in front of a beautiful house with a manicured lawn, everyone smiling, sunny day.',
-        blessing: '单单成交，客户满意，业绩长红',
-      },
-      {
-        key: 'signing',
-        label: '签约大单',
-        prompt: 'is a successful real estate agent at a bright office table shaking hands with happy clients after signing the purchase contract, champagne glasses raised, celebration mood.',
-        blessing: '大单连连，佣金丰厚',
-      },
-    ],
-  },
-  {
-    key: 'sales',
-    label: '销售 / 业务',
-    scenes: [
-      {
-        key: 'deal',
-        label: '签下大单',
-        prompt: 'is a top salesperson in a glass-walled boardroom shaking hands firmly with an important client after closing a big deal, the team clapping in the background.',
-        blessing: '签单如流水，业绩冲第一',
-      },
-    ],
-  },
-  {
-    key: 'ecommerce',
-    label: '网店 / 电商',
-    scenes: [
-      {
-        key: 'orders',
-        label: '订单爆满',
-        prompt: 'runs a successful online store, standing happily in a tidy warehouse stacked with packed parcels ready to ship, a laptop open nearby, staff busy packing orders.',
-        blessing: '订单爆满，好评如潮',
-      },
-    ],
-  },
-  {
-    key: 'boss',
-    label: '公司 / 工厂老板',
-    scenes: [
-      {
-        key: 'team',
-        label: '公司蒸蒸日上',
-        prompt: 'is the founder of a growing company, standing proudly in front of a modern office building with a large cheerful team celebrating together.',
-        blessing: '事业蒸蒸日上，宏图大展',
-      },
-      {
-        key: 'factory',
-        label: '订单满产',
-        prompt: 'is the owner of a modern clean factory, walking proudly along a busy production line with workers smiling, trucks loading goods outside.',
-        blessing: '订单满产，财源广进',
-      },
-    ],
-  },
-  {
-    key: 'investor',
-    label: '投资理财',
-    scenes: [
-      {
-        key: 'freedom',
-        label: '财务自由',
-        prompt: 'relaxes on the balcony of a beautiful home overlooking the sea at sunset, holding a cup of tea, calm, confident and financially free.',
-        blessing: '稳稳增值，财务自由',
-      },
-    ],
-  },
-  {
-    key: 'student',
-    label: '学生 / 考试',
-    scenes: [
-      {
-        key: 'admission',
-        label: '金榜题名',
-        prompt: 'celebrates at a graduation ceremony in cap and gown, tossing the cap into the air with classmates, family cheering on a sunny campus lawn.',
-        blessing: '金榜题名，前程远大',
-      },
-    ],
-  },
-  {
-    key: 'other',
-    label: '其他行业',
-    scenes: [
-      {
-        key: 'success',
-        label: '事业有成',
-        prompt: 'has achieved great success working in {industry}, celebrating that success at the workplace with colleagues and customers, proud and happy.',
-        blessing: '事业有成，心想事成',
-      },
-    ],
-  },
+  { key: 'office', label: '上班族', symbol: 'A shining staircase of golden clouds rises toward a radiant golden halo of light high in the sky.', wish: '升职加薪，前程似锦' },
+  { key: 'restaurant', label: '餐馆老板', symbol: 'A magnificent golden restaurant palace with red lanterns floats on the clouds, streams of tiny glowing guests flowing toward its doors.', wish: '生意兴隆，客似云来' },
+  { key: 'shop', label: '开店做生意', symbol: 'A golden shop front glows with light, an endless line of tiny glowing customers winding toward it.', wish: '顾客盈门，财源滚滚' },
+  { key: 'realestate', label: '房地产经纪', symbol: 'Golden houses and mansions float on the clouds, a giant glowing golden key hovering among them.', wish: '单单成交，业绩长红' },
+  { key: 'sales', label: '销售 / 业务', symbol: 'Glowing golden scrolls sealed with red seals (no writing on them) fly through the sky like a flock of birds.', wish: '大单连连，业绩第一' },
+  { key: 'ecommerce', label: '网店 / 电商', symbol: 'Golden gift parcels rain from the sky like shooting stars.', wish: '订单爆满，好评如潮' },
+  { key: 'boss', label: '公司 / 工厂老板', symbol: 'A towering golden skyscraper crowned with light rises among the clouds.', wish: '宏图大展，蒸蒸日上' },
+  { key: 'investor', label: '投资理财', symbol: 'A giant golden money tree heavy with gold coins grows on the clouds.', wish: '稳稳增值，财务自由' },
+  { key: 'student', label: '学生 / 考试', symbol: 'A golden scroll and an ink brush glow like a second sun above a ladder of clouds leading to a heavenly gate.', wish: '金榜题名，前程远大' },
+  { key: 'other', label: '其他行业', symbol: 'Glowing golden symbols of great success in {industry} float in the sky.', wish: '事业有成，心想事成' },
 ]

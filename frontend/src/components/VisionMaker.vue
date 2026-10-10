@@ -1,8 +1,8 @@
 <script setup>
-// 愿景图：拜完全部财神后解锁。选职业和场景、填年龄（可上传本人照片），
+// 愿景图：拜完全部财神后解锁。选职业和祥瑞主题、填年龄（可上传本人照片），
 // 由 /api/vision 生成一张没有文字的成功场景图，再在下方印上名字、祝福语和日期，供下载。
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { PROFESSIONS } from '../data/vision.js'
+import { PROFESSIONS, THEMES } from '../data/vision.js'
 
 const props = defineProps({
   unlocked: { type: Boolean, default: false },
@@ -12,7 +12,7 @@ const props = defineProps({
 })
 
 const profession = ref(PROFESSIONS[0].key)
-const scene = ref(PROFESSIONS[0].scenes[0].key)
+const theme = ref(THEMES[0].key)
 const custom = ref('')
 const gender = ref('male')
 const age = ref('')
@@ -80,15 +80,12 @@ function removeTurnstile() {
 }
 
 const current = computed(() => PROFESSIONS.find((p) => p.key === profession.value))
-const currentScene = computed(() => current.value.scenes.find((s) => s.key === scene.value) || current.value.scenes[0])
+const currentTheme = computed(() => THEMES.find((t) => t.key === theme.value) || THEMES[0])
 const waitText = computed(() => {
   const lines = ['财神正在为你铺纸研墨……', '正在描绘你的成功场面……', '金光加持中，马上就好……', '再等几秒，好事不怕晚……']
   return lines[Math.min(lines.length - 1, Math.floor(waitSeconds.value / 8))]
 })
 
-watch(profession, () => {
-  scene.value = current.value.scenes[0].key
-})
 // 表单出现时渲染验证框，表单消失（出结果）时移除
 watch(
   () => props.unlocked && !cardUrl.value,
@@ -184,10 +181,10 @@ async function composeCard(imageSrc) {
   ctx.textAlign = 'center'
   ctx.fillStyle = '#ffd86b'
   ctx.font = `bold 50px ${serif}`
-  ctx.fillText(`${name.value.trim() || '有缘人'} · ${currentScene.value.label}`, W / 2, imgH + 78)
+  ctx.fillText(`${name.value.trim() || '有缘人'} · ${currentTheme.value.label}`, W / 2, imgH + 78)
   ctx.fillStyle = '#fff3d6'
   ctx.font = `34px ${serif}`
-  wrap(ctx, currentScene.value.blessing, W - 120).slice(0, 2).forEach((line, i) => {
+  wrap(ctx, `${currentTheme.value.blessing}；${current.value.wish}`, W - 120).slice(0, 2).forEach((line, i) => {
     ctx.fillText(line, W / 2, imgH + 140 + i * 46)
   })
   const d = new Date()
@@ -218,7 +215,7 @@ async function generate() {
   }
   const form = new FormData()
   form.append('profession', profession.value)
-  form.append('scene', scene.value)
+  form.append('theme', theme.value)
   form.append('custom', custom.value.trim())
   form.append('gender', gender.value)
   form.append('age', String(ageNum))
@@ -260,13 +257,13 @@ onBeforeUnmount(() => {
     <h2 id="vision-title">生成你的成功愿景图</h2>
 
     <div v-if="!unlocked" class="vision-locked">
-      <p>八位神仙都拜圆满（供养四样、叩拜三下），就能解锁：按你的职业，生成一张你自己的成功场面，比如餐馆开业大吉、房子成交交钥匙、升职加薪。</p>
+      <p>八位神仙都拜圆满（供养四样、叩拜三下），就能解锁：为你画一张专属的祥瑞愿景图，龙凤呈祥、黄袍加身、金银满屋……再把你的行业化作画中的吉祥象征。</p>
       <div class="vision-progress"><span :style="{ width: (doneCount / total) * 100 + '%' }"></span></div>
       <p class="vision-progress__text">已圆满 {{ doneCount }} / {{ total }} 位</p>
     </div>
 
     <template v-else>
-      <p class="vision-lead">选你的职业和想要的场面，财神为你画一张属于你的愿景图。图上的字由我们另外印上，可以下载保存。</p>
+      <p class="vision-lead">选一个祥瑞主题和你的职业，财神为你画一张专属愿景图。图上的字由我们另外印上，可以下载保存。</p>
 
       <form v-if="!cardUrl" class="vision-form" @submit.prevent="generate">
         <span class="field-label">你的职业</span>
@@ -275,9 +272,9 @@ onBeforeUnmount(() => {
         </div>
         <input v-if="profession === 'other'" v-model="custom" class="field" maxlength="20" placeholder="你做哪一行？例如：美容院、装修、保险" />
 
-        <span class="field-label">想要的场面</span>
+        <span class="field-label">祥瑞主题</span>
         <div class="chips">
-          <button v-for="s in current.scenes" :key="s.key" type="button" class="chip" :class="{ active: scene === s.key }" @click="scene = s.key">{{ s.label }}</button>
+          <button v-for="t in THEMES" :key="t.key" type="button" class="chip" :class="{ active: theme === t.key }" @click="theme = t.key">{{ t.label }}</button>
         </div>
 
         <div class="vision-row">
@@ -320,7 +317,7 @@ onBeforeUnmount(() => {
         <img :src="cardUrl" alt="我的成功愿景图" />
         <div class="vision-result__btns">
           <a :href="cardUrl" :download="`愿景图-${name || '有缘人'}.jpg`" class="submit-btn">下载愿景图</a>
-          <button v-if="left !== 0" type="button" class="ghost-btn" @click="cardUrl = ''">换个场面再画一张</button>
+          <button v-if="left !== 0" type="button" class="ghost-btn" @click="cardUrl = ''">换个主题再画一张</button>
         </div>
         <p v-if="left !== null" class="qc-note">今天还可以生成 {{ left }} 张。</p>
       </div>

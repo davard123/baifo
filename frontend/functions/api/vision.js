@@ -1,13 +1,13 @@
 // 求财专区「愿景图」生成接口：POST /api/vision（multipart/form-data）
-// 字段：profession, scene, custom（职业为「其他」时的行业描述）, gender, age, consent, photo（可选，≤512px 的 JPEG）
+// 字段：profession, theme, custom（职业为「其他」时的行业描述）, gender, age, consent, photo（可选，≤512px 的 JPEG）
 // 生图：Cloudflare Workers AI（FLUX.2 klein 4B）为主，MiniMax image-01 备用；顺序可用 VISION_PRIMARY 环境变量调换。
 // 照片只在本次请求里使用，不落盘、不进数据库。图上不生成任何文字，名字和祝福语由前端另外印。
-import { PROFESSIONS } from '../../src/data/vision.js'
+import { PROFESSIONS, THEMES } from '../../src/data/vision.js'
 
 const DAILY_LIMIT = 2
 const BLOCKED = /(裸|色情|性感|暴力|血|枪|毒品|赌|政治|习近平|特朗普|支票特写|证件|身份证|护照|nude|naked|sex|gun|blood|drug)/i
 const NO_TEXT = 'Absolutely no text, no letters, no numbers, no Chinese characters, no signs with writing anywhere in the image.'
-const STYLE = 'Realistic documentary-style photograph, natural human proportions, medium full-body shot, warm golden light, joyful prosperous atmosphere, high detail.'
+const STYLE = 'Grand symbolic Chinese auspicious artwork, epic mythical scale, ultra detailed 3D render like a premium CG poster, rich red and gold palette, glowing golden light, festive and triumphant.'
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -16,24 +16,24 @@ function json(data, status = 200) {
   })
 }
 
+// 人物只是画中的小身影，主角是祥瑞象征；上传照片时保留本人面貌，但仍只占画面一小部分
 function personPhrase({ gender, age, hasPhoto }) {
-  if (hasPhoto) return 'The person from the reference photo (keep the same face, hairstyle and skin tone)'
+  if (hasPhoto) {
+    return 'The person from the reference photo (same face) appears small in the scene, about one quarter of the image height, facing the viewer joyfully; the symbolic scene is the main subject.'
+  }
   const g = gender === 'female' ? 'woman' : 'man'
-  return `A friendly East Asian ${g} around ${age} years old`
+  return `A tiny figure of an East Asian ${g} around ${age} stands small in the scene with arms raised in joy; the symbolic scene is the main subject.`
 }
 
-function buildPrompt({ profession, scene, custom, gender, age, hasPhoto }) {
+function buildPrompt({ profession, theme, custom, gender, age, hasPhoto }) {
   const p = PROFESSIONS.find((item) => item.key === profession)
-  if (!p) return null
-  const s = p.scenes.find((item) => item.key === scene) || p.scenes[0]
-  const who = personPhrase({ gender, age, hasPhoto })
-  const what = profession === 'other'
-    ? s.prompt.replace('{industry}', custom.replace(/[^\p{L}\p{N}\s]/gu, ' ').slice(0, 30) || 'their own field')
-    : s.prompt
-  return `${STYLE} ${who} ${what} ${NO_TEXT}`
+  const t = THEMES.find((item) => item.key === theme)
+  if (!p || !t) return null
+  const industry = custom.replace(/[^\p{L}\p{N}\s]/gu, ' ').slice(0, 30) || 'their own field'
+  const symbol = p.symbol.replace('{industry}', industry)
+  return `${STYLE} ${t.prompt} ${symbol} ${personPhrase({ gender, age, hasPhoto })} ${NO_TEXT}`
 }
 
-// 人机验证（Turnstile）：后台配置了 TURNSTILE_SECRET_KEY 时必须通过，本地开发未配置则跳过
 async function verifyTurnstile(env, token, ip) {
   if (!env.TURNSTILE_SECRET_KEY) return true
   if (!token) return false
@@ -113,7 +113,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: '请求格式不对，请刷新页面再试。' }, 400)
   }
   const profession = String(form.get('profession') || '')
-  const scene = String(form.get('scene') || '')
+  const theme = String(form.get('theme') || '')
   const custom = String(form.get('custom') || '').trim()
   const gender = form.get('gender') === 'female' ? 'female' : 'male'
   const age = Math.round(Number(form.get('age')))
@@ -127,8 +127,8 @@ export async function onRequestPost({ request, env }) {
     if (photo.size > 600 * 1024 || !/^image\/(jpeg|png|webp)$/.test(photo.type)) return json({ error: '照片格式不对或太大，请换一张。' }, 400)
   }
 
-  const prompt = buildPrompt({ profession, scene, custom, gender, age, hasPhoto })
-  if (!prompt) return json({ error: '请先选择你的职业。' }, 400)
+  const prompt = buildPrompt({ profession, theme, custom, gender, age, hasPhoto })
+  if (!prompt) return json({ error: '请先选择你的职业和祥瑞主题。' }, 400)
 
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown'
   if (!(await verifyTurnstile(env, String(form.get('cf-turnstile-response') || ''), ip))) {
