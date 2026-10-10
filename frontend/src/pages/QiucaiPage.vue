@@ -3,7 +3,6 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   BOWL_FULL,
   CAISHEN,
-  QIUCAI_BG,
   PROP,
   QIUCAI_ARTICLE,
   QIUCAI_FAQS,
@@ -190,9 +189,12 @@ function act(way) {
   }
 }
 
-function chooseDeity(item) {
+const fullRef = ref(null)
+
+function chooseDeity(item, scroll = false) {
   deity.value = item
   preloadPose(item)
+  if (scroll) fullRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   showToast(`已请${item.name}（${item.title}）`)
 }
 
@@ -393,7 +395,7 @@ onMounted(() => {
   document.title = '求财祈福｜在线拜财神、祈求财运亨通 - fopusha.com'
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
-    '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福禄寿、黄财神或土地公，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
+    '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
   )
   loadStats()
   preloadPose(deity.value)
@@ -410,45 +412,14 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="qiucai-shell">
-    <nav class="top-nav">
-      <router-link to="/" class="back-link">← 返回首页</router-link>
-      <span>/</span>
-      <span>求财专区</span>
-    </nav>
-
-    <header class="qc-hero">
-      <p class="qc-kicker">求财专区 · 在线拜财神</p>
-      <h1>求财祈福</h1>
-      <p class="hero-text">
-        选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
-      </p>
-      <div class="qc-today">
-        <span>今日 {{ todayInfo.ganzhi }}</span>
-        <span>财神方位：<strong>{{ todayInfo.direction }}</strong></span>
-        <span v-if="stats.streak">已连拜 <strong>{{ stats.streak }}</strong> 天</span>
-        <span v-if="stats.totalQi">累计财气 <strong>{{ stats.totalQi }}</strong></span>
+    <section ref="fullRef" class="qc-full" aria-label="在线拜财神">
+      <div class="qc-full__bar">
+        <router-link to="/" class="qc-full__back">← 首页</router-link>
+        <h1>求财祈福</h1>
+        <span class="qc-full__today">今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
       </div>
-    </header>
 
-    <section class="qc-deities" aria-label="选择财神">
-      <button
-        v-for="item in CAISHEN"
-        :key="item.key"
-        type="button"
-        class="qc-deity"
-        :class="{ active: deity.key === item.key }"
-        @click="chooseDeity(item)"
-      >
-        <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" loading="lazy" decoding="async" />
-        <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
-        <span class="qc-deity__name">{{ item.name }}</span>
-        <span class="qc-deity__title">{{ item.title }}</span>
-      </button>
-    </section>
-
-    <section class="qc-altar card">
       <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]">
-        <img :src="QIUCAI_BG" alt="" class="qc-stage__bg" aria-hidden="true" />
         <div :key="'aura-' + aura" class="qc-aura" :class="{ on: aura > 0, steady: blessing }" aria-hidden="true">
           <span class="qc-aura__rays"></span>
           <span class="qc-aura__ring"></span>
@@ -462,7 +433,6 @@ onBeforeUnmount(() => {
             :class="{ blessing: showPose }"
           />
         </Transition>
-        <div class="qc-stage__glow" aria-hidden="true"></div>
         <div class="qc-stage__smoke" aria-hidden="true"></div>
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-l" aria-hidden="true" />
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-r" aria-hidden="true" />
@@ -483,29 +453,51 @@ onBeforeUnmount(() => {
         <p v-if="toast" class="qc-toast" role="status">{{ toast }}</p>
         <div class="qc-stage__label">
           <strong>{{ deity.name }}</strong>
-          <span>{{ deity.short }}</span>
+          <span>{{ deity.title }} · {{ deity.short }}</span>
+        </div>
+        <div class="qc-bowl-mini" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
+          <img :src="PROP('bowl')" alt="" />
+          <span class="qc-bowl-mini__bar"><span :style="{ width: bowlPercent + '%' }"></span></span>
         </div>
       </div>
 
-      <div class="qc-panel">
-        <h2>祈福方式</h2>
-        <div class="qc-ways">
-          <button
-            v-for="way in QIUCAI_WAYS"
-            :key="way.key"
-            type="button"
-            class="qc-way"
-            :class="{ done: done[way.key] && !way.repeat }"
-            @click="act(way)"
-          >
-            <img v-if="way.img" :src="way.img" alt="" class="qc-way__img" />
-            <span v-else class="qc-way__icon">{{ way.icon }}</span>
-            <span>{{ way.label }}</span>
-            <small v-if="way.repeat">可多次</small>
-            <small v-else-if="done[way.key]">已完成</small>
-          </button>
-        </div>
+      <div class="qc-ways" role="group" aria-label="祈福方式">
+        <button
+          v-for="way in QIUCAI_WAYS"
+          :key="way.key"
+          type="button"
+          class="qc-way"
+          :class="{ done: done[way.key] && !way.repeat }"
+          @click="act(way)"
+        >
+          <img v-if="way.img" :src="way.img" alt="" class="qc-way__img" />
+          <span v-else class="qc-way__icon">{{ way.icon }}</span>
+          <span>{{ way.label }}</span>
+        </button>
+      </div>
 
+      <div class="qc-deities" role="group" aria-label="选择财神，上方神像随之切换">
+        <button
+          v-for="item in CAISHEN"
+          :key="item.key"
+          type="button"
+          class="qc-deity"
+          :class="{ active: deity.key === item.key }"
+          :aria-pressed="deity.key === item.key"
+          @click="chooseDeity(item)"
+        >
+          <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" loading="lazy" decoding="async" />
+          <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
+          <span class="qc-deity__name">{{ item.name }}</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="qc-altar card">
+      <div class="qc-panel">
+        <p class="hero-text">
+          选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
+        </p>
         <div class="qc-bowl" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <div class="qc-bowl__head">
             <span class="qc-bowl__name"><img :src="PROP('bowl')" alt="" />聚宝盆</span>
@@ -516,11 +508,10 @@ onBeforeUnmount(() => {
 
         <p v-if="reachedMilestone" class="qc-milestone">🎉 {{ reachedMilestone.text }}</p>
         <p v-else-if="nextMilestone" class="qc-milestone qc-milestone--next">
-          再拜 {{ nextMilestone.days - stats.streak }} 天：{{ nextMilestone.text }}
+          {{ stats.streak ? `已连拜 ${stats.streak} 天，` : '' }}再拜 {{ nextMilestone.days - stats.streak }} 天：{{ nextMilestone.text }}
         </p>
 
         <hr class="qc-divider" />
-
         <form v-if="!result" class="qc-form" @submit.prevent="submit">
           <h2>写下求财心愿</h2>
           <label class="field-label" for="qc-name">你的名字或称呼</label>
@@ -588,7 +579,7 @@ onBeforeUnmount(() => {
       <section class="copy-section">
         <h2>各路财神怎么选</h2>
         <div class="qc-deity-list">
-          <article v-for="item in CAISHEN" :key="item.key">
+          <article v-for="item in CAISHEN" :key="item.key" class="qc-deity-card" role="button" tabindex="0" @click="chooseDeity(item, true)" @keydown.enter="chooseDeity(item, true)">
             <h3>{{ item.name }}（{{ item.title }}）</h3>
             <p>{{ item.short }}</p>
           </article>
@@ -612,188 +603,184 @@ onBeforeUnmount(() => {
 .qiucai-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 24px 0 64px;
+  padding: 0 0 64px;
   display: grid;
   gap: 20px;
 }
 
-.top-nav { display: flex; gap: 8px; color: var(--text-muted); font-size: 14px; }
-
-.qc-hero {
-  text-align: center;
-  padding: 36px 20px 20px;
-  border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(60, 6, 8, 0.55), rgba(40, 4, 6, 0.92)),
-    url('/qiucai/caishen-hero.webp?v=1') center 25% / cover no-repeat;
-  border: 1px solid rgba(255, 210, 120, 0.35);
-}
-
-.qc-kicker { color: #ffd86b; letter-spacing: 0.2em; font-size: 14px; }
-.qc-hero h1 { font-size: clamp(40px, 7vw, 64px); color: #ffe08a; text-shadow: 0 4px 24px rgba(255, 180, 40, 0.45); margin: 6px 0; }
-.hero-text { max-width: 640px; margin: 0 auto; color: #fbe9c8; }
-
-.qc-today {
+/* ===== 满屏拜财神：竖屏铺满，横屏等高 ===== */
+.qc-full {
+  --gold: #c99a2e;
+  --red: #9e1b1f;
+  justify-self: center;
+  width: min(100vw, calc(100dvh * 0.68));
+  height: 100vh;
+  height: 100dvh;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 18px;
+  flex-direction: column;
+  background: #fffdf8;
+  color: #5a1a12;
+  overflow: hidden;
 }
-.qc-today span {
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 216, 107, 0.35);
-  font-size: 14px;
-}
-.qc-today strong { color: #ffd86b; }
 
-.qc-deities {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+@media (max-aspect-ratio: 3/4) {
+  .qc-full { width: 100vw; margin-inline: calc(50% - 50vw); }
 }
-.qc-deity {
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  padding: 12px 6px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 216, 107, 0.2);
-  background: rgba(60, 12, 14, 0.7);
-  color: var(--text);
-  transition: transform 0.2s, border-color 0.2s;
-}
-.qc-deity:hover { transform: translateY(-3px); }
-.qc-deity.active { border-color: #ffd86b; background: linear-gradient(180deg, #8e1215, #4a0a0c); }
-.qc-deity__seal {
-  width: 64px; height: 64px; border-radius: 50%;
-  display: grid; place-items: center;
-  font-size: 24px; font-weight: 700; color: #5a0b0e;
-  background: radial-gradient(circle at 35% 30%, #fff1b8, #e6a92e);
-  box-shadow: 0 4px 14px rgba(255, 190, 60, 0.4);
-  object-fit: cover;
-  border: 2px solid #ffd86b;
-}
-.qc-deity__name { font-weight: 700; }
-.qc-deity__title { font-size: 12px; color: var(--text-muted); text-align: center; }
 
-.qc-altar {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  gap: 24px;
-  padding: 20px;
+@media (min-aspect-ratio: 3/4) {
+  .qc-full { border-radius: 0 0 20px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35); }
 }
+
+.qc-full__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(201, 154, 46, 0.25);
+  flex: none;
+}
+.qc-full__back { color: var(--red); font-size: 14px; white-space: nowrap; }
+.qc-full__bar h1 { font-size: 20px; color: var(--red); letter-spacing: 0.1em; }
+.qc-full__today { margin-left: auto; font-size: 12px; color: #8a5a2b; text-align: right; }
+.qc-full__today strong { color: var(--red); }
 
 .qc-stage {
   position: relative;
-  justify-self: center;
-  width: min(100%, calc(82vh * 2 / 3));
-  aspect-ratio: 2 / 3;
-  border-radius: 20px;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
-  background: #2a0708;
+  background: radial-gradient(ellipse at 50% 42%, #fff6dc 0%, #fffdf8 62%);
 }
-.qc-stage__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: filter 0.6s; }
-.qc-stage.lit .qc-stage__bg { filter: brightness(0.95); }
+
 .qc-stage__img {
-  position: absolute; left: 50%; top: 5%; transform: translateX(-50%);
-  height: 50%; width: auto; max-width: 80%; object-fit: contain; object-position: bottom;
-  filter: brightness(0.9) drop-shadow(0 12px 30px rgba(0, 0, 0, 0.55));
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%);
+  height: 86%;
+  width: auto;
+  max-width: 94%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 10px 18px rgba(120, 70, 10, 0.28));
   transition: filter 0.6s;
   animation: appear 0.6s ease both;
 }
-.qc-stage__glow {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0;
-  background: radial-gradient(circle at 50% 70%, rgba(255, 200, 80, 0.55), transparent 55%);
-  transition: opacity 0.8s;
-}
-.qc-stage.lit .qc-stage__glow { opacity: 1; }
-.qc-stage.full .qc-stage__glow { opacity: 1; animation: pulse 1.8s ease-in-out infinite; }
-.qc-stage__smoke {
-  position: absolute; left: 50%; bottom: 22%; width: 60px; height: 160px; margin-left: -30px;
-  opacity: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.35), transparent 70%);
-  filter: blur(8px);
-}
-.qc-stage.smoking .qc-stage__smoke { opacity: 1; animation: smoke 3.2s ease-in-out infinite; }
-.qc-stage__offerings {
-  position: absolute; left: 0; right: 0; bottom: 30%;
-  display: flex; justify-content: center; gap: 18px; font-size: 34px;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-}
-.qc-stage__offerings { align-items: flex-end; }
-.qc-prop { width: 15%; max-width: 92px; height: auto; animation: drop-in 0.5s ease both; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
-.qc-prop--lamp-l, .qc-prop--lamp-r { position: absolute; top: 36%; width: 13%; animation: drop-in 0.6s ease both, sway 3s ease-in-out infinite; }
-.qc-prop--lamp-l { left: 4%; }
-.qc-prop--lamp-r { right: 4%; }
-.qc-particle img { width: 1em; height: 1em; object-fit: contain; }
-.qc-way__img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45)); }
-.qc-bowl__name { display: inline-flex; align-items: center; gap: 6px; }
-.qc-bowl__name img { width: 30px; height: 30px; object-fit: contain; }
-.qc-stage__label {
-  position: absolute; left: 0; right: 0; bottom: 0; text-align: center;
-  padding: 14px 18px;
-  background: linear-gradient(0deg, rgba(20, 2, 3, 0.9), transparent);
-  display: grid; gap: 2px;
-}
-.qc-stage__label strong { color: #ffd86b; font-size: 20px; }
-.qc-stage__label span { font-size: 14px; color: #fbe9c8; }
+.qc-stage.lit .qc-stage__img,
+.qc-stage.full .qc-stage__img { filter: drop-shadow(0 0 26px rgba(230, 170, 40, 0.65)); }
+.qc-stage__img.blessing { filter: drop-shadow(0 0 30px rgba(240, 180, 40, 0.85)) !important; }
 .qc-stage.fx-bow .qc-stage__img { animation: nod 0.6s ease; }
-.qc-stage.lit .qc-stage__img, .qc-stage.full .qc-stage__img { filter: brightness(1.05) saturate(1.1) drop-shadow(0 0 28px rgba(255, 200, 80, 0.55)); }
 
 .qc-aura {
-  position: absolute; left: 50%; top: 4%; width: 78%; aspect-ratio: 1; transform: translateX(-50%);
+  position: absolute; left: 50%; top: 6%; width: 92%; aspect-ratio: 1; transform: translateX(-50%);
   pointer-events: none; opacity: 0;
 }
 .qc-aura.on { animation: aura-flash 1.6s ease-out both; }
 .qc-aura.steady { opacity: 1; animation: none; }
 .qc-aura__rays, .qc-aura__ring { position: absolute; inset: 0; border-radius: 50%; }
 .qc-aura__rays {
-  background: repeating-conic-gradient(from 0deg, rgba(255, 220, 120, 0.42) 0deg 6deg, transparent 6deg 18deg);
-  mask: radial-gradient(circle, #000 18%, transparent 70%);
-  -webkit-mask: radial-gradient(circle, #000 18%, transparent 70%);
+  background: repeating-conic-gradient(from 0deg, rgba(240, 190, 60, 0.38) 0deg 6deg, transparent 6deg 18deg);
+  mask: radial-gradient(circle, #000 16%, transparent 68%);
+  -webkit-mask: radial-gradient(circle, #000 16%, transparent 68%);
   animation: spin 18s linear infinite;
 }
-.qc-aura__ring { background: radial-gradient(circle, rgba(255, 236, 160, 0.75) 0%, rgba(255, 190, 60, 0.35) 32%, transparent 62%); }
-.qc-stage__img.blessing { filter: brightness(1.08) saturate(1.15) drop-shadow(0 0 32px rgba(255, 210, 90, 0.75)) !important; }
-.pose-enter-active, .pose-leave-active { transition: opacity 0.35s ease, transform 0.35s ease; }
-.pose-enter-from { opacity: 0; transform: translateX(-50%) scale(0.96); }
-.pose-leave-to { opacity: 0; transform: translateX(-50%) scale(1.03); }
+.qc-aura__ring { background: radial-gradient(circle, rgba(255, 225, 140, 0.7) 0%, rgba(245, 190, 70, 0.3) 32%, transparent 62%); }
+
+.qc-stage__smoke {
+  position: absolute; left: 50%; bottom: 14%; width: 60px; height: 140px; margin-left: -30px;
+  opacity: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 100%, rgba(150, 120, 90, 0.28), transparent 70%);
+  filter: blur(8px);
+}
+.qc-stage.smoking .qc-stage__smoke { opacity: 1; animation: smoke 3.2s ease-in-out infinite; }
+
+.qc-stage__offerings {
+  position: absolute; left: 0; right: 0; bottom: 2%;
+  display: flex; justify-content: center; align-items: flex-end; gap: 14px;
+}
+.qc-prop { width: 15%; max-width: 78px; height: auto; animation: drop-in 0.5s ease both; filter: drop-shadow(0 4px 6px rgba(90, 50, 0, 0.3)); }
+.qc-prop--lamp-l, .qc-prop--lamp-r { position: absolute; top: 8%; width: 12%; max-width: 64px; animation: drop-in 0.6s ease both, sway 3s ease-in-out infinite; }
+.qc-prop--lamp-l { left: 4%; }
+.qc-prop--lamp-r { right: 4%; }
 
 .qc-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .qc-particle { position: absolute; top: -40px; animation-name: fall; animation-timing-function: ease-in; animation-fill-mode: both; }
+.qc-particle img { width: 1em; height: 1em; object-fit: contain; }
 
 .qc-toast {
-  position: absolute; left: 50%; top: 18px; transform: translateX(-50%);
-  max-width: 90%;
-  padding: 10px 18px; border-radius: 999px;
-  background: rgba(90, 11, 14, 0.92); border: 1px solid #ffd86b;
-  color: #ffe9b0; font-size: 15px; text-align: center;
-  animation: drop-in 0.3s ease both;
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
+  max-width: 90%; padding: 8px 16px; border-radius: 999px;
+  background: rgba(158, 27, 31, 0.92); color: #ffe9b0; font-size: 14px; text-align: center;
+  animation: drop-in 0.3s ease both; z-index: 3;
 }
 
-.qc-panel { display: grid; gap: 14px; align-content: start; }
-.qc-panel h2 { font-size: 20px; color: #ffd86b; }
-.qc-ways { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.qc-stage__label {
+  position: absolute; left: 12px; top: 12px;
+  display: grid; gap: 2px; max-width: 46%;
+}
+.qc-stage__label strong { font-size: 20px; color: var(--red); }
+.qc-stage__label span { font-size: 12px; color: #8a5a2b; line-height: 1.4; }
+
+.qc-bowl-mini { position: absolute; right: 12px; top: 14px; display: grid; justify-items: center; gap: 4px; width: 64px; }
+.qc-bowl-mini img { width: 44px; height: 44px; object-fit: contain; }
+.qc-bowl-mini__bar { width: 100%; height: 6px; border-radius: 999px; background: rgba(201, 154, 46, 0.2); overflow: hidden; }
+.qc-bowl-mini__bar span { display: block; height: 100%; background: linear-gradient(90deg, #e6a92e, #f5c84c); transition: width 0.5s ease; }
+
+/* 一排祈福方式 */
+.qc-ways {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  padding: 8px 8px 6px;
+  border-top: 1px solid rgba(201, 154, 46, 0.25);
+}
 .qc-way {
   display: grid; justify-items: center; gap: 2px;
-  padding: 10px 4px; border-radius: 14px;
-  border: 1px solid rgba(255, 216, 107, 0.3);
-  background: linear-gradient(180deg, #7a1013, #4a0a0c);
-  color: #fff3d6; font-size: 14px;
-  transition: transform 0.15s;
+  padding: 6px 0; border-radius: 12px;
+  border: 1px solid rgba(201, 154, 46, 0.35);
+  background: #fff8e8; color: #7a2a16; font-size: 12px; white-space: nowrap;
+  transition: transform 0.15s, background 0.2s;
 }
-.qc-way:active { transform: scale(0.94); }
-.qc-way.done { opacity: 0.6; }
-.qc-way__icon { font-size: 26px; }
-.qc-way small { font-size: 11px; color: #f5d68f; }
+.qc-way:active { transform: scale(0.92); }
+.qc-way.done { background: #fbe7c0; opacity: 0.75; }
+.qc-way__img { width: 32px; height: 32px; object-fit: contain; }
+.qc-way__icon { font-size: 24px; line-height: 32px; }
 
+/* 选择财神：在神像下方，点了上面换 */
+.qc-deities {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+  padding: 6px 8px 10px;
+  background: #fdf3df;
+}
+.qc-deity {
+  display: grid; justify-items: center; gap: 2px;
+  padding: 4px 0; border: 0; border-radius: 12px;
+  background: transparent; color: #7a2a16;
+}
+.qc-deity__seal {
+  width: 44px; height: 44px; border-radius: 50%;
+  object-fit: cover; display: grid; place-items: center;
+  border: 2px solid transparent; background: #f3dfb0;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.qc-deity.active .qc-deity__seal { border-color: var(--red); transform: scale(1.12); box-shadow: 0 0 0 3px rgba(201, 154, 46, 0.45); }
+.qc-deity__name { font-size: 11px; white-space: nowrap; }
+.qc-deity.active .qc-deity__name { color: var(--red); font-weight: 700; }
+
+/* ===== 满屏以下：心愿、祝福卡、介绍 ===== */
+.qc-altar { padding: 24px; }
+.qc-panel { display: grid; gap: 14px; max-width: 720px; margin: 0 auto; }
+.qc-panel h2 { font-size: 20px; color: #ffd86b; }
+.hero-text { color: #fbe9c8; line-height: 1.8; }
 .qc-bowl__head { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+.qc-bowl__name { display: inline-flex; align-items: center; gap: 6px; }
+.qc-bowl__name img { width: 30px; height: 30px; object-fit: contain; }
 .qc-bowl__bar { height: 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.35); overflow: hidden; }
 .qc-bowl__bar span { display: block; height: 100%; background: linear-gradient(90deg, #e6a92e, #ffe08a); transition: width 0.5s ease; }
-
 .qc-milestone { font-size: 14px; color: #ffe08a; }
 .qc-milestone--next { color: var(--text-muted); }
 .qc-divider { border: 0; border-top: 1px solid rgba(255, 216, 107, 0.2); }
@@ -816,15 +803,10 @@ onBeforeUnmount(() => {
   display: inline-block; text-align: center;
   padding: 12px 18px; border: 0;
   background: linear-gradient(180deg, #ffd86b, #e6a92e);
-  color: #4a0a0c; font-weight: 700; font-size: 16px;
-  border-radius: 12px;
+  color: #4a0a0c; font-weight: 700; font-size: 16px; border-radius: 12px;
 }
 .submit-btn:disabled { opacity: 0.6; }
-.ghost-btn {
-  padding: 12px 16px; border-radius: 12px;
-  border: 1px solid rgba(255, 216, 107, 0.4);
-  background: transparent; color: #ffe9b0;
-}
+.ghost-btn { padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255, 216, 107, 0.4); background: transparent; color: #ffe9b0; }
 .error-msg { color: #ff9f8f; font-size: 14px; }
 .qc-note { font-size: 13px; color: var(--text-muted); }
 
@@ -837,7 +819,6 @@ onBeforeUnmount(() => {
 .qc-info h2, .qc-wall h2, .qc-article h2 { color: #ffd86b; font-size: 22px; margin-bottom: 10px; }
 .qc-info p { line-height: 1.8; }
 .qc-day { margin-top: 8px; color: #ffe08a; }
-
 .qc-wall ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
 .qc-wall li { padding: 12px; border-radius: 14px; background: rgba(90, 11, 14, 0.45); border: 1px solid rgba(255, 216, 107, 0.18); }
 .qc-wall li span { margin-left: 8px; font-size: 12px; color: #ffd86b; }
@@ -846,30 +827,35 @@ onBeforeUnmount(() => {
 .qc-article { display: grid; gap: 22px; }
 .copy-section p { line-height: 1.9; margin-bottom: 8px; }
 .qc-deity-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.qc-deity-card { cursor: pointer; padding: 10px; border-radius: 12px; border: 1px solid rgba(255, 216, 107, 0.15); }
+.qc-deity-card:hover { border-color: rgba(255, 216, 107, 0.5); }
 .qc-deity-list h3, .faq-item h3 { font-size: 16px; color: #ffe9b0; margin-bottom: 4px; }
 .faq-item { margin-bottom: 12px; }
+
+.pose-enter-active, .pose-leave-active { transition: opacity 0.35s ease, transform 0.35s ease; }
+.pose-enter-from { opacity: 0; transform: translateX(-50%) scale(0.96); }
+.pose-leave-to { opacity: 0; transform: translateX(-50%) scale(1.03); }
 
 @keyframes fall {
   0% { transform: translateY(0) rotate(0); opacity: 0; }
   10% { opacity: 1; }
-  100% { transform: translateY(560px) rotate(300deg); opacity: 0.2; }
+  100% { transform: translateY(110vh) rotate(300deg); opacity: 0.2; }
 }
 @keyframes drop-in { from { transform: translateY(-12px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes smoke { 0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.7; } 50% { transform: translateY(-30px) scaleX(1.3); opacity: 0.3; } }
 @keyframes aura-flash { 0% { opacity: 0; transform: translateX(-50%) scale(0.7); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) scale(1.15); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-@keyframes pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 @keyframes nod { 0%, 100% { transform: translateX(-50%); } 50% { transform: translateX(-50%) translateY(6px) scale(0.99); } }
 @keyframes appear { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%); } }
 
-@media (max-width: 860px) {
-  .qc-deities { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .qc-altar { grid-template-columns: 1fr; padding: 12px; }
-  .card { padding: 20px; }
+@media (max-width: 380px) {
+  .qc-way { font-size: 11px; }
+  .qc-way__img { width: 28px; height: 28px; }
+  .qc-deity__seal { width: 38px; height: 38px; }
+  .qc-deity__name { font-size: 10px; }
 }
-@media (max-width: 420px) {
-  .qc-ways { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .qc-way { font-size: 12px; }
+@media (max-width: 860px) {
+  .card { padding: 20px; }
 }
 </style>

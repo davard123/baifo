@@ -182,6 +182,24 @@ onMounted(() => {
 
 <template>
   <main class="home-shell">
+    <a
+      href="/qiucai/"
+      class="qiucai-banner"
+      aria-label="进入求财专区，在线拜财神"
+      @click.prevent="navigateTo('/qiucai')"
+      @mouseenter="warmApi"
+      @mousedown="warmApi"
+      @touchstart.passive="warmApi"
+    >
+      <div class="qiucai-banner__media" aria-hidden="true"></div>
+      <div class="qiucai-banner__content">
+        <p class="qiucai-banner__kicker">求财专区 · 主推</p>
+        <h2>求财祈福 · 福禄寿临门</h2>
+        <p>赵公明、关公、文财神、五路财神，福星、禄星、寿星，黄财神。求财、升官、纳福、长寿，上香、献元宝、投金币、摇钱树，领取专属祝福卡。</p>
+        <span class="qiucai-banner__cta">进入求财专区 →</span>
+      </div>
+    </a>
+
     <header class="hero-section">
       <div class="hero-copy">
         <div class="hero-emblem" aria-hidden="true">
@@ -224,24 +242,6 @@ onMounted(() => {
         </a>
       </div>
     </header>
-
-    <a
-      href="/qiucai/"
-      class="qiucai-banner"
-      aria-label="进入求财专区，在线拜财神"
-      @click.prevent="navigateTo('/qiucai')"
-      @mouseenter="warmApi"
-      @mousedown="warmApi"
-      @touchstart.passive="warmApi"
-    >
-      <div class="qiucai-banner__media" aria-hidden="true"></div>
-      <div class="qiucai-banner__content">
-        <p class="qiucai-banner__kicker">求财专区 · 主推</p>
-        <h2>求财祈福 · 福禄寿临门</h2>
-        <p>赵公明、关公、文财神、五路财神，福星、禄星、寿星，黄财神、土地公。求财、升官、纳福、长寿，上香、献元宝、投金币、摇钱树，领取专属祝福卡。</p>
-        <span class="qiucai-banner__cta">进入求财专区 →</span>
-      </div>
-    </a>
 
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">

@@ -551,7 +551,7 @@ function topicPage({ path, slug }) {
 function qiucaiPage() {
   const path = '/qiucai'
   const heading = '求财祈福 · 在线拜财神'
-  const description = '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福禄寿、黄财神或土地公，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
+  const description = '在线拜财神求财：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
   const about = { '@type': 'Thing', name: '求财祈福', description }
   return {
     path,
