@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import {
   BOWL_FULL,
   CAISHEN,
@@ -17,6 +18,7 @@ import {
 import { apiFetch, warmApi } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import VisionMaker from '../components/VisionMaker.vue'
+import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
 
 const STORE_KEY = 'fopusha-qiucai-v1'
 // 已拜圆满的神仙（供养四样 + 叩拜三下），全部圆满后解锁愿景图
@@ -48,7 +50,15 @@ function markDeityComplete(key) {
   return true
 }
 
-const deity = ref(CAISHEN[0])
+// 每位财神有独立网址 /qiucai/<slug>/，打开即选中这位财神
+const route = useRoute()
+const router = useRouter()
+const slugOf = (item) => CAISHEN_SLUG[item.key]
+const deityBySlug = (slug) => CAISHEN.find((item) => slugOf(item) === slug) || null
+const pageDeity = computed(() => deityBySlug(route.params.slug))
+const detail = computed(() => (pageDeity.value ? CAISHEN_DETAIL[pageDeity.value.key] : null))
+
+const deity = ref(pageDeity.value || CAISHEN[0])
 const done = ref({})
 const qi = ref(0)
 const toast = ref('')
@@ -439,12 +449,33 @@ function resetAll() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-onMounted(() => {
-  document.title = '网上求财祈福｜在线拜财神、求财运求福寿 - fopusha.com'
+function applyMeta() {
+  const info = detail.value
+  document.title = `${info ? info.title : '网上求财祈福｜在线拜财神、求财运求福寿'} - fopusha.com`
   document.querySelector('meta[name="description"]')?.setAttribute(
     'content',
-    '网上求财、网上祈福，在线拜财神：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
+    info
+      ? info.description
+      : '网上求财、网上祈福，在线拜财神：选择赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、献元宝、投金币、摇钱树，写下求财心愿，领取专属求财祝福卡。'
   )
+}
+
+// 在财神页里换一位财神，网址跟着换；网址变了（前进后退、点卡片），神像跟着换
+function pickDeity(item) {
+  if (pageDeity.value && pageDeity.value.key !== item.key) {
+    router.replace(`${route.path.startsWith('/zh-hant') ? '/zh-hant' : ''}/qiucai/${slugOf(item)}/`)
+  }
+  chooseDeity(item)
+}
+
+watch(() => route.params.slug, () => {
+  const item = pageDeity.value
+  if (item && item.key !== deity.value.key) chooseDeity(item)
+  applyMeta()
+})
+
+onMounted(() => {
+  applyMeta()
   loadStats()
   loadCompleted()
   preloadPose(deity.value)
@@ -464,7 +495,7 @@ onBeforeUnmount(() => {
     <section ref="fullRef" class="qc-full" aria-label="在线拜财神">
       <div class="qc-full__bar">
         <router-link to="/" class="qc-full__back">← 首页</router-link>
-        <h1>求财祈福</h1>
+        <h1>{{ pageDeity ? `在线拜${pageDeity.name}` : '求财祈福' }}</h1>
         <span class="qc-full__today">
           <strong class="qc-full__deity">{{ deity.name }} · {{ deity.title }}</strong>
           <span>今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
@@ -545,7 +576,7 @@ onBeforeUnmount(() => {
           class="qc-deity"
           :class="{ active: deity.key === item.key }"
           :aria-pressed="deity.key === item.key"
-          @click="chooseDeity(item)"
+          @click="pickDeity(item)"
         >
           <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" decoding="async" />
           <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
@@ -627,6 +658,27 @@ onBeforeUnmount(() => {
       <p v-if="deity.day" class="qc-day">{{ deity.day }}</p>
     </section>
 
+    <section v-if="detail" class="card qc-article qc-detail">
+      <p class="hero-text">{{ detail.intro }}</p>
+      <section v-for="block in detail.sections" :key="block.title" class="copy-section">
+        <h2>{{ block.title }}</h2>
+        <p v-for="paragraph in block.paragraphs" :key="paragraph">{{ paragraph }}</p>
+      </section>
+      <section class="copy-section">
+        <h2>拜{{ pageDeity.name }}常见问题</h2>
+        <article v-for="faq in detail.faqs" :key="faq.q" class="faq-item">
+          <h3>{{ faq.q }}</h3>
+          <p>{{ faq.a }}</p>
+        </article>
+      </section>
+<nav class="qc-reading" aria-label="求财延伸阅读">
+        <router-link to="/topic/qiucai-bai-na-wei/">求财拜哪位财神</router-link>
+        <router-link to="/topic/ying-caishen/">正月初五迎财神怎么拜</router-link>
+        <router-link to="/topic/bai-caishen-gongpin/">拜财神的供品与禁忌</router-link>
+      </nav>
+      <p class="qc-detail__more"><router-link to="/qiucai/">← 看全部八位财神</router-link></p>
+    </section>
+
     <section v-if="wall.length" class="card qc-wall" aria-labelledby="qc-wall-title">
       <h2 id="qc-wall-title">求财祈愿墙</h2>
       <ul>
@@ -647,10 +699,10 @@ onBeforeUnmount(() => {
       <section class="copy-section">
         <h2>各路财神怎么选</h2>
         <div class="qc-deity-list">
-          <article v-for="item in CAISHEN" :key="item.key" class="qc-deity-card" role="button" tabindex="0" @click="chooseDeity(item, true)" @keydown.enter="chooseDeity(item, true)">
-            <h3>{{ item.name }}（{{ item.title }}）</h3>
+          <router-link v-for="item in CAISHEN" :key="item.key" class="qc-deity-card" :to="`/qiucai/${slugOf(item)}/`">
+            <h3>拜{{ item.name }}（{{ item.title }}）</h3>
             <p>{{ item.short }}</p>
-          </article>
+          </router-link>
         </div>
       </section>
 
@@ -661,6 +713,12 @@ onBeforeUnmount(() => {
           <p>{{ faq.a }}</p>
         </article>
       </section>
+
+      <nav class="qc-reading" aria-label="求财延伸阅读">
+        <router-link to="/topic/qiucai-bai-na-wei/">求财拜哪位财神</router-link>
+        <router-link to="/topic/ying-caishen/">正月初五迎财神怎么拜</router-link>
+        <router-link to="/topic/bai-caishen-gongpin/">拜财神的供品与禁忌</router-link>
+      </nav>
 
       <p class="qc-note">求财祈福是表达心愿的方式，不能保证结果；理财投资请量力而行，必要时咨询专业人士。</p>
     </section>
@@ -887,6 +945,9 @@ onBeforeUnmount(() => {
 
 .qc-info h2, .qc-wall h2, .qc-article h2 { color: #ffd86b; font-size: 22px; margin-bottom: 10px; }
 .qc-info p { line-height: 1.8; }
+.qc-detail__more a { color: #ffd86b; }
+.qc-reading { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 14px; }
+.qc-reading a { color: #ffd86b; text-decoration: underline; text-underline-offset: 3px; }
 .qc-day { margin-top: 8px; color: #ffe08a; }
 .qc-wall ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
 .qc-wall li { padding: 12px; border-radius: 14px; background: rgba(90, 11, 14, 0.45); border: 1px solid rgba(255, 216, 107, 0.18); }
@@ -896,7 +957,7 @@ onBeforeUnmount(() => {
 .qc-article { display: grid; gap: 22px; }
 .copy-section p { line-height: 1.9; margin-bottom: 8px; }
 .qc-deity-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
-.qc-deity-card { cursor: pointer; padding: 10px; border-radius: 12px; border: 1px solid rgba(255, 216, 107, 0.15); }
+.qc-deity-card { display: block; color: inherit; text-decoration: none; cursor: pointer; padding: 10px; border-radius: 12px; border: 1px solid rgba(255, 216, 107, 0.15); }
 .qc-deity-card:hover { border-color: rgba(255, 216, 107, 0.5); }
 .qc-deity-list h3, .faq-item h3 { font-size: 16px; color: #ffe9b0; margin-bottom: 4px; }
 .faq-item { margin-bottom: 12px; }

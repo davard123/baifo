@@ -1,5 +1,6 @@
 import { GUIDES } from '../src/data/guides.js'
 import { CAISHEN, QIUCAI_ARTICLE, QIUCAI_FAQS } from '../src/data/qiucai.js'
+import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../src/data/caishen-detail.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
 import { ANCESTORS } from '../src/data/ancestors.js'
 import { TOPICS, getTopicEntries } from '../src/data/topics.js'
@@ -588,6 +589,44 @@ function qiucaiPage() {
   }
 }
 
+function caishenPage(item) {
+  const path = `/qiucai/${CAISHEN_SLUG[item.key]}`
+  const info = CAISHEN_DETAIL[item.key]
+  const heading = `在线拜${item.name}`
+  const about = { '@type': 'Thing', name: item.name, description: item.desc }
+  return {
+    path,
+    title: info.title,
+    description: info.description,
+    heading,
+    summary: info.intro,
+    image: item.image ? item.image.replace(/\?.*$/, '') : '/qiucai/caishen-hero.webp',
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: heading,
+        description: info.description,
+        breadcrumbItems: [
+          { name: SITE.shortName, path: '/' },
+          { name: '求财祈福', path: '/qiucai' },
+          { name: item.name, path },
+        ],
+        about,
+        selectors: ['h1', '.hero-text', '.copy-section p:first-child', 'article.faq-item'],
+      }),
+      buildArticleSchema({
+        path,
+        headline: heading,
+        name: info.title,
+        description: info.description,
+        about,
+        articleBody: info.sections.flatMap((block) => [block.title, ...block.paragraphs]).join('\n'),
+      }),
+      buildFaqSchema(path, info.faqs),
+    ].filter(Boolean),
+  }
+}
+
 function nianfoPage() {
   const path = '/nianfo'
   return {
@@ -636,6 +675,7 @@ export function getStaticPages() {
   return [
     homePage(),
     qiucaiPage(),
+    ...CAISHEN.map(caishenPage),
     guidePage({
       slug: 'overview',
       title: '使用说明 | 礼佛祈愿',

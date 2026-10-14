@@ -42,6 +42,7 @@ const PAGE_ROUTES = [
     { path: '/ancestors', component: AncestorsPage },
     { path: '/nianfo', component: NianfoPage },
     { path: '/qiucai', component: QiucaiPage },
+    { path: '/qiucai/:slug', component: QiucaiPage },
 ]
 
 // 繁体版：每个页面在 /zh-hant 下各有一份，组件相同，文字在显示时转换

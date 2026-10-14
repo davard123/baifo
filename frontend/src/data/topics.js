@@ -1,3 +1,5 @@
+import { QIUCAI_TOPICS } from './qiucai-topics.js'
+
 export const TOPICS = {
   "online-worship": {
     "title": "在线拜佛怎么拜：网上礼佛祈福的步骤与心态",
@@ -1918,6 +1920,9 @@ export const TOPICS = {
     ]
   }
 }
+
+// 求财专题文章另放一个文件，合并进来
+Object.assign(TOPICS, QIUCAI_TOPICS)
 
 export const TOPIC_ALIASES = {
   '/rituals/prostration': 'prostration',
