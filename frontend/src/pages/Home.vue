@@ -154,7 +154,7 @@ onMounted(() => {
     >
       <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" />
       <div class="qiucai-banner__content">
-        <p class="qiucai-banner__kicker">网上求财 · 网上祈福 · 在线拜财神</p>
+        <h1 class="qiucai-banner__kicker">网上求财 · 网上祈福 · 在线拜财神</h1>
         <h2>拜一拜，给自己添一份财气</h2>
         <ul class="qiucai-banner__gains">
           <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
@@ -170,7 +170,7 @@ onMounted(() => {
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">在线礼佛 · 诸佛菩萨</p>
-        <h1 class="section-title">礼佛祈愿</h1>
+        <h2 class="section-title">礼佛祈愿</h2>
         <p class="section-sub">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。</p>
       </div>
       <div class="catalog-grid">
@@ -706,7 +706,7 @@ onMounted(() => {
   border-top: 1px solid rgba(201, 154, 46, 0.3);
 }
 
-.qiucai-banner__kicker { color: #b07a1c; letter-spacing: 0.12em; font-size: 14px; }
+.qiucai-banner__kicker { margin: 0; color: #b07a1c; letter-spacing: 0.12em; font-size: 14px; font-weight: 400; line-height: inherit; }
 .qiucai-banner__content h2 { font-size: clamp(26px, 4vw, 38px); color: #9e1b1f; }
 .qiucai-banner__gains {
   list-style: none;
