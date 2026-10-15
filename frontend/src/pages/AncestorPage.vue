@@ -22,6 +22,8 @@ const nextAncestor = computed(() => {
 
 // 提交成功后停在本页展示回向确认，而不是直接跳回列表
 const submitted = ref(null)
+// 2026-10-15 改成和礼佛页一样：牌位全屏，供养/导航收进右侧抽屉
+const drawerOpen = ref(false)
 
 const customPhoto = ref(null)
 const customName = ref(null)
@@ -68,6 +70,7 @@ watch(
     syncAncestorState()
     resetStageState()
     submitted.value = null
+    drawerOpen.value = false
     applyPageMeta()
   },
   { immediate: true }
@@ -84,6 +87,7 @@ async function onSubmit(payload) {
     throw new Error(data.message || '提交失败')
   }
   submitted.value = payload
+  drawerOpen.value = true
 }
 
 // 顶部导航与提交后面板共用同一组按钮
@@ -100,8 +104,7 @@ const doneActions = computed(() => {
 <template>
   <div v-if="ancestor" class="prayer-shell">
     <div class="prayer-frame">
-    <RitualNav :actions="doneActions" label="拜祭页面导航" />
-    <div class="prayer-layout">
+    <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
         <AncestorStage
           :ancestor="ancestor"
@@ -111,7 +114,25 @@ const doneActions = computed(() => {
         />
       </section>
 
-      <section class="panel-section card">
+      <button
+        type="button"
+        class="panel-toggle"
+        :class="{ open: drawerOpen }"
+        @click="drawerOpen = !drawerOpen"
+      >
+        {{ drawerOpen ? '收起供养' : '祭祖供养' }}
+      </button>
+
+      <button
+        v-if="drawerOpen"
+        type="button"
+        class="drawer-backdrop"
+        aria-label="关闭说明"
+        @click="drawerOpen = false"
+      ></button>
+
+      <section class="panel-section card" :class="{ open: drawerOpen }">
+        <RitualNav v-if="!submitted" :actions="doneActions" label="拜祭页面导航" inline />
         <h1 class="namo-title">{{ ancestor.namo }}</h1>
         <RitualPanel v-if="!submitted" :ritual="ritual" homage-title="祭奠" />
         <hr v-if="!submitted" class="divider" />
@@ -187,81 +208,97 @@ const doneActions = computed(() => {
 }
 
 .prayer-layout {
+  position: relative;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
+}
+
+.stage-section {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+  background: #0a0805;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (orientation: landscape) {
-  .prayer-layout {
-    flex-direction: row;
-  }
-
-  .stage-section {
-    flex: 2;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    background: #0a0805;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .panel-section {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 20px 32px;
-    border-radius: 0;
-    border-left: 1px solid rgba(120, 100, 80, 0.18);
-    box-shadow: none;
-  }
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 25;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  padding: 18px 10px;
+  border: 1px solid rgba(212, 168, 67, 0.36);
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+  background: rgba(30, 20, 42, 0.96);
+  color: var(--accent);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 10px 26px rgba(38, 18, 6, 0.18);
+  transition: right 0.28s ease, background 0.2s ease;
 }
 
-@media (orientation: portrait) {
-  .prayer-layout {
-    flex-direction: column;
-  }
+.panel-toggle.open {
+  right: min(380px, 88vw);
+}
 
-  .stage-section {
-    flex: 5;
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflow: hidden;
-    background: #0a0805;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  border: none;
+  background: rgba(18, 6, 0, 0.28);
+}
 
+.panel-section {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(380px, 88vw);
+  overflow-y: auto;
+  padding: 20px 20px 32px;
+  border-radius: 0;
+  border-left: 1px solid rgba(212, 168, 67, 0.18);
+  box-shadow: -10px 0 28px rgba(24, 9, 2, 0.22);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
+}
+
+.panel-section.open {
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
   .panel-section {
-    flex: 3;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 10px 16px 16px;
-    border-radius: 0;
-    border-top: 1px solid rgba(242, 200, 121, 0.16);
-    box-shadow: none;
+    width: min(420px, 100vw);
+    padding: 14px 16px 18px;
+  }
+
+  .panel-toggle {
+    top: auto;
+    bottom: 18px;
+    transform: none;
+  }
+
+  .panel-toggle.open {
+    right: min(420px, 100vw);
   }
 
   .namo-title {
-    font-size: 1rem;
-    margin-bottom: 4px;
-  }
-
-  .ancestor-desc {
-    font-size: 0.82rem;
-    line-height: 1.6;
-    margin-bottom: 0;
-  }
-
-  .divider {
-    margin: 8px 0;
+    font-size: 1.08rem;
+    margin-bottom: 6px;
   }
 }
 
