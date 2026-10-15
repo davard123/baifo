@@ -7,6 +7,8 @@ defineProps({
   // [{ label, to, primary? }]
   actions: { type: Array, default: () => [] },
   label: { type: String, default: '页面导航' },
+  // inline：放在供养抽屉里，不要顶栏的底色和分隔线
+  inline: { type: Boolean, default: false },
 })
 
 // 全屏：iPad Safari、安卓支持；iPhone Safari 不支持网页全屏，按钮自动隐藏
@@ -43,7 +45,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <nav class="ritual-nav" :aria-label="label">
+  <nav class="ritual-nav" :class="{ 'ritual-nav--inline': inline }" :aria-label="label">
     <router-link
       v-for="action in actions"
       :key="action.label"
@@ -129,5 +131,10 @@ onBeforeUnmount(() => {
     min-width: 34px;
     padding-inline: 6px;
   }
+}
+.ritual-nav--inline {
+  padding: 0 0 12px;
+  background: none;
+  border-bottom: none;
 }
 </style>

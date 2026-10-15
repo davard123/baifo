@@ -66,7 +66,7 @@ async function onSubmit(payload) {
   drawerOpen.value = true
 }
 
-// 顶部导航与提交后右侧面板共用同一组按钮，保证两处一致
+// 供养抽屉里的导航与提交后面板共用同一组按钮，保证两处一致
 const doneActions = computed(() => {
   const next = nextBuddha.value
   return [
@@ -80,8 +80,6 @@ const doneActions = computed(() => {
 <template>
   <div v-if="buddha" class="prayer-shell">
     <div class="prayer-frame">
-    <RitualNav :actions="doneActions" label="礼佛页面导航" />
-
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
         <PrayerStage :buddha="buddha" :ritual="ritual" />
@@ -105,6 +103,8 @@ const doneActions = computed(() => {
       ></button>
 
       <section class="panel-section card" :class="{ open: drawerOpen }">
+        <!-- 2026-10-15：顶部导航条去掉，返回/下一页/拜祭按钮放进供养抽屉（提交后由 DedicationDone 显示同一组） -->
+        <RitualNav v-if="!submitted" :actions="doneActions" label="礼佛页面导航" inline />
         <h1 class="namo-title">{{ buddha.namo }}</h1>
 
         <hr class="divider" />
