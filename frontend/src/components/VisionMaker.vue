@@ -207,7 +207,7 @@ onBeforeUnmount(() => {
     </div>
 
     <template v-else>
-      <p class="vision-lead">选你的职业和一个祥瑞主题，财神为你画一张专属愿景图：你的事业在中央，祥瑞环绕四周。图上的字由我们另外印上，可以下载保存。</p>
+      <p class="vision-lead">选你的职业和一个祥瑞主题，财神为你画一张专属愿景图：你的事业在中央，祥瑞环绕四周。愿景图可以下载保存。</p>
 
       <form v-if="!cardUrl" class="vision-form" @submit.prevent="generate">
         <span class="field-label">你的职业</span>
