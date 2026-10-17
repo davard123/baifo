@@ -1,0 +1,12 @@
+{
+  "release": "dedication-v10-sound-20261017",
+  "baseline": "ead0c55a2775e2c252c46d8a3d5ab705321524dc",
+  "sources": {
+    "src/components/PrayerStage.vue": "7e1790606b25662bd1e8e2ae85fac215e41b6e3c7b84c38b78e6c0f000a457a8",
+    "src/pages/BuddhaPage.vue": "9964f981cdd10b8a4bf02fd6fa8dbd5796a9fcb29782f73b3583331a37372ed5",
+    "src/utils/dedicationSound.js": "29a5215635defb3813e452d946b939aa7a2831fc1f70304741cd4cb3df4e185c",
+    "src/vendor/dedication-v10/runtime.js": "97e5fbde00be6bc2795f1d042b75dde000891763351df49c2a767b4c4fc01a0b",
+    "public/dedication-v10/clean-base.png": "e78fc787ebabbc9495acf18e8bb976a528ed7d4218b4417b7af2f9dd13e7ece7",
+    "public/dedication-v10/pouring-pose.png": "6a02c671375aed5b91a50d254bc308b0aeaef89bf36d6e5b4933e6001ea3ce51"
+  }
+}

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
 import PrayerStage from '../components/PrayerStage.vue'
@@ -15,6 +15,40 @@ const route = useRoute()
 
 // 提交成功后停在本页展示回向确认，而不是直接跳走
 const submitted = ref(null)
+const blessingId = ref(0)
+const prayerStage = ref(null)
+const blessingPhase = ref('idle')
+const drawerLocked = computed(() => blessingPhase.value !== 'idle')
+let drawerTimer = null
+function startBlessing() {
+  if (blessingPhase.value !== 'closing') return
+  clearTimeout(drawerTimer)
+  drawerTimer = null
+  blessingPhase.value = 'playing'
+  blessingId.value++
+}
+function onDrawerTransitionEnd(event) {
+  if (event.target === event.currentTarget && event.propertyName === 'transform') startBlessing()
+}
+function onBlessingEnd() {
+  if (blessingPhase.value !== 'playing') return
+  blessingPhase.value = 'idle'
+  drawerOpen.value = true
+}
+function toggleDrawer() {
+  if (!drawerLocked.value) drawerOpen.value = !drawerOpen.value
+}
+let requestController = null
+let pageGeneration = 0
+function cancelSubmission() {
+  pageGeneration++
+  requestController?.abort()
+  requestController = null
+  clearTimeout(drawerTimer)
+  drawerTimer = null
+  blessingPhase.value = 'idle'
+}
+onBeforeUnmount(cancelSubmission)
 
 const buddha = computed(() => BUDDHAS.find((item) => item.slug === route.params.slug))
 const nextBuddha = computed(() => {
@@ -40,6 +74,7 @@ function updatePageMeta() {
 watch(
   buddha,
   (current) => {
+    cancelSubmission()
     if (!current) return
 
     ritual.reset()
@@ -51,19 +86,34 @@ watch(
 )
 
 async function onSubmit(payload) {
-  const response = await apiFetch('/wishes', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...payload, buddha: buddha.value?.slug }),
-  })
-  const data = await response.json()
-
-  if (!response.ok || data.status !== 'success') {
-    throw new Error(data.message || '提交失败')
+  if (requestController || submitted.value) return
+  prayerStage.value?.unlockSound()
+  const controller = new AbortController()
+  requestController = controller
+  const generation = pageGeneration
+  try {
+    const response = await apiFetch('/wishes', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, buddha: buddha.value?.slug }),
+    })
+    const data = await response.json()
+    if (controller.signal.aborted || generation !== pageGeneration) return
+    if (!response.ok || data.status !== 'success') {
+      throw new Error(data.message || 'Submission failed')
+    }
+    submitted.value = payload
+    blessingPhase.value = 'closing'
+    drawerOpen.value = false
+    // Fallback for an already-closed drawer or a suppressed transition event.
+    // Longer than the drawer's 280ms transform transition.
+    drawerTimer = setTimeout(() => {
+      if (generation === pageGeneration) startBlessing()
+    }, 320)
+  } finally {
+    if (requestController === controller) requestController = null
   }
-
-  submitted.value = payload
-  drawerOpen.value = true
 }
 
 // 供养抽屉里的导航与提交后面板共用同一组按钮，保证两处一致
@@ -82,14 +132,15 @@ const doneActions = computed(() => {
     <div class="prayer-frame">
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
-        <PrayerStage :buddha="buddha" :ritual="ritual" />
+        <PrayerStage ref="prayerStage" :buddha="buddha" :ritual="ritual" :blessing-id="blessingId" @blessing-end="onBlessingEnd" />
       </section>
 
       <button
         type="button"
         class="panel-toggle"
         :class="{ open: drawerOpen }"
-        @click="drawerOpen = !drawerOpen"
+        :disabled="drawerLocked"
+        @click="toggleDrawer"
       >
         {{ drawerOpen ? '收起供养' : '礼佛供养' }}
       </button>
@@ -102,7 +153,7 @@ const doneActions = computed(() => {
         @click="drawerOpen = false"
       ></button>
 
-      <section class="panel-section card" :class="{ open: drawerOpen }">
+      <section class="panel-section card" :class="{ open: drawerOpen }" :inert="drawerLocked" @transitionend="onDrawerTransitionEnd">
         <!-- 2026-10-15：顶部导航条去掉，返回/下一页/拜祭按钮放进供养抽屉（提交后由 DedicationDone 显示同一组） -->
         <RitualNav v-if="!submitted" :actions="doneActions" label="礼佛页面导航" inline />
         <h1 class="namo-title">{{ buddha.namo }}</h1>
@@ -110,7 +161,7 @@ const doneActions = computed(() => {
         <hr class="divider" />
 
         <DedicationDone
-          v-if="submitted"
+          v-if="submitted && blessingPhase === 'idle'"
           kind="buddha"
           :subject-name="buddha.name"
           :name="submitted.username"
@@ -120,10 +171,10 @@ const doneActions = computed(() => {
           :actions="doneActions"
         />
 
-        <template v-else>
+        <template v-else-if="!submitted">
           <RitualPanel :ritual="ritual" homage-title="礼敬" />
           <hr class="divider" />
-          <WishForm :default-wish="buddha.wish" :on-submit="onSubmit" />
+          <WishForm :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" />
         </template>
 
         <hr class="divider" />
