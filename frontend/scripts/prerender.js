@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { getStaticPages, SITE, canonicalUrl } from './seo.config.js'
+import { getStaticNavigation } from './static-navigation.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -72,7 +73,16 @@ function buildJsonLd(page) {
   return `<script type="application/ld+json" id="ld-webpage">${JSON.stringify(page.schema)}</script>`
 }
 
-function buildFallbackContent(page) {
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function buildFallbackContent(page, staticPages) {
   // 放在 #app 内部，Vue mount 时整体替换；对无 JS 的爬虫/访客是真实可见内容。
   // 之前是 position:absolute;left:-9999px 的离屏隐藏块 —— 属于 Google 明确
   // 列为作弊信号的 hidden text，且内容与页面可见 FAQ 重复。
@@ -102,25 +112,30 @@ function buildFallbackContent(page) {
     lines.push('  </dl>')
   }
 
-  // Keep useful navigation available before JavaScript loads, using existing routes.
-  const links = getStaticPages().filter((entry) =>
-    entry.path !== page.path && (entry.path === '/' || entry.path.startsWith('/qiucai') || entry.path === '/ancestors' || entry.path.startsWith('/guide/'))
-  )
-  lines.push('  <nav aria-label="使用说明与主要入口"><ul>')
-  for (const entry of links) {
-    const href = page.hant ? hantUrl(canonicalUrl(entry.path)) : canonicalUrl(entry.path)
-    const label = page.hant ? toHantText(entry.heading) : entry.heading
-    lines.push(`    <li><a href="${href}">${label}</a></li>`)
+  // Keep bounded, relevant navigation available before JavaScript loads.
+  const navigation = getStaticNavigation(page, staticPages)
+  if (navigation.length) {
+    lines.push(`  <nav aria-label="${page.hant ? '相關內容' : '相关内容'}">`)
+    for (const group of navigation) {
+      const groupLabel = page.hant ? toHantText(group.label) : group.label
+      lines.push(`    <section><h2>${escapeHtml(groupLabel)}</h2><ul>`)
+      for (const link of group.links) {
+        const href = page.hant ? hantUrl(canonicalUrl(link.path)) : canonicalUrl(link.path)
+        const label = page.hant ? toHantText(link.label) : link.label
+        lines.push(`      <li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
+      }
+      lines.push('    </ul></section>')
+    }
+    lines.push('  </nav>')
   }
-  lines.push('  </ul></nav>')
   lines.push('</div>')
   return lines.join('\n')
 }
 
-function renderPage(page) {
+function renderPage(page, staticPages) {
   const head = buildMetaTags(page)
   const jsonLd = buildJsonLd(page)
-  const fallbackContent = buildFallbackContent(page)
+  const fallbackContent = buildFallbackContent(page, staticPages)
 
   return template
     .replace('<html lang="zh-CN">', page.hant ? '<html lang="zh-Hant">' : '<html lang="zh-CN">')
@@ -131,18 +146,20 @@ function renderPage(page) {
     .replace(/<div id="app">[\s\S]*?<\/div><\/div>/, `<div id="app">${fallbackContent}</div>`)
 }
 
-for (const page of getStaticPages()) {
+const staticPages = getStaticPages()
+
+for (const page of staticPages) {
   const normalizedPath = ensureTrailingSlashless(page.path)
   const filePath = normalizedPath === '/'
     ? indexPath
     : path.join(distDir, normalizedPath.slice(1), 'index.html')
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true })
-  fs.writeFileSync(filePath, renderPage(page).replace(/^[ \t]+$/gm, ''), 'utf8')
+  fs.writeFileSync(filePath, renderPage(page, staticPages).replace(/^[ \t]+$/gm, ''), 'utf8')
 
   const hantPath = normalizedPath === '/'
     ? path.join(distDir, HANT_DIR, 'index.html')
     : path.join(distDir, HANT_DIR, normalizedPath.slice(1), 'index.html')
   fs.mkdirSync(path.dirname(hantPath), { recursive: true })
-  fs.writeFileSync(hantPath, renderPage(toHantPage(page)).replace(/^[ \t]+$/gm, ''), 'utf8')
+  fs.writeFileSync(hantPath, renderPage(toHantPage(page), staticPages).replace(/^[ \t]+$/gm, ''), 'utf8')
 }
