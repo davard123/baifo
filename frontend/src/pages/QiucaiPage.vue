@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   BOWL_FULL,
@@ -18,6 +18,7 @@ import {
 import { apiFetch, warmApi } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import VisionMaker from '../components/VisionMaker.vue'
+import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
 
 const STORE_KEY = 'fopusha-qiucai-v1'
@@ -234,9 +235,108 @@ function act(way) {
     burst('full', 28)
     setTimeout(() => showToast('聚宝盆已满！财气圆满，写下你的求财心愿吧。'), 900)
   }
+
+  scheduleDrawerClose()
 }
 
 const fullRef = ref(null)
+const drawerOpen = ref(false)
+const drawerHandleRef = ref(null)
+const drawerCloseRef = ref(null)
+const drawerPanelRef = ref(null)
+const drawerPointerDown = ref(false)
+const drawerFocusWithin = ref(false)
+const drawerKeyboardMode = ref(false)
+const DRAWER_CLOSE_MS = 4000
+let drawerCloseTimer = null
+
+function clearDrawerCloseTimer() {
+  clearTimeout(drawerCloseTimer)
+  drawerCloseTimer = null
+}
+
+function scheduleDrawerClose() {
+  clearDrawerCloseTimer()
+  if (!drawerOpen.value || drawerPointerDown.value || drawerFocusWithin.value) return
+  drawerCloseTimer = setTimeout(() => {
+    drawerCloseTimer = null
+    if (!drawerPointerDown.value && !drawerFocusWithin.value) closeDrawer()
+  }, DRAWER_CLOSE_MS)
+}
+
+function openDrawer({ focus = false } = {}) {
+  drawerOpen.value = true
+  drawerKeyboardMode.value = focus
+  if (focus) {
+    nextTick(() => {
+      if (drawerOpen.value) drawerCloseRef.value?.focus({ preventScroll: true })
+    })
+  }
+  scheduleDrawerClose()
+}
+
+function closeDrawer({ restoreFocus = true } = {}) {
+  const wasOpen = drawerOpen.value
+  clearDrawerCloseTimer()
+  drawerOpen.value = false
+  drawerPointerDown.value = false
+  drawerFocusWithin.value = false
+  drawerKeyboardMode.value = false
+  if (wasOpen && restoreFocus) {
+    nextTick(() => drawerHandleRef.value?.focus({ preventScroll: true }))
+  }
+}
+
+function toggleDrawer(event) {
+  if (drawerOpen.value) closeDrawer()
+  else openDrawer({ focus: event?.detail === 0 })
+}
+
+function onDrawerPointerDown() {
+  drawerKeyboardMode.value = false
+  drawerFocusWithin.value = false
+  if (!drawerOpen.value) return
+  drawerPointerDown.value = true
+  clearDrawerCloseTimer()
+}
+
+function onDrawerPointerUp() {
+  drawerPointerDown.value = false
+  scheduleDrawerClose()
+}
+
+function onDrawerPointerCancel() {
+  drawerPointerDown.value = false
+  scheduleDrawerClose()
+}
+
+function onDrawerPointerLeave() {
+  drawerPointerDown.value = false
+  scheduleDrawerClose()
+}
+
+function onDrawerPointerMove() {
+  if (!drawerPointerDown.value && !drawerFocusWithin.value) scheduleDrawerClose()
+}
+
+function onDrawerFocusIn() {
+  if (!drawerKeyboardMode.value) return
+  drawerFocusWithin.value = true
+  clearDrawerCloseTimer()
+}
+
+function onDrawerFocusOut(event) {
+  if (event.relatedTarget instanceof Node && drawerPanelRef.value?.contains(event.relatedTarget)) return
+  drawerFocusWithin.value = false
+  scheduleDrawerClose()
+}
+
+function onDrawerKeydown(event) {
+  drawerKeyboardMode.value = true
+  if (event.key !== 'Escape' || !drawerOpen.value) return
+  event.preventDefault()
+  closeDrawer()
+}
 
 // 换一位神仙就重新开始：供养、财气、叩拜、赐福状态和已提交的心愿全部清掉，连拜天数保留
 function resetRitual() {
@@ -466,9 +566,11 @@ function pickDeity(item) {
     router.replace(`${route.path.startsWith('/zh-hant') ? '/zh-hant' : ''}/qiucai/${slugOf(item)}/`)
   }
   chooseDeity(item)
+  scheduleDrawerClose()
 }
 
 watch(() => route.params.slug, () => {
+  closeDrawer({ restoreFocus: false })
   const item = pageDeity.value
   if (item && item.key !== deity.value.key) chooseDeity(item)
   applyMeta()
@@ -487,6 +589,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearTimeout(toastTimer)
   clearTimeout(poseTimer)
+  clearDrawerCloseTimer()
 })
 </script>
 
@@ -502,7 +605,17 @@ onBeforeUnmount(() => {
         </span>
       </div>
 
-      <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]">
+      <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]" @click="closeDrawer()">
+        <SanctuaryBackdrop variant="wealth" />
+        <div class="qc-stage__altar" aria-hidden="true">
+          <img class="qc-stage__altar-img" src="/sanctuary/altar-20261019.webp" alt="" decoding="async" />
+          <div class="qc-stage__offerings">
+            <img v-if="done.fruit" :src="PROP('fruit')" alt="" class="qc-prop" />
+            <img v-if="done.incense" :src="PROP('incense')" alt="" class="qc-prop" />
+            <img v-if="done.ingot" :src="PROP('ingot')" alt="" class="qc-prop" />
+            <img v-if="done.tree" :src="PROP('tree')" alt="" class="qc-prop" />
+          </div>
+        </div>
         <div :key="'aura-' + aura" class="qc-aura" :class="{ on: aura > 0, steady: blessing }" aria-hidden="true">
           <span class="qc-aura__rays"></span>
           <span class="qc-aura__ring"></span>
@@ -532,12 +645,6 @@ onBeforeUnmount(() => {
         </div>
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-l" aria-hidden="true" />
         <img v-if="done.lamp" :src="PROP('lamp')" alt="" class="qc-prop qc-prop--lamp-r" aria-hidden="true" />
-        <div class="qc-stage__offerings" aria-hidden="true">
-          <img v-if="done.fruit" :src="PROP('fruit')" alt="" class="qc-prop" />
-          <img v-if="done.incense" :src="PROP('incense')" alt="" class="qc-prop" />
-          <img v-if="done.ingot" :src="PROP('ingot')" alt="" class="qc-prop" />
-          <img v-if="done.tree" :src="PROP('tree')" alt="" class="qc-prop" />
-        </div>
         <div class="qc-particles" aria-hidden="true">
           <span
             v-for="p in particles"
@@ -552,6 +659,52 @@ onBeforeUnmount(() => {
           <span class="qc-bowl-mini__bar"><span :style="{ width: bowlPercent + '%' }"></span></span>
         </div>
       </div>
+
+      <div
+        class="qc-controls-drawer"
+        :class="{ 'is-open': drawerOpen }"
+        @pointerdown="onDrawerPointerDown"
+        @pointerup="onDrawerPointerUp"
+        @pointercancel="onDrawerPointerCancel"
+        @pointerleave="onDrawerPointerLeave"
+        @pointermove="onDrawerPointerMove"
+        @keydown="onDrawerKeydown"
+      >
+        <button
+          ref="drawerHandleRef"
+          type="button"
+          class="qc-controls-drawer__handle"
+          :aria-expanded="drawerOpen"
+          aria-controls="qc-controls-drawer-panel"
+          :aria-label="drawerOpen ? '收起祈福方式和财神选择' : '打开祈福方式和财神选择'"
+          @click="toggleDrawer"
+        >
+          <span class="qc-controls-drawer__grip" aria-hidden="true"></span>
+          <span>{{ drawerOpen ? '收起供奉与财神选择' : '打开供奉与财神选择' }}</span>
+          <span class="qc-controls-drawer__chevron" aria-hidden="true">{{ drawerOpen ? '⌄' : '⌃' }}</span>
+        </button>
+
+        <div
+          id="qc-controls-drawer-panel"
+          ref="drawerPanelRef"
+          class="qc-controls-drawer__panel"
+          role="region"
+          :inert="!drawerOpen"
+          :aria-hidden="!drawerOpen"
+          aria-labelledby="qc-controls-drawer-title"
+          @focusin="onDrawerFocusIn"
+          @focusout="onDrawerFocusOut"
+        >
+          <div class="qc-controls-drawer__heading">
+            <strong id="qc-controls-drawer-title">祈福方式与财神选择</strong>
+            <button
+              ref="drawerCloseRef"
+              type="button"
+              class="qc-controls-drawer__close"
+              aria-label="收起祈福方式和财神选择"
+              @click="closeDrawer()"
+            >收起</button>
+          </div>
 
       <div class="qc-ways" role="group" aria-label="祈福方式">
         <button
@@ -582,6 +735,8 @@ onBeforeUnmount(() => {
           <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
           <span class="qc-deity__name">{{ item.name }}</span>
         </button>
+      </div>
+        </div>
       </div>
     </section>
 
@@ -739,22 +894,15 @@ onBeforeUnmount(() => {
   --gold: #c99a2e;
   --red: #9e1b1f;
   justify-self: center;
-  width: min(100vw, calc(100dvh * 0.68));
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   height: 100vh;
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #fffdf8;
-  color: #5a1a12;
+  background: #1b0c06;
+  color: #f5e3bf;
   overflow: hidden;
-}
-
-@media (max-aspect-ratio: 3/4) {
-  .qc-full { width: 100vw; margin-inline: calc(50% - 50vw); }
-}
-
-@media (min-aspect-ratio: 3/4) {
-  .qc-full { border-radius: 0 0 20px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35); }
 }
 
 .qc-full__bar {
@@ -762,34 +910,38 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  border-bottom: 1px solid rgba(201, 154, 46, 0.25);
+  background: rgba(32, 14, 6, 0.92);
+  border-bottom: 1px solid rgba(239, 193, 99, 0.22);
   flex: none;
 }
-.qc-full__back { color: var(--red); font-size: 14px; white-space: nowrap; }
-.qc-full__bar h1 { font-size: 20px; color: var(--red); letter-spacing: 0.1em; }
-.qc-full__today { margin-left: auto; display: grid; gap: 1px; font-size: 12px; color: #8a5a2b; text-align: right; }
+.qc-full__back { color: #f2c879; font-size: 14px; white-space: nowrap; }
+.qc-full__bar h1 { font-size: 20px; color: #f2c879; letter-spacing: 0.1em; }
+.qc-full__today { margin-left: auto; display: grid; gap: 1px; font-size: 12px; color: rgba(245, 227, 191, 0.72); text-align: right; }
 .qc-full__deity { font-size: 15px; }
-.qc-full__today strong { color: var(--red); }
+.qc-full__today strong { color: #f4ca73; }
 
 .qc-stage {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 42%, #fff6dc 0%, #fffdf8 62%);
+  isolation: isolate;
+  container-type: size;
+  background: #2b1207;
 }
 
 .qc-stage__img {
   position: absolute;
   left: 50%;
-  bottom: 9%;
+  bottom: 15%;
   transform: translateX(-50%);
-  height: 86%;
+  height: 82%;
   width: auto;
-  max-width: 94%;
+  max-width: min(92%, 620px);
   object-fit: contain;
   object-position: bottom;
-  filter: drop-shadow(0 10px 18px rgba(120, 70, 10, 0.28));
+  z-index: 3;
+  filter: drop-shadow(0 16px 22px rgba(35, 12, 2, 0.58));
   transition: filter 0.6s;
   animation: appear 0.6s ease both;
 }
@@ -798,15 +950,59 @@ onBeforeUnmount(() => {
 .qc-stage__img.blessing { filter: drop-shadow(0 0 30px rgba(240, 180, 40, 0.85)) !important; }
 .qc-stage.fx-bow .qc-stage__img { animation: nod 0.6s ease; }
 
+.qc-stage__altar {
+  position: absolute;
+  left: 50%;
+  bottom: calc(8cqh - 19.67cqw);
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.qc-stage__altar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 14px 20px rgba(24, 6, 1, 0.5));
+}
+
+.qc-stage__offerings {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  bottom: 61%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(6px, 2.2cqw, 18px);
+  z-index: 2;
+}
+
 .qc-aura {
   position: absolute; left: 50%; top: 6%; width: 92%; aspect-ratio: 1; transform: translateX(-50%);
-  pointer-events: none; opacity: 0;
+  z-index: 2; pointer-events: none; opacity: 0;
 }
 .qc-aura.on { animation: aura-flash 1.6s ease-out both; }
 .qc-aura.steady { opacity: 1; animation: none; }
 .qc-aura__rays, .qc-aura__ring { position: absolute; inset: 0; border-radius: 50%; }
 .qc-aura__rays {
-  background: repeating-conic-gradient(from 0deg, rgba(240, 190, 60, 0.38) 0deg 6deg, transparent 6deg 18deg);
+  background: conic-gradient(
+    from -8deg,
+    transparent 0deg 12deg,
+    rgba(240, 190, 60, 0.38) 12deg 25deg,
+    transparent 25deg 90deg,
+    rgba(240, 190, 60, 0.38) 90deg 103deg,
+    transparent 103deg 180deg,
+    rgba(240, 190, 60, 0.38) 180deg 193deg,
+    transparent 193deg 270deg,
+    rgba(240, 190, 60, 0.38) 270deg 283deg,
+    transparent 283deg 360deg
+  );
   mask: radial-gradient(circle, #000 16%, transparent 68%);
   -webkit-mask: radial-gradient(circle, #000 16%, transparent 68%);
   animation: spin 18s linear infinite;
@@ -815,30 +1011,27 @@ onBeforeUnmount(() => {
 
 .qc-stage__smoke {
   position: absolute; left: 50%; bottom: 14%; width: 60px; height: 140px; margin-left: -30px;
-  opacity: 0; pointer-events: none;
+  z-index: 7; opacity: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% 100%, rgba(150, 120, 90, 0.28), transparent 70%);
   filter: blur(8px);
 }
 .qc-stage.smoking .qc-stage__smoke { opacity: 1; animation: smoke 3.2s ease-in-out infinite; }
 
-.qc-stage__offerings {
-  position: absolute; left: 0; right: 0; bottom: 2%;
-  display: flex; justify-content: center; align-items: flex-end; gap: 14px;
-}
-.qc-prop { width: 15%; max-width: 78px; height: auto; animation: drop-in 0.5s ease both; filter: drop-shadow(0 4px 6px rgba(90, 50, 0, 0.3)); }
-.qc-prop--lamp-l, .qc-prop--lamp-r { position: absolute; top: 8%; width: 12%; max-width: 64px; animation: drop-in 0.6s ease both, sway 3s ease-in-out infinite; }
+.qc-prop { width: 15%; max-width: 78px; height: auto; animation: drop-in 0.5s ease both; filter: drop-shadow(0 7px 8px rgba(34, 11, 0, 0.5)); }
+.qc-prop--lamp-l, .qc-prop--lamp-r { position: absolute; top: 8%; width: 12%; max-width: 64px; z-index: 6; animation: drop-in 0.6s ease both, sway 3s ease-in-out infinite; }
 .qc-prop--lamp-l { left: 4%; }
 .qc-prop--lamp-r { right: 4%; }
 
-.qc-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.qc-particles { position: absolute; inset: 0; z-index: 10; pointer-events: none; overflow: hidden; }
 .qc-particle { position: absolute; top: -40px; animation-name: fall; animation-timing-function: ease-in; animation-fill-mode: both; }
 .qc-particle img { width: 1em; height: 1em; object-fit: contain; }
 
 .qc-toast {
   position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
   max-width: 90%; padding: 8px 16px; border-radius: 999px;
-  background: rgba(158, 27, 31, 0.92); color: #ffe9b0; font-size: 14px; text-align: center;
-  animation: drop-in 0.3s ease both; z-index: 3;
+  background: rgba(54, 22, 7, 0.92); border: 1px solid rgba(240, 193, 103, 0.42);
+  color: #ffe9b0; font-size: 14px; text-align: center;
+  animation: drop-in 0.3s ease both; z-index: 12;
 }
 
 .qc-stage__label {
@@ -848,10 +1041,86 @@ onBeforeUnmount(() => {
 .qc-stage__label strong { font-size: 20px; color: var(--red); }
 .qc-stage__label span { font-size: 12px; color: #8a5a2b; line-height: 1.4; }
 
-.qc-bowl-mini { position: absolute; right: 12px; top: 14px; display: grid; justify-items: center; gap: 4px; width: 64px; }
+.qc-bowl-mini {
+  position: absolute; right: 12px; top: 14px; display: grid; justify-items: center; gap: 4px; width: 64px;
+  z-index: 11; padding: 6px 5px; border: 1px solid rgba(240, 193, 103, 0.25); border-radius: 12px;
+  background: rgba(43, 18, 7, 0.68); box-shadow: 0 8px 18px rgba(20, 5, 1, 0.25);
+}
 .qc-bowl-mini img { width: 44px; height: 44px; object-fit: contain; }
 .qc-bowl-mini__bar { width: 100%; height: 6px; border-radius: 999px; background: rgba(201, 154, 46, 0.2); overflow: hidden; }
 .qc-bowl-mini__bar span { display: block; height: 100%; background: linear-gradient(90deg, #e6a92e, #f5c84c); transition: width 0.5s ease; }
+
+.qc-controls-drawer {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: min(260px, 38dvh);
+  transform: translateY(calc(100% - 44px));
+  transition: transform 0.35s cubic-bezier(0.22, 0.75, 0.2, 1);
+  color: #f5e3bf;
+}
+.qc-controls-drawer.is-open { transform: translateY(0); }
+.qc-controls-drawer__handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 0;
+  border-top: 1px solid rgba(239, 193, 99, 0.42);
+  background: linear-gradient(180deg, rgba(96, 48, 15, 0.98), rgba(48, 20, 7, 0.98));
+  color: #f7d897;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 -10px 24px rgba(18, 5, 1, 0.28);
+}
+.qc-controls-drawer__handle:focus-visible,
+.qc-controls-drawer__close:focus-visible { outline: 2px solid #ffe8a7; outline-offset: -3px; }
+.qc-controls-drawer__grip {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 227, 160, 0.72);
+  box-shadow: 0 0 0 1px rgba(35, 10, 1, 0.28);
+}
+.qc-controls-drawer__chevron { font-size: 18px; line-height: 1; }
+.qc-controls-drawer__panel {
+  max-height: min(216px, 30dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid rgba(239, 193, 99, 0.2);
+  background: linear-gradient(180deg, rgba(47, 20, 7, 0.98), rgba(22, 8, 3, 0.99));
+  box-shadow: 0 -18px 36px rgba(18, 5, 1, 0.38);
+}
+.qc-controls-drawer:not(.is-open) .qc-controls-drawer__panel { pointer-events: none; }
+.qc-controls-drawer__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  padding: 6px 12px 4px;
+  color: #f7d897;
+  font-size: 13px;
+}
+.qc-controls-drawer__close {
+  min-width: 44px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid rgba(239, 193, 99, 0.42);
+  border-radius: 999px;
+  background: rgba(89, 43, 13, 0.62);
+  color: #ffe8a7;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
 
 /* 一排祈福方式 */
 .qc-ways {
@@ -860,17 +1129,19 @@ onBeforeUnmount(() => {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
   padding: 8px 8px 6px;
-  border-top: 1px solid rgba(201, 154, 46, 0.25);
+  border-top: 1px solid rgba(239, 193, 99, 0.22);
+  background: linear-gradient(180deg, #271006, #1d0b05);
 }
 .qc-way {
   display: grid; justify-items: center; gap: 2px;
-  padding: 6px 0; border-radius: 12px;
-  border: 1px solid rgba(201, 154, 46, 0.35);
-  background: #fff8e8; color: #7a2a16; font-size: 12px; white-space: nowrap;
+  min-height: 54px; padding: 6px 0; border-radius: 12px;
+  border: 1px solid rgba(239, 193, 99, 0.32);
+  background: rgba(89, 43, 13, 0.44); color: #f5d592; font-size: 12px; white-space: nowrap;
   transition: transform 0.15s, background 0.2s;
 }
 .qc-way:active { transform: scale(0.92); }
-.qc-way.done { background: #fbe7c0; opacity: 0.75; }
+.qc-way:hover { background: rgba(138, 78, 22, 0.62); border-color: rgba(247, 210, 127, 0.7); }
+.qc-way.done { background: rgba(207, 142, 43, 0.28); opacity: 0.8; }
 .qc-way__img { width: 32px; height: 32px; object-fit: contain; }
 .qc-way__icon { font-size: 24px; line-height: 32px; }
 
@@ -881,22 +1152,22 @@ onBeforeUnmount(() => {
   grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 4px;
   padding: 6px 8px 10px;
-  background: #fdf3df;
+  background: linear-gradient(180deg, #1d0b05, #140805);
 }
 .qc-deity {
   display: grid; justify-items: center; gap: 2px;
-  padding: 4px 0; border: 0; border-radius: 12px;
-  background: transparent; color: #7a2a16;
+  min-height: 58px; padding: 4px 0; border: 0; border-radius: 12px;
+  background: transparent; color: #eac986;
 }
 .qc-deity__seal {
   width: 44px; height: 44px; border-radius: 50%;
   object-fit: cover; display: grid; place-items: center;
-  border: 2px solid transparent; background: #f3dfb0;
+  border: 2px solid transparent; background: #60401f;
   transition: transform 0.2s, border-color 0.2s;
 }
-.qc-deity.active .qc-deity__seal { border-color: var(--red); transform: scale(1.12); box-shadow: 0 0 0 3px rgba(201, 154, 46, 0.45); }
+.qc-deity.active .qc-deity__seal { border-color: #f3cb78; transform: scale(1.12); box-shadow: 0 0 0 3px rgba(201, 154, 46, 0.45); }
 .qc-deity__name { font-size: 11px; white-space: nowrap; }
-.qc-deity.active .qc-deity__name { color: var(--red); font-weight: 700; }
+.qc-deity.active .qc-deity__name { color: #f5d592; font-weight: 700; }
 
 /* ===== 满屏以下：心愿、祝福卡、介绍 ===== */
 .qc-altar { padding: 24px; }
@@ -988,7 +1259,7 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.6s ease, transform 0.6s ease;
-  z-index: 2;
+  z-index: 6;
   pointer-events: none;
 }
 .qc-worshipper--l { left: 2%; }
@@ -1014,5 +1285,15 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 860px) {
   .card { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qc-full *,
+  .qc-full *::before,
+  .qc-full *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 </style>

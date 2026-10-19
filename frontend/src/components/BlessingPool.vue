@@ -6,6 +6,7 @@ import { apiFetch } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import AltarLayer from './ritual/AltarLayer.vue'
 import RitualPanel from './ritual/RitualPanel.vue'
+import SanctuaryBackdrop from './ritual/SanctuaryBackdrop.vue'
 import { useRitual } from '../composables/useRitual.js'
 
 const emit = defineEmits(['wish-submitted'])
@@ -19,6 +20,9 @@ const resultWish = ref('')
 const resultEmail = ref('')
 const modalCloseButton = ref(null)
 const previousOverflow = ref('')
+const modalToggleButton = ref(null)
+const drawerHeading = ref(null)
+const modalOrigin = ref(null)
 
 const form = ref({
   name: '',
@@ -30,6 +34,32 @@ const form = ref({
 // 供养按钮、供台动画与拜佛 / 祭祀页共用
 const ritual = useRitual('blessing')
 const drawerOpen = ref(false)
+
+// The old blessing posters are opaque editorial cards. Keep each scene's
+// meaning, but stage a transparent devotional figure or a small symbolic
+// emblem instead of stretching that card across the sanctuary.
+const blessingSubjects = {
+  caishen: { src: '/qiucai/zhaogongming.webp', alt: '赵公明财神' },
+  jikang: { src: '/a3-20260906.webp?v=release1', alt: '药师佛' },
+  pingan: { src: '/a7-20260906.webp?v=release1', alt: '观音菩萨' },
+  xueye: { src: '/a5-20260906.webp?v=release1', alt: '文殊菩萨' },
+  shou: { src: '/qiucai/shouxing.webp', alt: '寿星' },
+  yinyuan: { src: '/sanctuary/mandarin-ducks-20261019.webp', alt: '金色鸳鸯合璧雕塑' },
+  siling: { src: '/a4-20260906.webp?v=release1', alt: '弥勒佛' },
+  xiaozai: { src: '/a7-20260906.webp?v=release1', alt: '观音菩萨' },
+  gongming: { src: '/qiucai/wencaishen.webp', alt: '文财神' },
+  fulu: {
+    alt: '福星与禄星',
+    srcs: [
+      { src: '/qiucai/fuxing.webp', alt: '福星' },
+      { src: '/qiucai/luxing.webp', alt: '禄星' },
+    ],
+  },
+  heping: { src: '/sanctuary/harmony-tree-20261019.webp', alt: '和平长青树与白鸽雕塑' },
+  jiaqin: { src: '/sanctuary/harmony-tree-20261019.webp', alt: '家宅团圆长青树雕塑' },
+}
+
+const activeSubject = computed(() => (active.value ? blessingSubjects[active.value.key] || null : null))
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
@@ -59,6 +89,7 @@ function open(blessing) {
     router.push('/qiucai/')
     return
   }
+  if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
   stage.value = 'form'
   resultWish.value = ''
@@ -68,9 +99,16 @@ function open(blessing) {
 }
 
 function close() {
+  const restoreTarget = modalOrigin.value
   active.value = null
   resetTransientState()
   hydrateProfile()
+  modalOrigin.value = null
+  nextTick(() => {
+    if (restoreTarget && document.contains(restoreTarget) && typeof restoreTarget.focus === 'function') {
+      restoreTarget.focus()
+    }
+  })
 }
 
 function clearToastSoon() {
@@ -135,6 +173,21 @@ function unlockBodyScroll() {
   document.body.style.overflow = previousOverflow.value
 }
 
+function handleModalKeydown(event) {
+  if (!active.value || event.key !== 'Escape') return
+  if (drawerOpen.value) {
+    closeDrawer()
+    return
+  }
+  close()
+}
+
+function closeDrawer() {
+  if (!drawerOpen.value) return
+  drawerOpen.value = false
+  nextTick(() => modalToggleButton.value?.focus())
+}
+
 watch(active, async (value) => {
   if (value) {
     lockBodyScroll()
@@ -145,11 +198,19 @@ watch(active, async (value) => {
   unlockBodyScroll()
 })
 
+watch(drawerOpen, async (value) => {
+  if (!value) return
+  await nextTick()
+  drawerHeading.value?.focus()
+})
+
 onMounted(() => {
   hydrateProfile()
+  window.addEventListener('keydown', handleModalKeydown)
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleModalKeydown)
   unlockBodyScroll()
 })
 </script>
@@ -189,23 +250,52 @@ onBeforeUnmount(() => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="blessing-dialog-title"
-        @keydown.esc="close"
       >
         <div class="bm-top">
           <button ref="modalCloseButton" class="bm-back" type="button" @click="close">← 返回祈福池</button>
-          <p class="bm-top-title">{{ active.label }}</p>
+          <p id="blessing-dialog-title" class="bm-top-title">{{ active.label }} · 祈福</p>
         </div>
 
-        <div class="bm-body">
+        <div class="bm-body" :class="{ 'drawer-open': drawerOpen }">
           <div class="bm-stage">
-            <img :src="active.bg" :alt="`${active.label}场景图`" class="bm-scene-img" />
+            <SanctuaryBackdrop variant="blessing" />
+            <div class="bm-subject-wrap" :class="`bm-subject-wrap--${active.key}`">
+              <template v-if="activeSubject?.srcs">
+                <div class="bm-subject-pair" role="img" :aria-label="activeSubject.alt">
+                  <img
+                    v-for="figure in activeSubject.srcs"
+                    :key="figure.src"
+                    :src="figure.src"
+                    :alt="figure.alt"
+                    class="bm-subject-pair__img"
+                    decoding="async"
+                  />
+                </div>
+              </template>
+              <img v-else-if="activeSubject?.src" :src="activeSubject.src" :alt="activeSubject.alt" class="bm-subject" decoding="async" />
+              <div
+                v-else-if="activeSubject?.symbol"
+                class="bm-subject bm-subject--symbol"
+                role="img"
+                :aria-label="activeSubject.label"
+              >
+                <span>{{ activeSubject.symbol }}</span>
+                <small>{{ activeSubject.label }}</small>
+              </div>
+            </div>
+            <div class="bm-altar" aria-hidden="true">
+              <img class="bm-altar__img" src="/sanctuary/altar-20261019.webp" alt="" decoding="async" />
+            </div>
             <AltarLayer :ritual="ritual" mode="blessing" />
           </div>
 
           <button
+            ref="modalToggleButton"
             type="button"
             class="bm-toggle"
             :class="{ open: drawerOpen }"
+            aria-controls="blessing-drawer"
+            :aria-expanded="drawerOpen"
             @click="drawerOpen = !drawerOpen"
           >
             {{ drawerOpen ? '收起' : '祈福供养' }}
@@ -216,12 +306,18 @@ onBeforeUnmount(() => {
             type="button"
             class="bm-backdrop"
             aria-label="收起祈福面板"
-            @click="drawerOpen = false"
+            @click="closeDrawer"
           ></button>
 
-          <section class="bm-drawer" :class="{ open: drawerOpen }">
+          <section
+            id="blessing-drawer"
+            class="bm-drawer"
+            :class="{ open: drawerOpen }"
+            :inert="!drawerOpen"
+          >
+            <button type="button" class="bm-drawer-close" @click="closeDrawer">收起祈福面板</button>
             <p class="overlay-kicker">祈福主题</p>
-            <h3 id="blessing-dialog-title" class="overlay-title">{{ active.label }}</h3>
+            <h3 ref="drawerHeading" class="overlay-title" tabindex="-1">{{ active.label }}</h3>
             <p class="form-wish-hint">
               <template v-if="stage === 'form'">{{ active.wish }}</template>
               <template v-else>{{ resultWish }}</template>
@@ -425,8 +521,8 @@ onBeforeUnmount(() => {
   z-index: 3000;
   display: flex;
   flex-direction: column;
-  background: #160800;
-  color: var(--text);
+  background: #160a04;
+  color: #f7e6c5;
 }
 
 .bm-top {
@@ -436,8 +532,8 @@ onBeforeUnmount(() => {
   gap: 12px;
   padding: 8px 12px;
   padding-top: max(8px, env(safe-area-inset-top));
-  background: var(--surface);
-  border-bottom: 1px solid rgba(212, 168, 67, 0.15);
+  background: linear-gradient(180deg, rgba(43, 20, 8, 0.98), rgba(28, 12, 4, 0.96));
+  border-bottom: 1px solid rgba(240, 194, 109, 0.24);
 }
 
 .bm-back {
@@ -445,8 +541,8 @@ onBeforeUnmount(() => {
   padding: 6px 14px;
   border: 1px solid rgba(212, 168, 67, 0.35);
   border-radius: 10px;
-  background: transparent;
-  color: var(--accent);
+  background: rgba(95, 49, 15, 0.28);
+  color: #f2ce86;
   font: inherit;
   font-size: 0.88rem;
   cursor: pointer;
@@ -454,7 +550,7 @@ onBeforeUnmount(() => {
 
 .bm-top-title {
   margin: 0;
-  color: var(--accent);
+  color: #f2ce86;
   font-weight: 700;
   letter-spacing: 0.12em;
 }
@@ -464,26 +560,166 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .bm-stage {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(241, 193, 88, 0.16), transparent 40%),
-    linear-gradient(180deg, #180700 0%, #341100 40%, #592107 78%, #7c3f10 100%);
+  container-type: size;
+  isolation: isolate;
+  background: #2b1207;
 }
 
-.bm-scene-img {
-  /* 神像图收在上方，下方留给供台 */
+.bm-altar {
   position: absolute;
-  inset: 1.5% 0 29% 0;
+  left: 50%;
+  bottom: calc(8cqh - 19.67cqw);
   width: 100%;
-  height: 69.5%;
+  aspect-ratio: 3 / 1;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bm-altar__img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  /* 神像贴着供台摆放，空白留在顶部 */
+  object-position: bottom center;
+  filter: drop-shadow(0 14px 20px rgba(24, 6, 1, 0.5));
+}
+
+.bm-subject-wrap {
+  position: absolute;
+  inset: 3% 0 14%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-inline: 4%;
+  pointer-events: none;
+  transition: padding 0.3s ease;
+}
+
+/* Keep AltarLayer's semantic objects on the real table surface while
+   worshippers remain grounded at the stage bottom. The altar art is 3:1,
+   so its 60%-from-bottom table-top anchor scales with the viewport width. */
+.bm-stage :deep(.altar-layer .altar) {
+  bottom: 8%;
+}
+
+.bm-stage :deep(.altar-layer .vase),
+.bm-stage :deep(.altar-layer .candle),
+.bm-stage :deep(.altar-layer .burner) {
+  --b: calc(var(--u) * 6);
+}
+
+.bm-subject {
+  display: block;
+  width: min(94cqw, 760px);
+  height: 100%;
+  max-width: 94cqw;
+  object-fit: contain;
   object-position: center bottom;
+  filter: drop-shadow(0 16px 24px rgba(36, 12, 2, 0.6));
+}
+
+/* The original alpha Buddha canvases are deliberately wide: their visible
+   figure occupies the centre band. Use the PrayerStage fit measurements so
+   mobile keeps the figure legible without letting the transparent canvas
+   dictate the layout width. */
+.bm-subject-wrap--jikang .bm-subject { width: auto; max-width: none; height: min(100%, 141.5cqw); }
+.bm-subject-wrap--pingan .bm-subject { width: auto; max-width: none; height: min(100%, 151.5cqw); }
+.bm-subject-wrap--xueye .bm-subject { width: auto; max-width: none; height: min(100%, 132.7cqw); }
+.bm-subject-wrap--siling .bm-subject { width: auto; max-width: none; height: min(100%, 75.3cqw); }
+
+/* Symbolic wide canvases are sized by width on phones; otherwise their
+   transparent margins make the subject overflow and crop at both edges. */
+.bm-subject-wrap--yinyuan .bm-subject {
+  width: auto;
+  max-width: 90cqw;
+  height: auto;
+  max-height: 60cqh;
+}
+
+@media (orientation: portrait) {
+  .bm-subject-wrap--yinyuan { bottom: 29%; }
+}
+
+.bm-subject-wrap--heping .bm-subject,
+.bm-subject-wrap--jiaqin .bm-subject {
+  width: auto;
+  max-width: 85cqw;
+  height: auto;
+  max-height: 68cqh;
+}
+
+.bm-subject-pair {
+  width: min(92cqw, 660px);
+  height: auto;
+  max-height: 72cqh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: min(2cqw, 16px);
+}
+
+.bm-subject-pair__img {
+  width: calc(50% - 1cqw);
+  height: auto;
+  max-width: calc(50% - 1cqw);
+  max-height: 72cqh;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 16px 24px rgba(36, 12, 2, 0.6));
+}
+
+.bm-subject-wrap--fulu .bm-subject-pair {
+  width: min(94cqw, 660px);
+}
+
+.bm-subject--symbol {
+  width: min(44cqw, 330px);
+  height: min(44cqw, 330px);
+  max-width: 72%;
+  max-height: 84%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid rgba(245, 205, 127, 0.48);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 215, 132, 0.28), transparent 56%),
+    rgba(66, 29, 8, 0.64);
+  box-shadow:
+    0 0 60px rgba(228, 160, 55, 0.2),
+    inset 0 0 0 10px rgba(107, 55, 15, 0.38),
+    0 20px 30px rgba(24, 7, 1, 0.45);
+  color: #f3c875;
+}
+
+.bm-subject--symbol span {
+  font-family: 'Noto Serif SC', 'Source Han Serif CN', STSong, SimSun, serif;
+  font-size: clamp(4rem, 14cqw, 8rem);
+  line-height: 1;
+  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.45);
+}
+
+.bm-subject--symbol small {
+  font-size: clamp(0.76rem, 1.7cqw, 1rem);
+  letter-spacing: 0.18em;
+  color: rgba(255, 231, 175, 0.82);
+}
+
+@media (min-width: 700px) {
+  .bm-body.drawer-open .bm-subject-wrap {
+    padding-right: min(32vw, 400px);
+  }
 }
 
 .bm-toggle {
@@ -497,8 +733,8 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(212, 168, 67, 0.36);
   border-right: none;
   border-radius: 16px 0 0 16px;
-  background: rgba(30, 20, 42, 0.96);
-  color: var(--accent);
+  background: rgba(59, 29, 9, 0.96);
+  color: #f2ce86;
   font: inherit;
   font-size: 0.86rem;
   letter-spacing: 0.1em;
@@ -515,7 +751,7 @@ onBeforeUnmount(() => {
   inset: 0;
   z-index: 18;
   border: none;
-  background: rgba(18, 6, 0, 0.28);
+  background: rgba(15, 5, 1, 0.48);
 }
 
 .bm-drawer {
@@ -528,15 +764,36 @@ onBeforeUnmount(() => {
   overflow-y: auto;
   padding: 20px 20px 32px;
   padding-bottom: max(32px, env(safe-area-inset-bottom));
-  background: var(--surface);
-  border-left: 1px solid rgba(212, 168, 67, 0.18);
+  background: rgba(37, 18, 8, 0.98);
+  border-left: 1px solid rgba(235, 188, 97, 0.24);
   box-shadow: -10px 0 28px rgba(24, 9, 2, 0.22);
   transform: translateX(100%);
+  visibility: hidden;
   transition: transform 0.28s ease;
+}
+
+.bm-drawer-close {
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 0 0 14px;
+  padding: 8px 14px;
+  border: 1px solid rgba(235, 188, 97, 0.42);
+  border-radius: 10px;
+  background: rgba(95, 49, 15, 0.3);
+  color: #f7d796;
+  font: inherit;
+  cursor: pointer;
+}
+
+.bm-drawer-close:focus-visible,
+.bm-toggle:focus-visible {
+  outline: 3px solid rgba(246, 205, 125, 0.68);
+  outline-offset: 3px;
 }
 
 .bm-drawer.open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 .bm-divider {
