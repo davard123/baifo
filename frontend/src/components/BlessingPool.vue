@@ -309,8 +309,9 @@ onBeforeUnmount(() => {
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
-                {{ form.age }} 岁的 {{ form.name }} {{ form.target ? `，为 ${form.target}` : '' }} 留下了这份祈愿。
+                {{ form.age }} 岁的 {{ form.name }} 留下了这份祈愿。
               </p>
+              <p v-if="form.target" class="result-user">{{ form.target }}</p>
               <div class="result-btns">
                 <button class="back-home-btn" type="button" @click="close(); router.push('/')">
                   返回首页
