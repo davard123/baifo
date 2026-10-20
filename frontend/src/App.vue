@@ -139,6 +139,11 @@ onMounted(() => {
 
 <style>
 #app { min-height: 100vh; }
+/* Leave the explicit three-bow instructions unobstructed. */
+#app:has(.qc-ritual-progress) > .audio-btn,
+#app:has(.qc-ritual-progress) .nianfo-trigger {
+  top: calc(160px + env(safe-area-inset-top, 0px));
+}
 /* Global floating tools must not intercept the drawer's language link or form. */
 #app:has(.qc-info-drawer.open, .panel-section.open) > .audio-btn,
 #app:has(.qc-info-drawer.open, .panel-section.open) .nianfo-trigger {

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
 import { apiFetch } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
+import { getBlessingSuggestions, getBlessingTarget, saveBlessingTarget } from '../utils/blessingDrafts.js'
 import AltarLayer from './ritual/AltarLayer.vue'
 import RitualPanel from './ritual/RitualPanel.vue'
 import SanctuaryBackdrop from './ritual/SanctuaryBackdrop.vue'
@@ -53,6 +54,16 @@ const blessingSubjects = {
 }
 
 const activeSubject = computed(() => (active.value ? blessingSubjects[active.value.key] || null : null))
+const targetSuggestions = computed(() => getBlessingSuggestions(active.value?.key))
+
+function rememberTarget() {
+  if (active.value) saveBlessingTarget(active.value.key, form.value.target)
+}
+
+function selectTarget(text) {
+  form.value.target = text
+  rememberTarget()
+}
 
 const nextBlessing = computed(() => {
   if (!active.value) return null
@@ -64,7 +75,7 @@ function hydrateProfile() {
   const viewer = getViewerProfile()
   form.value.name = viewer.username || ''
   form.value.age = viewer.age ? String(viewer.age) : ''
-  form.value.target = ''
+  form.value.target = active.value ? getBlessingTarget(active.value.key) : ''
   form.value.email = ''
 }
 
@@ -353,11 +364,24 @@ onBeforeUnmount(() => {
                 <input
                   id="blessing-target"
                   v-model="form.target"
+                  @input="rememberTarget"
                   type="text"
                   class="field target-field"
                   maxlength="50"
-                  placeholder="可选，例如：父亲健康、家人平安"
+                  aria-describedby="blessing-target-help"
+                  placeholder="可修改推荐词，或写下自己的祝愿"
                 />
+                <p id="blessing-target-help" class="target-help">可直接修改；本主题上次填写的内容仅在本机保留。</p>
+                <div class="target-suggestions" role="group" aria-label="推荐祈福词">
+                  <button
+                    v-for="suggestion in targetSuggestions"
+                    :key="suggestion"
+                    type="button"
+                    class="target-suggestion"
+                    :aria-pressed="form.target === suggestion"
+                    @click="selectTarget(suggestion)"
+                  >{{ suggestion }}</button>
+                </div>
               </div>
 
               <button class="submit-btn" type="submit" :disabled="loading">
@@ -377,6 +401,45 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.target-help {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.target-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.target-suggestion {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(235, 188, 97, 0.35);
+  border-radius: 8px;
+  background: #38220f;
+  color: #f7d796;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.target-suggestion[aria-pressed="true"] {
+  border-color: #efc46d;
+  background: #624119;
+}
+
+.target-suggestion:focus-visible {
+  outline: 3px solid #efc46d;
+  outline-offset: 2px;
+}
+
 .blessing-section {
   position: relative;
   animation: fadeInUp 0.7s 0.12s ease both;

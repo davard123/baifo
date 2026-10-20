@@ -17,6 +17,7 @@ import {
 } from '../data/qiucai.js'
 import { apiFetch, warmApi } from '../api.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
+import { wealthRitualProgress, nextWealthDeity } from '../utils/wealthRitual.js'
 import VisionMaker from '../components/VisionMaker.vue'
 import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
@@ -70,6 +71,11 @@ const done = ref({})
 const qi = ref(0)
 const toast = ref('')
 const bowCount = ref(0)
+const bowProgress = computed(() => wealthRitualProgress(bowCount.value))
+const nextDeity = computed(() => nextWealthDeity(CAISHEN, deity.value.key))
+const ceremonyDone = ref(false)
+const ceremonyGreeting = ref('')
+const wishNameRef = ref(null)
 const particles = ref([])
 const effect = ref('')
 // 神像回应：aura=身后金光一闪；blessing=换成赐福姿势（撒金币、举福字等）
@@ -93,6 +99,7 @@ const stats = ref({ lastDay: '', streak: 0, totalQi: 0, totalDays: 0 })
 const wall = ref([])
 
 let toastTimer = null
+const ritualToastTimers = new Set()
 let particleId = 0
 
 const bowlPercent = computed(() => Math.min(100, Math.round((qi.value / BOWL_FULL) * 100)))
@@ -174,6 +181,21 @@ function showToast(text) {
   }, 2600)
 }
 
+function scheduleRitualToast(text, delay) {
+  const timer = setTimeout(() => {
+    ritualToastTimers.delete(timer)
+    showToast(text)
+  }, delay)
+  ritualToastTimers.add(timer)
+}
+
+function clearRitualToasts() {
+  for (const timer of ritualToastTimers) clearTimeout(timer)
+  ritualToastTimers.clear()
+  clearTimeout(toastTimer)
+  toast.value = ''
+}
+
 function burst(kind, count) {
   const symbols = {
     coin: ['coin', 'coin', '✨'],
@@ -199,6 +221,7 @@ function burst(kind, count) {
 }
 
 function act(way) {
+  if (way.key === 'bow' && bowProgress.value.complete) return
   if (!way.repeat && done.value[way.key]) return
   done.value = { ...done.value, [way.key]: true }
   qi.value += way.qi
@@ -210,12 +233,12 @@ function act(way) {
     effect.value = way.effect
   })
 
-  if (way.key === 'bow') bowCount.value += 1
+  if (way.key === 'bow') bowCount.value = bowProgress.value.nextCount
   if (['bow', 'coin', 'ingot', 'tree', 'lamp'].includes(way.key)) flashAura()
   if (way.key === 'bow' && bowCount.value % 3 === 0) {
     manifest()
     burst('coin', 18)
-    setTimeout(() => showToast(`${deity.value.name}显灵赐福：${pickGreeting()}！`), 300)
+    scheduleRitualToast(`${deity.value.name}显灵赐福：${pickGreeting()}！`, 300)
   }
   const counts = { coin: 10, tree: 16, ingot: 6, fruit: 5, bow: 6 }
   if (counts[way.effect]) burst(way.effect, counts[way.effect])
@@ -223,7 +246,9 @@ function act(way) {
   if (way.repeat && way.key !== 'bow') {
     showToast(`${way.toast} ${pickGreeting()}！`)
   } else if (way.key === 'bow') {
-    showToast(`第 ${bowCount.value} 拜 · ${pickGreeting()}`)
+    showToast(bowProgress.value.complete
+      ? '三叩首已完成，请点「礼成 · 领取财神赐福」。'
+      : `已叩首 ${bowCount.value}/3，还需 ${3 - bowCount.value} 次。`)
   } else {
     showToast(way.toast)
   }
@@ -231,20 +256,44 @@ function act(way) {
   if (FULL_OFFERINGS.every((key) => done.value[key]) && bowCount.value >= 3 && markDeityComplete(deity.value.key)) {
     const count = completedDeities.value.length
     const total = CAISHEN.length
-    setTimeout(() => showToast(count >= total
+    scheduleRitualToast(count >= total
       ? '八位神仙全部拜圆满！打开求财说明，可以生成你的成功愿景图了。'
-      : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`), 1400)
+      : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`, 1400)
   }
 
   if (bowlFull.value && !bowlCelebrated.value) {
     bowlCelebrated.value = true
     burst('full', 28)
-    setTimeout(() => showToast('聚宝盆已满！财气圆满，写下你的求财心愿吧。'), 900)
+    scheduleRitualToast('聚宝盆已满！财气圆满，写下你的求财心愿吧。', 900)
   }
 
   // Reveal the entire bow immediately, rather than hiding it behind the drawer.
   if (way.key === 'bow') closeDrawer()
   else scheduleDrawerClose()
+}
+
+function finishCeremony() {
+  if (!bowProgress.value.complete) return
+  ceremonyGreeting.value = pickGreeting()
+  ceremonyDone.value = true
+  manifest(10000)
+  flashAura()
+  burst('full', 24)
+  openInfoDrawer()
+  nextTick(() => infoDrawerPanelRef.value?.querySelector('.qc-info-drawer__body')?.scrollTo({ top: 0 }))
+}
+
+function continueToNextDeity() {
+  const item = nextDeity.value
+  if (!item) return
+  closeInfoDrawer({ restoreFocus: false })
+  closeDrawer({ restoreFocus: false })
+  pickDeity(item)
+  nextTick(() => drawerHandleRef.value?.focus({ preventScroll: true }))
+}
+
+function writeCeremonyWish() {
+  nextTick(() => wishNameRef.value?.focus())
 }
 
 const fullRef = ref(null)
@@ -448,9 +497,12 @@ function onDrawerKeydown(event) {
 
 // 换一位神仙就重新开始：供养、财气、叩拜、赐福状态和已提交的心愿全部清掉，连拜天数保留
 function resetRitual() {
+  clearRitualToasts()
   done.value = {}
   qi.value = 0
   bowCount.value = 0
+  ceremonyDone.value = false
+  ceremonyGreeting.value = ''
   bowlCelebrated.value = false
   blessingUntil.value = 0
   clearTimeout(poseTimer)
@@ -707,6 +759,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  clearRitualToasts()
   if (enteredFullscreen && currentFullscreenElement()) {
     const exit = document.exitFullscreen || document.webkitExitFullscreen
     try { Promise.resolve(exit?.call(document)).catch(() => {}) } catch { /* Browser already exited. */ }
@@ -742,6 +795,18 @@ onBeforeUnmount(() => {
           @click="toggleFullscreen"
         >{{ fullscreenActive ? '✕' : '⛶' }}</button>
         <span v-if="!fullscreenSupported" class="qc-full__fullscreen-note">浏览器菜单可全屏</span>
+      </div>
+
+      <div class="qc-ritual-progress">
+        <div class="qc-ritual-progress__text" role="status" aria-live="polite">
+          <strong>三叩首 · {{ bowProgress.count }}/3</strong>
+          <span>{{ bowProgress.hint }}</span>
+        </div>
+        <button
+          type="button"
+          class="qc-ritual-progress__action"
+          @click="bowProgress.complete ? finishCeremony() : act(QIUCAI_WAYS.find(way => way.key === 'bow'))"
+        >{{ bowProgress.label }}</button>
       </div>
 
       <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]" @click="closeDrawer()">
@@ -852,11 +917,12 @@ onBeforeUnmount(() => {
           type="button"
           class="qc-way"
           :class="{ done: done[way.key] && !way.repeat }"
+          :disabled="way.key === 'bow' && bowProgress.complete"
           @click="act(way)"
         >
           <img v-if="way.img" :src="way.img" alt="" class="qc-way__img" />
           <span v-else class="qc-way__icon">{{ way.icon }}</span>
-          <span>{{ way.label }}</span>
+          <span>{{ way.key === 'bow' ? `叩首 ${bowProgress.count}/3` : way.label }}</span>
         </button>
       </div>
 
@@ -911,7 +977,7 @@ onBeforeUnmount(() => {
       aria-labelledby="qc-info-drawer-title"
     >
       <header class="qc-info-drawer__header">
-        <h2 id="qc-info-drawer-title">求财说明与心愿</h2>
+        <h2 id="qc-info-drawer-title">{{ ceremonyDone ? '三叩首礼成' : '求财说明与心愿' }}</h2>
         <button
           ref="infoDrawerCloseRef"
           type="button"
@@ -921,6 +987,17 @@ onBeforeUnmount(() => {
         >收起</button>
       </header>
       <div class="qc-info-drawer__body">
+        <section v-if="ceremonyDone" class="qc-ceremony-result" aria-labelledby="qc-ceremony-title">
+          <h3 id="qc-ceremony-title">礼敬已完成</h3>
+          <p>你已向{{ deity.name }}完成三叩首。</p>
+          <p class="qc-ceremony-result__greeting">{{ ceremonyGreeting }}，愿你勤勉有成，平安顺遂。</p>
+          <p class="qc-note">本次礼敬已结束，可直接离开；也可以继续写下心愿。</p>
+          <div class="qc-ceremony-result__actions">
+            <button type="button" class="submit-btn" @click="continueToNextDeity">拜下一位 · {{ nextDeity?.name }}</button>
+            <router-link :to="languageLinks.traditionalCurrent ? '/zh-hant/' : '/'" class="qc-ceremony-exit">结束返回首页</router-link>
+            <button v-if="!result" type="button" class="qc-ceremony-wish" @click="writeCeremonyWish">写下心愿，领取祝福卡（可选）</button>
+          </div>
+        </section>
         <nav class="qc-language-switch" aria-label="语言切换">
           <span>语言：</span>
           <a v-if="languageLinks.traditionalCurrent" :href="languageLinks.simplified" data-keep-script>简体中文</a>
@@ -948,7 +1025,7 @@ onBeforeUnmount(() => {
         <form v-if="!result" class="qc-form" @submit.prevent="submit">
           <h2>写下求财心愿</h2>
           <label class="field-label" for="qc-name">你的名字或称呼</label>
-          <input id="qc-name" v-model="form.name" class="field" maxlength="20" autocomplete="nickname" placeholder="例如：王先生" />
+          <input id="qc-name" ref="wishNameRef" v-model="form.name" class="field" maxlength="20" autocomplete="nickname" placeholder="例如：王先生" />
 
           <span class="field-label">求财方向</span>
           <div class="qc-scenes">
@@ -1070,6 +1147,67 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.qc-ritual-progress {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #301807;
+  color: #f5d592;
+}
+.qc-ritual-progress__text { display: grid; gap: 3px; min-width: 0; }
+.qc-ritual-progress__text strong { font-size: 13px; }
+.qc-ritual-progress__text span { font-size: 12px; line-height: 1.5; }
+.qc-ritual-progress__action {
+  flex: none;
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: #efc46d;
+  color: #321706;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.qc-ritual-progress__action:focus-visible,
+.qc-ceremony-exit:focus-visible,
+.qc-ceremony-wish:focus-visible { outline: 3px solid #ffe6ad; outline-offset: 2px; }
+.qc-way:disabled { opacity: 0.6; cursor: default; }
+.qc-ceremony-result { padding-bottom: 22px; margin-bottom: 20px; border-bottom: 1px solid #79532b; }
+.qc-ceremony-result h3 { margin: 0 0 12px; color: #f5d592; font-size: 1.4rem; }
+.qc-ceremony-result p { line-height: 1.8; }
+.qc-ceremony-result__greeting { margin: 12px 0; color: #f5d592; font-size: 1.05rem; }
+.qc-ceremony-result__actions { display: grid; gap: 10px; margin-top: 16px; }
+.qc-ceremony-exit,
+.qc-ceremony-wish {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #b48a4c;
+  border-radius: 8px;
+  background: #38220f;
+  color: #f5d592;
+  font: inherit;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+@media (max-width: 430px) {
+  .qc-ritual-progress { gap: 6px; padding-inline: 10px; }
+  .qc-ritual-progress__text span { max-width: 150px; }
+  .qc-ritual-progress__action { max-width: 175px; padding-inline: 9px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .qc-full .qc-full__bar { padding-block: 4px; }
+  .qc-ritual-progress { padding-block: 2px; }
+  .qc-ritual-progress__text { display: flex; align-items: baseline; gap: 12px; }
+}
+
 .qiucai-shell {
   position: relative;
   width: 100%;

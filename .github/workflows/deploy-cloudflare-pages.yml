@@ -33,6 +33,12 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Verify blessing drafts and wealth ritual flow
+        run: |
+          node scripts/test-blessing-drafts.mjs
+          node scripts/test-wealth-ritual.mjs
+          node scripts/check-sanctuary.mjs
+
       # Production is already deployed by the Cloudflare Git integration.
       # Do not run a second, unauthenticated deploy or upload competing builds.
       - name: Verify all generated pages
