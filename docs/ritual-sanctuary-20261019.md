@@ -48,3 +48,27 @@
 - 父线程最终执行 build、check-sanctuary、test-memorial-inscription、check:images、check-seo-output、check-static-navigation、git diff --check 全通过；既有繁体字库大分包警告不变。
 - 浏览器1280×800/390×844：默认收起、供奉后自动收起、切换财神后自动收起、键盘打开保持展开和Escape关闭；姓名输入焦点、保存及刷新保留、全文模式重开不重复加称谓、普通及较长姓名竖排完整显示通过。示例姓名已清空，未提交后端祈愿。
 - 本轮未重复照片上传、未故障注入本地存储异常、未测试真实Pad硬件。仍仅本地预览，未提交或部署。
+
+## 正式发布验收（2026-10-19；取代上文未发布状态）
+- 用户明确批准上线；发布代码 commit `ac195188273b7b0348fe7421ab7114b6c7280359`，从4942686快进推送master，无强推、无后端/数据迁移。
+- Cloudflare Pages部署 `b8e4f7f7-970a-49b6-a016-69a9c960695a` success；GitHub validate运行39311201448 success。沿用Git集成，没有重复手动上传部署。
+- 独立Luna发布审查完成；唯一门禁发现是新增helper末尾空行，主线程修正后cached diff check通过。父线程重新执行build、图片检查、71页SEO、142页894内链检查均通过。
+- 正式域名五张sanctuary WebP全部200、image/webp，SHA256逐一与发布本地源文件相同。
+- 线上1280×800横屏、390×844手机竖屏、800×1280 Pad竖屏检查：祭祀、财神、姻缘祈福代表场景无横向溢出/主体裁切，素材正常加载；姓名输入保存刷新持久化、供养标题、清空恢复默认正常；求财上香后约4秒自动收起；祈福供养与Escape正常。测试姓名已清空，未向后端提交测试祈愿。
+- 线上截图保存在既有截图目录，文件名production-ancestor/wealth/blessing-landscape/portrait.png。为浏览器尺寸模拟，不冒充真实Pad/Safari硬件验收。既有繁体字库chunk warning未改。
+
+## 第三轮交互纠正（历史本地阶段，发布状态见末尾）
+- 用户指出此前ac19518求财只是100dvh首屏，仍是可滚长页，不符合独立拜神场景；祭祀抽屉滚动后收起按钮离屏，奠酒/烧纸被面板遮挡且器物过小。此前代表场景检查未覆盖这些滚动场景，不能据此认为全部交互无误。
+- 两个Luna包wealth_fullscreen_v3、ancestor_controls_v3完成，父线程检查真实diff并修复语言切换/隐藏控件焦点导致滚动的边界。
+- QiucaiPage.vue：固定视口，说明、心愿、愿景图和FAQ移入侧栏；侧栏固定头部、内部滚动、焦点循环，打开时主场景inert，底部供奉抽屉保留。增加全屏按钮及拒绝/不支持提示。简繁链接使用整页导航。App.vue排除求财页底部语言链接，避免额外滚高和焦点目标。
+- AncestorPage.vue：收起固定在不滚动头部，祭祀动作提前显示；按语义wine/paper调用后收起，不依赖简繁体按钮文字；手机打开时隐藏外部浮动toggle，关闭恢复焦点。AncestorStage.vue：酒爵/火盆尺寸提高到56–96px。
+- 父线程build、check-sanctuary、test-memorial-inscription、check:images、71页SEO、142页894内链、diff check全通过。仅保留既有cn2t大chunk warning。
+- 浏览器390×844/1280×800：抽屉滚到底后收起仍在顶部；财神End键及末尾Tab后scrollY=0/frameTop=0；手机文档高度=844；底部供奉自动收起正常；简繁切换和退出页面滚动恢复正常。祭祀奠酒、烧纸自动收起并可见，繁体燒紙同样通过；未提交后端祈愿。全屏按钮状态可进入/退出，本机嵌入浏览器未作为实体Pad全屏验收。
+- 截图：v3-ancestor-actions-mobile.png、v3-ancestor-pinned-close-mobile.png、v3-wealth-side-drawer-landscape.png、v3-wealth-pinned-close-mobile.png，位于既有截图目录。此轮未commit/push/deploy，线上仍ac19518。
+
+## 第四轮遮挡修复与第三轮合并发布（2026-10-19）
+- 用户明确要求全部修复后上线。本轮合并此前第三轮修复，不只报告问题。
+- 祭祖手机拉手移到侧边中部，求财说明入口也远离底部人物；求财舞台为44px加安全区的底部拉手预留独立空间，两个姿态均不被拉手遮盖。两页叩拜立即收起操作抽屉，不再等4秒动画结束才收起。
+- 深入键盘验收发现：求财关闭的底抽屉经transform移出后，会让overflow:hidden的qc-frame成为可隐式滚动容器；聚焦侧栏末尾链接时frame.scrollTop约208，导致固定头部消失。改用overflow:clip禁止框架隐式滚动，正文仍在侧栏内部滚动。回归验证frame.scrollTop=0、收起按钮top约10px。
+- 本地390×844、1280×800、800×1280及求财844×390检查通过；祭祖奠酒/烧纸/叩拜自动收起、侧栏末尾收起按钮可见；求财End不推动主画面。最终build、sanctuary、memorial-inscription、images、71页SEO、142页894内链全部通过。既有cn2t分包提示仍存在。
+- 未向后端提交测试祈愿、未改变数据协议；尺寸模拟不等同真实Pad/Safari硬件测试。

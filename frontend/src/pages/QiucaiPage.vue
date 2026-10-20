@@ -20,6 +20,7 @@ import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import VisionMaker from '../components/VisionMaker.vue'
 import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
+import { isHantPath, stripHant, toHant } from '../i18n/hant.js'
 
 const STORE_KEY = 'fopusha-qiucai-v1'
 // 已拜圆满的神仙（供养四样 + 叩拜三下），全部圆满后解锁愿景图
@@ -58,6 +59,11 @@ const slugOf = (item) => CAISHEN_SLUG[item.key]
 const deityBySlug = (slug) => CAISHEN.find((item) => slugOf(item) === slug) || null
 const pageDeity = computed(() => deityBySlug(route.params.slug))
 const detail = computed(() => (pageDeity.value ? CAISHEN_DETAIL[pageDeity.value.key] : null))
+const languageLinks = computed(() => ({
+  simplified: stripHant(route.path),
+  traditional: toHant(route.path),
+  traditionalCurrent: isHantPath(route.path),
+}))
 
 const deity = ref(pageDeity.value || CAISHEN[0])
 const done = ref({})
@@ -226,7 +232,7 @@ function act(way) {
     const count = completedDeities.value.length
     const total = CAISHEN.length
     setTimeout(() => showToast(count >= total
-      ? '八位神仙全部拜圆满！往下看，可以生成你的成功愿景图了。'
+      ? '八位神仙全部拜圆满！打开求财说明，可以生成你的成功愿景图了。'
       : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`), 1400)
   }
 
@@ -236,7 +242,9 @@ function act(way) {
     setTimeout(() => showToast('聚宝盆已满！财气圆满，写下你的求财心愿吧。'), 900)
   }
 
-  scheduleDrawerClose()
+  // Reveal the entire bow immediately, rather than hiding it behind the drawer.
+  if (way.key === 'bow') closeDrawer()
+  else scheduleDrawerClose()
 }
 
 const fullRef = ref(null)
@@ -249,6 +257,106 @@ const drawerFocusWithin = ref(false)
 const drawerKeyboardMode = ref(false)
 const DRAWER_CLOSE_MS = 4000
 let drawerCloseTimer = null
+
+// The wealth ritual keeps the visual scene pinned to one viewport.  Long-form
+// guidance and the wish form live in a separate side drawer, just like the
+// Buddha ritual, so opening them never turns the scene into a scrolling page.
+const infoDrawerOpen = ref(false)
+const infoDrawerToggleRef = ref(null)
+const infoDrawerCloseRef = ref(null)
+const infoDrawerPanelRef = ref(null)
+const fullscreenSupported = ref(false)
+const fullscreenActive = ref(false)
+let enteredFullscreen = false
+let previousHtmlOverflow = ''
+let previousBodyOverflow = ''
+let previousBodyOverscroll = ''
+
+function currentFullscreenElement() {
+  return document.fullscreenElement || document.webkitFullscreenElement || null
+}
+
+function syncFullscreen() {
+  fullscreenActive.value = Boolean(currentFullscreenElement())
+}
+
+function toggleFullscreen() {
+  if (currentFullscreenElement()) {
+    ;(document.exitFullscreen || document.webkitExitFullscreen)?.call(document)
+    return
+  }
+  if (!fullscreenSupported.value) {
+    showToast('当前浏览器不支持网页全屏，请使用浏览器菜单或设备横屏查看。')
+    return
+  }
+  const request = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen
+  if (!request) {
+    showToast('当前浏览器不支持网页全屏，请使用浏览器菜单或设备横屏查看。')
+    return
+  }
+  try {
+    Promise.resolve(request.call(document.documentElement)).then(() => {
+      enteredFullscreen = true
+    }).catch(() => {
+      showToast('网页全屏未获允许，请使用浏览器菜单或设备横屏查看。')
+    })
+  } catch {
+    showToast('网页全屏未获允许，请使用浏览器菜单或设备横屏查看。')
+  }
+}
+
+function openInfoDrawer() {
+  closeDrawer({ restoreFocus: false })
+  infoDrawerOpen.value = true
+  nextTick(() => infoDrawerCloseRef.value?.focus({ preventScroll: true }))
+}
+
+function closeInfoDrawer({ restoreFocus = true } = {}) {
+  const wasOpen = infoDrawerOpen.value
+  infoDrawerOpen.value = false
+  if (wasOpen && restoreFocus) {
+    nextTick(() => infoDrawerToggleRef.value?.focus({ preventScroll: true }))
+  }
+}
+
+function toggleInfoDrawer() {
+  if (infoDrawerOpen.value) closeInfoDrawer()
+  else openInfoDrawer()
+}
+
+function onInfoDrawerKeydown(event) {
+  if (!infoDrawerOpen.value) return
+  if (event.key === 'Tab') {
+    const panel = infoDrawerPanelRef.value
+    if (!panel || !panel.contains(event.target)) return
+    const focusable = [...panel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => el.getClientRects().length > 0 && !el.closest('[inert]'))
+    if (!focusable.length) {
+      event.preventDefault()
+      return
+    }
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    const active = document.activeElement
+    if (!panel.contains(active)) {
+      event.preventDefault()
+      first.focus()
+      return
+    }
+    if (event.shiftKey && active === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault()
+      first.focus()
+    }
+    return
+  }
+  if (event.key !== 'Escape') return
+  event.preventDefault()
+  closeInfoDrawer()
+  if (drawerOpen.value) closeDrawer()
+}
 
 function clearDrawerCloseTimer() {
   clearTimeout(drawerCloseTimer)
@@ -546,7 +654,6 @@ async function drawCard(data) {
 
 function resetAll() {
   resetRitual()
-  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function applyMeta() {
@@ -571,12 +678,20 @@ function pickDeity(item) {
 
 watch(() => route.params.slug, () => {
   closeDrawer({ restoreFocus: false })
+  closeInfoDrawer({ restoreFocus: false })
   const item = pageDeity.value
   if (item && item.key !== deity.value.key) chooseDeity(item)
   applyMeta()
 })
 
 onMounted(() => {
+  previousHtmlOverflow = document.documentElement.style.overflow
+  previousBodyOverflow = document.body.style.overflow
+  previousBodyOverscroll = document.body.style.overscrollBehavior
+  document.documentElement.style.overflow = 'hidden'
+  document.body.style.overflow = 'hidden'
+  document.body.style.overscrollBehavior = 'none'
+  window.scrollTo(0, 0)
   applyMeta()
   loadStats()
   loadCompleted()
@@ -584,18 +699,34 @@ onMounted(() => {
   form.value.name = getViewerProfile()?.username || ''
   warmApi()
   loadWall()
+  fullscreenSupported.value = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled)
+  syncFullscreen()
+  document.addEventListener('fullscreenchange', syncFullscreen)
+  document.addEventListener('webkitfullscreenchange', syncFullscreen)
+  window.addEventListener('keydown', onInfoDrawerKeydown)
 })
 
 onBeforeUnmount(() => {
+  if (enteredFullscreen && currentFullscreenElement()) {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen
+    try { Promise.resolve(exit?.call(document)).catch(() => {}) } catch { /* Browser already exited. */ }
+  }
   clearTimeout(toastTimer)
   clearTimeout(poseTimer)
   clearDrawerCloseTimer()
+  document.removeEventListener('fullscreenchange', syncFullscreen)
+  document.removeEventListener('webkitfullscreenchange', syncFullscreen)
+  window.removeEventListener('keydown', onInfoDrawerKeydown)
+  document.documentElement.style.overflow = previousHtmlOverflow
+  document.body.style.overflow = previousBodyOverflow
+  document.body.style.overscrollBehavior = previousBodyOverscroll
 })
 </script>
 
 <template>
   <main class="qiucai-shell">
-    <section ref="fullRef" class="qc-full" aria-label="在线拜财神">
+    <div class="qc-frame" :class="{ 'info-drawer-open': infoDrawerOpen }">
+    <section ref="fullRef" class="qc-full" :inert="infoDrawerOpen" :aria-hidden="infoDrawerOpen" aria-label="在线拜财神">
       <div class="qc-full__bar">
         <router-link to="/" class="qc-full__back">← 首页</router-link>
         <h1>{{ pageDeity ? `在线拜${pageDeity.name}` : '求财祈福' }}</h1>
@@ -603,6 +734,14 @@ onBeforeUnmount(() => {
           <strong class="qc-full__deity">{{ deity.name }} · {{ deity.title }}</strong>
           <span>今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
         </span>
+        <button
+          type="button"
+          class="qc-full__fullscreen"
+          :aria-label="fullscreenActive ? '退出全屏' : '全屏显示'"
+          :title="fullscreenSupported ? (fullscreenActive ? '退出全屏' : '全屏显示') : '当前浏览器不支持网页全屏，请使用浏览器菜单或设备横屏查看'"
+          @click="toggleFullscreen"
+        >{{ fullscreenActive ? '✕' : '⛶' }}</button>
+        <span v-if="!fullscreenSupported" class="qc-full__fullscreen-note">浏览器菜单可全屏</span>
       </div>
 
       <div class="qc-stage" :class="[`fx-${effect}`, { lit: done.lamp, smoking: done.incense, full: bowlFull }]" @click="closeDrawer()">
@@ -740,6 +879,53 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <button
+      v-if="!infoDrawerOpen"
+      ref="infoDrawerToggleRef"
+      type="button"
+      class="qc-info-toggle"
+      aria-controls="qc-info-drawer"
+      :aria-expanded="infoDrawerOpen"
+      aria-label="打开求财说明与心愿面板"
+      @click="toggleInfoDrawer"
+    >
+      <span aria-hidden="true">☰</span>
+      <span>求财说明</span>
+    </button>
+
+    <button
+      v-if="infoDrawerOpen"
+      type="button"
+      class="qc-info-backdrop"
+      aria-label="关闭求财说明面板"
+      @click="closeInfoDrawer"
+    ></button>
+
+    <aside
+      id="qc-info-drawer"
+      ref="infoDrawerPanelRef"
+      class="qc-info-drawer"
+      :class="{ open: infoDrawerOpen }"
+      :inert="!infoDrawerOpen"
+      :aria-hidden="!infoDrawerOpen"
+      aria-labelledby="qc-info-drawer-title"
+    >
+      <header class="qc-info-drawer__header">
+        <h2 id="qc-info-drawer-title">求财说明与心愿</h2>
+        <button
+          ref="infoDrawerCloseRef"
+          type="button"
+          class="qc-info-drawer__close"
+          aria-label="收起求财说明与心愿面板"
+          @click="closeInfoDrawer"
+        >收起</button>
+      </header>
+      <div class="qc-info-drawer__body">
+        <nav class="qc-language-switch" aria-label="语言切换">
+          <span>语言：</span>
+          <a v-if="languageLinks.traditionalCurrent" :href="languageLinks.simplified" data-keep-script>简体中文</a>
+          <a v-else :href="languageLinks.traditional" data-keep-script>繁體中文</a>
+        </nav>
     <section class="qc-altar card">
       <div class="qc-panel">
         <p class="hero-text">
@@ -877,39 +1063,58 @@ onBeforeUnmount(() => {
 
       <p class="qc-note">求财祈福是表达心愿的方式，不能保证结果；理财投资请量力而行，必要时咨询专业人士。</p>
     </section>
+      </div>
+    </aside>
+    </div>
   </main>
 </template>
 
 <style scoped>
 .qiucai-shell {
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 0 0 64px;
-  display: grid;
-  gap: 20px;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #160800;
+}
+
+.qc-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  /* A translated closed drawer extends below the viewport. Unlike hidden,
+     clip cannot scroll implicitly when a nested link receives keyboard focus. */
+  overflow: clip;
 }
 
 /* ===== 满屏拜财神：竖屏铺满，横屏等高 ===== */
 .qc-full {
+  --controls-handle-height: calc(44px + env(safe-area-inset-bottom, 0px));
   --gold: #c99a2e;
   --red: #9e1b1f;
   justify-self: center;
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
+  width: 100%;
+  margin-inline: 0;
   height: 100vh;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   background: #1b0c06;
   color: #f5e3bf;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .qc-full__bar {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: max(10px, env(safe-area-inset-top)) 14px 10px;
   background: rgba(32, 14, 6, 0.92);
   border-bottom: 1px solid rgba(239, 193, 99, 0.22);
   flex: none;
@@ -919,8 +1124,33 @@ onBeforeUnmount(() => {
 .qc-full__today { margin-left: auto; display: grid; gap: 1px; font-size: 12px; color: rgba(245, 227, 191, 0.72); text-align: right; }
 .qc-full__deity { font-size: 15px; }
 .qc-full__today strong { color: #f4ca73; }
+.qc-full__fullscreen {
+  flex: none;
+  min-width: 40px;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 1px solid rgba(239, 193, 99, 0.42);
+  border-radius: 10px;
+  background: rgba(89, 43, 13, 0.62);
+  color: #ffe8a7;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.qc-full__fullscreen:focus-visible,
+.qc-info-toggle:focus-visible,
+.qc-info-drawer__close:focus-visible { outline: 2px solid #ffe8a7; outline-offset: 2px; }
+.qc-full__fullscreen-note {
+  display: none;
+  color: rgba(245, 227, 191, 0.66);
+  font-size: 10px;
+  white-space: nowrap;
+}
 
 .qc-stage {
+  /* The closed handle occupies its own strip, never either worshipper's body. */
+  margin-bottom: var(--controls-handle-height);
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
@@ -1057,19 +1287,21 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   max-height: min(260px, 38dvh);
-  transform: translateY(calc(100% - 44px));
+  transform: translateY(calc(100% - var(--controls-handle-height)));
   transition: transform 0.35s cubic-bezier(0.22, 0.75, 0.2, 1);
   color: #f5e3bf;
 }
 .qc-controls-drawer.is-open { transform: translateY(0); }
 .qc-controls-drawer__handle {
+  box-sizing: border-box;
+  height: var(--controls-handle-height);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   width: 100%;
   min-height: 44px;
-  padding: 8px 16px;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px));
   border: 0;
   border-top: 1px solid rgba(239, 193, 99, 0.42);
   background: linear-gradient(180deg, rgba(96, 48, 15, 0.98), rgba(48, 20, 7, 0.98));
@@ -1168,6 +1400,104 @@ onBeforeUnmount(() => {
 .qc-deity.active .qc-deity__seal { border-color: #f3cb78; transform: scale(1.12); box-shadow: 0 0 0 3px rgba(201, 154, 46, 0.45); }
 .qc-deity__name { font-size: 11px; white-space: nowrap; }
 .qc-deity.active .qc-deity__name { color: #f5d592; font-weight: 700; }
+
+/* ===== 求财说明抽屉：说明、心愿表单和长文不再撑高主页面 ===== */
+.qc-info-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 46;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+  padding: 10px 10px 10px 12px;
+  border: 1px solid rgba(239, 193, 99, 0.42);
+  border-right: 0;
+  border-radius: 14px 0 0 14px;
+  background: rgba(38, 17, 6, 0.96);
+  color: #f7d897;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  cursor: pointer;
+  transform: translateY(-50%);
+  box-shadow: -8px 10px 24px rgba(18, 5, 1, 0.35);
+}
+.qc-info-toggle span:first-child { font-size: 18px; line-height: 1; writing-mode: horizontal-tb; }
+.qc-info-toggle:hover { background: rgba(89, 43, 13, 0.98); }
+.qc-info-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 47;
+  border: 0;
+  background: rgba(18, 6, 0, 0.34);
+  cursor: pointer;
+}
+.qc-info-drawer {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(460px, 92vw);
+  overflow: hidden;
+  border-left: 1px solid rgba(239, 193, 99, 0.24);
+  background: linear-gradient(180deg, rgba(47, 20, 7, 0.99), rgba(20, 7, 2, 0.99));
+  box-shadow: -18px 0 42px rgba(18, 5, 1, 0.48);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.22, 0.75, 0.2, 1);
+  pointer-events: none;
+}
+.qc-info-drawer.open { transform: translateX(0); pointer-events: auto; }
+.qc-info-drawer__header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 58px;
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+  border-bottom: 1px solid rgba(239, 193, 99, 0.25);
+  background: rgba(36, 14, 5, 0.98);
+}
+.qc-info-drawer__header h2 { margin: 0; color: #f7d897; font-size: 17px; letter-spacing: 0.08em; }
+.qc-info-drawer__close {
+  flex: none;
+  min-width: 58px;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid rgba(239, 193, 99, 0.5);
+  border-radius: 999px;
+  background: rgba(89, 43, 13, 0.7);
+  color: #ffe8a7;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.qc-info-drawer__close:hover { background: rgba(138, 78, 22, 0.78); }
+.qc-info-drawer__body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px 14px max(24px, env(safe-area-inset-bottom));
+  scrollbar-gutter: stable;
+}
+.qc-info-drawer__body > * { margin-inline: 0; }
+.qc-info-drawer__body .card { padding: 18px; }
+.qc-info-drawer__body .qc-panel { max-width: none; }
+.qc-language-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  margin: 0 2px 10px;
+  color: rgba(245, 227, 191, 0.68);
+  font-size: 12px;
+}
+.qc-language-switch a { color: #f2c879; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ===== 满屏以下：心愿、祝福卡、介绍 ===== */
 .qc-altar { padding: 24px; }
@@ -1278,6 +1608,9 @@ onBeforeUnmount(() => {
 @keyframes qc-bow-once { 0%, 15% { opacity: 0; } 30%, 70% { opacity: 1; } 85%, 100% { opacity: 0; } }
 
 @media (max-width: 380px) {
+  .qc-full__bar h1 { font-size: 14px; }
+  .qc-full__today { max-width: 76px; }
+  .qc-full__today > span { display: none; }
   .qc-way { font-size: 11px; }
   .qc-way__img { width: 28px; height: 28px; }
   .qc-deity__seal { width: 38px; height: 38px; }
@@ -1285,12 +1618,31 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 860px) {
   .card { padding: 20px; }
+  .qc-full__bar { gap: 7px; padding-inline: 10px; }
+  .qc-full__bar h1 { font-size: 16px; letter-spacing: 0.06em; }
+  .qc-full__today { font-size: 10px; }
+  .qc-full__deity { font-size: 12px; }
+  .qc-full__fullscreen { min-width: 44px; min-height: 44px; padding-inline: 6px; }
+  .qc-info-toggle {
+    top: 50%;
+    right: 0;
+    bottom: auto;
+    min-height: 44px;
+    border-right: 1px solid rgba(239, 193, 99, 0.42);
+    border-radius: 12px;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+  }
+  .qc-info-toggle span:first-child { font-size: 16px; }
+  .qc-info-drawer { width: min(440px, 100vw); }
+  .qc-info-drawer__header { min-height: 58px; padding-inline: 14px; }
+  .qc-info-drawer__body { padding-inline: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .qc-full *,
-  .qc-full *::before,
-  .qc-full *::after {
+  .qc-frame *,
+  .qc-frame *::before,
+  .qc-frame *::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;

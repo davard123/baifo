@@ -213,6 +213,17 @@ const tabletTextStyle = computed(() => ({
 :deep(.altar-layer .candle),
 :deep(.altar-layer .burner) { --b: calc(var(--u) * 6); }
 
+/* The ancestor altar image has a real tabletop front edge. The shared altar
+   defaults keep wine and the paper basin deliberately small, which leaves
+   them behind that edge on a phone. Scale the two ancestor-only actions to a
+   clearly readable physical size and keep their bases on the tabletop. */
+:deep(.altar-layer--ancestor .wine),
+:deep(.altar-layer--ancestor .basin) {
+  --h: clamp(56px, calc(var(--u) * 15), 96px);
+  --b: clamp(2px, calc(var(--u) * 2), 8px);
+  z-index: 6;
+}
+
 .tablet-panel-content {
   position: absolute;
   left: 36.5%;

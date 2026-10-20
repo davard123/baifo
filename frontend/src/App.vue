@@ -118,7 +118,9 @@ watch(
 const isHant = computed(() => isHantPath(route.path))
 const hansHref = computed(() => stripHant(route.path))
 const hantHref = computed(() => toHant(route.path))
-const showSwitch = computed(() => !/^\/(buddha|ancestor)\//.test(stripHant(route.path)))
+// Full-viewport rituals keep navigation inside their drawers. Qiucai provides
+// its language link there, so a document footer must not add a scroll target.
+const showSwitch = computed(() => !/^\/(buddha|ancestor|qiucai)(\/|$)/.test(stripHant(route.path)))
 
 onMounted(() => {
   warmApi()
@@ -137,6 +139,12 @@ onMounted(() => {
 
 <style>
 #app { min-height: 100vh; }
+/* Global floating tools must not intercept the drawer's language link or form. */
+#app:has(.qc-info-drawer.open, .panel-section.open) > .audio-btn,
+#app:has(.qc-info-drawer.open, .panel-section.open) .nianfo-trigger {
+  visibility: hidden;
+  pointer-events: none;
+}
 .script-switch {
   text-align: center;
   margin: 0 auto 72px;

@@ -34,6 +34,7 @@ const submitted = ref(null)
 const drawerOpen = ref(false)
 const drawerId = 'ancestor-offering-panel'
 const nameInputId = 'ancestor-person-name'
+const panelToggle = ref(null)
 
 // The old catalogue stored a complete customName string. Keep that string as
 // full-text mode unless our separate raw-name field proves it came from the
@@ -50,11 +51,17 @@ const storageReadWarning = ref('')
 function closeDrawer() {
   drawerOpen.value = false
   hydrateInscriptionEditor()
+  // Return keyboard focus to the control that reopened the drawer. This also
+  // keeps focus inside the visible page when the mobile toggle is hidden.
+  nextTick(() => panelToggle.value?.focus({ preventScroll: true }))
 }
 
 function toggleDrawer() {
-  drawerOpen.value = !drawerOpen.value
-  if (!drawerOpen.value) hydrateInscriptionEditor()
+  if (drawerOpen.value) {
+    closeDrawer()
+    return
+  }
+  drawerOpen.value = true
 }
 
 function openNameEditor() {
@@ -129,6 +136,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
 const customPhoto = ref(null)
 const customName = ref(null)
 const ritual = useRitual('ancestor')
+
+// Keep the shared RitualPanel's state and rendering intact, but close this
+// page's drawer by semantic ritual key before watching a memorial action or bow.
+// This avoids matching translated button text or depending on child markup.
+const ritualPanel = {
+  ...ritual,
+  act(key) {
+    ritual.act(key)
+    if (['wine', 'paper', 'bow'].includes(key)) closeDrawer()
+  },
+}
 
 const displayAncestorName = computed(() => {
   const savedInscription = normalizeInscription(customName.value)
@@ -279,6 +297,7 @@ const doneActions = computed(() => {
 
       <button
         type="button"
+        ref="panelToggle"
         class="panel-toggle"
         :class="{ open: drawerOpen }"
         :aria-expanded="drawerOpen"
@@ -306,10 +325,19 @@ const doneActions = computed(() => {
       >
         <div class="panel-header">
           <span class="panel-kicker">祭祖供养</span>
-          <button type="button" class="panel-close" aria-label="关闭祭祖供养面板" @click="closeDrawer">关闭</button>
+          <button type="button" class="panel-close" aria-label="收起祭祖供养面板" @click="closeDrawer">收起面板</button>
         </div>
-        <h1 class="namo-title">{{ displayAncestorName }}</h1>
-        <section class="inscription-editor" aria-labelledby="inscription-editor-title">
+        <div class="panel-scroll">
+          <h1 class="namo-title">{{ displayAncestorName }}</h1>
+          <p class="ritual-focus-note">
+            <span aria-hidden="true">🍶</span>
+            <strong>祭祀动作</strong>
+            <span>奠酒、烧纸、叩拜点击后会自动收起面板，方便观看祭拜动作。</span>
+          </p>
+          <div class="ancestor-ritual-panel">
+            <RitualPanel v-if="!submitted" :ritual="ritualPanel" homage-title="祭奠" />
+          </div>
+          <section class="inscription-editor" aria-labelledby="inscription-editor-title">
           <div class="editor-title-row">
             <div>
               <p class="editor-kicker">牌位设置</p>
@@ -371,49 +399,49 @@ const doneActions = computed(() => {
               {{ saveState === 'saving' ? '保存中…' : '保存牌位文字' }}
             </button>
           </div>
-        </section>
-        <RitualNav v-if="!submitted" :actions="doneActions" label="拜祭页面导航" inline />
-        <RitualPanel v-if="!submitted" :ritual="ritual" homage-title="祭奠" />
-        <hr v-if="!submitted" class="divider" />
-        <p class="ancestor-desc">{{ ancestor.desc }}</p>
-        <div class="page-tags">
-          <span>{{ ancestor.subtitle }}</span>
-          <span>祭祖追思</span>
-          <span>功德回向</span>
-        </div>
-        <section class="entry-summary">
-          <h2>本次祭拜对象</h2>
-          <div class="summary-chips">
-            <span>{{ displayAncestorName }}</span>
-            <span>{{ defaultRelationship }}</span>
+          </section>
+          <RitualNav v-if="!submitted" :actions="doneActions" label="拜祭页面导航" inline />
+          <hr v-if="!submitted" class="divider" />
+          <p class="ancestor-desc">{{ ancestor.desc }}</p>
+          <div class="page-tags">
+            <span>{{ ancestor.subtitle }}</span>
+            <span>祭祖追思</span>
+            <span>功德回向</span>
           </div>
-          <p>牌位文字可在上方直接编辑；下面的表单“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
-          <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
-        </section>
-        <section class="privacy-note">
-          <p>个性化姓名和照片只保存在当前设备，不会公开给其他人。</p>
-        </section>
-        <hr class="divider" />
-        <DedicationDone
-          v-if="submitted"
-          kind="ancestor"
-          :subject-name="displayAncestorName"
-          :name="submitted.username"
-          :age="submitted.age"
-          :wish="submitted.wish"
-          :email="submitted.email || ''"
-          :actions="doneActions"
-        />
-
-        <template v-else>
-          <AncestorWishForm
-            :slug="ancestor.slug"
-            :default-wish="ancestor.wish"
-            :default-ancestor-name="displayAncestorName"
-            :default-relationship="defaultRelationship"
-            :on-submit="onSubmit"
+          <section class="entry-summary">
+            <h2>本次祭拜对象</h2>
+            <div class="summary-chips">
+              <span>{{ displayAncestorName }}</span>
+              <span>{{ defaultRelationship }}</span>
+            </div>
+            <p>牌位文字可在上方直接编辑；下面的表单“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
+            <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
+          </section>
+          <section class="privacy-note">
+            <p>个性化姓名和照片只保存在当前设备，不会公开给其他人。</p>
+          </section>
+          <hr class="divider" />
+          <DedicationDone
+            v-if="submitted"
+            kind="ancestor"
+            :subject-name="displayAncestorName"
+            :name="submitted.username"
+            :age="submitted.age"
+            :wish="submitted.wish"
+            :email="submitted.email || ''"
+            :actions="doneActions"
           />
-        </template>
+
+          <template v-else>
+            <AncestorWishForm
+              :slug="ancestor.slug"
+              :default-wish="ancestor.wish"
+              :default-ancestor-name="displayAncestorName"
+              :default-relationship="defaultRelationship"
+              :on-submit="onSubmit"
+            />
+          </template>
+        </div>
       </section>
     </div>
     </div>
@@ -512,8 +540,12 @@ const doneActions = computed(() => {
   bottom: 0;
   z-index: 20;
   width: min(380px, 88vw);
-  overflow-y: auto;
-  padding: 20px 20px 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  padding: 0;
   border-radius: 0;
   border-left: 1px solid rgba(212, 168, 67, 0.18);
   box-shadow: -10px 0 28px rgba(24, 9, 2, 0.22);
@@ -526,11 +558,31 @@ const doneActions = computed(() => {
 }
 
 .panel-header {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  min-height: 66px;
+  box-sizing: border-box;
+  padding: max(12px, env(safe-area-inset-top)) 20px 10px;
+  margin: 0;
+  background: linear-gradient(180deg, rgba(63, 33, 17, 0.99), rgba(43, 26, 16, 0.97));
+  border-bottom: 1px solid rgba(242, 200, 121, 0.16);
+  box-shadow: 0 8px 18px rgba(16, 5, 1, 0.18);
+}
+
+/* Keep the close control outside the scrollport. On a short phone viewport it
+   therefore remains available even after the ritual controls are scrolled. */
+.panel-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 20px calc(32px + env(safe-area-inset-bottom));
 }
 
 .panel-kicker {
@@ -549,13 +601,66 @@ const doneActions = computed(() => {
   background: rgba(255, 248, 233, 0.07);
   color: var(--text-muted);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.84rem;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .panel-close:hover {
   background: rgba(242, 200, 121, 0.16);
   color: var(--text);
+}
+
+.ritual-focus-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(242, 200, 121, 0.22);
+  border-radius: 10px;
+  background: rgba(242, 200, 121, 0.08);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.ritual-focus-note strong {
+  flex: 0 0 auto;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+
+.ancestor-ritual-panel {
+  margin-bottom: 16px;
+}
+
+:deep(.ancestor-ritual-panel .step--homage) {
+  padding: 11px;
+  border: 1px solid rgba(242, 200, 121, 0.32);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(105, 56, 20, 0.34), rgba(242, 200, 121, 0.08));
+}
+
+:deep(.ancestor-ritual-panel .step--homage .step-title) {
+  margin-bottom: 10px;
+  font-size: 0.96rem;
+}
+
+:deep(.ancestor-ritual-panel .step--homage .r-btn) {
+  min-height: 70px;
+  border-color: rgba(242, 200, 121, 0.54);
+  background: rgba(255, 248, 233, 0.1);
+}
+
+:deep(.ancestor-ritual-panel .step--homage .r-btn:nth-child(-n + 2)) {
+  border-color: rgba(255, 213, 123, 0.84);
+  background: linear-gradient(145deg, rgba(242, 200, 121, 0.26), rgba(255, 248, 233, 0.1));
+  box-shadow: inset 0 0 0 1px rgba(255, 224, 155, 0.1), 0 6px 16px rgba(53, 24, 4, 0.16);
+}
+
+:deep(.ancestor-ritual-panel .step--homage .r-btn:nth-child(-n + 2) .r-icon) {
+  font-size: 1.55rem;
 }
 
 .inscription-editor {
@@ -758,22 +863,38 @@ const doneActions = computed(() => {
 @media (max-width: 768px) {
   .panel-section {
     width: min(420px, 100vw);
-    padding: 14px 16px 18px;
+  }
+
+  .panel-header {
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+
+  .panel-scroll {
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
   }
 
   .panel-toggle {
-    top: auto;
-    bottom: 18px;
-    transform: none;
+    /* Keep the handle clear of both kneeling figures and their bow poses. */
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
   }
 
   .panel-toggle.open {
-    right: min(420px, 100vw);
+    /* The fixed panel header is the close affordance on phones. Do not leave
+       a second vertical toggle over the scrollable editor below it. */
+    display: none;
   }
 
   .namo-title {
     font-size: 1.08rem;
     margin-bottom: 6px;
+  }
+
+  :deep(.ancestor-ritual-panel .step--homage .r-btn) {
+    min-height: 74px;
   }
 }
 
