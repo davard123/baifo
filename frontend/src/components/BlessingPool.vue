@@ -35,28 +35,21 @@ const form = ref({
 const ritual = useRitual('blessing')
 const drawerOpen = ref(false)
 
-// The old blessing posters are opaque editorial cards. Keep each scene's
-// meaning, but stage a transparent devotional figure or a small symbolic
-// emblem instead of stretching that card across the sanctuary.
+// Each blessing uses its own generated, transparent 2:3 guardian figure in
+// both the selection card and the immersive sanctuary stage.
 const blessingSubjects = {
-  caishen: { src: '/qiucai/zhaogongming.webp', alt: '赵公明财神' },
-  jikang: { src: '/a3-20260906.webp?v=release1', alt: '药师佛' },
-  pingan: { src: '/a7-20260906.webp?v=release1', alt: '观音菩萨' },
-  xueye: { src: '/a5-20260906.webp?v=release1', alt: '文殊菩萨' },
-  shou: { src: '/qiucai/shouxing.webp', alt: '寿星' },
-  yinyuan: { src: '/sanctuary/mandarin-ducks-20261019.webp', alt: '金色鸳鸯合璧雕塑' },
-  siling: { src: '/a4-20260906.webp?v=release1', alt: '弥勒佛' },
-  xiaozai: { src: '/a7-20260906.webp?v=release1', alt: '观音菩萨' },
-  gongming: { src: '/qiucai/wencaishen.webp', alt: '文财神' },
-  fulu: {
-    alt: '福星与禄星',
-    srcs: [
-      { src: '/qiucai/fuxing.webp', alt: '福星' },
-      { src: '/qiucai/luxing.webp', alt: '禄星' },
-    ],
-  },
-  heping: { src: '/sanctuary/harmony-tree-20261019.webp', alt: '和平长青树与白鸽雕塑' },
-  jiaqin: { src: '/sanctuary/harmony-tree-20261019.webp', alt: '家宅团圆长青树雕塑' },
+  caishen: { src: '/sanctuary/blessing-caishen-20261019-v2.webp', alt: '财神' },
+  jikang: { src: '/sanctuary/blessing-jikang-20261019-v2.webp', alt: '健康守护神' },
+  pingan: { src: '/sanctuary/blessing-pingan-20261019-v2.webp', alt: '平安守护神' },
+  xueye: { src: '/sanctuary/blessing-xueye-20261019-v2.webp', alt: '文昌帝君艺术像' },
+  shou: { src: '/sanctuary/blessing-shou-20261019-v2.webp', alt: '寿星' },
+  yinyuan: { src: '/sanctuary/blessing-yinyuan-20261019-v2.webp', alt: '月老' },
+  siling: { src: '/sanctuary/blessing-siling-20261019-v2.webp', alt: '送子娘娘艺术像' },
+  xiaozai: { src: '/sanctuary/blessing-xiaozai-20261019-v2.webp', alt: '消灾守护神' },
+  gongming: { src: '/sanctuary/blessing-gongming-20261019-v2.webp', alt: '禄星' },
+  fulu: { src: '/sanctuary/blessing-fulu-20261019-v2.webp', alt: '福神' },
+  heping: { src: '/sanctuary/blessing-heping-20261019-v2.webp', alt: '和平守护神' },
+  jiaqin: { src: '/sanctuary/blessing-jiaqin-20261019-v2.webp', alt: '家宅守护神' },
 }
 
 const activeSubject = computed(() => (active.value ? blessingSubjects[active.value.key] || null : null))
@@ -85,10 +78,6 @@ function resetTransientState() {
 }
 
 function open(blessing) {
-  if (blessing.key === 'caishen') {
-    router.push('/qiucai/')
-    return
-  }
   if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
   stage.value = 'form'
@@ -259,29 +248,8 @@ onBeforeUnmount(() => {
         <div class="bm-body" :class="{ 'drawer-open': drawerOpen }">
           <div class="bm-stage">
             <SanctuaryBackdrop variant="blessing" />
-            <div class="bm-subject-wrap" :class="`bm-subject-wrap--${active.key}`">
-              <template v-if="activeSubject?.srcs">
-                <div class="bm-subject-pair" role="img" :aria-label="activeSubject.alt">
-                  <img
-                    v-for="figure in activeSubject.srcs"
-                    :key="figure.src"
-                    :src="figure.src"
-                    :alt="figure.alt"
-                    class="bm-subject-pair__img"
-                    decoding="async"
-                  />
-                </div>
-              </template>
-              <img v-else-if="activeSubject?.src" :src="activeSubject.src" :alt="activeSubject.alt" class="bm-subject" decoding="async" />
-              <div
-                v-else-if="activeSubject?.symbol"
-                class="bm-subject bm-subject--symbol"
-                role="img"
-                :aria-label="activeSubject.label"
-              >
-                <span>{{ activeSubject.symbol }}</span>
-                <small>{{ activeSubject.label }}</small>
-              </div>
+            <div class="bm-subject-wrap">
+              <img v-if="activeSubject?.src" :src="activeSubject.src" :alt="activeSubject.alt" class="bm-subject" decoding="async" />
             </div>
             <div class="bm-altar" aria-hidden="true">
               <img class="bm-altar__img" src="/sanctuary/altar-20261019.webp" alt="" decoding="async" />
@@ -497,9 +465,10 @@ onBeforeUnmount(() => {
 
 .blessing-icon {
   width: 92px;
-  height: 124px;
-  object-fit: cover;
-  object-position: top center;
+  height: 138px;
+  aspect-ratio: 2 / 3;
+  object-fit: contain;
+  object-position: center bottom;
   border-radius: 14px;
   border: 2px solid rgba(212, 168, 67, 0.25);
   box-shadow: 0 10px 22px rgba(96, 64, 24, 0.14);
@@ -619,101 +588,14 @@ onBeforeUnmount(() => {
 
 .bm-subject {
   display: block;
-  width: min(94cqw, 760px);
+  width: auto;
   height: 100%;
   max-width: 94cqw;
+  max-height: 100%;
+  aspect-ratio: 2 / 3;
   object-fit: contain;
   object-position: center bottom;
   filter: drop-shadow(0 16px 24px rgba(36, 12, 2, 0.6));
-}
-
-/* The original alpha Buddha canvases are deliberately wide: their visible
-   figure occupies the centre band. Use the PrayerStage fit measurements so
-   mobile keeps the figure legible without letting the transparent canvas
-   dictate the layout width. */
-.bm-subject-wrap--jikang .bm-subject { width: auto; max-width: none; height: min(100%, 141.5cqw); }
-.bm-subject-wrap--pingan .bm-subject { width: auto; max-width: none; height: min(100%, 151.5cqw); }
-.bm-subject-wrap--xueye .bm-subject { width: auto; max-width: none; height: min(100%, 132.7cqw); }
-.bm-subject-wrap--siling .bm-subject { width: auto; max-width: none; height: min(100%, 75.3cqw); }
-
-/* Symbolic wide canvases are sized by width on phones; otherwise their
-   transparent margins make the subject overflow and crop at both edges. */
-.bm-subject-wrap--yinyuan .bm-subject {
-  width: auto;
-  max-width: 90cqw;
-  height: auto;
-  max-height: 60cqh;
-}
-
-@media (orientation: portrait) {
-  .bm-subject-wrap--yinyuan { bottom: 29%; }
-}
-
-.bm-subject-wrap--heping .bm-subject,
-.bm-subject-wrap--jiaqin .bm-subject {
-  width: auto;
-  max-width: 85cqw;
-  height: auto;
-  max-height: 68cqh;
-}
-
-.bm-subject-pair {
-  width: min(92cqw, 660px);
-  height: auto;
-  max-height: 72cqh;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: min(2cqw, 16px);
-}
-
-.bm-subject-pair__img {
-  width: calc(50% - 1cqw);
-  height: auto;
-  max-width: calc(50% - 1cqw);
-  max-height: 72cqh;
-  object-fit: contain;
-  object-position: center bottom;
-  filter: drop-shadow(0 16px 24px rgba(36, 12, 2, 0.6));
-}
-
-.bm-subject-wrap--fulu .bm-subject-pair {
-  width: min(94cqw, 660px);
-}
-
-.bm-subject--symbol {
-  width: min(44cqw, 330px);
-  height: min(44cqw, 330px);
-  max-width: 72%;
-  max-height: 84%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  border: 1px solid rgba(245, 205, 127, 0.48);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255, 215, 132, 0.28), transparent 56%),
-    rgba(66, 29, 8, 0.64);
-  box-shadow:
-    0 0 60px rgba(228, 160, 55, 0.2),
-    inset 0 0 0 10px rgba(107, 55, 15, 0.38),
-    0 20px 30px rgba(24, 7, 1, 0.45);
-  color: #f3c875;
-}
-
-.bm-subject--symbol span {
-  font-family: 'Noto Serif SC', 'Source Han Serif CN', STSong, SimSun, serif;
-  font-size: clamp(4rem, 14cqw, 8rem);
-  line-height: 1;
-  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.45);
-}
-
-.bm-subject--symbol small {
-  font-size: clamp(0.76rem, 1.7cqw, 1rem);
-  letter-spacing: 0.18em;
-  color: rgba(255, 231, 175, 0.82);
 }
 
 @media (min-width: 700px) {
@@ -773,13 +655,16 @@ onBeforeUnmount(() => {
 }
 
 .bm-drawer-close {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   align-self: flex-start;
   min-height: 44px;
   margin: 0 0 14px;
   padding: 8px 14px;
   border: 1px solid rgba(235, 188, 97, 0.42);
   border-radius: 10px;
-  background: rgba(95, 49, 15, 0.3);
+  background: #5f310f;
   color: #f7d796;
   font: inherit;
   cursor: pointer;
@@ -852,9 +737,9 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .bm-toggle {
-    top: auto;
-    bottom: 18px;
-    transform: none;
+    top: 16%;
+    bottom: auto;
+    transform: translateY(-50%);
   }
 
   .bm-drawer {
@@ -1002,7 +887,7 @@ onBeforeUnmount(() => {
 
   .blessing-icon {
     width: 74px;
-    height: 100px;
+    height: 111px;
   }
 
   .form-row {

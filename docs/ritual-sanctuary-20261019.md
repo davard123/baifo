@@ -72,3 +72,5 @@
 - 深入键盘验收发现：求财关闭的底抽屉经transform移出后，会让overflow:hidden的qc-frame成为可隐式滚动容器；聚焦侧栏末尾链接时frame.scrollTop约208，导致固定头部消失。改用overflow:clip禁止框架隐式滚动，正文仍在侧栏内部滚动。回归验证frame.scrollTop=0、收起按钮top约10px。
 - 本地390×844、1280×800、800×1280及求财844×390检查通过；祭祖奠酒/烧纸/叩拜自动收起、侧栏末尾收起按钮可见；求财End不推动主画面。最终build、sanctuary、memorial-inscription、images、71页SEO、142页894内链全部通过。既有cn2t分包提示仍存在。
 - 未向后端提交测试祈愿、未改变数据协议；尺寸模拟不等同真实Pad/Safari硬件测试。
+- 发布结果：`3967e29aa8533516fc41cee21bb0d1bc0de981bf`已推送master，Cloudflare `4bfb32db-0efd-4521-85e7-c44cb617a18a` success，CI validate `39368834253` success。独立Luna只读复核完成；父线程修正离开求财时退出该页发起的全屏、侧栏被全局音乐/念佛浮层遮挡后重新构建验收。
+- 线上390×844/1280×800：求财叩拜两人完整、面板末尾固定收起（frame.scrollTop=0、closeTop约10px）、主文档不滚；祭祖叩拜/奠酒/烧纸自动收起、面板末尾收起可见。祭祖另验800×1280竖屏。证据同既有截图目录`release3967-*.png`。未提交测试祈愿，未改用户姓名存储。
