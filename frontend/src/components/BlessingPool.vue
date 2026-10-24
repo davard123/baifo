@@ -24,6 +24,16 @@ const previousOverflow = ref('')
 const modalToggleButton = ref(null)
 const drawerHeading = ref(null)
 const modalOrigin = ref(null)
+let requestController = null
+let toastTimer = null
+
+function cancelSubmission() {
+  requestController?.abort()
+  requestController = null
+  loading.value = false
+  clearTimeout(toastTimer)
+  toast.value = ''
+}
 
 const form = ref({
   name: '',
@@ -89,6 +99,7 @@ function resetTransientState() {
 }
 
 function open(blessing) {
+  cancelSubmission()
   if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
   stage.value = 'form'
@@ -99,6 +110,7 @@ function open(blessing) {
 }
 
 function close() {
+  cancelSubmission()
   const restoreTarget = modalOrigin.value
   active.value = null
   resetTransientState()
@@ -112,13 +124,14 @@ function close() {
 }
 
 function clearToastSoon() {
-  setTimeout(() => {
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
     toast.value = ''
   }, 2500)
 }
 
 async function submit() {
-  if (loading.value) return
+  if (loading.value || stage.value !== 'form' || !active.value) return
 
   if (!form.value.name.trim()) {
     toast.value = '请填写祈福者姓名。'
@@ -133,11 +146,16 @@ async function submit() {
   }
 
   loading.value = true
-  saveViewerProfile(form.value.name.trim(), form.value.age)
+  const controller = new AbortController()
+  requestController = controller
+  const wish = active.value.wish
+  const email = form.value.email.trim()
 
   try {
-    await apiFetch('/wishes', {
+    saveViewerProfile(form.value.name.trim(), form.value.age)
+    const response = await apiFetch('/wishes', {
       method: 'POST',
+      signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         username: form.value.name.trim(),
@@ -149,19 +167,26 @@ async function submit() {
         ...(form.value.email.trim() ? { email: form.value.email.trim() } : {}),
       }),
     })
+    const data = await response.json()
+    if (controller.signal.aborted || requestController !== controller) return
+    if (!response.ok || data.status !== 'success') throw new Error('Submission failed')
+    resultWish.value = wish
+    resultEmail.value = email
+    stage.value = 'done'
+    closeDrawer()
+    toast.value = '祈愿已保存，回向完成。'
+    clearToastSoon()
+    emit('wish-submitted')
   } catch {
+    if (controller.signal.aborted || requestController !== controller) return
     toast.value = '提交失败，请稍后重试。'
     clearToastSoon()
-    loading.value = false
-    return
+  } finally {
+    if (requestController === controller) {
+      requestController = null
+      loading.value = false
+    }
   }
-
-  loading.value = false
-  resultWish.value = active.value.wish
-  resultEmail.value = form.value.email.trim()
-  stage.value = 'done'
-  drawerOpen.value = true
-  emit('wish-submitted')
 }
 
 function lockBodyScroll() {
@@ -188,9 +213,13 @@ function closeDrawer() {
   nextTick(() => modalToggleButton.value?.focus())
 }
 
-watch(active, async (value) => {
+watch(() => ritual.state.bowRun, (value, previous) => {
+  if (value > previous) closeDrawer()
+})
+
+watch(active, async (value, previous) => {
   if (value) {
-    lockBodyScroll()
+    if (!previous) lockBodyScroll()
     await nextTick()
     modalCloseButton.value?.focus()
     return
@@ -210,6 +239,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  cancelSubmission()
   window.removeEventListener('keydown', handleModalKeydown)
   unlockBodyScroll()
 })
@@ -277,7 +307,7 @@ onBeforeUnmount(() => {
             :aria-expanded="drawerOpen"
             @click="drawerOpen = !drawerOpen"
           >
-            {{ drawerOpen ? '收起' : '祈福供养' }}
+            {{ drawerOpen ? '收起' : stage === 'done' ? '查看回向' : '祈福供养' }}
           </button>
 
           <button
@@ -294,13 +324,10 @@ onBeforeUnmount(() => {
             :class="{ open: drawerOpen }"
             :inert="!drawerOpen"
           >
+            <div class="bm-drawer-content">
             <button type="button" class="bm-drawer-close" @click="closeDrawer">收起祈福面板</button>
             <p class="overlay-kicker">祈福主题</p>
             <h3 ref="drawerHeading" class="overlay-title" tabindex="-1">{{ active.label }}</h3>
-            <p class="form-wish-hint">
-              <template v-if="stage === 'form'">{{ active.wish }}</template>
-              <template v-else>{{ resultWish }}</template>
-            </p>
 
             <template v-if="stage === 'form'">
               <RitualPanel :ritual="ritual" homage-title="礼敬" />
@@ -330,7 +357,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
 
-            <form v-if="stage === 'form'" class="scene-form" @submit.prevent="submit">
+            <form v-if="stage === 'form'" id="blessing-form" class="scene-form" @submit.prevent="submit">
               <div class="form-row">
                 <div class="field-block">
                   <label class="field-label" for="blessing-name">祈福者姓名</label>
@@ -385,11 +412,15 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
-              <button class="submit-btn" type="submit" :disabled="loading">
-                <span v-if="loading">祈福中...</span>
-                <span v-else>提交祈福</span>
-              </button>
             </form>
+            <p class="form-wish-hint">{{ stage === 'form' ? active.wish : resultWish }}</p>
+            </div>
+            <div v-if="stage === 'form'" class="bm-completion">
+              <button class="submit-btn" type="submit" form="blessing-form" :disabled="loading">
+                <span v-if="loading">正在保存…</span>
+                <span v-else>完成祈福 · 回向</span>
+              </button>
+            </div>
           </section>
         </div>
 
@@ -701,13 +732,15 @@ onBeforeUnmount(() => {
 }
 
 .bm-drawer {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   z-index: 20;
   width: min(400px, 88vw);
-  overflow-y: auto;
+  overflow: hidden;
   padding: 20px 20px 32px;
   padding-bottom: max(32px, env(safe-area-inset-bottom));
   background: rgba(37, 18, 8, 0.98);
@@ -716,6 +749,19 @@ onBeforeUnmount(() => {
   transform: translateX(100%);
   visibility: hidden;
   transition: transform 0.28s ease;
+}
+
+.bm-drawer-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.bm-completion {
+  flex-shrink: 0;
+  padding-top: 10px;
+  background: var(--surface);
 }
 
 .bm-drawer-close {
@@ -974,7 +1020,6 @@ onBeforeUnmount(() => {
   .bm-toggle {
     animation: none !important;
     transition: none !important;
-    transform: none !important;
   }
 }
 </style>

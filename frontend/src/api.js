@@ -57,8 +57,6 @@ export function warmApi() {
   warmPromise = (async () => {
     const warmRequests = [
       fetch(`${BASE}/`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
-      fetch(`${BASE}/wishes?limit=1`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
-      fetch(`${BASE}/ancestor-wishes?limit=1`, { method: 'GET', cache: 'no-store', keepalive: true }).catch(() => null),
     ]
 
     try {
