@@ -10,3 +10,10 @@ compatibility_date = "2026-05-04"
 # [[routes]]
 # pattern = "api.fopusha.com"
 # custom_domain = true
+
+# 公开心愿墙：只存访客明确选择"公开"的心愿，名字在服务器端打码，不存年龄/邮箱。
+[[d1_databases]]
+binding = "WALL"
+database_name = "fopusha-wall"
+database_id = "7f2f8837-88a1-4ae9-995e-7c77c834b650"
+migrations_dir = "migrations-wall"

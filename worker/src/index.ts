@@ -7,6 +7,8 @@ type Bindings = {
   SUPABASE_SERVICE_KEY: string
   RESEND_API_KEY: string
   RESEND_FROM?: string
+  WALL: D1Database
+  ADMIN_KEY?: string
 }
 
 const ADMIN_EMAIL = 'lodaviddai@gmail.com'
@@ -255,7 +257,104 @@ function isValidEmail(v: string): boolean {
 
 app.get('/', (c) => c.json({ status: 'ok' }))
 
+// ---- 后台查看：旧心愿含真名、年龄，只许带管理密钥读取 ----------------------------
+function isAdmin(c: { req: { header: (k: string) => string | undefined }; env: Bindings }): boolean {
+  const expected = c.env.ADMIN_KEY ?? ''
+  const got = c.req.header('x-admin-key') ?? ''
+  if (expected.length < 16 || got.length !== expected.length) return false
+  let diff = 0
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ got.charCodeAt(i)
+  return diff === 0
+}
+
+// ---- 公开心愿墙 ----------------------------------------------------------------
+// 只收访客在页面上明确选择"公开到心愿墙"的心愿；名字只留第一个字，其余打码。
+const WALL_KINDS = new Set(['buddha', 'caishen', 'blessing', 'ancestor'])
+
+function maskName(name: string): string {
+  const chars = Array.from(name.trim())
+  if (!chars.length) return '有缘人'
+  return chars[0] + '**'
+}
+
+function looksLikeSpam(text: string): boolean {
+  return /(https?:\/\/|www\.|\.com|\.cn|微信|vx|加v|qq|电报|telegram|\d{7,})/i.test(text)
+}
+
+async function hashIp(ip: string, salt: string): Promise<string> {
+  const data = new TextEncoder().encode(salt + '|' + ip)
+  const digest = await crypto.subtle.digest('SHA-256', data)
+  return [...new Uint8Array(digest)].slice(0, 12).map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+app.get('/wall', async (c) => {
+  const limit = parseLimit(c.req.query('limit'))
+  const kind = c.req.query('kind') ?? ''
+  const sql = WALL_KINDS.has(kind)
+    ? 'SELECT id, kind, deity, topic, display_name AS name, wish, created_at FROM public_wishes WHERE hidden = 0 AND kind = ? ORDER BY id DESC LIMIT ?'
+    : 'SELECT id, kind, deity, topic, display_name AS name, wish, created_at FROM public_wishes WHERE hidden = 0 ORDER BY id DESC LIMIT ?'
+  const stmt = WALL_KINDS.has(kind) ? c.env.WALL.prepare(sql).bind(kind, limit) : c.env.WALL.prepare(sql).bind(limit)
+  const { results } = await stmt.all()
+  return c.json(results ?? [], 200, { 'Cache-Control': 'public, max-age=30' })
+})
+
+app.post('/wall', async (c) => {
+  let body: Record<string, unknown>
+  try { body = await c.req.json() } catch { return c.json({ detail: '无效的请求体' }, 422) }
+  const kind = asStr(body.kind)
+  const wish = asStr(body.wish).trim()
+  const name = asStr(body.name).trim().slice(0, 20)
+  const deity = asStr(body.deity).trim().slice(0, 20)
+  const topic = asStr(body.topic).trim().slice(0, 20)
+  if (!WALL_KINDS.has(kind)) return c.json({ detail: '类型不对' }, 422)
+  if (wish.length < 2 || wish.length > 300) return c.json({ detail: '心愿请写 2 到 300 个字' }, 422)
+  if (looksLikeSpam(wish) || looksLikeSpam(name)) return c.json({ detail: '心愿里请不要留联系方式或网址' }, 422)
+
+  const ip = c.req.header('cf-connecting-ip') ?? ''
+  const ipHash = await hashIp(ip, c.env.ADMIN_KEY ?? 'fopusha-wall')
+  const recent = await c.env.WALL.prepare(
+    "SELECT COUNT(*) AS n FROM public_wishes WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')",
+  ).bind(ipHash).first<{ n: number }>()
+  if (!isAdmin(c) && (recent?.n ?? 0) >= 6) return c.json({ detail: '公开得太频繁了，请稍后再试' }, 429)
+
+  // 管理员（带 x-admin-key）发布时可署名"本站"等，原样显示；普通访客一律打码。
+  const displayName = isAdmin(c) && name ? name : maskName(name)
+  // 自动生成的祝福语会带上访客全名，公开前把正文里的名字也换成打码后的名字。
+  const safeWish = Array.from(name).length >= 2 ? wish.split(name).join(displayName) : wish
+  const row = await c.env.WALL.prepare(
+    'INSERT INTO public_wishes (kind, deity, topic, display_name, wish, ip_hash) VALUES (?, ?, ?, ?, ?, ?) RETURNING id, kind, deity, topic, display_name AS name, wish, created_at',
+  ).bind(kind, deity, topic, displayName, safeWish, ipHash).first()
+  return c.json({ status: 'success', item: row })
+})
+
+// 真实使用统计：只返回数量，不返回任何心愿内容。
+async function countRows(env: Bindings, table: string): Promise<number> {
+  const res = await sb(env, `${table}?select=id&limit=1`, { headers: { Prefer: 'count=exact' } })
+  const range = res.headers.get('content-range') ?? ''
+  const total = Number.parseInt(range.split('/')[1] ?? '', 10)
+  return Number.isNaN(total) ? 0 : total
+}
+
+app.get('/stats', async (c) => {
+  const [wishes, ancestor, wall] = await Promise.all([
+    countRows(c.env, 'users'),
+    countRows(c.env, 'ancestor_wishes'),
+    c.env.WALL.prepare('SELECT COUNT(*) AS n FROM public_wishes WHERE hidden = 0').first<{ n: number }>(),
+  ])
+  return c.json({ wishes, ancestor, public: wall?.n ?? 0 }, 200, { 'Cache-Control': 'public, max-age=3600' })
+})
+
+// 管理员隐藏不合适的心愿：POST /wall/123/hide，请求头 x-admin-key
+app.post('/wall/:id/hide', async (c) => {
+  if (!isAdmin(c)) return c.json({ detail: 'Unauthorized' }, 401)
+  const id = Number.parseInt(c.req.param('id'), 10)
+  if (!id) return c.json({ detail: 'bad id' }, 422)
+  await c.env.WALL.prepare('UPDATE public_wishes SET hidden = 1 WHERE id = ?').bind(id).run()
+  return c.json({ status: 'success' })
+})
+
 app.get('/wishes', async (c) => {
+  if (!isAdmin(c)) return c.json({ detail: 'Not found' }, 404)
   const limit = parseLimit(c.req.query('limit'))
   const username = c.req.query('username')
   let path = `users?select=id,username,age,wish,buddha,blessing,target,created_at&order=id.desc&limit=${limit}`
@@ -295,6 +394,7 @@ app.post('/wishes', async (c) => {
 })
 
 app.get('/ancestor-wishes', async (c) => {
+  if (!isAdmin(c)) return c.json({ detail: 'Not found' }, 404)
   const limit = parseLimit(c.req.query('limit'))
   const username = c.req.query('username')
   let path = `ancestor_wishes?select=id,username,age,ancestor,ancestor_name,relationship,wish,created_at&order=id.desc&limit=${limit}`

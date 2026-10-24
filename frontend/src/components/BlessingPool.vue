@@ -12,6 +12,7 @@ import { useRitual } from '../composables/useRitual.js'
 
 import RecordSaveChoice from './RecordSaveChoice.vue'
 const storageChoice = ref('')
+const resultPublished = ref(false)
 
 const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
@@ -149,7 +150,7 @@ async function submit() {
     return
   }
 
-  if (storageChoice.value !== 'local') {
+  if (storageChoice.value !== 'local' && storageChoice.value !== 'public') {
     toast.value = '请为本次记录选择保存方式。'
     clearToastSoon()
     return
@@ -185,7 +186,8 @@ async function submit() {
     stage.value = 'done'
     storageChoice.value = ''
     closeDrawer()
-    toast.value = '祈愿已保存在本机，未上传。回向完成。'
+    toast.value = data.published ? '祈愿已公开到心愿墙，本机也保存了一份。回向完成。' : '祈愿已保存在本机，未上传。回向完成。'
+    resultPublished.value = !!data.published
     clearToastSoon()
     emit('wish-submitted')
   } catch (error) {
@@ -347,7 +349,7 @@ onBeforeUnmount(() => {
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
-                {{ form.age }} 岁的 {{ form.name }} 已将这份祈愿保存在本机，未上传。
+                {{ form.age }} 岁的 {{ form.name }} {{ resultPublished ? '已将这份祈愿公开到心愿墙。' : '已将这份祈愿保存在本机，未上传。' }}
               </p>
               <p v-if="form.target" class="result-user">{{ form.target }}</p>
               <div class="result-btns">
@@ -429,8 +431,8 @@ onBeforeUnmount(() => {
             </div>
             <div v-if="stage === 'form'" class="bm-completion">
               <button class="submit-btn" type="submit" form="blessing-form" :disabled="loading">
-                <span v-if="loading">正在保存…</span>
-                <span v-else>仅保存到本机 · 回向</span>
+                <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
+                <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '仅保存到本机 · 回向' }}</span>
               </button>
             </div>
           </section>

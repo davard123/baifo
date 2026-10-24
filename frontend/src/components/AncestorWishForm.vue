@@ -63,7 +63,7 @@ async function handleSubmit() {
   if (!age.value || age.value <= 0){ error.value = '请填写正确的年龄。'; return }
   if (!wish.value.trim())          { error.value = '请填写祈祷内容。'; return }
 
-  if (storageChoice.value !== 'local') { error.value = '请为本次记录选择保存方式。'; return }
+  if (storageChoice.value !== 'local' && storageChoice.value !== 'public') { error.value = '请为本次记录选择保存方式。'; return }
   loading.value = true
   try {
     saveViewerProfile(username.value.trim(), age.value)
@@ -192,8 +192,8 @@ async function handleSubmit() {
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">保存到本机…</span>
-        <span v-else>仅保存到本机 · 回向先人</span>
+        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '保存到本机…' }}</span>
+        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向先人' : '仅保存到本机 · 回向先人' }}</span>
       </button>
     </form>
   </div>

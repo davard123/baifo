@@ -7,6 +7,7 @@ import { TOPICS } from '../data/topics.js'
 import { BUDDHAS } from '../data/buddhas.js'
 import BlessingPool from '../components/BlessingPool.vue'
 import WishList from '../components/WishList.vue'
+import PublicWishWall from '../components/PublicWishWall.vue'
 import { readLocalRecords } from '../utils/localRecords.js'
 import { warmApi } from '../api.js'
 const recordsError = ref('')
@@ -219,6 +220,8 @@ onMounted(() => {
         <source src="/video/fopusha-intro-v3.mp4" type="video/mp4" />
       </video>
     </section>
+
+    <PublicWishWall title="心愿墙" sub="大家在礼佛、求财、祈福、追思时公开的心愿。名字只显示第一个字，不显示年龄和联系方式。" :limit="30" />
 
     <section class="wishes-section card">
       <div class="section-head">

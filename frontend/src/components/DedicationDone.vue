@@ -1,4 +1,5 @@
 <script setup>
+import { lastSavePublished } from '../utils/localRecords.js'
 // 提交祈愿/祭拜成功后的回向收尾。
 // 此前佛菩萨页和先人页提交成功即 router.push 跳走，用户没有任何确认，
 // 而祈福池却有完整的 done 状态 —— 这个组件把两边拉齐。
@@ -21,10 +22,11 @@ defineProps({
     <p class="done-mark" aria-hidden="true">🙏</p>
 
     <h2 class="done-title">
-      已保存在本机 · 回向完成
+      {{ lastSavePublished ? '已公开到心愿墙 · 回向完成' : '已保存在本机 · 回向完成' }}
     </h2>
 
-    <p>本次内容未上传，也未发布到主页心愿墙。</p>
+    <p v-if="lastSavePublished">这份心愿已公开到首页心愿墙（名字只显示第一个字），本机也留了一份记录。</p>
+    <p v-else>本次内容未上传，也未发布到主页心愿墙。</p>
     <div class="done-actions" aria-label="下一步">
       <router-link
         v-for="action in actions"

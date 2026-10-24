@@ -17,6 +17,7 @@ import {
 } from '../data/qiucai.js'
 import { saveLocalRequest as apiFetch, readLocalRecords } from '../utils/localRecords.js'
 import RecordSaveChoice from '../components/RecordSaveChoice.vue'
+import PublicWishWall from '../components/PublicWishWall.vue'
 const storageChoice = ref('')
 const recordsError = ref('')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
@@ -100,6 +101,7 @@ const cardUrl = ref('')
 
 const stats = ref({ lastDay: '', streak: 0, totalQi: 0, totalDays: 0 })
 const wall = ref([])
+const wallKey = ref(0)
 
 let toastTimer = null
 const ritualToastTimers = new Set()
@@ -533,6 +535,7 @@ function maskName(name = '') {
 }
 
 function loadWall() {
+  wallKey.value++
   recordsError.value = ''
   try {
     wall.value = readLocalRecords().filter(row => row.blessing === 'caishen').reverse().slice(0, 12)
@@ -550,7 +553,7 @@ async function submit() {
     submitError.value = '请先写下你的名字或称呼。'
     return
   }
-  if (storageChoice.value !== 'local') { submitError.value = '请为本次记录选择保存方式。'; return }
+  if (storageChoice.value !== 'local' && storageChoice.value !== 'public') { submitError.value = '请为本次记录选择保存方式。'; return }
   const blessingText = pickWish(form.value.scene, name)
   const wishText = form.value.wish.trim() || blessingText
   submitting.value = true
@@ -578,6 +581,7 @@ async function submit() {
     try { markToday() } catch { /* Record already saved; optional stats must not fail it. */ }
     result.value = {
       name,
+      published: !!data.published,
       scene: scene.value.label,
       deity: deity.value.name,
       blessing: blessingText,
@@ -1051,13 +1055,12 @@ onBeforeUnmount(() => {
           <RecordSaveChoice v-model="storageChoice" :disabled="submitting" />
           <p v-if="submitError" class="error-msg">{{ submitError }}</p>
           <button type="submit" class="submit-btn" :disabled="submitting">
-            {{ submitting ? '祈福中……' : '仅保存到本机，领取祝福卡' }}
+            {{ submitting ? '祈福中……' : (storageChoice === 'public' ? '公开到心愿墙，领取祝福卡' : '仅保存到本机，领取祝福卡') }}
           </button>
-          <p class="qc-note">本次仅保存到本机，不上传，不会出现在主页公开心愿墙。</p>
         </form>
 
         <div v-else class="qc-result">
-          <h2>{{ result.name }}，祈愿已保存在本机，未上传</h2>
+          <h2>{{ result.name }}，{{ result.published ? '祈愿已公开到心愿墙' : '祈愿已保存在本机，未上传' }}</h2>
           <p class="qc-result__blessing">{{ result.blessing }}</p>
           <p class="qc-result__couplet">{{ result.couplet[0] }}　{{ result.couplet[1] }}　· {{ result.couplet[2] }}</p>
           <img v-if="cardUrl" :src="cardUrl" alt="求财祝福卡" class="qc-card" />
@@ -1103,6 +1106,8 @@ onBeforeUnmount(() => {
       </nav>
       <p class="qc-detail__more"><router-link to="/qiucai/">← 看全部八位财神</router-link></p>
     </section>
+
+    <PublicWishWall kind="caishen" title="求财心愿墙" sub="大家公开的求财心愿，名字只显示第一个字。" :refresh-key="wallKey" />
 
     <p v-if="recordsError" role="alert">{{ recordsError }}</p>
     <section class="card qc-wall" aria-labelledby="qc-wall-title">
