@@ -28,7 +28,7 @@ defineExpose({ unlockSound })
 const assetIds = { shakyamuni: 'a1', amitabha: 'a2', medicine: 'a3', maitreya: 'a4', manjushri: 'a5', samantabhadra: 'a6', guanyin: 'a7', ksitigarbha: 'a8' }
 // 同一尊佛可以有几种造型（原图 + variants），每次进入页面随机选一张
 function pickLook(buddha) {
-  const looks = [{ image: buddha?.image, anchorShift: null }, ...(buddha?.variants || [])]
+  const looks = [{ image: buddha?.image, anchorShift: null, mudra: buddha?.mudra, mudraNote: buddha?.mudraNote }, ...(buddha?.variants || [])]
   return looks[Math.floor(Math.random() * looks.length)]
 }
 const look = ref(pickLook(props.buddha))
@@ -161,7 +161,7 @@ const stageImageStyle = computed(() => {
 
     <AltarLayer :ritual="ritual" mode="buddha" />
 
-    <div class="stage-label" :class="{ faded: ritual.anyDone.value }">{{ buddha.title }}</div>
+    <div class="stage-label" :class="{ faded: ritual.anyDone.value }">{{ buddha.title }}<span v-if="look.mudra" class="stage-mudra">{{ look.mudra }}：{{ look.mudraNote }}</span></div>
     </div>
     <canvas ref="canvasElement" class="dedication-canvas" aria-hidden="true"></canvas>
     <button type="button" class="sound-toggle" :aria-pressed="!soundMuted" :aria-label="soundMuted ? '开启回向音效' : '静音回向音效'" @click="toggleSound">
@@ -235,6 +235,13 @@ const stageImageStyle = computed(() => {
 }
 
 /* 开始供养后佛名淡出，避免压住前排供品 */
+.stage-mudra {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: rgba(245, 233, 205, 0.86);
+}
 .stage-label.faded {
   opacity: 0;
 }

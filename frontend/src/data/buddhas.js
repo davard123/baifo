@@ -6,10 +6,12 @@ export const BUDDHAS = [
     subtitle: '娑婆世界教主',
     namo: '南无本师释迦牟尼佛',
     image: '/a1-20260906.webp?v=release1',
+    mudra: '施无畏印 · 与愿印',
+    mudraNote: '右手上举掌心向外，令众生离怖畏；左手掌心向上置于膝上，满众生所愿。',
     // 同一尊佛的其他造型，打开页面时与 image 一起随机选一张；anchorShift 让回向光效对准新图的手势
     variants: [
-      { image: '/buddha-variants/a1-gilt-20261024.webp', anchorShift: [-20, 352] },
-      { image: '/buddha-variants/a1-jade-20261024.webp', anchorShift: [220, 17] },
+      { image: '/buddha-variants/a1-gilt-20261024.webp', anchorShift: [-20, 352], mudra: '触地印（降魔印）', mudraNote: '佛陀菩提树下成道时，右手按地，请大地为证。' },
+      { image: '/buddha-variants/a1-jade-nianhua-20261024.webp', anchorShift: [65, 7], mudra: '拈花印', mudraNote: '灵山会上佛陀拈花示众，迦叶会心微笑，以心传心。' },
     ],
     thumb: '/thumbs/buddha-a1.webp?v=20260810',
     desc: '释迦牟尼佛，娑婆世界教主，三界导师，四生慈父。礼敬本师，可消业障、增福慧、开智慧，是一切修行之根本。',
@@ -23,9 +25,11 @@ export const BUDDHAS = [
     subtitle: '接引导师',
     namo: '南无阿弥陀佛',
     image: '/a2-20260906.webp?v=release1',
+    mudra: '禅定印',
+    mudraNote: '双手相叠于腹前，拇指相抵，表心定不乱、安住禅定。',
     variants: [
-      { image: '/buddha-variants/a2-standing-20261024.webp', anchorShift: [55, -98] },
-      { image: '/buddha-variants/a2-sandalwood-20261024.webp', anchorShift: [-25, 192] },
+      { image: '/buddha-variants/a2-standing-20261024.webp', anchorShift: [55, -98], mudra: '接引印', mudraNote: '右手垂下接引众生，左手托莲，迎念佛人往生西方。' },
+      { image: '/buddha-variants/a2-mituo-20261024.webp', anchorShift: [15, 182], mudra: '弥陀定印', mudraNote: '双手相叠于腹前，两手食指与拇指各结一环，为阿弥陀佛特有的定印。' },
     ],
     thumb: '/thumbs/buddha-a2.webp?v=20260810',
     desc: '阿弥陀佛，西方极乐世界教主，四十八大愿接引十方一切念佛众生，往生净土，不退成佛。',
