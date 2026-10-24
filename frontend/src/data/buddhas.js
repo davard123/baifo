@@ -6,6 +6,11 @@ export const BUDDHAS = [
     subtitle: '娑婆世界教主',
     namo: '南无本师释迦牟尼佛',
     image: '/a1-20260906.webp?v=release1',
+    // 同一尊佛的其他造型，打开页面时与 image 一起随机选一张；anchorShift 让回向光效对准新图的手势
+    variants: [
+      { image: '/buddha-variants/a1-gilt-20261024.webp', anchorShift: [-20, 352] },
+      { image: '/buddha-variants/a1-jade-20261024.webp', anchorShift: [220, 17] },
+    ],
     thumb: '/thumbs/buddha-a1.webp?v=20260810',
     desc: '释迦牟尼佛，娑婆世界教主，三界导师，四生慈父。礼敬本师，可消业障、增福慧、开智慧，是一切修行之根本。',
     themes: '消除业障、增长福慧、开启智慧，以及修行入门与发愿回向',
@@ -18,6 +23,10 @@ export const BUDDHAS = [
     subtitle: '接引导师',
     namo: '南无阿弥陀佛',
     image: '/a2-20260906.webp?v=release1',
+    variants: [
+      { image: '/buddha-variants/a2-standing-20261024.webp', anchorShift: [55, -98] },
+      { image: '/buddha-variants/a2-sandalwood-20261024.webp', anchorShift: [-25, 192] },
+    ],
     thumb: '/thumbs/buddha-a2.webp?v=20260810',
     desc: '阿弥陀佛，西方极乐世界教主，四十八大愿接引十方一切念佛众生，往生净土，不退成佛。',
     themes: '念佛往生、临终关怀、超荐先亡，以及求生净土与消除烦恼',

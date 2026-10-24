@@ -26,6 +26,12 @@ function toggleSound() {
 }
 defineExpose({ unlockSound })
 const assetIds = { shakyamuni: 'a1', amitabha: 'a2', medicine: 'a3', maitreya: 'a4', manjushri: 'a5', samantabhadra: 'a6', guanyin: 'a7', ksitigarbha: 'a8' }
+// 同一尊佛可以有几种造型（原图 + variants），每次进入页面随机选一张
+function pickLook(buddha) {
+  const looks = [{ image: buddha?.image, anchorShift: null }, ...(buddha?.variants || [])]
+  return looks[Math.floor(Math.random() * looks.length)]
+}
+const look = ref(pickLook(props.buddha))
 let player = null
 let generation = 0
 let watchdog = null
@@ -58,7 +64,12 @@ function ensurePlayer() {
     originalImage: imageElement.value,
     id: assetIds[props.buddha.slug],
     assetBase: '/dedication-v10/',
-    assetSources: Object.fromEntries(Array.from({ length: 8 }, (_, i) => ['a' + (i + 1), '/a' + (i + 1) + '-20260906.webp?v=release1'])),
+    assetSources: {
+      ...Object.fromEntries(Array.from({ length: 8 }, (_, i) => ['a' + (i + 1), '/a' + (i + 1) + '-20260906.webp?v=release1'])),
+      // 回向时特效会把佛像重画到画布上，必须用当前显示的这张造型
+      [assetIds[props.buddha.slug]]: look.value.image,
+    },
+    anchorShift: look.value.anchorShift,
     // Canvas shakes itself once; mirror only its camera movement onto the DOM
     // background, altar and label. Reset before measuring the hidden image.
     onFrame: (time, camera) => {
@@ -98,6 +109,7 @@ onMounted(() => {
   }
 })
 watch(() => props.buddha?.slug, () => {
+  look.value = pickLook(props.buddha)
   clearBlessing()
   player?.destroy()
   player = null
@@ -144,7 +156,7 @@ const stageImageStyle = computed(() => {
     <div class="stage-bg"></div>
 
     <div class="buddha-frame">
-      <img ref="imageElement" :src="buddha.image" :alt="buddha.name" class="buddha-img" :style="stageImageStyle" />
+      <img ref="imageElement" :src="look.image" :alt="buddha.name" class="buddha-img" :style="stageImageStyle" />
     </div>
 
     <AltarLayer :ritual="ritual" mode="buddha" />
