@@ -8,7 +8,7 @@ import { useRitual } from '../composables/useRitual.js'
 import WishForm from '../components/WishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
-import { apiFetch } from '../api.js'
+import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()

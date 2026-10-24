@@ -230,6 +230,7 @@ onBeforeUnmount(() => {
         <button type="submit" class="submit-btn" :disabled="loading || !turnstileToken">
           {{ loading ? waitText + '（' + waitSeconds + ' 秒）' : '生成我的愿景图' }}
         </button>
+        <p class="qc-note">这是单独的在线生成服务：点击生成会上传所选职业、主题及自填职业说明，不会上传你的本机祈愿记录，也不会发布到心愿墙。</p>
         <p class="qc-note">愿景图由 AI 生成，是祝福和心愿的寄托，不代表任何结果。每人每天可生成 2 张。</p>
       </form>
 

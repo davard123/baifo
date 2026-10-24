@@ -8,7 +8,7 @@ import { useRitual } from '../composables/useRitual.js'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
-import { apiFetch } from '../api.js'
+import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getPhoto, getName, getField, saveField, saveName } from '../utils/localPhoto.js'
 import {
   buildInscription,
@@ -434,6 +434,7 @@ const doneActions = computed(() => {
 
           <template v-else>
             <AncestorWishForm
+                :key="ancestor.slug"
               :slug="ancestor.slug"
               :default-wish="ancestor.wish"
               :default-ancestor-name="displayAncestorName"

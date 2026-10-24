@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import RecordSaveChoice from './RecordSaveChoice.vue'
+const storageChoice = ref('')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
 const props = defineProps({
@@ -29,10 +31,12 @@ async function handleSubmit() {
   if (!age.value || age.value <= 0) { error.value = '请填写正确的年龄。'; return }
   if (!wish.value.trim()) { error.value = '请填写祈愿内容。'; return }
 
+  if (storageChoice.value !== 'local') { error.value = '请为本次记录选择保存方式。'; return }
   loading.value = true
   try {
     saveViewerProfile(username.value.trim(), age.value)
     const payload = {
+      storageChoice: storageChoice.value,
       username: username.value.trim(),
       age: Number(age.value),
       wish: wish.value.trim(),
@@ -41,6 +45,7 @@ async function handleSubmit() {
 
     if (props.onSubmit) {
       await props.onSubmit(payload)
+      storageChoice.value = ''
     } else {
       emit('submit', payload)
     }
@@ -98,11 +103,12 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
+      <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">提交中…</span>
-        <span v-else>🙏 礼毕，回向众生</span>
+        <span v-if="loading">保存到本机…</span>
+        <span v-else>仅保存到本机 · 回向</span>
       </button>
     </form>
   </div>

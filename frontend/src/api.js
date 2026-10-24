@@ -75,6 +75,9 @@ export function warmApi() {
 }
 
 export async function apiFetch(path, options = {}) {
+  if (/^\/(?:wishes|ancestor-wishes)(?:[/?#]|$)/.test(path)) {
+    throw new Error('祈愿记录仅在本机保存，旧记录网络接口已停用。')
+  }
   const url = BASE + path
   const cacheKey = getRecordCacheKey(path, options)
   const cached = cacheKey ? recordCache.get(cacheKey) : null

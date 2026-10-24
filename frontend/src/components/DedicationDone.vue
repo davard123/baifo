@@ -21,9 +21,10 @@ defineProps({
     <p class="done-mark" aria-hidden="true">🙏</p>
 
     <h2 class="done-title">
-      {{ kind === 'ancestor' ? '回向已完成' : '祈愿已送达' }}
+      已保存在本机 · 回向完成
     </h2>
 
+    <p>本次内容未上传，也未发布到主页心愿墙。</p>
     <div class="done-actions" aria-label="下一步">
       <router-link
         v-for="action in actions"

@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import RecordSaveChoice from './RecordSaveChoice.vue'
+const storageChoice = ref('')
 import { saveField, getField, saveGlobal, getGlobal } from '../utils/localPhoto.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
@@ -22,12 +24,13 @@ const error        = ref('')
 // 年度追思提醒。默认关闭：后端订阅表和定时任务上线前，
 // 不能先在界面上给用户一个兑现不了的承诺。
 // 启用方式：构建时设置 VITE_REMINDERS=on
-const remindersEnabled = import.meta.env.VITE_REMINDERS === 'on'
+const remindersEnabled = false
 const remind      = ref(false)
 const deathMonth  = ref('')
 const deathDay    = ref('')
 
 onMounted(() => {
+  try {
   const viewer = getViewerProfile()
   username.value = viewer.username || getGlobal('username') || ''
   if (viewer.age) age.value = viewer.age
@@ -38,12 +41,19 @@ onMounted(() => {
 
   // per-slug 字段（每位先祖独立保存）
   wish.value = getField(props.slug, 'wish') || props.defaultWish || ''
+  } catch {
+    wish.value = props.defaultWish || ''
+    error.value = '本机存储暂不可读，请检查浏览器存储设置。'
+  }
 })
 
 // 每次字段变化都实时保存
-function onUsernameChange()     { saveGlobal('username', username.value) }
-function onAgeChange()          { saveGlobal('age', age.value) }
-function onWishChange()         { saveField(props.slug, 'wish', wish.value) }
+function saveDraft(write) {
+  try { write() } catch { error.value = '草稿未保存：本机存储不可用。请保留输入并检查浏览器设置。' }
+}
+function onUsernameChange() { saveDraft(() => saveGlobal('username', username.value)) }
+function onAgeChange() { saveDraft(() => saveGlobal('age', age.value)) }
+function onWishChange() { saveDraft(() => saveField(props.slug, 'wish', wish.value)) }
 
 async function handleSubmit() {
   if (loading.value) return
@@ -53,10 +63,12 @@ async function handleSubmit() {
   if (!age.value || age.value <= 0){ error.value = '请填写正确的年龄。'; return }
   if (!wish.value.trim())          { error.value = '请填写祈祷内容。'; return }
 
+  if (storageChoice.value !== 'local') { error.value = '请为本次记录选择保存方式。'; return }
   loading.value = true
   try {
     saveViewerProfile(username.value.trim(), age.value)
     const payload = {
+      storageChoice: storageChoice.value,
       username:      username.value.trim(),
       age:           Number(age.value),
       ancestor_name: props.defaultAncestorName.trim(),
@@ -70,6 +82,7 @@ async function handleSubmit() {
 
     if (props.onSubmit) {
       await props.onSubmit(payload)
+      storageChoice.value = ''
     } else {
       emit('submit', payload)
     }
@@ -175,11 +188,12 @@ async function handleSubmit() {
         </div>
       </div>
 
+      <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">提交中…</span>
-        <span v-else>🙏 祭毕，回向先人</span>
+        <span v-if="loading">保存到本机…</span>
+        <span v-else>仅保存到本机 · 回向先人</span>
       </button>
     </form>
   </div>

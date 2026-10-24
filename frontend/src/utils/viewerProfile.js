@@ -1,4 +1,5 @@
 export function getViewerProfile() {
+  try {
   const username =
     localStorage.getItem('baifo_username') ||
     localStorage.getItem('bless_name') ||
@@ -14,6 +15,9 @@ export function getViewerProfile() {
   return {
     username: username.trim(),
     age: age ? Number(age) : null,
+  }
+  } catch {
+    return { username: '', age: null }
   }
 }
 

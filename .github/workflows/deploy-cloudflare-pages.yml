@@ -36,6 +36,7 @@ jobs:
       - name: Verify blessing drafts and wealth ritual flow
         run: |
           node scripts/test-blessing-drafts.mjs
+          node scripts/test-local-records.mjs
           node scripts/test-wealth-ritual.mjs
           node scripts/check-sanctuary.mjs
 

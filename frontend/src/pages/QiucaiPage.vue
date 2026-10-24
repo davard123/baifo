@@ -15,7 +15,10 @@ import {
   pickGreeting,
   pickWish,
 } from '../data/qiucai.js'
-import { apiFetch, warmApi } from '../api.js'
+import { saveLocalRequest as apiFetch, readLocalRecords } from '../utils/localRecords.js'
+import RecordSaveChoice from '../components/RecordSaveChoice.vue'
+const storageChoice = ref('')
+const recordsError = ref('')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import { wealthRitualProgress, nextWealthDeity } from '../utils/wealthRitual.js'
 import VisionMaker from '../components/VisionMaker.vue'
@@ -497,6 +500,7 @@ function onDrawerKeydown(event) {
 
 // 换一位神仙就重新开始：供养、财气、叩拜、赐福状态和已提交的心愿全部清掉，连拜天数保留
 function resetRitual() {
+  storageChoice.value = ''
   clearRitualToasts()
   done.value = {}
   qi.value = 0
@@ -528,24 +532,25 @@ function maskName(name = '') {
   return `${trimmed[0]}${'*'.repeat(Math.min(2, trimmed.length - 1))}`
 }
 
-async function loadWall() {
+function loadWall() {
+  recordsError.value = ''
   try {
-    const response = await apiFetch('/wishes?limit=50')
-    if (!response.ok) return
-    const rows = await response.json()
-    wall.value = rows.filter((row) => row.blessing === 'caishen').slice(0, 12)
-  } catch {
+    wall.value = readLocalRecords().filter(row => row.blessing === 'caishen').reverse().slice(0, 12)
+  } catch (error) {
+    recordsError.value = error.message
     wall.value = []
   }
 }
 
 async function submit() {
+  if (submitting.value || result.value) return
   submitError.value = ''
   const name = form.value.name.trim()
   if (!name) {
     submitError.value = '请先写下你的名字或称呼。'
     return
   }
+  if (storageChoice.value !== 'local') { submitError.value = '请为本次记录选择保存方式。'; return }
   const blessingText = pickWish(form.value.scene, name)
   const wishText = form.value.wish.trim() || blessingText
   submitting.value = true
@@ -554,6 +559,7 @@ async function submit() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        storageChoice: storageChoice.value,
         username: name,
         wish: `【${deity.value.name}·${scene.value.label}】${wishText}`,
         blessing: 'caishen',
@@ -568,7 +574,8 @@ async function submit() {
     } catch {
       // 本地存储不可用时不影响提交
     }
-    markToday()
+    storageChoice.value = ''
+    try { markToday() } catch { /* Record already saved; optional stats must not fail it. */ }
     result.value = {
       name,
       scene: scene.value.label,
@@ -579,10 +586,10 @@ async function submit() {
       image: poseReady.value[deity.value.key] ? deity.value.pose : deity.value.image,
     }
     burst('full', 24)
-    cardUrl.value = await drawCard(result.value)
+    try { cardUrl.value = await drawCard(result.value) } catch { cardUrl.value = '' }
     loadWall()
-  } catch {
-    submitError.value = '提交没有成功，请稍后再试一次。'
+  } catch (error) {
+    submitError.value = error.message || '本机保存未成功，请稍后重试。'
   } finally {
     submitting.value = false
   }
@@ -749,7 +756,6 @@ onMounted(() => {
   loadCompleted()
   preloadPose(deity.value)
   form.value.name = getViewerProfile()?.username || ''
-  warmApi()
   loadWall()
   fullscreenSupported.value = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled)
   syncFullscreen()
@@ -1042,15 +1048,16 @@ onBeforeUnmount(() => {
           <label class="field-label" for="qc-wish">想说的话（选填）</label>
           <textarea id="qc-wish" v-model="form.wish" class="field" rows="3" maxlength="200" placeholder="不填也可以，会为你配一段吉祥祝福"></textarea>
 
+          <RecordSaveChoice v-model="storageChoice" :disabled="submitting" />
           <p v-if="submitError" class="error-msg">{{ submitError }}</p>
           <button type="submit" class="submit-btn" :disabled="submitting">
-            {{ submitting ? '祈福中……' : '诚心祈愿，领取祝福卡' }}
+            {{ submitting ? '祈福中……' : '仅保存到本机，领取祝福卡' }}
           </button>
-          <p class="qc-note">名字会显示在求财祈愿墙上（只显示首字）。请不要填写住址、证件等隐私信息。</p>
+          <p class="qc-note">本次仅保存到本机，不上传，不会出现在主页公开心愿墙。</p>
         </form>
 
         <div v-else class="qc-result">
-          <h2>{{ result.name }}，祈愿已圆满</h2>
+          <h2>{{ result.name }}，祈愿已保存在本机，未上传</h2>
           <p class="qc-result__blessing">{{ result.blessing }}</p>
           <p class="qc-result__couplet">{{ result.couplet[0] }}　{{ result.couplet[1] }}　· {{ result.couplet[2] }}</p>
           <img v-if="cardUrl" :src="cardUrl" alt="求财祝福卡" class="qc-card" />
@@ -1097,8 +1104,11 @@ onBeforeUnmount(() => {
       <p class="qc-detail__more"><router-link to="/qiucai/">← 看全部八位财神</router-link></p>
     </section>
 
-    <section v-if="wall.length" class="card qc-wall" aria-labelledby="qc-wall-title">
-      <h2 id="qc-wall-title">求财祈愿墙</h2>
+    <p v-if="recordsError" role="alert">{{ recordsError }}</p>
+    <section class="card qc-wall" aria-labelledby="qc-wall-title">
+      <h2 id="qc-wall-title">我的本机求财记录</h2>
+      <p>仅此浏览器可回看，不跨设备；清理浏览器数据可能丢失。没有导入服务器历史记录。</p>
+      <p v-if="!wall.length">本机暂无求财记录。</p>
       <ul>
         <li v-for="item in wall" :key="item.id">
           <strong>{{ maskName(item.username) }}</strong>

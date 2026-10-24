@@ -2,13 +2,16 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
-import { apiFetch } from '../api.js'
+import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import { getBlessingSuggestions, getBlessingTarget, saveBlessingTarget } from '../utils/blessingDrafts.js'
 import AltarLayer from './ritual/AltarLayer.vue'
 import RitualPanel from './ritual/RitualPanel.vue'
 import SanctuaryBackdrop from './ritual/SanctuaryBackdrop.vue'
 import { useRitual } from '../composables/useRitual.js'
+
+import RecordSaveChoice from './RecordSaveChoice.vue'
+const storageChoice = ref('')
 
 const emit = defineEmits(['wish-submitted'])
 const router = useRouter()
@@ -99,6 +102,7 @@ function resetTransientState() {
 }
 
 function open(blessing) {
+  storageChoice.value = ''
   cancelSubmission()
   if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
@@ -145,6 +149,11 @@ async function submit() {
     return
   }
 
+  if (storageChoice.value !== 'local') {
+    toast.value = '请为本次记录选择保存方式。'
+    clearToastSoon()
+    return
+  }
   loading.value = true
   const controller = new AbortController()
   requestController = controller
@@ -158,6 +167,7 @@ async function submit() {
       signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        storageChoice: storageChoice.value,
         username: form.value.name.trim(),
         age: Number(form.value.age),
         wish: active.value.wish,
@@ -173,13 +183,14 @@ async function submit() {
     resultWish.value = wish
     resultEmail.value = email
     stage.value = 'done'
+    storageChoice.value = ''
     closeDrawer()
-    toast.value = '祈愿已保存，回向完成。'
+    toast.value = '祈愿已保存在本机，未上传。回向完成。'
     clearToastSoon()
     emit('wish-submitted')
-  } catch {
+  } catch (error) {
     if (controller.signal.aborted || requestController !== controller) return
-    toast.value = '提交失败，请稍后重试。'
+    toast.value = error.message || '本机保存失败，请稍后重试。'
     clearToastSoon()
   } finally {
     if (requestController === controller) {
@@ -336,7 +347,7 @@ onBeforeUnmount(() => {
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
-                {{ form.age }} 岁的 {{ form.name }} 留下了这份祈愿。
+                {{ form.age }} 岁的 {{ form.name }} 已将这份祈愿保存在本机，未上传。
               </p>
               <p v-if="form.target" class="result-user">{{ form.target }}</p>
               <div class="result-btns">
@@ -412,13 +423,14 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
+              <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
             </form>
             <p class="form-wish-hint">{{ stage === 'form' ? active.wish : resultWish }}</p>
             </div>
             <div v-if="stage === 'form'" class="bm-completion">
               <button class="submit-btn" type="submit" form="blessing-form" :disabled="loading">
                 <span v-if="loading">正在保存…</span>
-                <span v-else>完成祈福 · 回向</span>
+                <span v-else>仅保存到本机 · 回向</span>
               </button>
             </div>
           </section>
