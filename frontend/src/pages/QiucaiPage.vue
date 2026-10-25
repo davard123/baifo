@@ -23,6 +23,8 @@ const recordsError = ref('')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import { wealthRitualProgress, nextWealthDeity } from '../utils/wealthRitual.js'
 import VisionMaker from '../components/VisionMaker.vue'
+import FamilyCare from '../components/FamilyCare.vue'
+import InviteBanner from '../components/InviteBanner.vue'
 import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
 import { pickCaishenLook } from '../data/caishen-looks.js'
@@ -60,6 +62,9 @@ function markDeityComplete(key) {
 
 // 每位财神有独立网址 /qiucai/<slug>/，打开即选中这位财神
 const route = useRoute()
+// 家人从邀请链接（?invite=1）进来时，顶部给一句说明
+const invited = computed(() => route.query.invite === '1')
+const inviteDismissed = ref(false)
 const router = useRouter()
 const slugOf = (item) => CAISHEN_SLUG[item.key]
 const deityBySlug = (slug) => CAISHEN.find((item) => slugOf(item) === slug) || null
@@ -827,6 +832,16 @@ onBeforeUnmount(() => {
         <span v-if="!fullscreenSupported" class="qc-full__fullscreen-note">浏览器菜单可全屏</span>
       </div>
 
+      <InviteBanner
+        v-if="invited && !inviteDismissed"
+        kind="qiucai"
+        :subject="deity.name"
+        action-label="开始拜"
+        :style="{ top: 'calc(200px + env(safe-area-inset-top, 0px))' }"
+        @start="inviteDismissed = true"
+        @close="inviteDismissed = true"
+      />
+
       <div class="qc-ritual-progress">
         <div class="qc-ritual-progress__text" role="status" aria-live="polite">
           <strong>三叩首 · {{ bowProgress.count }}/3</strong>
@@ -1089,6 +1104,7 @@ onBeforeUnmount(() => {
             <button type="button" class="ghost-btn" @click="anotherBlessing">换一句祝福</button>
             <button type="button" class="ghost-btn" @click="resetAll">再拜一次</button>
           </div>
+          <FamilyCare kind="qiucai" :slug="slugOf(deity)" :subject="deity.name" />
         </div>
       </div>
     </section>
@@ -1268,6 +1284,7 @@ onBeforeUnmount(() => {
 
 /* ===== 满屏拜财神：竖屏铺满，横屏等高 ===== */
 .qc-full {
+  position: relative;
   --controls-handle-height: calc(44px + env(safe-area-inset-bottom, 0px));
   --gold: #c99a2e;
   --red: #9e1b1f;

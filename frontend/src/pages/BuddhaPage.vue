@@ -8,6 +8,8 @@ import { useRitual } from '../composables/useRitual.js'
 import WishForm from '../components/WishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
+import FamilyCare from '../components/FamilyCare.vue'
+import InviteBanner from '../components/InviteBanner.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
 
@@ -60,6 +62,18 @@ const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== rou
 const ritual = useRitual('buddha')
 const drawerOpen = ref(false)
 
+// 叩拜后浮出「叫家人一起来」；家人从邀请链接进来时顶部给一句说明
+const showFamilyBar = ref(false)
+const familyBarDismissed = ref(false)
+let familyBarTimer = null
+watch(() => ritual.state.done.bow, (bowed) => {
+  clearTimeout(familyBarTimer)
+  if (bowed && !familyBarDismissed.value) familyBarTimer = setTimeout(() => { showFamilyBar.value = true }, 3500)
+})
+onBeforeUnmount(() => clearTimeout(familyBarTimer))
+const invited = computed(() => route.query.invite === '1')
+const inviteDismissed = ref(false)
+
 function updatePageMeta() {
   if (!buddha.value) return
 
@@ -79,6 +93,8 @@ watch(
 
     ritual.reset()
     drawerOpen.value = false
+    showFamilyBar.value = false
+    familyBarDismissed.value = false
     submitted.value = null
     updatePageMeta()
   },
@@ -133,6 +149,22 @@ const doneActions = computed(() => {
     <div class="prayer-layout" :class="{ 'drawer-open': drawerOpen }">
       <section class="stage-section card">
         <PrayerStage ref="prayerStage" :buddha="buddha" :ritual="ritual" :blessing-id="blessingId" @blessing-end="onBlessingEnd" />
+        <InviteBanner
+          v-if="invited && !inviteDismissed"
+          kind="buddha"
+          :subject="buddha.name"
+          action-label="开始礼拜"
+          @start="drawerOpen = true; inviteDismissed = true"
+          @close="inviteDismissed = true"
+        />
+        <FamilyCare
+          v-if="showFamilyBar && !drawerOpen"
+          kind="buddha"
+          :slug="buddha.slug"
+          :subject="buddha.name"
+          variant="bar"
+          @close="showFamilyBar = false; familyBarDismissed = true"
+        />
       </section>
 
       <button
@@ -176,6 +208,8 @@ const doneActions = computed(() => {
           <hr class="divider" />
           <WishForm :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" />
         </template>
+
+        <FamilyCare kind="buddha" :slug="buddha.slug" :subject="buddha.name" />
 
         <hr class="divider" />
 
@@ -269,6 +303,7 @@ const doneActions = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 :deep(.stage) {

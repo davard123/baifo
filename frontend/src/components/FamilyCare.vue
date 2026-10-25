@@ -1,51 +1,65 @@
 <script setup>
-// 祭祖页：拜完之后「叫家人一起来」和「提醒我」。
-// 邀请链接不带先人姓名；提醒是浏览器里生成的日历文件，什么都不上传。
+// 礼佛、求财、祭祖页：拜完之后「叫家人一起来」和「提醒我」。
+// 邀请链接不带任何个人信息；提醒是浏览器里生成的日历文件，什么都不上传。
 import { computed, ref } from 'vue'
 import {
-  buildIcs, downloadIcs, inviteText, inviteUrl, isWeChat, nextYearly, spokenName, upcomingFestivals,
+  buildIcs, downloadIcs, inviteCard, inviteText, isWeChat, nextYearly, pageUrl, spokenName, upcomingFestivals,
 } from '../utils/familyCare.js'
 
 const props = defineProps({
-  slug: { type: String, required: true },
-  // 'bar'：舞台上拜完后浮出的小条；'section'：供养面板里的完整版
+  // 'ancestor' | 'buddha' | 'qiucai'
+  kind: { type: String, default: 'ancestor' },
+  slug: { type: String, default: '' },
+  // 佛菩萨或财神的名字
+  subject: { type: String, default: '' },
+  // 'bar'：舞台上拜完后浮出的小条；'section'：面板里的完整版
   variant: { type: String, default: 'section' },
 })
 
-const who = computed(() => spokenName(props.slug))
 const emit = defineEmits(['close'])
+const who = computed(() => props.kind === 'ancestor' ? spokenName(props.slug) : (props.subject || '财神'))
+const verb = computed(() => props.kind === 'ancestor' ? '祭拜' : '拜')
+const lead = computed(() => {
+  if (props.kind === 'buddha') return `心香已上。叫上家里人，一起为全家祈一份平安。`
+  if (props.kind === 'qiucai') return `财神已拜。叫上家里人一起来，全家都沾沾财气。`
+  return `心意到了。叫上家里人，一起给${who.value}上一炷香。`
+})
+const sub = computed(() => props.kind === 'ancestor'
+  ? '回不了家的家人，也可以点开链接一起上香。忌日、清明、冬至，手机会提前一天提醒你。'
+  : props.kind === 'qiucai'
+    ? '把链接发到家人群，大家都能点开拜一拜。春节、初五迎财神，手机会提前一天提醒你。'
+    : '把链接发到家人群，大家都能点开一起礼拜、写祈愿。')
+const text = computed(() => inviteText(props.kind, props.slug, props.subject))
 const open = ref('')
 const copied = ref(false)
 const shareNote = ref('')
 const inWeChat = typeof navigator !== 'undefined' && isWeChat()
 
-const festivals = upcomingFestivals()
+const festivals = upcomingFestivals(props.kind)
 const picked = ref(Object.fromEntries(festivals.map((f) => [f.key, true])))
 const anniversary = ref('')
 const remindNote = ref('')
 
+const cardSrc = ref('')
+
 async function invite() {
   open.value = 'invite'
-  const text = inviteText(props.slug)
-  if (navigator.share && !inWeChat) {
+  shareNote.value = ''
+  if (!cardSrc.value) {
     try {
-      await navigator.share({ title: `一起祭拜${who.value}`, text, url: inviteUrl() })
-      shareNote.value = '已打开分享，选家人或家人群发送即可。'
-      return
-    } catch (error) {
-      if (error?.name === 'AbortError') return
+      cardSrc.value = await inviteCard(props.kind, props.slug, props.subject)
+    } catch {
+      shareNote.value = '邀请图没生成出来，可以先复制下面这段话发给家人。'
     }
   }
-  await copy()
 }
 
 async function copy() {
-  const text = inviteText(props.slug)
   try {
-    await navigator.clipboard.writeText(text)
+    await navigator.clipboard.writeText(text.value)
   } catch {
     const box = document.createElement('textarea')
-    box.value = text
+    box.value = text.value
     document.body.appendChild(box)
     box.select()
     document.execCommand('copy')
@@ -56,43 +70,45 @@ async function copy() {
 }
 
 function saveReminders() {
-  const pageUrl = `${location.origin}${location.pathname}`
   const events = festivals
     .filter((f) => picked.value[f.key])
-    .map((f) => ({ date: f.date, title: `${f.label} · 祭拜${who.value}` }))
-  if (anniversary.value) {
+    .map((f) => ({ date: f.date, title: `${f.label} · ${verb.value}${who.value}` }))
+  if (props.kind === 'ancestor' && anniversary.value) {
     events.push({ date: nextYearly(anniversary.value.slice(5)), title: `${who.value}的忌日`, yearly: true })
   }
   if (!events.length) {
     remindNote.value = '请至少选一个日子。'
     return
   }
-  downloadIcs(buildIcs(events, pageUrl))
+  downloadIcs(buildIcs(events, pageUrl()))
   remindNote.value = '日历文件已生成，打开后选「添加到日历」，到日子前一天上午手机会提醒你。'
 }
 </script>
 
 <template>
-  <section class="family-care" :class="`family-care--${variant}`" aria-label="和家人一起祭拜">
+  <section class="family-care" :class="`family-care--${variant}`" aria-label="和家人一起">
     <template v-if="variant === 'bar'">
       <button type="button" class="fc-close" aria-label="关闭" @click="emit('close')">×</button>
-      <p class="fc-lead">心意到了。叫上家里人，一起给{{ who }}上一炷香。</p>
+      <p class="fc-lead">{{ lead }}</p>
     </template>
     <template v-else>
-      <h2 class="fc-title">和家人一起，记得日子</h2>
-      <p class="fc-sub">回不了家的家人，也可以点开链接一起上香。忌日、清明、冬至，手机会提前一天提醒你。</p>
+      <h2 class="fc-title">{{ festivals.length ? '和家人一起，记得日子' : '和家人一起' }}</h2>
+      <p class="fc-sub">{{ sub }}</p>
     </template>
 
     <div class="fc-actions">
       <button type="button" class="fc-btn fc-btn--primary" @click="invite">叫家人一起来拜</button>
-      <button type="button" class="fc-btn" :aria-expanded="open === 'remind'" @click="open = open === 'remind' ? '' : 'remind'">提醒我</button>
+      <button v-if="festivals.length" type="button" class="fc-btn" :aria-expanded="open === 'remind'" @click="open = open === 'remind' ? '' : 'remind'">提醒我</button>
     </div>
 
     <div v-if="open === 'invite'" class="fc-panel" role="status">
-      <p class="fc-preview">{{ inviteText(slug) }}</p>
+      <img v-if="cardSrc" :src="cardSrc" class="fc-card" :alt="`邀请家人一起${verb}${who}的二维码图片`" />
+      <p class="fc-note">{{ inWeChat ? '长按上面的图片，选「发送给朋友」或「保存图片」，发到家人群。家人长按二维码就能打开。' : '在手机上长按图片可保存或转发；家人用微信扫码就能打开。' }}</p>
+      <div class="fc-row">
+        <a v-if="cardSrc && !inWeChat" :href="cardSrc" download="一起来拜-fopusha.png" class="fc-btn fc-btn--small">保存图片</a>
+        <button type="button" class="fc-btn fc-btn--small" @click="copy">{{ copied ? '已复制文字' : '复制文字链接' }}</button>
+      </div>
       <p v-if="shareNote" class="fc-note">{{ shareNote }}</p>
-      <p v-if="inWeChat" class="fc-note">也可以点右上角「···」→「发送给朋友」。</p>
-      <button v-if="!copied" type="button" class="fc-btn fc-btn--small" @click="copy">复制这段话</button>
     </div>
 
     <div v-if="open === 'remind'" class="fc-panel">
@@ -101,7 +117,7 @@ function saveReminders() {
         <label v-for="f in festivals" :key="f.key">
           <input v-model="picked[f.key]" type="checkbox" /> {{ f.label }}（{{ +f.date.slice(5, 7) }}月{{ +f.date.slice(8) }}日）
         </label>
-        <label class="fc-anniv">
+        <label v-if="kind === 'ancestor'" class="fc-anniv">
           {{ who }}的忌日（公历，每年提醒，可不填）
           <input v-model="anniversary" type="date" />
         </label>
@@ -140,7 +156,9 @@ function saveReminders() {
 .fc-lead { padding: 0 24px; font-size: 0.95rem; color: var(--gold-light); text-align: center; line-height: 1.6; }
 .fc-title { font-size: 1.05rem; color: var(--gold-light); }
 .fc-sub { font-size: 0.86rem; color: var(--text-muted); line-height: 1.7; }
-.fc-actions { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+.fc-actions { display: flex; gap: 10px; }
+.fc-actions .fc-btn { flex: 1; }
+.fc-actions .fc-btn--primary { flex: 1.4; }
 .fc-btn {
   min-height: 44px;
   padding: 8px 12px;
@@ -153,6 +171,9 @@ function saveReminders() {
 }
 .fc-btn--primary { background: linear-gradient(135deg, #e0b76e, #f0d091); border-color: transparent; color: #2a1c0c; font-weight: 600; }
 .fc-btn--small { min-height: 38px; font-size: 0.88rem; justify-self: start; }
+.fc-card { width: min(260px, 100%); justify-self: center; border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+.fc-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.fc-row .fc-btn { display: inline-flex; align-items: center; text-decoration: none; }
 .fc-panel { display: grid; gap: 8px; padding-top: 4px; }
 .fc-preview { font-size: 0.86rem; line-height: 1.7; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.25); overflow-wrap: anywhere; }
 .fc-note { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }

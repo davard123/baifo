@@ -9,7 +9,7 @@ import AncestorWishForm from '../components/AncestorWishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
 import FamilyCare from '../components/FamilyCare.vue'
-import { spokenName } from '../utils/familyCare.js'
+import InviteBanner from '../components/InviteBanner.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getPhoto, getName, getField, saveField, saveName } from '../utils/localPhoto.js'
 import {
@@ -309,15 +309,17 @@ const doneActions = computed(() => {
           :ritual="ritual"
           @edit-name="openNameEditor"
         />
-        <div v-if="invited && !inviteDismissed" class="invite-banner" role="status">
-          <p>家人邀请你一起祭拜{{ spokenName(ancestor.slug) }}。点「祭祖供养」，上一炷香、敬一杯酒，心意就到了。</p>
-          <div class="invite-banner__actions">
-            <button type="button" class="invite-banner__go" @click="drawerOpen = true; inviteDismissed = true">开始祭拜</button>
-            <button type="button" class="invite-banner__close" aria-label="关闭提示" @click="inviteDismissed = true">×</button>
-          </div>
-        </div>
+        <InviteBanner
+          v-if="invited && !inviteDismissed"
+          kind="ancestor"
+          :slug="ancestor.slug"
+          action-label="开始祭拜"
+          @start="drawerOpen = true; inviteDismissed = true"
+          @close="inviteDismissed = true"
+        />
         <FamilyCare
           v-if="showFamilyBar && !drawerOpen"
+          kind="ancestor"
           :slug="ancestor.slug"
           variant="bar"
           @close="showFamilyBar = false; familyBarDismissed = true"
@@ -366,7 +368,7 @@ const doneActions = computed(() => {
           <div class="ancestor-ritual-panel">
             <RitualPanel v-if="!submitted" :ritual="ritualPanel" homage-title="祭奠" />
           </div>
-          <FamilyCare :slug="ancestor.slug" />
+          <FamilyCare kind="ancestor" :slug="ancestor.slug" />
           <section class="inscription-editor" aria-labelledby="inscription-editor-title">
           <div class="editor-title-row">
             <div>
@@ -527,36 +529,6 @@ const doneActions = computed(() => {
   position: relative;
 }
 
-.invite-banner {
-  position: absolute;
-  top: calc(124px + env(safe-area-inset-top, 0px));
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(460px, calc(100% - 32px));
-  z-index: 6;
-  display: grid;
-  gap: 10px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid rgba(242, 200, 121, 0.35);
-  background: rgba(24, 17, 12, 0.9);
-  color: var(--gold-light);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  text-align: center;
-}
-.invite-banner__actions { display: flex; justify-content: center; gap: 10px; }
-.invite-banner__go {
-  min-height: 40px;
-  padding: 6px 22px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #e0b76e, #f0d091);
-  color: #2a1c0c;
-  font-weight: 600;
-  cursor: pointer;
-}
-.invite-banner__close { width: 40px; border: none; background: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
 
 .panel-toggle {
   position: absolute;
