@@ -152,7 +152,7 @@ onMounted(() => {
           <li><strong>天天来添财气</strong>记录你的连拜天数和财气值，坚持越久，祝福越满。</li>
         </ul>
         <span class="qiucai-banner__cta">现在去拜财神 →</span>
-        <span class="qiucai-banner__note">免费 · 不用注册 · 几分钟拜完</span>
+        <span class="qiucai-banner__note">免费 · 不用注册 · 不收任何费用 · 几分钟拜完</span>
       </div>
     </a>
 
@@ -301,8 +301,8 @@ onMounted(() => {
     </section>
 
     <section class="card privacy-note" aria-labelledby="privacy-note-title">
-      <h2 id="privacy-note-title" class="section-title">提交前，请留意个人信息</h2>
-      <p>牌位照片和自定义姓名保存在当前设备。你主动提交的祈愿或回向文字会发送到服务器，请不要填写住址、电话或其他私密信息。</p>
+      <h2 id="privacy-note-title" class="section-title">免费，不用注册，不收任何费用</h2>
+      <p>牌位照片、先人姓名和你写的祈愿，默认只保存在你自己的手机里，不上传。只有你选了「公开到心愿墙」，祈愿才会显示在网站上，名字只显示第一个字；公开的内容请不要写住址、电话等私密信息。</p>
     </section>
 
     <section class="topics-section">

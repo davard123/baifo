@@ -8,6 +8,8 @@ import { useRitual } from '../composables/useRitual.js'
 import AncestorWishForm from '../components/AncestorWishForm.vue'
 import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
+import FamilyCare from '../components/FamilyCare.vue'
+import { spokenName } from '../utils/familyCare.js'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getPhoto, getName, getField, saveField, saveName } from '../utils/localPhoto.js'
 import {
@@ -230,8 +232,22 @@ function syncAncestorState() {
   hydrateInscriptionEditor()
 }
 
+// 叩拜动作播完后，在舞台下方浮出「叫家人一起来 / 提醒我」；家人从邀请链接进来时顶部给一句说明
+const showFamilyBar = ref(false)
+const familyBarDismissed = ref(false)
+let familyBarTimer = null
+watch(() => ritual.state.done.bow, (bowed) => {
+  clearTimeout(familyBarTimer)
+  if (bowed && !familyBarDismissed.value) familyBarTimer = setTimeout(() => { showFamilyBar.value = true }, 3500)
+})
+onBeforeUnmount(() => clearTimeout(familyBarTimer))
+const invited = computed(() => route.query.invite === '1')
+const inviteDismissed = ref(false)
+
 function resetStageState() {
   ritual.reset()
+  showFamilyBar.value = false
+  familyBarDismissed.value = false
 }
 
 function applyPageMeta() {
@@ -293,6 +309,19 @@ const doneActions = computed(() => {
           :ritual="ritual"
           @edit-name="openNameEditor"
         />
+        <div v-if="invited && !inviteDismissed" class="invite-banner" role="status">
+          <p>家人邀请你一起祭拜{{ spokenName(ancestor.slug) }}。点「祭祖供养」，上一炷香、敬一杯酒，心意就到了。</p>
+          <div class="invite-banner__actions">
+            <button type="button" class="invite-banner__go" @click="drawerOpen = true; inviteDismissed = true">开始祭拜</button>
+            <button type="button" class="invite-banner__close" aria-label="关闭提示" @click="inviteDismissed = true">×</button>
+          </div>
+        </div>
+        <FamilyCare
+          v-if="showFamilyBar && !drawerOpen"
+          :slug="ancestor.slug"
+          variant="bar"
+          @close="showFamilyBar = false; familyBarDismissed = true"
+        />
       </section>
 
       <button
@@ -337,6 +366,7 @@ const doneActions = computed(() => {
           <div class="ancestor-ritual-panel">
             <RitualPanel v-if="!submitted" :ritual="ritualPanel" homage-title="祭奠" />
           </div>
+          <FamilyCare :slug="ancestor.slug" />
           <section class="inscription-editor" aria-labelledby="inscription-editor-title">
           <div class="editor-title-row">
             <div>
@@ -418,7 +448,7 @@ const doneActions = computed(() => {
             <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
           </section>
           <section class="privacy-note">
-            <p>个性化姓名和照片只保存在当前设备，不会公开给其他人。</p>
+            <p>免费，不用注册，不收任何费用。先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
           </section>
           <hr class="divider" />
           <DedicationDone
@@ -494,7 +524,39 @@ const doneActions = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
+
+.invite-banner {
+  position: absolute;
+  top: calc(124px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(460px, calc(100% - 32px));
+  z-index: 6;
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(242, 200, 121, 0.35);
+  background: rgba(24, 17, 12, 0.9);
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.invite-banner__actions { display: flex; justify-content: center; gap: 10px; }
+.invite-banner__go {
+  min-height: 40px;
+  padding: 6px 22px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #e0b76e, #f0d091);
+  color: #2a1c0c;
+  font-weight: 600;
+  cursor: pointer;
+}
+.invite-banner__close { width: 40px; border: none; background: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
 
 .panel-toggle {
   position: absolute;
