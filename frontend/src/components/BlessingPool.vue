@@ -52,22 +52,28 @@ const drawerOpen = ref(false)
 
 // Each blessing uses its own generated, transparent 2:3 guardian figure in
 // both the selection card and the immersive sanctuary stage.
+// 每个祈福项对应一位传统神明，三种造型（彩绘木雕 / 鎏金铜 / 白瓷）打开时随机显示一张
 const blessingSubjects = {
-  caishen: { src: '/sanctuary/blessing-caishen-20261019-v2.webp', alt: '财神' },
-  jikang: { src: '/sanctuary/blessing-jikang-20261019-v2.webp', alt: '健康守护神' },
-  pingan: { src: '/sanctuary/blessing-pingan-20261019-v2.webp', alt: '平安守护神' },
-  xueye: { src: '/sanctuary/blessing-xueye-20261019-v2.webp', alt: '文昌帝君艺术像' },
-  shou: { src: '/sanctuary/blessing-shou-20261019-v2.webp', alt: '寿星' },
-  yinyuan: { src: '/sanctuary/blessing-yinyuan-20261019-v2.webp', alt: '月老' },
-  siling: { src: '/sanctuary/blessing-siling-20261019-v2.webp', alt: '送子娘娘艺术像' },
-  xiaozai: { src: '/sanctuary/blessing-xiaozai-20261019-v2.webp', alt: '消灾守护神' },
-  gongming: { src: '/sanctuary/blessing-gongming-20261019-v2.webp', alt: '禄星' },
-  fulu: { src: '/sanctuary/blessing-fulu-20261019-v2.webp', alt: '福神' },
-  heping: { src: '/sanctuary/blessing-heping-20261019-v2.webp', alt: '和平守护神' },
-  jiaqin: { src: '/sanctuary/blessing-jiaqin-20261019-v2.webp', alt: '家宅守护神' },
+  caishen: { alt: '财帛星君', srcs: ['/sanctuary/blessing-caishen-20261024-1.webp', '/sanctuary/blessing-caishen-20261024-2.webp', '/sanctuary/blessing-caishen-20261024-3.webp'] },
+  zhaiyun: { alt: '土地公（福德正神）', srcs: ['/sanctuary/blessing-zhaiyun-20261024-1.webp', '/sanctuary/blessing-zhaiyun-20261024-2.webp', '/sanctuary/blessing-zhaiyun-20261024-3.webp'] },
+  jikang: { alt: '药王孙思邈', srcs: ['/sanctuary/blessing-jikang-20261024-1.webp', '/sanctuary/blessing-jikang-20261024-2.webp', '/sanctuary/blessing-jikang-20261024-3.webp'] },
+  pingan: { alt: '妈祖', srcs: ['/sanctuary/blessing-pingan-20261024-1.webp', '/sanctuary/blessing-pingan-20261024-2.webp', '/sanctuary/blessing-pingan-20261024-3.webp'] },
+  xueye: { alt: '文昌帝君', srcs: ['/sanctuary/blessing-xueye-20261024-1.webp', '/sanctuary/blessing-xueye-20261024-2.webp', '/sanctuary/blessing-xueye-20261024-3.webp'] },
+  shou: { alt: '寿星', srcs: ['/sanctuary/blessing-shou-20261019-v2.webp', '/sanctuary/blessing-shou-20261024-2.webp', '/sanctuary/blessing-shou-20261024-3.webp'] },
+  yinyuan: { alt: '月下老人', srcs: ['/sanctuary/blessing-yinyuan-20261019-v2.webp', '/sanctuary/blessing-yinyuan-20261024-2.webp', '/sanctuary/blessing-yinyuan-20261024-3.webp'] },
+  siling: { alt: '送子观音', srcs: ['/sanctuary/blessing-siling-20261024-1.webp', '/sanctuary/blessing-siling-20261024-2.webp', '/sanctuary/blessing-siling-20261024-3.webp'] },
+  xiaozai: { alt: '钟馗', srcs: ['/sanctuary/blessing-xiaozai-20261024-1.webp', '/sanctuary/blessing-xiaozai-20261024-2.webp', '/sanctuary/blessing-xiaozai-20261024-3.webp'] },
+  gongming: { alt: '魁星', srcs: ['/sanctuary/blessing-gongming-20261024-1.webp', '/sanctuary/blessing-gongming-20261024-2.webp', '/sanctuary/blessing-gongming-20261024-3.webp'] },
+  fulu: { alt: '天官', srcs: ['/sanctuary/blessing-fulu-20261024-1.webp', '/sanctuary/blessing-fulu-20261024-2.webp', '/sanctuary/blessing-fulu-20261024-3.webp'] },
+  jiaqin: { alt: '和合二仙', srcs: ['/sanctuary/blessing-jiaqin-20261024-1.webp', '/sanctuary/blessing-jiaqin-20261024-2.webp', '/sanctuary/blessing-jiaqin-20261024-3.webp'] },
 }
 
-const activeSubject = computed(() => (active.value ? blessingSubjects[active.value.key] || null : null))
+const subjectPick = ref(0)
+const activeSubject = computed(() => {
+  const subject = active.value ? blessingSubjects[active.value.key] : null
+  if (!subject) return null
+  return { alt: subject.alt, src: subject.srcs[subjectPick.value % subject.srcs.length] }
+})
 const targetSuggestions = computed(() => getBlessingSuggestions(active.value?.key))
 
 function rememberTarget() {
@@ -107,6 +113,7 @@ function open(blessing) {
   cancelSubmission()
   if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
+  subjectPick.value = Math.floor(Math.random() * 3)
   stage.value = 'form'
   resultWish.value = ''
   ritual.reset()

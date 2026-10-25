@@ -708,6 +708,15 @@ async function drawCard(data) {
   ctx.font = `28px ${serif}`
   ctx.fillText(`${data.date} · fopusha.com 求财祈福`, canvas.width / 2, 1170)
 
+  // 右下角二维码：卡片转发到微信后，朋友长按就能打开拜财神页面
+  const qr = await loadImage('/qiucai/qr-qiucai.png').catch(() => null)
+  if (qr) {
+    ctx.drawImage(qr, 718, 1040, 120, 120)
+    ctx.fillStyle = '#fdecc1'
+    ctx.font = `20px ${serif}`
+    ctx.fillText('扫码拜财神', 778, 1190)
+  }
+
   try {
     return canvas.toDataURL('image/png')
   } catch {

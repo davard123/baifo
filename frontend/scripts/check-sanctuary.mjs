@@ -30,10 +30,9 @@ for (const file of files) {
 }
 const assetCount = sanctuaryRefs.size
 const blessingKeys = [
-  'caishen', 'jikang', 'pingan', 'xueye', 'shou', 'yinyuan',
-  'siling', 'xiaozai', 'gongming', 'fulu', 'heping', 'jiaqin',
+  'caishen', 'zhaiyun', 'jikang', 'pingan', 'xueye', 'shou',
+  'yinyuan', 'siling', 'xiaozai', 'gongming', 'fulu', 'jiaqin',
 ]
-const blessingAssetPaths = blessingKeys.map((key) => '/sanctuary/blessing-' + key + '-20261019-v2.webp')
 const ancestor = fs.readFileSync(path.join(root, files[0]), 'utf8')
 assert(ancestor.includes('props.customName'), 'custom inscription remains supported')
 assert(ancestor.includes(':src="customPhoto"'), 'local photo remains supported')
@@ -42,11 +41,14 @@ const blessing = fs.readFileSync(path.join(root, files[1]), 'utf8')
 assert(!blessing.includes(':src="active.bg"'), 'no flat blessing poster in immersive stage')
 const blessingData = fs.readFileSync(path.join(root, 'src/data/blessings.js'), 'utf8')
 const subjectBlock = blessing.match(/const blessingSubjects = \{[\s\S]*?\n\}/)?.[0] || ''
-assert.equal(blessingAssetPaths.length, 12, '12 blessing assets are required')
-for (const [index, assetPath] of blessingAssetPaths.entries()) {
-  const key = blessingKeys[index]
-  assert(blessing.includes(assetPath), `stage asset mapping: ${key}`)
-  assert(blessingData.includes(assetPath), `selection asset mapping: ${key}`)
+assert.equal(blessingKeys.length, 12, '12 blessing items are required')
+for (const key of blessingKeys) {
+  // 每项至少 3 张造型图，选择格子里的小图必须是其中之一
+  const line = subjectBlock.split('\n').find((l) => l.trim().startsWith(key + ':')) || ''
+  const srcs = [...line.matchAll(/'(\/sanctuary\/[^']+)'/g)].map((m) => m[1])
+  assert(srcs.length >= 3, `stage figures for ${key}`)
+  const icon = blessingData.match(new RegExp("key: '" + key + "'[^}]*icon: '([^']+)'"))?.[1]
+  assert(icon && srcs.includes(icon), `selection icon for ${key}`)
 }
 for (const reused of ['/qiucai/', 'mandarin-ducks-20261019', 'harmony-tree-20261019', ...Array.from({ length: 8 }, (_, index) => '/a' + (index + 1) + '-20260906')]) {
   assert(!subjectBlock.includes(reused), `reused blessing subject asset: ${reused}`)
