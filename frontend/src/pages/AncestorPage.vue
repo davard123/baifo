@@ -10,6 +10,7 @@ import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
 import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
+import PanelTabs from '../components/PanelTabs.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getPhoto, getName, getField, saveField, saveName } from '../utils/localPhoto.js'
 import {
@@ -68,6 +69,7 @@ function toggleDrawer() {
 
 function openNameEditor() {
   drawerOpen.value = true
+  panelTab.value = 'do'
   saveState.value = 'idle'
   saveError.value = ''
   nextTick(() => nameInput.value?.focus())
@@ -243,6 +245,7 @@ watch(() => ritual.state.done.bow, (bowed) => {
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
 const inviteDismissed = ref(false)
+const panelTab = ref('do')
 
 function resetStageState() {
   ritual.reset()
@@ -267,6 +270,7 @@ watch(
     resetStageState()
     submitted.value = null
     drawerOpen.value = false
+    panelTab.value = 'do'
     applyPageMeta()
   },
   { immediate: true }
@@ -360,6 +364,8 @@ const doneActions = computed(() => {
         </div>
         <div class="panel-scroll">
           <h1 class="namo-title">{{ displayAncestorName }}</h1>
+          <PanelTabs v-model="panelTab" read-label="祭祀说明" />
+          <div v-show="panelTab === 'do'">
           <p class="ritual-focus-note">
             <span aria-hidden="true">🍶</span>
             <strong>祭祀动作</strong>
@@ -368,6 +374,27 @@ const doneActions = computed(() => {
           <div class="ancestor-ritual-panel">
             <RitualPanel v-if="!submitted" :ritual="ritualPanel" homage-title="祭奠" />
           </div>
+          <DedicationDone
+            v-if="submitted"
+            kind="ancestor"
+            :subject-name="displayAncestorName"
+            :name="submitted.username"
+            :age="submitted.age"
+            :wish="submitted.wish"
+            :email="submitted.email || ''"
+            :actions="doneActions"
+          />
+
+          <template v-else>
+            <AncestorWishForm
+                :key="ancestor.slug"
+              :slug="ancestor.slug"
+              :default-wish="ancestor.wish"
+              :default-ancestor-name="displayAncestorName"
+              :default-relationship="defaultRelationship"
+              :on-submit="onSubmit"
+            />
+          </template>
           <FamilyCare kind="ancestor" :slug="ancestor.slug" />
           <section class="inscription-editor" aria-labelledby="inscription-editor-title">
           <div class="editor-title-row">
@@ -433,7 +460,8 @@ const doneActions = computed(() => {
           </div>
           </section>
           <RitualNav v-if="!submitted" :actions="doneActions" label="拜祭页面导航" inline />
-          <hr v-if="!submitted" class="divider" />
+          </div>
+          <div v-show="panelTab === 'read'">
           <p class="ancestor-desc">{{ ancestor.desc }}</p>
           <div class="page-tags">
             <span>{{ ancestor.subtitle }}</span>
@@ -446,34 +474,13 @@ const doneActions = computed(() => {
               <span>{{ displayAncestorName }}</span>
               <span>{{ defaultRelationship }}</span>
             </div>
-            <p>牌位文字可在上方直接编辑；下面的表单“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
+            <p>牌位文字可在「供养 · 祈愿」页里编辑；下面的表单“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
             <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
           </section>
           <section class="privacy-note">
             <p>免费，不用注册，不收任何费用。先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
           </section>
-          <hr class="divider" />
-          <DedicationDone
-            v-if="submitted"
-            kind="ancestor"
-            :subject-name="displayAncestorName"
-            :name="submitted.username"
-            :age="submitted.age"
-            :wish="submitted.wish"
-            :email="submitted.email || ''"
-            :actions="doneActions"
-          />
-
-          <template v-else>
-            <AncestorWishForm
-                :key="ancestor.slug"
-              :slug="ancestor.slug"
-              :default-wish="ancestor.wish"
-              :default-ancestor-name="displayAncestorName"
-              :default-relationship="defaultRelationship"
-              :on-submit="onSubmit"
-            />
-          </template>
+          </div>
         </div>
       </section>
     </div>

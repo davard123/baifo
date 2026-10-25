@@ -10,6 +10,7 @@ import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
 import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
+import PanelTabs from '../components/PanelTabs.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
 
@@ -73,6 +74,7 @@ watch(() => ritual.state.done.bow, (bowed) => {
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
 const inviteDismissed = ref(false)
+const panelTab = ref('do')
 
 function updatePageMeta() {
   if (!buddha.value) return
@@ -93,6 +95,7 @@ watch(
 
     ritual.reset()
     drawerOpen.value = false
+    panelTab.value = 'do'
     showFamilyBar.value = false
     familyBarDismissed.value = false
     submitted.value = null
@@ -190,8 +193,9 @@ const doneActions = computed(() => {
         <RitualNav v-if="!submitted" :actions="doneActions" label="礼佛页面导航" inline />
         <h1 class="namo-title">{{ buddha.namo }}</h1>
 
-        <hr class="divider" />
+        <PanelTabs v-model="panelTab" :read-label="`${buddha.name}说明`" />
 
+        <div v-show="panelTab === 'do'">
         <DedicationDone
           v-if="submitted && blessingPhase === 'idle'"
           kind="buddha"
@@ -210,9 +214,9 @@ const doneActions = computed(() => {
         </template>
 
         <FamilyCare kind="buddha" :slug="buddha.slug" :subject="buddha.name" />
+        </div>
 
-        <hr class="divider" />
-
+        <div v-show="panelTab === 'read'">
         <p class="buddha-desc">{{ buddha.desc }}</p>
 
         <div class="page-tags">
@@ -252,6 +256,7 @@ const doneActions = computed(() => {
             </router-link>
           </div>
         </section>
+        </div>
       </section>
     </div>
     </div>

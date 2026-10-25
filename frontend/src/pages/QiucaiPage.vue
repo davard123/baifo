@@ -273,7 +273,7 @@ function act(way) {
     const count = completedDeities.value.length
     const total = CAISHEN.length
     scheduleRitualToast(count >= total
-      ? '八位神仙全部拜圆满！打开求财说明，可以生成你的成功愿景图了。'
+      ? '八位神仙全部拜圆满！打开「写心愿 · 说明」，可以生成你的成功愿景图了。'
       : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`, 1400)
   }
 
@@ -308,7 +308,11 @@ function continueToNextDeity() {
   nextTick(() => drawerHandleRef.value?.focus({ preventScroll: true }))
 }
 
+// 抽屉分两页：「写心愿」是操作，「财神说明」是介绍和长文，不再混在一起
+const infoTab = ref('do')
+
 function writeCeremonyWish() {
+  infoTab.value = 'do'
   nextTick(() => wishNameRef.value?.focus())
 }
 
@@ -373,6 +377,7 @@ function toggleFullscreen() {
 function openInfoDrawer() {
   closeDrawer({ restoreFocus: false })
   infoDrawerOpen.value = true
+  infoTab.value = 'do'
   nextTick(() => infoDrawerCloseRef.value?.focus({ preventScroll: true }))
 }
 
@@ -1001,7 +1006,7 @@ onBeforeUnmount(() => {
       @click="toggleInfoDrawer"
     >
       <span aria-hidden="true">☰</span>
-      <span>求财说明</span>
+      <span>写心愿 · 说明</span>
     </button>
 
     <button
@@ -1022,7 +1027,7 @@ onBeforeUnmount(() => {
       aria-labelledby="qc-info-drawer-title"
     >
       <header class="qc-info-drawer__header">
-        <h2 id="qc-info-drawer-title">{{ ceremonyDone ? '三叩首礼成' : '求财说明与心愿' }}</h2>
+        <h2 id="qc-info-drawer-title">{{ ceremonyDone ? '三叩首礼成' : '写心愿 · 财神说明' }}</h2>
         <button
           ref="infoDrawerCloseRef"
           type="button"
@@ -1042,17 +1047,19 @@ onBeforeUnmount(() => {
             <router-link :to="languageLinks.traditionalCurrent ? '/zh-hant/' : '/'" class="qc-ceremony-exit">结束返回首页</router-link>
             <button v-if="!result" type="button" class="qc-ceremony-wish" @click="writeCeremonyWish">写下心愿，领取祝福卡（可选）</button>
           </div>
+          <FamilyCare kind="qiucai" :slug="slugOf(deity)" :subject="deity.name" />
         </section>
+        <div class="qc-tabs" role="tablist" aria-label="面板内容">
+          <button type="button" role="tab" :aria-selected="infoTab === 'do'" :class="{ on: infoTab === 'do' }" @click="infoTab = 'do'">写心愿 · 领祝福卡</button>
+          <button type="button" role="tab" :aria-selected="infoTab === 'read'" :class="{ on: infoTab === 'read' }" @click="infoTab = 'read'">财神说明</button>
+        </div>
         <nav class="qc-language-switch" aria-label="语言切换">
           <span>语言：</span>
           <a v-if="languageLinks.traditionalCurrent" :href="languageLinks.simplified" data-keep-script>简体中文</a>
           <a v-else :href="languageLinks.traditional" data-keep-script>繁體中文</a>
         </nav>
-    <section class="qc-altar card">
+    <section v-show="infoTab === 'do'" class="qc-altar card">
       <div class="qc-panel">
-        <p class="hero-text">
-          不用跑庙，网上求财、网上祈福几分钟就能完成：选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
-        </p>
         <div class="qc-bowl" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <div class="qc-bowl__head">
             <span class="qc-bowl__name"><img :src="PROP('bowl')" alt="" />聚宝盆</span>
@@ -1109,20 +1116,25 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <div v-show="infoTab === 'do'">
     <VisionMaker
       :unlocked="visionPreview || completedDeities.length >= CAISHEN.length"
       :done-count="completedDeities.length"
       :total="CAISHEN.length"
       :default-name="form.name"
     />
+    </div>
 
-    <section class="card qc-info">
+    <section v-show="infoTab === 'read'" class="card qc-info">
+      <p class="hero-text">
+          不用跑庙，网上求财、网上祈福几分钟就能完成：选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
+      </p>
       <h2>{{ deity.name }} · {{ deity.title }}</h2>
       <p>{{ deity.desc }}</p>
       <p v-if="deity.day" class="qc-day">{{ deity.day }}</p>
     </section>
 
-    <section v-if="detail" class="card qc-article qc-detail">
+    <section v-if="detail" v-show="infoTab === 'read'" class="card qc-article qc-detail">
       <p class="hero-text">{{ detail.intro }}</p>
       <section v-for="block in detail.sections" :key="block.title" class="copy-section">
         <h2>{{ block.title }}</h2>
@@ -1143,10 +1155,12 @@ onBeforeUnmount(() => {
       <p class="qc-detail__more"><router-link to="/qiucai/">← 看全部八位财神</router-link></p>
     </section>
 
+    <div v-show="infoTab === 'do'">
     <PublicWishWall kind="caishen" title="求财心愿墙" sub="大家公开的求财心愿，名字只显示第一个字。" :refresh-key="wallKey" />
+    </div>
 
     <p v-if="recordsError" role="alert">{{ recordsError }}</p>
-    <section class="card qc-wall" aria-labelledby="qc-wall-title">
+    <section v-show="infoTab === 'do'" class="card qc-wall" aria-labelledby="qc-wall-title">
       <h2 id="qc-wall-title">我的本机求财记录</h2>
       <p>仅此浏览器可回看，不跨设备；清理浏览器数据可能丢失。没有导入服务器历史记录。</p>
       <p v-if="!wall.length">本机暂无求财记录。</p>
@@ -1159,7 +1173,7 @@ onBeforeUnmount(() => {
       </ul>
     </section>
 
-    <section class="card qc-article">
+    <section v-show="infoTab === 'read'" class="card qc-article">
       <section v-for="block in QIUCAI_ARTICLE" :key="block.title" class="copy-section">
         <h2>{{ block.title }}</h2>
         <p v-for="paragraph in block.paragraphs" :key="paragraph">{{ paragraph }}</p>
@@ -1592,6 +1606,10 @@ onBeforeUnmount(() => {
 .qc-deity.active .qc-deity__seal { border-color: #f3cb78; transform: scale(1.12); box-shadow: 0 0 0 3px rgba(201, 154, 46, 0.45); }
 .qc-deity__name { font-size: 11px; white-space: nowrap; }
 .qc-deity.active .qc-deity__name { color: #f5d592; font-weight: 700; }
+
+.qc-tabs { position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; border-radius: 14px; background: rgba(30, 14, 8, 0.92); }
+.qc-tabs button { min-height: 44px; border: 1px solid rgba(255, 216, 107, 0.25); border-radius: 10px; background: transparent; color: #f3dcae; font-size: 15px; cursor: pointer; }
+.qc-tabs button.on { background: linear-gradient(135deg, #e0b76e, #f0d091); color: #2a1c0c; font-weight: 700; border-color: transparent; }
 
 /* ===== 求财说明抽屉：说明、心愿表单和长文不再撑高主页面 ===== */
 .qc-info-toggle {
