@@ -28,7 +28,7 @@ defineExpose({ unlockSound })
 const assetIds = { shakyamuni: 'a1', amitabha: 'a2', medicine: 'a3', maitreya: 'a4', manjushri: 'a5', samantabhadra: 'a6', guanyin: 'a7', ksitigarbha: 'a8' }
 // 同一尊佛可以有几种造型（原图 + variants），每次进入页面随机选一张
 function pickLook(buddha) {
-  const looks = [{ image: buddha?.image, anchorShift: null, mudra: buddha?.mudra, mudraNote: buddha?.mudraNote }, ...(buddha?.variants || [])]
+  const looks = [{ image: buddha?.image, anchorShift: buddha?.anchorShift ?? null, mudra: buddha?.mudra, mudraNote: buddha?.mudraNote }, ...(buddha?.variants || [])]
   return looks[Math.floor(Math.random() * looks.length)]
 }
 const look = ref(pickLook(props.buddha))
@@ -70,6 +70,8 @@ function ensurePlayer() {
       [assetIds[props.buddha.slug]]: look.value.image,
     },
     anchorShift: look.value.anchorShift,
+    // 旧倾瓶动作含原观音裁片；新像只走按 anchorShift 定位的光效，避免叠回旧手与衣袖。
+    guanyinVariant: props.buddha.slug === 'guanyin' && look.value.image !== props.buddha.image ? 'static' : null,
     // Canvas shakes itself once; mirror only its camera movement onto the DOM
     // background, altar and label. Reset before measuring the hidden image.
     onFrame: (time, camera) => {

@@ -25,6 +25,7 @@ import { wealthRitualProgress, nextWealthDeity } from '../utils/wealthRitual.js'
 import VisionMaker from '../components/VisionMaker.vue'
 import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
+import { pickCaishenLook } from '../data/caishen-looks.js'
 import { isHantPath, stripHant, toHant } from '../i18n/hant.js'
 
 const STORE_KEY = 'fopusha-qiucai-v1'
@@ -71,6 +72,8 @@ const languageLinks = computed(() => ({
 }))
 
 const deity = ref(pageDeity.value || CAISHEN[0])
+// 造型在页面初始化和财神切换时各抽一次；不要在 computed 中随机，避免响应式重算时跳图。
+const look = ref(pickCaishenLook(deity.value))
 const done = ref({})
 const qi = ref(0)
 const toast = ref('')
@@ -111,16 +114,19 @@ const bowlPercent = computed(() => Math.min(100, Math.round((qi.value / BOWL_FUL
 const bowlFull = computed(() => qi.value >= BOWL_FULL)
 // 聚宝盆满或已提交心愿后一直保持赐福姿势；叩拜 3 下临时显灵 3 秒
 const blessing = computed(() => bowlFull.value || Boolean(result.value) || now.value < blessingUntil.value)
-const showPose = computed(() => blessing.value && poseReady.value[deity.value.key])
+const lookKey = computed(() => `${deity.value?.key || 'unknown'}:${look.value?.id || look.value?.image || 'default'}`)
+const showPose = computed(() => blessing.value && poseReady.value[lookKey.value])
 
-function preloadPose(item) {
-  if (!item.pose || poseReady.value[item.key] !== undefined) return
-  poseReady.value = { ...poseReady.value, [item.key]: false }
+function preloadPose(item, selectedLook = look.value) {
+  const bless = selectedLook?.bless || item?.pose
+  const key = `${item?.key || 'unknown'}:${selectedLook?.id || selectedLook?.image || 'default'}`
+  if (!bless || poseReady.value[key] !== undefined) return
+  poseReady.value = { ...poseReady.value, [key]: false }
   const img = new Image()
   img.onload = () => {
-    poseReady.value = { ...poseReady.value, [item.key]: true }
+    poseReady.value = { ...poseReady.value, [key]: true }
   }
-  img.src = item.pose
+  img.src = bless
 }
 
 function flashAura() {
@@ -523,9 +529,14 @@ function resetRitual() {
 function chooseDeity(item, scroll = false) {
   if (item.key !== deity.value.key) resetRitual()
   deity.value = item
-  preloadPose(item)
+  look.value = pickCaishenLook(item)
+  preloadPose(item, look.value)
   if (scroll) fullRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   showToast(`已请${item.name}（${item.title}）`)
+}
+
+function avatarFor(item) {
+  return item.key === deity.value.key ? (look.value?.avatar || item.avatar) : item.avatar
 }
 
 function maskName(name = '') {
@@ -587,7 +598,7 @@ async function submit() {
       blessing: blessingText,
       couplet: pickCouplet(),
       date: dayKey(),
-      image: poseReady.value[deity.value.key] ? deity.value.pose : deity.value.image,
+      image: poseReady.value[lookKey.value] ? (look.value?.bless || look.value?.image) : look.value?.image,
     }
     burst('full', 24)
     try { cardUrl.value = await drawCard(result.value) } catch { cardUrl.value = '' }
@@ -767,7 +778,7 @@ onMounted(() => {
   applyMeta()
   loadStats()
   loadCompleted()
-  preloadPose(deity.value)
+  preloadPose(deity.value, look.value)
   form.value.name = getViewerProfile()?.username || ''
   loadWall()
   fullscreenSupported.value = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled)
@@ -845,11 +856,11 @@ onBeforeUnmount(() => {
         </div>
         <Transition name="pose" type="transition" :duration="400">
           <img
-            :key="deity.key + (showPose ? '-pose' : '')"
-            :src="showPose ? deity.pose : deity.image"
+            :key="deity.key + ':' + (look.id || look.image || 'default') + (showPose ? '-bless' : '')"
+            :src="showPose ? (look.bless || look.image) : look.image"
             :alt="`${deity.name}三维立体像`"
             class="qc-stage__img"
-            :class="{ blessing: showPose }"
+            :class="{ blessing: showPose, 'qc-stage__img--group': deity.key === 'wulu' }"
           />
         </Transition>
         <div class="qc-stage__smoke" aria-hidden="true"></div>
@@ -955,7 +966,7 @@ onBeforeUnmount(() => {
           :aria-pressed="deity.key === item.key"
           @click="pickDeity(item)"
         >
-          <img v-if="item.avatar" :src="item.avatar" :alt="item.name" class="qc-deity__seal" decoding="async" />
+          <img v-if="avatarFor(item)" :src="avatarFor(item)" :alt="item.name" class="qc-deity__seal" decoding="async" />
           <span v-else class="qc-deity__seal">{{ item.name.slice(0, 1) }}</span>
           <span class="qc-deity__name">{{ item.name }}</span>
         </button>
@@ -1337,6 +1348,8 @@ onBeforeUnmount(() => {
   transition: filter 0.6s;
   animation: appear 0.6s ease both;
 }
+/* 五路为五尊群像，不能沿用单尊 620px 上限，否则面部与法宝过小。 */
+.qc-stage__img--group { max-width: min(94%, 1050px); }
 .qc-stage.lit .qc-stage__img,
 .qc-stage.full .qc-stage__img { filter: drop-shadow(0 0 26px rgba(230, 170, 40, 0.65)); }
 .qc-stage__img.blessing { filter: drop-shadow(0 0 30px rgba(240, 180, 40, 0.85)) !important; }

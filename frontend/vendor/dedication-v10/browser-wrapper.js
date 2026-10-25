@@ -42,7 +42,10 @@ function position(value, available, axis) {
 
 /** Three-second, success-triggered Canvas enhancement. Never submits a prayer. */
 class FopushaDedication {
-  constructor({ canvas, originalImage = null, id = 'a1', assetBase = 'assets/', getImageRect = null, assetSources = null, onFrame = null } = {}) {
+  constructor({ canvas, originalImage = null, id = 'a1', assetBase = 'assets/', getImageRect = null, assetSources = null, onFrame = null, anchorShift = null, guanyinVariant = null } = {}) {
+    this.anchorShift = anchorShift;
+    // Alternative silhouettes must not use the original Guanyin's raster wrist rig.
+    this.guanyinVariant = guanyinVariant;
     if (!canvas || typeof canvas.getContext !== 'function') throw new TypeError('A canvas element is required.');
     if (getImageRect !== null && typeof getImageRect !== 'function') throw new TypeError('getImageRect must be a function.');
     this.canvas = canvas;
@@ -149,7 +152,7 @@ class FopushaDedication {
     this._clear();
     if (!this.originalImage && this.assets && !this._destroyed) {
       this.ctx.save();
-      try { engine.drawStatic(this.ctx, this.id, this.assets, { imageRect: this._imageRect(), transparentBackground: true }); }
+      try { engine.drawStatic(this.ctx, this.id, this.assets, { imageRect: this._imageRect(), transparentBackground: true, anchorShift: this.anchorShift, guanyinVariant: this.guanyinVariant }); }
       finally { this.ctx.restore(); }
     }
   }
@@ -157,7 +160,7 @@ class FopushaDedication {
     this.onFrame?.(0, engine.cameraState(0));
     this._clear();
     this.ctx.save();
-    try { engine.draw(this.ctx, t, this.id, this.assets, { imageRect: this._imageRect(), transparentBackground: true });
+    try { engine.draw(this.ctx, t, this.id, this.assets, { imageRect: this._imageRect(), transparentBackground: true, anchorShift: this.anchorShift, guanyinVariant: this.guanyinVariant });
       this.onFrame?.(t, engine.cameraState(t)); }
     finally { this.ctx.restore(); }
   }

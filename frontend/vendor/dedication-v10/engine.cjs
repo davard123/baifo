@@ -8,7 +8,7 @@ function effectState(t){return{env:ease((t-.015)/.28)*(1-ease((t-2.05)/.70)),ft:
 function cameraState(t){const keys=[[1.28,0],[1.32,5],[1.365,-2.5],[1.415,.8],[1.48,0]];if(t<=1.28||t>=1.48)return{dx:0,dy:0,overscan:1};let k=0;while(t>keys[k+1][0])k++;const[a,x]=keys[k],[b,y]=keys[k+1],dx=mix(x,y,ease((t-a)/(b-a)));return{dx,dy:0,overscan:1+Math.abs(dx)/480*1.4}}
 function gripBlend(t){return ease((t-.18)/.36)*(1-ease((t-2.05)/.56))}
 function imageRect(id,W,H,opts={}){if(opts.imageRect)return opts.imageRect;const s=specs.find(s=>s.id===id),[l,top,r,b]=s.bounds,k=Math.min(W*.84/(r-l),H*.78/(b-top));return[W/2-(l+r)*.5*k,H*.90-b*k,1672*k,941*k]}
-function pointFor(id,t,W,H,opts={}){const [x,y,w,h]=imageRect(id,W,H,opts),m=motionState(t),cx=W/2,cy=W>H?H*.28:H*.5;return q=>[cx+(x+q[0]*w/1672-cx)*m.scale,cy+(y+q[1]*h/941-cy)*m.scale]}
+function pointFor(id,t,W,H,opts={}){const [x,y,w,h]=imageRect(id,W,H,opts),m=motionState(t),cx=W/2,cy=W>H?H*.28:H*.5,sh=opts.anchorShift||[0,0];return q=>[cx+(x+(q[0]+sh[0])*w/1672-cx)*m.scale,cy+(y+(q[1]+sh[1])*h/941-cy)*m.scale]}
 function zoom(ctx,t,W,H){const m=motionState(t);const cy=W>H?H*.28:H*.5;ctx.translate(W/2,cy);ctx.scale(m.scale,m.scale);ctx.translate(-W/2,-cy)}
 function original(ctx,id,assets,opts){ctx.drawImage(assets[id],...imageRect(id,ctx.canvas.width,ctx.canvas.height,opts))}
 let portrait=createCanvas(1,1),scene=createCanvas(1,1),rig=createCanvas(1,1);
