@@ -190,6 +190,27 @@ onMounted(() => {
 
     <BlessingPool @wish-submitted="loadWishes" />
 
+    <!-- 2026-10-24 用户要求：祈福和祭祀换位置，祭祀紧跟在祈福池下面 -->
+    <section class="ritual-stage">
+      <a
+        href="/ancestors/"
+        class="ancestor-banner"
+        aria-label="进入祭祀先人页面，追思祖先并进行回向祈福"
+        @click.prevent="navigateTo('/ancestors')"
+        @mouseenter="warmApi"
+        @mousedown="warmApi"
+        @touchstart.passive="warmApi"
+      >
+        <div class="ancestor-banner__media" aria-hidden="true"></div>
+        <div class="ancestor-banner__content">
+          <p class="ancestor-banner__kicker">追思与祭祀</p>
+          <h2>祭祀先人</h2>
+          <p>为亲人供一束花、点一盏灯，写下思念与祝愿。</p>
+          <span class="ancestor-banner__cta">进入祭祀先人</span>
+        </div>
+      </a>
+    </section>
+
     <section class="intro-video card" aria-labelledby="intro-video-title">
       <div class="section-head">
         <p class="section-kicker">1 分钟看懂</p>
@@ -315,27 +336,6 @@ onMounted(() => {
           <p>{{ faq.a }}</p>
         </details>
       </div>
-    </section>
-
-    <!-- 2026-10-24 用户要求：祈福放上面，祭祖放到首页最下面 -->
-    <section class="ritual-stage">
-      <a
-        href="/ancestors/"
-        class="ancestor-banner"
-        aria-label="进入祭祀先人页面，追思祖先并进行回向祈福"
-        @click.prevent="navigateTo('/ancestors')"
-        @mouseenter="warmApi"
-        @mousedown="warmApi"
-        @touchstart.passive="warmApi"
-      >
-        <div class="ancestor-banner__media" aria-hidden="true"></div>
-        <div class="ancestor-banner__content">
-          <p class="ancestor-banner__kicker">追思与祭祀</p>
-          <h2>祭祀先人</h2>
-          <p>为亲人供一束花、点一盏灯，写下思念与祝愿。</p>
-          <span class="ancestor-banner__cta">进入祭祀先人</span>
-        </div>
-      </a>
     </section>
 
     <footer class="site-footer">
