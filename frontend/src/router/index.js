@@ -9,6 +9,7 @@ const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
 const NianfoPage = () => import('../pages/NianfoPage.vue')
+const SutraPage = () => import('../pages/SutraPage.vue')
 const QiucaiPage = () => import('../pages/QiucaiPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
@@ -41,6 +42,8 @@ const PAGE_ROUTES = [
     { path: '/ancestor/:slug', component: AncestorPage },
     { path: '/ancestors', component: AncestorsPage },
     { path: '/nianfo', component: NianfoPage },
+    { path: '/jing', component: SutraPage },
+    { path: '/jing/:slug', component: SutraPage },
     { path: '/qiucai', component: QiucaiPage },
     { path: '/qiucai/:slug', component: QiucaiPage },
 ]

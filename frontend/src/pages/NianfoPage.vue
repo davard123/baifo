@@ -38,6 +38,7 @@ onMounted(() => {
       <p class="lead">
         轻触木鱼，计一声佛号。计数只保存在这台设备上，不需要注册，也不会上传。
       </p>
+      <p class="lead"><router-link to="/jing/">想跟着念整部经？去诵经：心经、大悲咒全文带拼音和诵读 →</router-link></p>
     </header>
 
     <section class="counter-card card">
