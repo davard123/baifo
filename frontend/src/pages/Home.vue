@@ -117,7 +117,7 @@ function loadWishes() {
 }
 
 onMounted(() => {
-  document.title = '网上求财 · 网上祈福 | 在线拜财神、礼佛祈愿与网上祭祖 - fopusha.com'
+  document.title = '求财祈福拜佛网｜网上求财 · 在线拜财神、礼佛祈愿与网上祭祖 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
@@ -339,6 +339,7 @@ onMounted(() => {
     </section>
 
     <footer class="site-footer">
+      <p class="footer-brand">求财祈福拜佛网 · fopusha.com</p>
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
       <p class="footer-contact">意见反馈与联系：<a href="mailto:fopushacom@gmail.com">fopushacom@gmail.com</a></p>
     </footer>
@@ -1052,6 +1053,7 @@ onMounted(() => {
   white-space: nowrap;
 }
 
+.footer-brand { font-weight: 700; letter-spacing: 0.08em; color: var(--gold, #b8862f); }
 .site-footer {
   text-align: center;
   padding: 28px 12px 0;

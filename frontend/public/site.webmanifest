@@ -1,7 +1,7 @@
 {
-  "name": "礼佛祈愿",
-  "short_name": "礼佛祈愿",
-  "description": "在线礼佛祈愿、供花点灯上香与拜祭先人追思回向平台。",
+  "name": "求财祈福拜佛网",
+  "short_name": "求财祈福",
+  "description": "在线拜财神求财、礼佛祈愿、供花点灯上香与拜祭先人追思回向平台。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f0e3",

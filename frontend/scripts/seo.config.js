@@ -7,7 +7,7 @@ import { TOPICS, getTopicEntries } from '../src/data/topics.js'
 import { HOME_ABOUT, HOME_FAQS } from '../src/data/homeContent.js'
 
 export const SITE = {
-  name: '礼佛祈愿',
+  name: '求财祈福拜佛网',
   shortName: 'Fopusha',
   baseUrl: 'https://fopusha.com',
   defaultImage: '/fopusha-share-20260906.png?v=release1',
@@ -130,7 +130,7 @@ function orgRef() {
   return {
     '@type': 'Organization',
     '@id': `${SITE.baseUrl}/#organization`,
-    name: '礼佛祈愿 Fopusha',
+    name: '求财祈福拜佛网 Fopusha',
     url: SITE.baseUrl,
   }
 }
@@ -139,7 +139,7 @@ function publisherRef() {
   return {
     '@type': 'Organization',
     '@id': `${SITE.baseUrl}/#organization`,
-    name: '礼佛祈愿',
+    name: '求财祈福拜佛网',
     url: SITE.baseUrl,
     logo: {
       '@type': 'ImageObject',
@@ -260,7 +260,7 @@ function buildArticleSchema({
 function homePage() {
   return {
     path: '/',
-    title: '网上求财 · 网上祈福 | 在线拜财神、礼佛祈愿与网上祭祖',
+    title: '求财祈福拜佛网｜网上求财 · 在线拜财神、礼佛祈愿与网上祭祖',
     description: '免费网上求财祈福、在线拜财神：赵公明、关公、文财神、五路财神、福禄寿三星、黄财神八位财神，上香、点财神灯、供五果、献元宝、投金币、摇钱树，写下心愿领求财祝福卡，不用注册。也可以在线礼佛、网上祭祖。适合海外华人。',
     heading: '网上求财祈福 · 在线拜财神',
     summary: '免费在线拜财神：选赵公明、关公、文财神、五路财神、福星、禄星、寿星或黄财神，上香、点灯、供果、献元宝，写下求财心愿，领一张带你名字的祝福卡。也可以礼敬八位佛菩萨，或为思念的亲人设立牌位网上祭祖。',
@@ -280,7 +280,7 @@ function homePage() {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
         '@id': `${SITE.baseUrl}/#webapp`,
-        name: 'Fopusha 在线礼佛祈愿',
+        name: '求财祈福拜佛网 Fopusha',
         url: absoluteUrl('/'),
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
@@ -310,7 +310,7 @@ function homePage() {
         path: '/',
         idSuffix: 'about',
         headline: '在线礼佛与网上祭祖',
-        name: '关于礼佛祈愿',
+        name: '关于求财祈福拜佛网',
         description: HOME_ABOUT[0],
         articleBody: HOME_ABOUT.join('\n'),
       }),
@@ -342,7 +342,7 @@ function buddhaPage(item) {
         name: item.namo,
         description: item.desc,
         breadcrumbItems: [
-          { name: '礼佛祈愿', path: '/' },
+          { name: '求财祈福拜佛网', path: '/' },
           { name: item.name, path: `/buddha/${item.slug}` },
         ],
         about,
@@ -384,7 +384,7 @@ function ancestorsPage() {
         name: '拜祭先人',
         description: '在线祭祖、追思祖先、超荐亡灵的页面集合。',
         breadcrumbItems: [
-          { name: '礼佛祈愿', path: '/' },
+          { name: '求财祈福拜佛网', path: '/' },
           { name: '拜祭先人', path: '/ancestors' },
         ],
         about: {
@@ -438,7 +438,7 @@ function ancestorPage(item) {
         name: `${item.name}祭拜`,
         description: item.desc,
         breadcrumbItems: [
-          { name: '礼佛祈愿', path: '/' },
+          { name: '求财祈福拜佛网', path: '/' },
           { name: '拜祭先人', path: '/ancestors' },
           { name: item.name, path: `/ancestor/${item.slug}` },
         ],
@@ -644,7 +644,7 @@ function nianfoPage() {
         name: '念佛计数器',
         description: '在线念佛计数与电子木鱼，用于记录每日称念佛号的数量。',
         breadcrumbItems: [
-          { name: '礼佛祈愿', path: '/' },
+          { name: '求财祈福拜佛网', path: '/' },
           { name: '念佛计数', path },
         ],
         about: {
