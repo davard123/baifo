@@ -86,6 +86,9 @@ export async function saveLocalRequest(path, options = {}) {
     if (!isPublic) throw new Error('未保存：本机存储不可用或空间不足。内容没有上传，请保留输入后重试。')
   }
   lastSavePublished.value = isPublic
+  // 只存本机的也算一次人次：只发类型，不发任何内容；失败不影响保存。
+  if (!isPublic) countSubmission(toWallItem(path, payload).kind)
+  statsVersion.value += 1
   return { ok: true, json: async () => ({ status: 'success', id: record.id, published: isPublic }) }
 }
 
@@ -97,8 +100,20 @@ export async function fetchWall(kind = '', limit = 30) {
   return res.json()
 }
 
-export async function fetchStats() {
-  const res = await fetch(`${API_BASE}/stats`)
+// 每次提交后 +1，心愿墙据此重新取累计人次。
+export const statsVersion = ref(0)
+
+function countSubmission(kind) {
+  fetch(`${API_BASE}/count`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ kind }),
+    keepalive: true,
+  }).catch(() => {})
+}
+
+export async function fetchStats({ fresh = false } = {}) {
+  const res = await fetch(`${API_BASE}/stats`, fresh ? { cache: 'no-store' } : undefined)
   if (!res.ok) throw new Error('stats unavailable')
   return res.json()
 }

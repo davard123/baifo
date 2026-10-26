@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import { fetchStats, fetchWall } from '../utils/localRecords.js'
+import { fetchStats, fetchWall, statsVersion } from '../utils/localRecords.js'
 
 // 公开心愿墙：只显示访客自己选择"公开到心愿墙"的心愿，名字已在服务器端打码。
 const props = defineProps({
@@ -39,13 +39,19 @@ async function load() {
   }
 }
 
+function loadTotal(fresh = false) {
+  fetchStats({ fresh })
+    .then((d) => { total.value = (d.wishes || 0) + (d.ancestor || 0) + (d.public || 0) + (d.local || 0) })
+    .catch(() => {})
+}
+
 onMounted(() => {
   load()
-  fetchStats()
-    .then((d) => { total.value = (d.wishes || 0) + (d.ancestor || 0) + (d.public || 0) })
-    .catch(() => {})
+  loadTotal()
 })
 watch(() => props.refreshKey, load)
+// 刚提交完：计数请求可能还在路上，稍等一下再绕过缓存重取。
+watch(statsVersion, () => setTimeout(() => loadTotal(true), 1500))
 </script>
 
 <template>

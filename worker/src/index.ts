@@ -335,13 +335,43 @@ async function countRows(env: Bindings, table: string): Promise<number> {
   return Number.isNaN(total) ? 0 : total
 }
 
+// 计数表结构同 migrations-wall/0002；首次用到时自动建表（当前 wrangler 登录没有 D1 迁移权限）。
+let submissionLogReady = false
+async function ensureSubmissionLog(db: D1Database) {
+  if (submissionLogReady) return
+  await db.batch([
+    db.prepare("CREATE TABLE IF NOT EXISTS submission_log (id INTEGER PRIMARY KEY AUTOINCREMENT, kind TEXT NOT NULL CHECK (kind IN ('buddha', 'caishen', 'blessing', 'ancestor')), ip_hash TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')))"),
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_submission_log_ip ON submission_log (ip_hash, created_at)'),
+  ])
+  submissionLogReady = true
+}
+
 app.get('/stats', async (c) => {
-  const [wishes, ancestor, wall] = await Promise.all([
+  await ensureSubmissionLog(c.env.WALL)
+  const [wishes, ancestor, wall, local] = await Promise.all([
     countRows(c.env, 'users'),
     countRows(c.env, 'ancestor_wishes'),
     c.env.WALL.prepare('SELECT COUNT(*) AS n FROM public_wishes WHERE hidden = 0').first<{ n: number }>(),
+    c.env.WALL.prepare('SELECT COUNT(*) AS n FROM submission_log').first<{ n: number }>(),
   ])
-  return c.json({ wishes, ancestor, public: wall?.n ?? 0 }, 200, { 'Cache-Control': 'public, max-age=3600' })
+  return c.json({ wishes, ancestor, public: wall?.n ?? 0, local: local?.n ?? 0 }, 200, { 'Cache-Control': 'public, max-age=60' })
+})
+
+// 累计人次：访客选"仅保存在本机"时，只记一次数（类型 + 打码 IP 哈希用于限频），不收任何内容。
+// 公开到心愿墙的那次已经由 public_wishes 计入，前端不会再调这里。
+app.post('/count', async (c) => {
+  let body: Record<string, unknown>
+  try { body = await c.req.json() } catch { return c.json({ detail: '无效的请求体' }, 422) }
+  const kind = asStr(body.kind)
+  if (!WALL_KINDS.has(kind)) return c.json({ detail: '类型不对' }, 422)
+  const ipHash = await hashIp(c.req.header('cf-connecting-ip') ?? '', c.env.ADMIN_KEY ?? 'fopusha-wall')
+  await ensureSubmissionLog(c.env.WALL)
+  const recent = await c.env.WALL.prepare(
+    "SELECT COUNT(*) AS n FROM submission_log WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')",
+  ).bind(ipHash).first<{ n: number }>()
+  if ((recent?.n ?? 0) >= 20) return c.json({ status: 'skipped' })
+  await c.env.WALL.prepare('INSERT INTO submission_log (kind, ip_hash) VALUES (?, ?)').bind(kind, ipHash).run()
+  return c.json({ status: 'success' })
 })
 
 // 管理员隐藏不合适的心愿：POST /wall/123/hide，请求头 x-admin-key
