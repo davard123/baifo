@@ -212,6 +212,17 @@ onMounted(() => {
       </a>
     </section>
 
+    <!-- 2026-10-25 诵经板块入口：原先只有目录下一行小字链接，用户找不到 -->
+    <router-link to="/jing/xinjing/" class="sutra-banner" aria-label="进入每日诵经：心经诵读与唱诵视频">
+      <img class="sutra-banner__img" src="/jing/xinjing-music-poster.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="sutra-banner__content">
+        <p class="sutra-banner__kicker">每日诵经</p>
+        <h2>跟着念心经</h2>
+        <p>全文带拼音，诵读和唱诵两种视频，念到哪一句、哪一句就亮起来。</p>
+        <span class="sutra-banner__cta">开始诵经 →</span>
+      </div>
+    </router-link>
+
     <section class="intro-video card" aria-labelledby="intro-video-title">
       <div class="section-head">
         <p class="section-kicker">1 分钟看懂</p>
@@ -1213,5 +1224,30 @@ onMounted(() => {
 @media (max-width: 700px) {
   .hero-intent-strip { gap: 6px; }
   .hero-intent-strip span { min-height: 34px; padding-inline: 10px; font-size: .82rem; }
+}
+
+.sutra-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  margin: 20px 0;
+  border-radius: 24px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(15, 12, 20, 0.96);
+  border: 1px solid rgba(242, 200, 121, 0.18);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
+}
+.sutra-banner__img { width: 100%; height: 100%; min-height: 200px; object-fit: cover; display: block; }
+.sutra-banner__content { padding: 28px; display: grid; align-content: center; gap: 10px; }
+.sutra-banner__kicker { margin: 0; color: #d4a843; letter-spacing: 0.12em; font-size: 0.85rem; }
+.sutra-banner__content h2 { margin: 0; font-size: 1.6rem; color: #f8e5bd; }
+.sutra-banner__content p { margin: 0; color: #d9c9b1; line-height: 1.7; }
+.sutra-banner__cta { justify-self: start; margin-top: 6px; padding: 10px 18px; border-radius: 999px; background: #d4a843; color: #2a1c0c; font-weight: 700; }
+@media (max-width: 720px) {
+  .sutra-banner { grid-template-columns: 1fr; }
+  .sutra-banner__img { min-height: 0; aspect-ratio: 16 / 9; }
+  .sutra-banner__content { padding: 20px; }
 }
 </style>
