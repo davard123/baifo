@@ -2,8 +2,7 @@
 // 经文出处 CBETA 电子佛典（CC BY-NC-SA），页面上注明；音频为本站制作，只在音频定稿后才填 audio。
 import xinjing from './sutras/xinjing.js'
 import dabeizhou from './sutras/dabeizhou.js'
-import xinjingRead from './sutras/xinjing-read-timing.js'
-import xinjingChant from './sutras/xinjing-chant-woodfish-timing.js'
+import xinjingChant from './sutras/xinjing-chant-timing.js'
 
 export const SUTRAS = [
   {
@@ -11,12 +10,13 @@ export const SUTRAS = [
     name: '般若波罗蜜多心经',
     image: '/a7-20260906.webp?v=release1',
     intro: '《心经》是般若经典的精要，全经正文二百六十字，汉传寺院早晚课都会诵念。经中观自在菩萨「照见五蕴皆空，度一切苦厄」，教人放下执着、心无挂碍。',
-    when: '早晚课、心绪不宁、为家人祈福时都可以念。一遍约两分半钟，跟着字幕慢慢念即可。',
+    when: '早晚课、心绪不宁、为家人祈福时都可以念。诵读一遍不到两分钟，结尾揭谛咒念三遍，跟着字幕慢慢念即可。',
     audio: [
-      { key: 'read', label: '朗读版', src: '/jing/xinjing-read.mp3', timing: xinjingRead },
-      { key: 'chant', label: '木鱼念诵版', src: '/jing/xinjing-chant-woodfish.mp3', timing: xinjingChant },
+      { key: 'chant', label: '诵读版', src: '/jing/xinjing-chant.mp3?v=2e', timing: xinjingChant },
     ],
-    youtubeId: '',
+    youtubeId: 'r40dv0lA__g',
+    youtubeTitle: '心经 音乐版（唱诵视频）',
+    youtubePoster: '/jing/xinjing-music-poster.jpg',
     faqs: [
       { q: '心经有多少字？', a: '通行的玄奘译本，正文二百六十字（不算经题）。本页经文与汉传寺院课诵本一致。' },
       { q: '「揭谛揭谛，波罗揭谛」是什么意思？', a: '这是心经结尾的咒语。按传统，咒语保留原来的读音，不作翻译，念诵时照读即可。' },
