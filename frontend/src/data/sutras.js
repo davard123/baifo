@@ -15,8 +15,8 @@ export const SUTRAS = [
       { key: 'chant', label: '诵读版', src: '/jing/xinjing-chant.mp3?v=2e', timing: xinjingChant },
     ],
     videos: [
-      { id: '00x2YdhXKSk', label: '诵读版', title: '心经 诵读版（全文 · 揭谛咒三遍）', poster: '/jing/xinjing-read-poster.jpg' },
-      { id: 'r40dv0lA__g', label: '音乐版', title: '心经 音乐版（唱诵）', poster: '/jing/xinjing-music-poster.jpg' },
+      { id: '00x2YdhXKSk', label: '诵读版', title: '心经 诵读版（全文 · 揭谛咒三遍）', src: '/jing/xinjing-read.mp4', poster: '/jing/xinjing-read-poster.jpg' },
+      { id: 'r40dv0lA__g', label: '音乐版', title: '心经 音乐版（唱诵）', src: '/jing/xinjing-music.mp4', poster: '/jing/xinjing-music-poster.jpg' },
     ],
     faqs: [
       { q: '心经有多少字？', a: '通行的玄奘译本，正文二百六十字（不算经题）。本页经文与汉传寺院课诵本一致。' },

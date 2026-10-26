@@ -13,14 +13,11 @@ const isList = computed(() => !route.params.slug)
 const versionKey = ref('read')
 const version = computed(() => sutra.value?.audio.find((a) => a.key === versionKey.value) || sutra.value?.audio[0] || null)
 const showPinyin = ref(false)
-// 视频点了才加载 YouTube，平时不拖慢页面
-const videoOn = ref(false)
 const videoIndex = ref(0)
 const video = computed(() => sutra.value?.videos?.[videoIndex.value] || null)
-watch(() => route.params.slug, () => { videoOn.value = false; videoIndex.value = 0 })
+watch(() => route.params.slug, () => { videoIndex.value = 0 })
 function pickVideo(i) {
   videoIndex.value = i
-  videoOn.value = false
 }
 const player = ref(null)
 const playing = ref(false)
@@ -140,20 +137,17 @@ onBeforeUnmount(() => player.value?.pause())
         >{{ v.label }}</button>
       </div>
       <div class="jing-video__frame">
-        <iframe
-          v-if="videoOn"
-          :key="video.id"
-          :src="`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`"
-          :title="video.title"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-        <button v-else type="button" class="jing-video__poster" @click="videoOn = true" :aria-label="`播放：${video.title}`">
-          <img :src="video.poster || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`" alt="" loading="lazy" />
-          <span class="jing-video__play" aria-hidden="true">▶</span>
-        </button>
+        <!-- 视频放在本站，国内也能直接看；YouTube 只作为频道入口 -->
+        <video
+          :key="video.src"
+          :src="video.src"
+          :poster="video.poster"
+          controls
+          playsinline
+          preload="none"
+        ></video>
       </div>
-      <p class="jing-tip">{{ video.title }}。也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
+      <p class="jing-tip">{{ video.title }}。海外观众也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
     </section>
 
     <article class="jing-text card" :class="{ 'with-pinyin': showPinyin }" aria-label="经文">
@@ -245,8 +239,5 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-video__title { margin: 0 0 10px; font-size: 1.05rem; }
 .jing-video .jing-versions { margin-bottom: 10px; }
 .jing-video__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #1b1223; margin-bottom: 8px; }
-.jing-video__frame iframe, .jing-video__poster { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.jing-video__poster { padding: 0; cursor: pointer; background: #1b1223; }
-.jing-video__poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.jing-video__play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 68px; height: 68px; border-radius: 50%; background: rgba(165, 100, 26, 0.92); color: #fff; font-size: 26px; display: grid; place-items: center; padding-left: 4px; box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
+.jing-video__frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 </style>
