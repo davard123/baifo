@@ -15,7 +15,13 @@ const version = computed(() => sutra.value?.audio.find((a) => a.key === versionK
 const showPinyin = ref(false)
 // 视频点了才加载 YouTube，平时不拖慢页面
 const videoOn = ref(false)
-watch(() => route.params.slug, () => { videoOn.value = false })
+const videoIndex = ref(0)
+const video = computed(() => sutra.value?.videos?.[videoIndex.value] || null)
+watch(() => route.params.slug, () => { videoOn.value = false; videoIndex.value = 0 })
+function pickVideo(i) {
+  videoIndex.value = i
+  videoOn.value = false
+}
 const player = ref(null)
 const playing = ref(false)
 const currentN = ref(0)
@@ -120,22 +126,34 @@ onBeforeUnmount(() => player.value?.pause())
       <label class="jing-switch"><input v-model="showPinyin" type="checkbox" /> 显示拼音</label>
     </section>
 
-    <section v-if="sutra.youtubeId" class="jing-video card" aria-label="诵经视频">
-      <h2 class="jing-video__title">{{ sutra.youtubeTitle || '诵经视频' }}</h2>
+    <section v-if="sutra.videos?.length" class="jing-video card" aria-label="诵经视频">
+      <h2 class="jing-video__title">诵经视频</h2>
+      <div v-if="sutra.videos.length > 1" class="jing-versions" role="tablist" aria-label="视频版本">
+        <button
+          v-for="(v, i) in sutra.videos"
+          :key="v.id"
+          type="button"
+          role="tab"
+          :aria-selected="i === videoIndex"
+          :class="{ on: i === videoIndex }"
+          @click="pickVideo(i)"
+        >{{ v.label }}</button>
+      </div>
       <div class="jing-video__frame">
         <iframe
           v-if="videoOn"
-          :src="`https://www.youtube-nocookie.com/embed/${sutra.youtubeId}?autoplay=1&rel=0`"
-          :title="sutra.youtubeTitle || sutra.name"
+          :key="video.id"
+          :src="`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`"
+          :title="video.title"
           allow="autoplay; encrypted-media; picture-in-picture"
           allowfullscreen
         ></iframe>
-        <button v-else type="button" class="jing-video__poster" @click="videoOn = true" :aria-label="`播放：${sutra.youtubeTitle || sutra.name}`">
-          <img :src="sutra.youtubePoster || `https://i.ytimg.com/vi/${sutra.youtubeId}/hqdefault.jpg`" alt="" loading="lazy" />
+        <button v-else type="button" class="jing-video__poster" @click="videoOn = true" :aria-label="`播放：${video.title}`">
+          <img :src="video.poster || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`" alt="" loading="lazy" />
           <span class="jing-video__play" aria-hidden="true">▶</span>
         </button>
       </div>
-      <p class="jing-tip">也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
+      <p class="jing-tip">{{ video.title }}。也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
     </section>
 
     <article class="jing-text card" :class="{ 'with-pinyin': showPinyin }" aria-label="经文">
@@ -225,6 +243,7 @@ onBeforeUnmount(() => player.value?.pause())
 @media (max-width: 520px) { .jing-actions { grid-template-columns: 1fr; } }
 .jing-video { padding: 18px; }
 .jing-video__title { margin: 0 0 10px; font-size: 1.05rem; }
+.jing-video .jing-versions { margin-bottom: 10px; }
 .jing-video__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #1b1223; margin-bottom: 8px; }
 .jing-video__frame iframe, .jing-video__poster { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .jing-video__poster { padding: 0; cursor: pointer; background: #1b1223; }
