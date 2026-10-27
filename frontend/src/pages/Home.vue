@@ -183,7 +183,7 @@ onMounted(() => {
         </router-link>
       </div>
       <div class="catalog-links">
-        <router-link to="/jing/">在线诵经 · 心经、大悲咒全文带拼音 →</router-link>
+        <router-link to="/jing/">在线诵经 · 心经、大悲咒、普贤行愿品全文带拼音 →</router-link>
         <router-link to="/nianfo/">念佛计数 · 开始今日功课 →</router-link>
         <router-link to="/guide/overview/">第一次来？看使用说明 →</router-link>
       </div>

@@ -3,6 +3,8 @@
 import xinjing from './sutras/xinjing.js'
 import dabeizhou from './sutras/dabeizhou.js'
 import xinjingChant from './sutras/xinjing-chant-timing.js'
+import puxian from './sutras/puxian.js'
+import puxianRead from './sutras/puxian-read-timing.js'
 
 export const SUTRAS = [
   {
@@ -36,6 +38,26 @@ export const SUTRAS = [
       { q: '大悲咒有多少句、多少字？', a: '通行的课诵本为八十四句、四百一十五字。经中原本分为八十二句，后来的课诵本按念诵时的停顿，把结尾一句拆开，成为八十四句。' },
       { q: '「唵」字怎么念？', a: '各地课诵本的注音不完全相同，常见注作 ōng。本站的诵读按通行的念法，跟着念即可，不必为个别字的读音担心。' },
       { q: '不懂意思也可以念吗？', a: '可以。咒语传统上保留原音、不作翻译，诚心持念就好。' },
+    ],
+  },
+  {
+    ...puxian,
+    name: '普贤菩萨行愿品偈颂',
+    image: '/buddha-variants/a6-six-tusk-20261024.webp',
+    intro: '《普贤行愿品》出自《大方广佛华严经》第四十卷，唐代般若三藏译。偈颂共六十二偈、二百四十八句，从「所有十方世界中」念到「速往无量光佛刹」，把普贤菩萨十大愿王——礼敬诸佛、称赞如来、广修供养、忏悔业障、随喜功德、请转法轮、请佛住世、常随佛学、恒顺众生、普皆回向——一一发起，最后回向往生极乐。',
+    when: '发愿、回向、为家人祈福时常念，汉传寺院晚课、佛七圆满也常诵。诵读一遍约九分钟；唱诵版分上下两集，跟着唱更容易记住。',
+    audio: [
+      { key: 'read', label: '诵读版', src: '/jing/puxian-read.mp3?v=3', timing: puxianRead },
+    ],
+    videos: [
+      { id: 'puxian-sing-1', label: '唱诵上集', title: '普贤行愿品偈颂 唱诵上集（礼敬诸佛 广修供养）', src: '/jing/puxian-sing-1.mp4', poster: '/jing/puxian-sing-1-poster.jpg' },
+      { id: 'puxian-sing-2', label: '唱诵下集', title: '普贤行愿品偈颂 唱诵下集（导归极乐 普皆回向）', src: '/jing/puxian-sing-2.mp4', poster: '/jing/puxian-sing-2-poster.jpg' },
+      { id: 'puxian-read', label: '诵读版', title: '普贤行愿品偈颂 诵读版（全文六十二偈）', src: '/jing/puxian-read.mp4?v=3', poster: '/jing/puxian-read-poster.jpg' },
+    ],
+    faqs: [
+      { q: '普贤行愿品偈颂有多少句？', a: '通行本共六十二偈，每偈四句，合计二百四十八句、一千七百三十六字。本页经文按 CBETA 与汉传课诵本两源对照校订。' },
+      { q: '普贤十大愿王是哪十个？', a: '一礼敬诸佛，二称赞如来，三广修供养，四忏悔业障，五随喜功德，六请转法轮，七请佛住世，八常随佛学，九恒顺众生，十普皆回向。' },
+      { q: '偈颂里「一一」怎么念？', a: '「一一」就是「每一个」的意思，连着念 yī yī，中间不要停顿。' },
     ],
   },
 ]

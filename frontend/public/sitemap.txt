@@ -124,6 +124,14 @@ https://fopusha.com/ancestors/
 https://fopusha.com/zh-hant/ancestors/
 https://fopusha.com/nianfo/
 https://fopusha.com/zh-hant/nianfo/
+https://fopusha.com/jing/
+https://fopusha.com/zh-hant/jing/
+https://fopusha.com/jing/xinjing/
+https://fopusha.com/zh-hant/jing/xinjing/
+https://fopusha.com/jing/dabeizhou/
+https://fopusha.com/zh-hant/jing/dabeizhou/
+https://fopusha.com/jing/puxian/
+https://fopusha.com/zh-hant/jing/puxian/
 https://fopusha.com/ancestor/father/
 https://fopusha.com/zh-hant/ancestor/father/
 https://fopusha.com/ancestor/mother/

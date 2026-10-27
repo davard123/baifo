@@ -1009,6 +1009,70 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/jing/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/jing/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/jing/xinjing/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/xinjing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/xinjing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/xinjing/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/jing/xinjing/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/xinjing/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/xinjing/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/xinjing/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/jing/dabeizhou/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/dabeizhou/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/dabeizhou/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/dabeizhou/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/jing/dabeizhou/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/dabeizhou/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/dabeizhou/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/dabeizhou/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/jing/puxian/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/puxian/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/puxian/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/puxian/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/jing/puxian/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/puxian/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/puxian/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/puxian/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/ancestor/father/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/father/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/father/" />
