@@ -193,7 +193,7 @@ onMounted(() => {
           preload="metadata"
           aria-hidden="true"
         ></video>
-        <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频，有声音</span>
+        <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频</span>
       </div>
       <div class="sutra-banner__content">
         <p class="sutra-banner__kicker">每日诵经</p>
