@@ -7,6 +7,7 @@ import puxian from './sutras/puxian.js'
 import puxianRead from './sutras/puxian-read-timing.js'
 import jingang from './sutras/jingang.js'
 import jingangSing1 from './sutras/jingang-sing1-timing.js'
+import jingangSing2 from './sutras/jingang-sing2-timing.js'
 
 export const SUTRAS = [
   {
@@ -81,12 +82,14 @@ export const SUTRAS = [
     name: '金刚般若波罗蜜经',
     image: '/buddha-variants/a1-gilt-20261024.webp',
     intro: '《金刚经》全名《金刚般若波罗蜜经》，姚秦鸠摩罗什译，全经三十二分、五千余字。经中须菩提向佛请问「云何应住，云何降伏其心」，佛以「凡所有相，皆是虚妄」「应无所住而生其心」作答，是汉传佛教流传最广的般若经典。',
-    when: '早晚课、为家人祈福、为先人回向时都常诵。全经诵一遍约四十分钟；本站唱诵版分五集，第一集唱第一至第八分，后面几集陆续上线。',
+    when: '早晚课、为家人祈福、为先人回向时都常诵。全经诵一遍约四十分钟；本站唱诵版分五集：第一集唱第一至第八分，第二集唱第九至第十三分，后面几集陆续上线。',
     audio: [
-      { key: 'sing1', label: '唱诵第一集（第一至八分）', src: '/jing/jingang-sing-1.mp3', timing: jingangSing1 },
+      { key: 'sing1', label: '唱诵第一集', src: '/jing/jingang-sing-1.mp3', timing: jingangSing1 },
+      { key: 'sing2', label: '唱诵第二集', src: '/jing/jingang-sing-2.mp3', timing: jingangSing2 },
     ],
     videos: [
       { id: 'jingang-sing-1', label: '唱诵第一集', title: '金刚经 唱诵第一集（法会因由分第一 至 依法出生分第八）', src: '/jing/jingang-sing-1.mp4', poster: '/jing/jingang-sing-1-poster.jpg' },
+      { id: 'jingang-sing-2', label: '唱诵第二集', title: '金刚经 唱诵第二集（一相无相分第九 至 如法受持分第十三）', src: '/jing/jingang-sing-2.mp4', poster: '/jing/jingang-sing-2-poster.jpg' },
     ],
     faqs: [
       { q: '金刚经有多少字、分几分？', a: '通行的鸠摩罗什译本共三十二分，本页经文五千一百六十七字（不算标点），按 CBETA 与汉传通行流通本两源对照校订。' },

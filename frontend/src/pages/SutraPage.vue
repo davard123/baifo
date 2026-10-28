@@ -44,8 +44,22 @@ function pickVersion(key) {
 // 点哪一句就从哪一句开始念
 function seekTo(n) {
   const hit = version.value?.timing.lines.find(([ln]) => ln === n)
-  if (!hit || !player.value) return
-  player.value.currentTime = hit[1]
+  if (hit && player.value) {
+    player.value.currentTime = hit[1]
+    player.value.play()
+    return
+  }
+  // 这句在另一集的音频里（如金刚经分集）：切过去，等新音频加载好再从这句开始
+  const other = sutra.value?.audio.find((a) => a.timing.lines.some(([ln]) => ln === n))
+  if (!other) return
+  pendingSeek = other.timing.lines.find(([ln]) => ln === n)[1]
+  pickVersion(other.key)
+}
+let pendingSeek = null
+function onMeta() {
+  if (pendingSeek == null || !player.value) return
+  player.value.currentTime = pendingSeek
+  pendingSeek = null
   player.value.play()
 }
 
@@ -142,6 +156,7 @@ onBeforeUnmount(() => player.value?.pause())
           controls
           preload="metadata"
           class="jing-audio"
+          @loadedmetadata="onMeta"
           @timeupdate="onTimeUpdate"
           @play="playing = true"
           @pause="playing = false"

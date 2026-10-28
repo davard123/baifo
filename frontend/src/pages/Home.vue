@@ -24,6 +24,7 @@ const SUTRA_TEASERS = [
   { n: 3, to: '/jing/puxian/', label: '普贤行愿品 · 唱诵' },
   { n: 4, to: '/jing/puxian/', label: '普贤行愿品 · 诵读' },
   { n: 5, to: '/jing/xinjing/', label: '心经 · 诵读' },
+  { n: 6, to: '/jing/jingang/', label: '金刚经 · 唱诵' },
 ]
 const sutraTeaserPick = ref(SUTRA_TEASERS[0])
 const sutraTeaser = ref(null)
