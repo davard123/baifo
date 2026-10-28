@@ -16,6 +16,26 @@ const localWishes = ref([])
 const localAncestorWishes = ref([])
 const loadingRecords = ref(true)
 const viewerName = ref('')
+// 主页诵经横幅：每次打开随机放一段静音循环短片（唱诵、诵读都有），点进去到对应的经文页。
+// 预渲染出来的 HTML 里没有 muted 属性，所以挂载后再选片、手动静音、播放
+const SUTRA_TEASERS = [
+  { n: 1, to: '/jing/jingang/', label: '金刚经 · 唱诵' },
+  { n: 2, to: '/jing/puxian/', label: '普贤行愿品 · 唱诵' },
+  { n: 3, to: '/jing/puxian/', label: '普贤行愿品 · 唱诵' },
+  { n: 4, to: '/jing/puxian/', label: '普贤行愿品 · 诵读' },
+  { n: 5, to: '/jing/xinjing/', label: '心经 · 诵读' },
+]
+const sutraTeaserPick = ref(SUTRA_TEASERS[0])
+const sutraTeaser = ref(null)
+async function startSutraTeaser() {
+  sutraTeaserPick.value = SUTRA_TEASERS[Math.floor(Math.random() * SUTRA_TEASERS.length)]
+  await nextTick()
+  const v = sutraTeaser.value
+  if (!v) return
+  v.muted = true
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+  v.play().catch(() => {})
+}
 const router = useRouter()
 
 const guideCards = [
@@ -117,6 +137,7 @@ function loadWishes() {
 }
 
 onMounted(() => {
+  startSutraTeaser()
   document.title = '求财祈福拜佛网｜网上求财 · 在线拜财神、礼佛祈愿与网上祭祖 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
@@ -157,8 +178,23 @@ onMounted(() => {
     </a>
 
     <!-- 2026-10-25 诵经板块入口；10-27 用户嫌太靠后，挪到求财横幅正下方 -->
-    <router-link to="/jing/" class="sutra-banner" aria-label="进入每日诵经：心经、金刚经、普贤行愿品唱诵视频">
-      <img class="sutra-banner__img" src="/jing/jingang-sing-1-poster.jpg" alt="" loading="lazy" decoding="async" />
+    <router-link :to="sutraTeaserPick.to" class="sutra-banner" aria-label="进入每日诵经：心经、金刚经、普贤行愿品唱诵视频">
+      <div class="sutra-banner__media">
+        <video
+          ref="sutraTeaser"
+          class="sutra-banner__img"
+          :key="sutraTeaserPick.n"
+          :src="`/jing/teaser/t${sutraTeaserPick.n}.mp4`"
+          :poster="`/jing/teaser/t${sutraTeaserPick.n}.jpg`"
+          muted
+          autoplay
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+        ></video>
+        <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频，有声音</span>
+      </div>
       <div class="sutra-banner__content">
         <p class="sutra-banner__kicker">每日诵经</p>
         <h2>看唱诵视频，跟着念经</h2>
@@ -1240,7 +1276,9 @@ onMounted(() => {
   border: 1px solid rgba(242, 200, 121, 0.18);
   box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
 }
-.sutra-banner__img { width: 100%; height: 100%; min-height: 200px; object-fit: cover; display: block; }
+.sutra-banner__media { position: relative; min-height: 200px; }
+.sutra-banner__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.sutra-banner__badge { position: absolute; left: 12px; top: 12px; padding: 5px 12px; border-radius: 999px; background: rgba(20, 12, 6, 0.72); color: #f8e5bd; font-size: 0.8rem; }
 .sutra-banner__content { padding: 28px; display: grid; align-content: center; gap: 10px; }
 .sutra-banner__kicker { margin: 0; color: #d4a843; letter-spacing: 0.12em; font-size: 0.85rem; }
 .sutra-banner__content h2 { margin: 0; font-size: 1.6rem; color: #f8e5bd; }
@@ -1248,7 +1286,7 @@ onMounted(() => {
 .sutra-banner__cta { justify-self: start; margin-top: 6px; padding: 10px 18px; border-radius: 999px; background: #d4a843; color: #2a1c0c; font-weight: 700; }
 @media (max-width: 720px) {
   .sutra-banner { grid-template-columns: 1fr; }
-  .sutra-banner__img { min-height: 0; aspect-ratio: 16 / 9; }
+  .sutra-banner__media { min-height: 0; aspect-ratio: 16 / 9; }
   .sutra-banner__content { padding: 20px; }
 }
 </style>
