@@ -1073,6 +1073,22 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/jing/jingang/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/jingang/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/jingang/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/jingang/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/jing/jingang/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/jing/jingang/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/jing/jingang/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/jing/jingang/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/ancestor/father/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/ancestor/father/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/ancestor/father/" />

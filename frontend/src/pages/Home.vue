@@ -156,6 +156,17 @@ onMounted(() => {
       </div>
     </a>
 
+    <!-- 2026-10-25 诵经板块入口；10-27 用户嫌太靠后，挪到求财横幅正下方 -->
+    <router-link to="/jing/" class="sutra-banner" aria-label="进入每日诵经：心经、金刚经、普贤行愿品唱诵视频">
+      <img class="sutra-banner__img" src="/jing/jingang-sing-1-poster.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="sutra-banner__content">
+        <p class="sutra-banner__kicker">每日诵经</p>
+        <h2>看唱诵视频，跟着念经</h2>
+        <p>心经、金刚经、普贤行愿品，唱诵视频点开就能看；全文带拼音，念到哪一句、哪一句就亮起来。</p>
+        <span class="sutra-banner__cta">看诵经视频 →</span>
+      </div>
+    </router-link>
+
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">在线礼佛 · 诸佛菩萨</p>
@@ -183,7 +194,7 @@ onMounted(() => {
         </router-link>
       </div>
       <div class="catalog-links">
-        <router-link to="/jing/">在线诵经 · 心经、大悲咒、普贤行愿品全文带拼音 →</router-link>
+        <router-link to="/jing/">在线诵经 · 心经、金刚经、普贤行愿品全文与唱诵视频 →</router-link>
         <router-link to="/nianfo/">念佛计数 · 开始今日功课 →</router-link>
         <router-link to="/guide/overview/">第一次来？看使用说明 →</router-link>
       </div>
@@ -212,16 +223,6 @@ onMounted(() => {
       </a>
     </section>
 
-    <!-- 2026-10-25 诵经板块入口：原先只有目录下一行小字链接，用户找不到 -->
-    <router-link to="/jing/xinjing/" class="sutra-banner" aria-label="进入每日诵经：心经诵读与唱诵视频">
-      <img class="sutra-banner__img" src="/jing/xinjing-music-poster.jpg" alt="" loading="lazy" decoding="async" />
-      <div class="sutra-banner__content">
-        <p class="sutra-banner__kicker">每日诵经</p>
-        <h2>跟着念心经</h2>
-        <p>全文带拼音，诵读和唱诵两种视频，念到哪一句、哪一句就亮起来。</p>
-        <span class="sutra-banner__cta">开始诵经 →</span>
-      </div>
-    </router-link>
 
     <section class="intro-video card" aria-labelledby="intro-video-title">
       <div class="section-head">

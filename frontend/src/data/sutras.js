@@ -5,6 +5,8 @@ import dabeizhou from './sutras/dabeizhou.js'
 import xinjingChant from './sutras/xinjing-chant-timing.js'
 import puxian from './sutras/puxian.js'
 import puxianRead from './sutras/puxian-read-timing.js'
+import jingang from './sutras/jingang.js'
+import jingangSing1 from './sutras/jingang-sing1-timing.js'
 
 export const SUTRAS = [
   {
@@ -54,10 +56,43 @@ export const SUTRAS = [
       { id: 'puxian-sing-2', label: '唱诵下集', title: '普贤行愿品偈颂 唱诵下集（导归极乐 普皆回向）', src: '/jing/puxian-sing-2.mp4', poster: '/jing/puxian-sing-2-poster.jpg' },
       { id: 'puxian-read', label: '诵读版', title: '普贤行愿品偈颂 诵读版（全文六十二偈）', src: '/jing/puxian-read.mp4?v=3', poster: '/jing/puxian-read-poster.jpg' },
     ],
+    shorts: [
+      { title: '我昔所造诸恶业，皆由无始贪恚痴', src: '/jing/shorts/puxian-02.mp4', poster: '/jing/shorts/puxian-02.jpg' },
+      { title: '临命终时，最想听到的四句话', src: '/jing/shorts/puxian-03.mp4', poster: '/jing/shorts/puxian-03.jpg' },
+      { title: '虚空有尽，我愿无穷', src: '/jing/shorts/puxian-04.mp4', poster: '/jing/shorts/puxian-04.jpg' },
+      { title: '诵此普贤大愿王，一念速疾皆销灭', src: '/jing/shorts/puxian-05.mp4', poster: '/jing/shorts/puxian-05.jpg' },
+      { title: '普贤十大愿，最后的回向', src: '/jing/shorts/puxian-06.mp4', poster: '/jing/shorts/puxian-06.jpg' },
+      { title: '普贤行愿品 唱诵版', src: '/jing/shorts/puxian-07.mp4', poster: '/jing/shorts/puxian-07.jpg' },
+      { title: '请佛住世，回向众生', src: '/jing/shorts/puxian-08.mp4', poster: '/jing/shorts/puxian-08.jpg' },
+      { title: '恒顺众生，一切行愿同修学', src: '/jing/shorts/puxian-09.mp4', poster: '/jing/shorts/puxian-09.jpg' },
+      { title: '一念见尽三世', src: '/jing/shorts/puxian-10.mp4', poster: '/jing/shorts/puxian-10.jpg' },
+      { title: '愿面见阿弥陀', src: '/jing/shorts/puxian-11.mp4', poster: '/jing/shorts/puxian-11.jpg' },
+      { title: '虚空有尽愿无穷', src: '/jing/shorts/puxian-12.mp4', poster: '/jing/shorts/puxian-12.jpg' },
+      { title: '普贤胜福皆回向', src: '/jing/shorts/puxian-13.mp4', poster: '/jing/shorts/puxian-13.jpg' },
+    ],
     faqs: [
       { q: '普贤行愿品偈颂有多少句？', a: '通行本共六十二偈，每偈四句，合计二百四十八句、一千七百三十六字。本页经文按 CBETA 与汉传课诵本两源对照校订。' },
       { q: '普贤十大愿王是哪十个？', a: '一礼敬诸佛，二称赞如来，三广修供养，四忏悔业障，五随喜功德，六请转法轮，七请佛住世，八常随佛学，九恒顺众生，十普皆回向。' },
       { q: '偈颂里「一一」怎么念？', a: '「一一」就是「每一个」的意思，连着念 yī yī，中间不要停顿。' },
+    ],
+  },
+  {
+    ...jingang,
+    name: '金刚般若波罗蜜经',
+    image: '/buddha-variants/a1-gilt-20261024.webp',
+    intro: '《金刚经》全名《金刚般若波罗蜜经》，姚秦鸠摩罗什译，全经三十二分、五千余字。经中须菩提向佛请问「云何应住，云何降伏其心」，佛以「凡所有相，皆是虚妄」「应无所住而生其心」作答，是汉传佛教流传最广的般若经典。',
+    when: '早晚课、为家人祈福、为先人回向时都常诵。全经诵一遍约四十分钟；本站唱诵版分五集，第一集唱第一至第八分，后面几集陆续上线。',
+    audio: [
+      { key: 'sing1', label: '唱诵第一集（第一至八分）', src: '/jing/jingang-sing-1.mp3', timing: jingangSing1 },
+    ],
+    videos: [
+      { id: 'jingang-sing-1', label: '唱诵第一集', title: '金刚经 唱诵第一集（法会因由分第一 至 依法出生分第八）', src: '/jing/jingang-sing-1.mp4', poster: '/jing/jingang-sing-1-poster.jpg' },
+    ],
+    faqs: [
+      { q: '金刚经有多少字、分几分？', a: '通行的鸠摩罗什译本共三十二分，本页经文五千一百六十七字（不算标点），按 CBETA 与汉传通行流通本两源对照校订。' },
+      { q: '「三十二分」是谁分的？', a: '相传是南朝梁昭明太子所分，每分各有一个小标题，例如「法会因由分第一」，方便念诵和查找。' },
+      { q: '「阿耨多罗三藐三菩提」怎么念？', a: '通行念法是 ā nòu duō luó sān miǎo sān pú tí，意思是「无上正等正觉」。「耨」念 nòu，「藐」念 miǎo。' },
+      { q: '唱诵视频里个别字和字幕不一样？', a: '唱诵音乐由 AI 辅助制作，个别字唱音不准，请以字幕和本页经文为准。' },
     ],
   },
 ]

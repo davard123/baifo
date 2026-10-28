@@ -676,8 +676,8 @@ function jingListPage() {
   const path = '/jing'
   return {
     path,
-    title: '在线诵经 | 心经、大悲咒、普贤行愿品全文带拼音与诵经视频',
-    description: '常诵经咒全文：心经、大悲咒、普贤行愿品等，带拼音，可跟着诵读音频逐句念。经文按汉传通行课诵本校订，免费、不用注册。',
+    title: '在线诵经 | 心经、金刚经、普贤行愿品全文带拼音与唱诵视频',
+    description: '常诵经咒全文：心经、金刚经、大悲咒、普贤行愿品等，有唱诵视频，带拼音，可跟着诵读音频逐句念。经文按汉传通行课诵本校订，免费、不用注册。',
     heading: '在线诵经',
     summary: SUTRAS.map((s) => `${s.name}（${s.title}，${s.lines.length}句）`).join('；') + '。',
     image: SITE.defaultImage,

@@ -71,6 +71,7 @@ onBeforeUnmount(() => player.value?.pause())
         <div>
           <h2>{{ s.title }}<small>{{ s.name }}</small></h2>
           <p>{{ s.translator }} · {{ s.lines.length }} 句 · {{ s.charCount }} 字</p>
+          <span v-if="s.videos?.length" class="jing-card__tag">{{ s.videos.length }} 个诵经视频</span>
           <span class="jing-card__tag">{{ s.audio.length ? '可跟读音频' : '音频制作中' }}</span>
         </div>
       </router-link>
@@ -93,7 +94,35 @@ onBeforeUnmount(() => player.value?.pause())
       <p class="lead">{{ sutra.title }}全文 · {{ sutra.lines.length }} 句 · {{ sutra.charCount }} 字 · 带拼音</p>
     </header>
 
-    <section class="jing-player card" aria-label="诵读音频">
+    <section v-if="sutra.videos?.length" class="jing-video card" aria-label="诵经视频">
+      <h2 class="jing-video__title">诵经视频</h2>
+      <div v-if="sutra.videos.length > 1" class="jing-versions" role="tablist" aria-label="视频版本">
+        <button
+          v-for="(v, i) in sutra.videos"
+          :key="v.id"
+          type="button"
+          role="tab"
+          :aria-selected="i === videoIndex"
+          :class="{ on: i === videoIndex }"
+          @click="pickVideo(i)"
+        >{{ v.label }}</button>
+      </div>
+      <div class="jing-video__frame">
+        <!-- 视频放在本站，国内也能直接看；YouTube 只作为频道入口 -->
+        <video
+          :key="video.src"
+          :src="video.src"
+          :poster="video.poster"
+          controls
+          playsinline
+          preload="none"
+        ></video>
+      </div>
+      <p class="jing-tip">{{ video.title }}。海外观众也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
+    </section>
+
+
+    <section class="jing-player card" :class="{ playing }" aria-label="诵读音频">
       <template v-if="version">
         <div class="jing-versions" role="tablist" aria-label="诵读版本">
           <button
@@ -123,32 +152,6 @@ onBeforeUnmount(() => player.value?.pause())
       <label class="jing-switch"><input v-model="showPinyin" type="checkbox" /> 显示拼音</label>
     </section>
 
-    <section v-if="sutra.videos?.length" class="jing-video card" aria-label="诵经视频">
-      <h2 class="jing-video__title">诵经视频</h2>
-      <div v-if="sutra.videos.length > 1" class="jing-versions" role="tablist" aria-label="视频版本">
-        <button
-          v-for="(v, i) in sutra.videos"
-          :key="v.id"
-          type="button"
-          role="tab"
-          :aria-selected="i === videoIndex"
-          :class="{ on: i === videoIndex }"
-          @click="pickVideo(i)"
-        >{{ v.label }}</button>
-      </div>
-      <div class="jing-video__frame">
-        <!-- 视频放在本站，国内也能直接看；YouTube 只作为频道入口 -->
-        <video
-          :key="video.src"
-          :src="video.src"
-          :poster="video.poster"
-          controls
-          playsinline
-          preload="none"
-        ></video>
-      </div>
-      <p class="jing-tip">{{ video.title }}。海外观众也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
-    </section>
 
     <article class="jing-text card" :class="{ 'with-pinyin': showPinyin }" aria-label="经文">
       <h2 class="jing-text__title">{{ sutra.name }}</h2>
@@ -165,6 +168,16 @@ onBeforeUnmount(() => player.value?.pause())
       </p>
       <p class="jing-dedication">愿以此功德，普及于一切，我等与众生，皆共成佛道。</p>
     </article>
+
+    <section v-if="sutra.shorts?.length" class="jing-shorts card" aria-label="短视频">
+      <h2 class="jing-video__title">短视频 · 一两分钟听一段</h2>
+      <div class="jing-shorts__grid">
+        <figure v-for="v in sutra.shorts" :key="v.src" class="jing-short">
+          <video :src="v.src" :poster="v.poster" controls playsinline preload="none"></video>
+          <figcaption>{{ v.title }}</figcaption>
+        </figure>
+      </div>
+    </section>
 
     <section class="jing-actions">
       <router-link to="/nianfo/" class="jing-btn">念完了，去念佛计数 →</router-link>
@@ -205,9 +218,11 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-card h2 { font-size: 1.25rem; color: var(--gold-light); display: flex; flex-direction: column; gap: 2px; }
 .jing-card h2 small { font-size: 0.82rem; color: var(--text-muted); font-weight: 400; }
 .jing-card p { font-size: 0.86rem; color: var(--text-muted); margin: 6px 0; }
-.jing-card__tag { font-size: 0.78rem; color: var(--accent); border: 1px solid rgba(242, 200, 121, 0.35); border-radius: 999px; padding: 2px 10px; }
+.jing-card__tag { display: inline-block; margin: 0 6px 4px 0; font-size: 0.78rem; color: var(--accent); border: 1px solid rgba(242, 200, 121, 0.35); border-radius: 999px; padding: 2px 10px; }
 
-.jing-player { display: grid; gap: 12px; padding: 18px; position: sticky; top: 8px; z-index: 3; }
+.jing-player { display: grid; gap: 12px; padding: 18px; }
+/* 只在播放时固定在顶部，跟着高亮句子；不播放时不挡住上面的视频 */
+.jing-player.playing { position: sticky; top: 8px; z-index: 3; }
 .jing-versions { display: flex; gap: 8px; }
 .jing-versions button { flex: 1; min-height: 42px; border-radius: 10px; border: 1px solid rgba(242, 200, 121, 0.3); background: transparent; color: var(--accent); font-size: 0.95rem; cursor: pointer; }
 .jing-versions button.on { background: linear-gradient(135deg, #e0b76e, #f0d091); color: #2a1c0c; font-weight: 700; border-color: transparent; }
@@ -240,4 +255,9 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-video .jing-versions { margin-bottom: 10px; }
 .jing-video__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #1b1223; margin-bottom: 8px; }
 .jing-video__frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.jing-shorts { padding: 18px; }
+.jing-shorts__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.jing-short { margin: 0; }
+.jing-short video { width: 100%; aspect-ratio: 9 / 16; border-radius: 10px; background: #1b1223; display: block; }
+.jing-short figcaption { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-top: 6px; }
 </style>
