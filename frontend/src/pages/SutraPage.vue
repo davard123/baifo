@@ -1,7 +1,7 @@
 <script setup>
 // 诵经板块：/jing/ 目录，/jing/:slug/ 单部经。
 // 先放「跟着念」的播放器和全文（操作），介绍和常见问题放在后面，不让操作被说明埋住。
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { SUTRAS, SUTRA_BY_SLUG } from '../data/sutras.js'
 import NotFoundPage from './NotFoundPage.vue'
@@ -14,6 +14,15 @@ const versionKey = ref('read')
 const version = computed(() => sutra.value?.audio.find((a) => a.key === versionKey.value) || sutra.value?.audio[0] || null)
 const showPinyin = ref(false)
 const videoIndex = ref(0)
+// YouTube 上的同一条视频：还没到公开时间的先不给链接（按太平洋时间当天晚上 9 点之后算公开）。
+// now 在浏览器里才取，预渲染的页面里先不出带日期的链接
+const now = ref(0)
+onMounted(() => { now.value = Date.now() })
+function ytUrl(v) {
+  if (!v?.yt) return ''
+  if (v.ytFrom && now.value < Date.parse(`${v.ytFrom}T21:00:00-07:00`)) return ''
+  return v.src.includes('/shorts/') ? `https://www.youtube.com/shorts/${v.yt}` : `https://www.youtube.com/watch?v=${v.yt}`
+}
 const video = computed(() => sutra.value?.videos?.[videoIndex.value] || null)
 // 从目录页的视频墙点进来时带 ?v=视频id，直接切到那一个
 function videoFromQuery() {
@@ -185,7 +194,10 @@ onBeforeUnmount(() => player.value?.pause())
           preload="none"
         ></video>
       </div>
-      <p class="jing-tip">{{ video.title }}。海外观众也可以到 YouTube 频道「求財祈福網・每日誦經」观看、订阅。</p>
+      <p class="jing-tip">{{ video.title }}。</p>
+      <p v-if="ytUrl(video)" class="jing-tip jing-yt">
+        能打开 YouTube 的话，也可以<a :href="ytUrl(video)" target="_blank" rel="noopener">到 YouTube 看这个视频</a>（画质更清楚），并订阅频道「求財祈福網・每日誦經」。
+      </p>
     </section>
 
 
@@ -242,7 +254,10 @@ onBeforeUnmount(() => player.value?.pause())
       <div class="jing-shorts__grid">
         <figure v-for="v in sutra.shorts" :key="v.src" class="jing-short">
           <video :src="v.src" :poster="v.poster" controls playsinline preload="none"></video>
-          <figcaption>{{ v.title }}</figcaption>
+          <figcaption>
+            {{ v.title }}
+            <a v-if="ytUrl(v)" :href="ytUrl(v)" target="_blank" rel="noopener" class="jing-short__yt">YouTube 观看</a>
+          </figcaption>
         </figure>
       </div>
     </section>
@@ -351,6 +366,8 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-video__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #1b1223; margin-bottom: 8px; }
 .jing-video__frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .jing-shorts { padding: 18px; }
+.jing-yt a, .jing-short__yt { color: var(--accent); }
+.jing-short__yt { display: block; margin-top: 2px; font-size: 0.75rem; }
 .jing-shorts__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
 .jing-short { margin: 0; }
 .jing-short video { width: 100%; aspect-ratio: 9 / 16; border-radius: 10px; background: #1b1223; display: block; }
