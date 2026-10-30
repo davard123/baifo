@@ -25,7 +25,8 @@ watch(() => [route.params.slug, route.query.v], videoFromQuery, { immediate: tru
 // 目录页视频墙：唱诵版排前面；电脑上鼠标移上去静音预览，移开就停；手机上滑到屏幕中间的那一个自动预览
 const wallVideos = computed(() => SUTRAS
   .flatMap((s) => (s.videos || []).map((v) => ({ ...v, slug: s.slug, sutraTitle: s.title })))
-  .sort((a, b) => /唱诵/.test(b.label) - /唱诵/.test(a.label)))
+  .sort((a, b) => /唱诵/.test(b.label) - /唱诵/.test(a.label))
+  .filter((v) => !sutra.value || v.slug !== sutra.value.slug))
 function preview(e) {
   const el = e.currentTarget.querySelector('video')
   if (!el) return
@@ -38,7 +39,7 @@ function stopPreview(e) {
 const wall = ref(null)
 let wallObserver = null
 // 目录页和单部经共用这个组件，切换路由时视频墙会出现或消失，所以跟着 wall 元素走，而不是只在挂载时设一次
-watch(wall, (el) => {
+watch([wall, wallVideos], ([el]) => {
   wallObserver?.disconnect()
   wallObserver = null
   if (!el || window.matchMedia('(hover: hover)').matches || !('IntersectionObserver' in window)) return
@@ -243,6 +244,23 @@ onBeforeUnmount(() => player.value?.pause())
           <video :src="v.src" :poster="v.poster" controls playsinline preload="none"></video>
           <figcaption>{{ v.title }}</figcaption>
         </figure>
+      </div>
+    </section>
+
+    <section v-if="wallVideos.length" ref="wall" class="jing-wall" aria-label="更多诵经视频">
+      <h2 class="jing-wall__title">更多诵经视频</h2>
+      <div class="jing-wall__grid">
+        <router-link
+          v-for="v in wallVideos"
+          :key="v.id"
+          :to="{ path: `/jing/${v.slug}/`, query: { v: v.id } }"
+          class="jing-wall__item"
+          @mouseenter="preview"
+          @mouseleave="stopPreview"
+        >
+          <video :src="v.src" :poster="v.poster" muted loop playsinline preload="none" tabindex="-1"></video>
+          <span class="jing-wall__label"><b>{{ v.sutraTitle }}</b>{{ v.label }}</span>
+        </router-link>
       </div>
     </section>
 
