@@ -48,13 +48,12 @@ export const SUTRAS = [
     name: '普贤菩萨行愿品偈颂',
     image: '/buddha-variants/a6-six-tusk-20261024.webp',
     intro: '《普贤行愿品》出自《大方广佛华严经》第四十卷，唐代般若三藏译。偈颂共六十二偈、二百四十八句，从「所有十方世界中」念到「速往无量光佛刹」，把普贤菩萨十大愿王——礼敬诸佛、称赞如来、广修供养、忏悔业障、随喜功德、请转法轮、请佛住世、常随佛学、恒顺众生、普皆回向——一一发起，最后回向往生极乐。',
-    when: '发愿、回向、为家人祈福时常念，汉传寺院晚课、佛七圆满也常诵。诵读一遍约九分钟；唱诵版分上下两集，跟着唱更容易记住。',
+    when: '发愿、回向、为家人祈福时常念，汉传寺院晚课、佛七圆满也常诵。诵读一遍约九分钟；唱诵全文约十二分钟，跟着唱更容易记住。',
     audio: [
       { key: 'read', label: '诵读版', src: '/jing/puxian-read.mp3?v=3', timing: puxianRead },
     ],
     videos: [
-      { id: 'puxian-sing-1', label: '唱诵上集', title: '普贤行愿品偈颂 唱诵上集（礼敬诸佛 广修供养）', src: '/jing/puxian-sing-1.mp4', poster: '/jing/puxian-sing-1-poster.jpg' },
-      { id: 'puxian-sing-2', label: '唱诵下集', title: '普贤行愿品偈颂 唱诵下集（导归极乐 普皆回向）', src: '/jing/puxian-sing-2.mp4', poster: '/jing/puxian-sing-2-poster.jpg' },
+      { id: 'puxian-sing', label: '唱诵全文', title: '普贤行愿品偈颂 唱诵全文（六十二偈）', src: '/jing/puxian-sing-full.mp4', poster: '/jing/puxian-sing-full-poster.jpg' },
       { id: 'puxian-read', label: '诵读版', title: '普贤行愿品偈颂 诵读版（全文六十二偈）', src: '/jing/puxian-read.mp4?v=3', poster: '/jing/puxian-read-poster.jpg' },
     ],
     shorts: [

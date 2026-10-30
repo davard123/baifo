@@ -15,7 +15,42 @@ const version = computed(() => sutra.value?.audio.find((a) => a.key === versionK
 const showPinyin = ref(false)
 const videoIndex = ref(0)
 const video = computed(() => sutra.value?.videos?.[videoIndex.value] || null)
-watch(() => route.params.slug, () => { videoIndex.value = 0 })
+// 从目录页的视频墙点进来时带 ?v=视频id，直接切到那一个
+function videoFromQuery() {
+  const i = sutra.value?.videos?.findIndex((v) => v.id === route.query.v) ?? -1
+  videoIndex.value = i > 0 ? i : 0
+}
+watch(() => [route.params.slug, route.query.v], videoFromQuery, { immediate: true })
+
+// 目录页视频墙：唱诵版排前面；电脑上鼠标移上去静音预览，移开就停；手机上滑到屏幕中间的那一个自动预览
+const wallVideos = computed(() => SUTRAS
+  .flatMap((s) => (s.videos || []).map((v) => ({ ...v, slug: s.slug, sutraTitle: s.title })))
+  .sort((a, b) => /唱诵/.test(b.label) - /唱诵/.test(a.label)))
+function preview(e) {
+  const el = e.currentTarget.querySelector('video')
+  if (!el) return
+  if (el.currentTime < 1) el.currentTime = 12
+  el.play().catch(() => {})
+}
+function stopPreview(e) {
+  e.currentTarget.querySelector('video')?.pause()
+}
+const wall = ref(null)
+let wallObserver = null
+// 目录页和单部经共用这个组件，切换路由时视频墙会出现或消失，所以跟着 wall 元素走，而不是只在挂载时设一次
+watch(wall, (el) => {
+  wallObserver?.disconnect()
+  wallObserver = null
+  if (!el || window.matchMedia('(hover: hover)').matches || !('IntersectionObserver' in window)) return
+  wallObserver = new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (en.isIntersecting) preview({ currentTarget: en.target })
+      else en.target.querySelector('video')?.pause()
+    }
+  }, { rootMargin: '-45% 0px -45% 0px' })
+  el.querySelectorAll('.jing-wall__item').forEach((item) => wallObserver.observe(item))
+}, { flush: 'post' })
+onBeforeUnmount(() => wallObserver?.disconnect())
 function pickVideo(i) {
   videoIndex.value = i
 }
@@ -79,6 +114,23 @@ onBeforeUnmount(() => player.value?.pause())
       <h1>诵经</h1>
       <p class="lead">常诵经咒的完整经文，带拼音，可以跟着诵读音频一句一句念。免费，不用注册。</p>
     </header>
+    <section v-if="wallVideos.length" ref="wall" class="jing-wall" aria-label="诵经视频">
+      <h2 class="jing-wall__title">诵经视频</h2>
+      <div class="jing-wall__grid">
+        <router-link
+          v-for="v in wallVideos"
+          :key="v.id"
+          :to="{ path: `/jing/${v.slug}/`, query: { v: v.id } }"
+          class="jing-wall__item"
+          @mouseenter="preview"
+          @mouseleave="stopPreview"
+        >
+          <video :src="v.src" :poster="v.poster" muted loop playsinline preload="none" tabindex="-1"></video>
+          <span class="jing-wall__label"><b>{{ v.sutraTitle }}</b>{{ v.label }}</span>
+        </router-link>
+      </div>
+    </section>
+    <h2 class="jing-wall__title">经文</h2>
     <section class="jing-list">
       <router-link v-for="s in SUTRAS" :key="s.slug" :to="`/jing/${s.slug}/`" class="jing-card card">
         <img :src="s.image" :alt="s.name" class="jing-card__img" loading="lazy" />
@@ -228,6 +280,16 @@ onBeforeUnmount(() => player.value?.pause())
 .lead { color: var(--text-muted); font-size: 0.92rem; line-height: 1.85; max-width: 32em; margin: 0 auto; }
 
 .jing-list { display: grid; gap: 14px; }
+.jing-wall__title { font-size: 1.05rem; color: var(--gold-light); letter-spacing: 0.12em; margin: 4px 0 -6px; }
+.jing-wall__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+.jing-wall__item { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #1b1223; border: 1px solid rgba(242, 200, 121, 0.25); text-decoration: none; transition: transform 0.25s, border-color 0.25s; }
+.jing-wall__item:hover { transform: translateY(-2px); border-color: rgba(242, 200, 121, 0.7); }
+.jing-wall__item video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.jing-wall__label { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 10px 8px; background: linear-gradient(transparent, rgba(10, 6, 14, 0.85)); color: var(--text); font-size: 0.8rem; display: flex; gap: 6px; align-items: baseline; }
+.jing-wall__label b { color: var(--gold-light); font-size: 0.92rem; }
+.jing-wall__label { flex-wrap: wrap; column-gap: 6px; row-gap: 0; }
+@media (min-width: 640px) { .jing-wall__grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+@media (max-width: 480px) { .jing-wall__label { font-size: 0.72rem; padding: 14px 8px 6px; } .jing-wall__label b { font-size: 0.82rem; } }
 .jing-card { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; padding: 14px 16px; text-decoration: none; color: var(--text); }
 .jing-card__img { width: 96px; height: 96px; object-fit: contain; }
 .jing-card h2 { font-size: 1.25rem; color: var(--gold-light); display: flex; flex-direction: column; gap: 2px; }
