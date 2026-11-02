@@ -8,6 +8,8 @@ import puxianRead from './sutras/puxian-read-timing.js'
 import jingang from './sutras/jingang.js'
 import jingangSing1 from './sutras/jingang-sing1-timing.js'
 import jingangSing2 from './sutras/jingang-sing2-timing.js'
+import pumen from './sutras/pumen.js'
+import pumenSing from './sutras/pumen-sing-timing.js'
 
 export const SUTRAS = [
   {
@@ -74,6 +76,30 @@ export const SUTRAS = [
       { q: '普贤行愿品偈颂有多少句？', a: '通行本共六十二偈，每偈四句，合计二百四十八句、一千七百三十六字。本页经文按 CBETA 与汉传课诵本两源对照校订。' },
       { q: '普贤十大愿王是哪十个？', a: '一礼敬诸佛，二称赞如来，三广修供养，四忏悔业障，五随喜功德，六请转法轮，七请佛住世，八常随佛学，九恒顺众生，十普皆回向。' },
       { q: '偈颂里「一一」怎么念？', a: '「一一」就是「每一个」的意思，连着念 yī yī，中间不要停顿。' },
+    ],
+  },
+  {
+    ...pumen,
+    name: '妙法莲华经观世音菩萨普门品',
+    image: '/buddha-variants/a7-water-moon-20261024.webp',
+    intro: '《普门品》是《妙法莲华经》第二十五品，后秦鸠摩罗什译。无尽意菩萨问佛：观世音菩萨以什么因缘名观世音？佛说众生受诸苦恼，一心称名，菩萨即时观其音声，皆得解脱。经中讲观音菩萨救七难、离三毒、应二求，以三十三应化身随类说法；后半偈颂「念彼观音力」一句一句回应前文，是汉传佛教流传最广的观音经典。',
+    when: '为家人祈求平安、出行、生病、遇到难事时常诵，许多寺院在观音诞和早晚课也念。唱诵全品约二十一分钟：前半长行约十五分钟，后半偈颂约六分钟，时间不够时只唱偈颂也好。',
+    audio: [
+      { key: 'sing', label: '唱诵全品', src: '/jing/pumen-sing.mp3', timing: pumenSing },
+    ],
+    videos: [
+      { id: 'pumen-sing-1', label: '唱诵 · 长行', title: '普门品 唱诵（长行：无尽意菩萨问佛 至 献璎珞）', src: '/jing/pumen-sing-1.mp4', poster: '/jing/pumen-sing-1-poster.jpg', yt: '2Aap6xmad8A', ytFrom: '2026-11-02' },
+      { id: 'pumen-sing-2', label: '唱诵 · 偈颂', title: '普门品偈颂 唱诵全偈（世尊妙相具 至 是故应顶礼）', src: '/jing/pumen-sing-2.mp4', poster: '/jing/pumen-sing-2-poster.jpg', yt: 'Yhs_rlf-oT0', ytFrom: '2026-11-02' },
+    ],
+    shorts: [
+      { title: '一心称名，皆得解脱', src: '/jing/shorts/pumen-01.mp4', poster: '/jing/shorts/pumen-01.jpg', yt: 'jT0MXN5vaiw', ytFrom: '2026-11-02' },
+      { title: '念彼观音力，火坑变成池', src: '/jing/shorts/pumen-02.mp4', poster: '/jing/shorts/pumen-02.jpg', yt: 'kPF0XAJ3AFA', ytFrom: '2026-11-02' },
+      { title: '观音妙智力，能救世间苦', src: '/jing/shorts/pumen-03.mp4', poster: '/jing/shorts/pumen-03.jpg', yt: 'hfza_QFhoPA', ytFrom: '2026-11-02' },
+    ],
+    faqs: [
+      { q: '普门品有多少字？', a: '本页经文按鸠摩罗什译本，与 CBETA 及汉传寺院课诵本两源对照校订，共二千零六十二字（不算标点），其中偈颂从「世尊妙相具」到「是故应顶礼」。' },
+      { q: '只念偈颂可以吗？', a: '可以。偈颂把前面长行的内容用韵文重说一遍，很多人日常只念偈颂；时间充裕时念全品更完整。' },
+      { q: '唱诵视频里个别字和字幕不一样？', a: '唱诵音乐由 AI 辅助制作，个别字唱音不准，请以字幕和本页经文为准。' },
     ],
   },
   {
