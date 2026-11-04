@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import { getStaticPages, canonicalUrl } from './seo.config.js';
+import { canonicalUrl } from './seo.config.js';
+import { getStaticPages } from './seo.jing.js';
 
 let count = 0;
 for (const page of getStaticPages()) {

@@ -48,13 +48,18 @@ function hantUrl(url) {
   return url.replace(SITE.baseUrl, `${SITE.baseUrl}${toHant('/').replace(/\/$/, '')}`)
 }
 
+// 诵经页的 SEO 要异步加载，快速切页时只让最后一次导航写 head
+let latestSeoRun = 0
+
 async function applyRouteSeo(fullPath) {
+  const run = ++latestSeoRun
   const hant = isHantPath(fullPath)
   const path = stripHant(fullPath)
-  const page = getSeoByPath(path)
+  const page = await getSeoByPath(path)
   const isKnownPage = !!page
   const normalizedPath = normalizePath(path)
   const convert = hant ? await loadConverter() : (text) => text
+  if (run !== latestSeoRun) return
   const title = convert(page?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`)
   const description = convert(page?.description || '这个地址当前没有对应内容。')
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`

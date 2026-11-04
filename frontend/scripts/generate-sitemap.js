@@ -1,7 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { getStaticPages, SITE, canonicalUrl } from './seo.config.js'
+import { SITE, canonicalUrl } from './seo.config.js'
+import { getStaticPages } from './seo.jing.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
