@@ -676,8 +676,8 @@ function jingListPage() {
   const path = '/jing'
   return {
     path,
-    title: '在线诵经 | 心经、普门品、金刚经、普贤行愿品全文带拼音与唱诵视频',
-    description: '常诵经咒全文：心经、金刚经、大悲咒、普贤行愿品等，有唱诵视频，带拼音，可跟着诵读音频逐句念。经文按汉传通行课诵本校订，免费、不用注册。',
+    title: '在线诵经 | 心经、大悲咒、金刚经、地藏经、阿弥陀经全文带拼音，女声读诵可跟读',
+    description: '常诵经咒全文：心经、大悲咒、金刚经、地藏经、阿弥陀经、普门品、普贤行愿品，有女声读诵和唱诵视频，带拼音，可跟读、可默读。经文按汉传通行课诵本校订，免费、不用注册。',
     heading: '在线诵经',
     summary: SUTRAS.map((s) => `${s.name}（${s.title}，${s.lines.length}句）`).join('；') + '。',
     image: SITE.defaultImage,
@@ -703,7 +703,7 @@ function sutraPage(item) {
   return {
     path,
     title: `${item.title}全文带拼音｜${item.name}诵读`,
-    description: `${item.name}全文（${item.translator}），${item.lines.length}句、${item.charCount}字，带拼音，可跟着诵读音频逐句念。${item.intro}`.slice(0, 160),
+    description: `${item.name}全文（${item.translator}），${item.lines.length}句、${item.charCount}字，带拼音，有女声读诵，可跟读、可默读。${item.intro}`.slice(0, 160),
     heading: item.name,
     summary: item.intro,
     image: item.image,

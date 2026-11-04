@@ -2,14 +2,15 @@
 // 经文出处 CBETA 电子佛典（CC BY-NC-SA），页面上注明；音频为本站制作，只在音频定稿后才填 audio。
 import xinjing from './sutras/xinjing.js'
 import dabeizhou from './sutras/dabeizhou.js'
-import xinjingChant from './sutras/xinjing-chant-timing.js'
 import puxian from './sutras/puxian.js'
-import puxianRead from './sutras/puxian-read-timing.js'
 import jingang from './sutras/jingang.js'
 import jingangSing1 from './sutras/jingang-sing1-timing.js'
 import jingangSing2 from './sutras/jingang-sing2-timing.js'
 import pumen from './sutras/pumen.js'
 import pumenSing from './sutras/pumen-sing-timing.js'
+import amituo from './sutras/amituo.js'
+import dizang from './sutras/dizang.js'
+import { RECITE } from './sutras-recite.js'
 
 export const SUTRAS = [
   {
@@ -18,11 +19,9 @@ export const SUTRAS = [
     image: '/a7-20260906.webp?v=release1',
     intro: '《心经》是般若经典的精要，全经正文二百六十字，汉传寺院早晚课都会诵念。经中观自在菩萨「照见五蕴皆空，度一切苦厄」，教人放下执着、心无挂碍。',
     when: '早晚课、心绪不宁、为家人祈福时都可以念。诵读一遍不到两分钟，结尾揭谛咒念三遍，跟着字幕慢慢念即可。',
-    audio: [
-      { key: 'chant', label: '诵读版', src: '/jing/xinjing-chant.mp3?v=2e', timing: xinjingChant },
-    ],
+    audio: RECITE.xinjing.audio,
     videos: [
-      { id: '00x2YdhXKSk', label: '诵读版', title: '心经 诵读版（全文 · 揭谛咒三遍）', src: '/jing/xinjing-read.mp4', poster: '/jing/xinjing-read-poster.jpg', yt: '00x2YdhXKSk' },
+      ...RECITE.xinjing.videos,
       { id: 'r40dv0lA__g', label: '音乐版', title: '心经 音乐版（唱诵）', src: '/jing/xinjing-music.mp4', poster: '/jing/xinjing-music-poster.jpg', yt: 'r40dv0lA__g' },
     ],
     faqs: [
@@ -36,9 +35,9 @@ export const SUTRAS = [
     name: '千手千眼无碍大悲心陀罗尼',
     image: '/buddha-variants/a7-white-standing-20261024.webp',
     intro: '大悲咒出自《千手千眼观世音菩萨广大圆满无碍大悲心陀罗尼经》，唐代伽梵达摩译。汉传寺院早课必诵，通行的课诵本分为八十四句。',
-    when: '早课、为家人祈求平安、身体不适或遇到困难时常念。一遍约四分钟。',
-    audio: [],
-    videos: [],
+    when: '早课、为家人祈求平安、身体不适或遇到困难时常念。女声读诵一遍约两分半钟，可以跟读，也可以默读。',
+    audio: RECITE.dabeizhou.audio,
+    videos: RECITE.dabeizhou.videos,
     faqs: [
       { q: '大悲咒有多少句、多少字？', a: '通行的课诵本为八十四句、四百一十五字。经中原本分为八十二句，后来的课诵本按念诵时的停顿，把结尾一句拆开，成为八十四句。' },
       { q: '「唵」字怎么念？', a: '各地课诵本的注音不完全相同，常见注作 ōng。本站的诵读按通行的念法，跟着念即可，不必为个别字的读音担心。' },
@@ -50,13 +49,11 @@ export const SUTRAS = [
     name: '普贤菩萨行愿品偈颂',
     image: '/buddha-variants/a6-six-tusk-20261024.webp',
     intro: '《普贤行愿品》出自《大方广佛华严经》第四十卷，唐代般若三藏译。偈颂共六十二偈、二百四十八句，从「所有十方世界中」念到「速往无量光佛刹」，把普贤菩萨十大愿王——礼敬诸佛、称赞如来、广修供养、忏悔业障、随喜功德、请转法轮、请佛住世、常随佛学、恒顺众生、普皆回向——一一发起，最后回向往生极乐。',
-    when: '发愿、回向、为家人祈福时常念，汉传寺院晚课、佛七圆满也常诵。诵读一遍约九分钟；唱诵全文约十二分钟，跟着唱更容易记住。',
-    audio: [
-      { key: 'read', label: '诵读版', src: '/jing/puxian-read.mp3?v=3', timing: puxianRead },
-    ],
+    when: '发愿、回向、为家人祈福时常念，汉传寺院晚课、佛七圆满也常诵。女声读诵一遍约八分钟，可以跟读，也可以默读；唱诵全文约十二分钟，跟着唱更容易记住。',
+    audio: RECITE.puxian.audio,
     videos: [
+      ...RECITE.puxian.videos,
       { id: 'puxian-sing', label: '唱诵全文', title: '普贤行愿品偈颂 唱诵全文（六十二偈）', src: '/jing/puxian-sing-full.mp4', poster: '/jing/puxian-sing-full-poster.jpg', yt: 'ZTdaR6ivGs0', ytFrom: '2026-11-05' },
-      { id: 'puxian-read', label: '诵读版', title: '普贤行愿品偈颂 诵读版（全文六十二偈）', src: '/jing/puxian-read.mp4?v=3', poster: '/jing/puxian-read-poster.jpg', yt: 'q7fF-ZJijvg' },
     ],
     shorts: [
       { title: '我昔所造诸恶业，皆由无始贪恚痴', src: '/jing/shorts/puxian-02.mp4', poster: '/jing/shorts/puxian-02.jpg', yt: 'zfbAi1iKlAI', ytFrom: '2026-10-31' },
@@ -83,11 +80,13 @@ export const SUTRAS = [
     name: '妙法莲华经观世音菩萨普门品',
     image: '/buddha-variants/a7-water-moon-20261024.webp',
     intro: '《普门品》是《妙法莲华经》第二十五品，后秦鸠摩罗什译。无尽意菩萨问佛：观世音菩萨以什么因缘名观世音？佛说众生受诸苦恼，一心称名，菩萨即时观其音声，皆得解脱。经中讲观音菩萨救七难、离三毒、应二求，以三十三应化身随类说法；后半偈颂「念彼观音力」一句一句回应前文，是汉传佛教流传最广的观音经典。',
-    when: '为家人祈求平安、出行、生病、遇到难事时常诵，许多寺院在观音诞和早晚课也念。唱诵全品约二十一分钟：前半长行约十五分钟，后半偈颂约六分钟，时间不够时只唱偈颂也好。',
+    when: '为家人祈求平安、出行、生病、遇到难事时常诵，许多寺院在观音诞和早晚课也念。唱诵全品约二十一分钟：前半长行约十五分钟，后半偈颂约六分钟，时间不够时只唱偈颂也好。女声读诵全品约十分钟，可以跟读，也可以默读。',
     audio: [
+      ...RECITE.pumen.audio,
       { key: 'sing', label: '唱诵全品', src: '/jing/pumen-sing.mp3', timing: pumenSing },
     ],
     videos: [
+      ...RECITE.pumen.videos,
       { id: 'pumen-sing-1', label: '唱诵 · 长行', title: '普门品 唱诵（长行：无尽意菩萨问佛 至 献璎珞）', src: '/jing/pumen-sing-1.mp4', poster: '/jing/pumen-sing-1-poster.jpg', yt: '2Aap6xmad8A', ytFrom: '2026-11-02' },
       { id: 'pumen-sing-2', label: '唱诵 · 偈颂', title: '普门品偈颂 唱诵全偈（世尊妙相具 至 是故应顶礼）', src: '/jing/pumen-sing-2.mp4', poster: '/jing/pumen-sing-2-poster.jpg', yt: 'Yhs_rlf-oT0', ytFrom: '2026-11-02' },
     ],
@@ -107,12 +106,14 @@ export const SUTRAS = [
     name: '金刚般若波罗蜜经',
     image: '/buddha-variants/a1-gilt-20261024.webp',
     intro: '《金刚经》全名《金刚般若波罗蜜经》，姚秦鸠摩罗什译，全经三十二分、五千余字。经中须菩提向佛请问「云何应住，云何降伏其心」，佛以「凡所有相，皆是虚妄」「应无所住而生其心」作答，是汉传佛教流传最广的般若经典。',
-    when: '早晚课、为家人祈福、为先人回向时都常诵。全经诵一遍约四十分钟；本站唱诵版分五集：第一集唱第一至第八分，第二集唱第九至第十三分，后面几集陆续上线。',
+    when: '早晚课、为家人祈福、为先人回向时都常诵。全经诵一遍约四十分钟；本站唱诵版分五集：第一集唱第一至第八分，第二集唱第九至第十三分，后面几集陆续上线。女声读诵全本约二十七分钟，分五集，可以跟读，也可以默读。',
     audio: [
+      ...RECITE.jingang.audio,
       { key: 'sing1', label: '唱诵第一集', src: '/jing/jingang-sing-1.mp3', timing: jingangSing1 },
       { key: 'sing2', label: '唱诵第二集', src: '/jing/jingang-sing-2.mp3', timing: jingangSing2 },
     ],
     videos: [
+      ...RECITE.jingang.videos,
       { id: 'jingang-sing-1', label: '唱诵第一集', title: '金刚经 唱诵第一集（法会因由分第一 至 依法出生分第八）', src: '/jing/jingang-sing-1.mp4', poster: '/jing/jingang-sing-1-poster.jpg', yt: '-RoyKDYHljI' },
       { id: 'jingang-sing-2', label: '唱诵第二集', title: '金刚经 唱诵第二集（一相无相分第九 至 如法受持分第十三）', src: '/jing/jingang-sing-2.mp4', poster: '/jing/jingang-sing-2-poster.jpg', yt: 'NeMD77R7HRQ' },
     ],
@@ -121,6 +122,33 @@ export const SUTRAS = [
       { q: '「三十二分」是谁分的？', a: '相传是南朝梁昭明太子所分，每分各有一个小标题，例如「法会因由分第一」，方便念诵和查找。' },
       { q: '「阿耨多罗三藐三菩提」怎么念？', a: '通行念法是 ā nòu duō luó sān miǎo sān pú tí，意思是「无上正等正觉」。「耨」念 nòu，「藐」念 miǎo。' },
       { q: '唱诵视频里个别字和字幕不一样？', a: '唱诵音乐由 AI 辅助制作，个别字唱音不准，请以字幕和本页经文为准。' },
+    ],
+  },
+  {
+    ...amituo,
+    name: '佛说阿弥陀经',
+    image: '/buddha-variants/a2-mituo-20261024.webp',
+    intro: '《佛说阿弥陀经》，后秦鸠摩罗什译，是净土宗最常诵的经典之一。佛陀对舍利弗讲述西方极乐世界的依正庄严，劝人一心执持阿弥陀佛名号，发愿往生。',
+    when: '晚课、念佛共修、为家人回向时常诵。女声读诵一遍约九分钟，可以跟读，也可以默读。',
+    audio: RECITE.amituo.audio,
+    videos: RECITE.amituo.videos,
+    faqs: [
+      { q: '阿弥陀经有多少字？', a: `本页经文按鸠摩罗什译本，与 CBETA 及汉传课诵本两源对照校订，共 ${amituo.charCount} 字（不算标点）。` },
+      { q: '跟读和默读有什么不同？', a: '跟读是跟着声音念出声，适合刚开始学、想把字音念熟；默读是不出声，眼看字幕、心里念，不方便出声时也能做。两种都可以，按自己的情况选。' },
+    ],
+  },
+  {
+    ...dizang,
+    name: '地藏菩萨本愿经',
+    image: '/buddha-variants/a8-five-crown-20261024.webp',
+    intro: '《地藏菩萨本愿经》，唐代实叉难陀译，全经十三品。佛在忉利天为母说法，讲地藏菩萨的大愿、众生业缘与孝亲度亡的法门，汉传佛教常在超度、祭祖、回向先人时诵读。',
+    when: '为过世的亲人回向、祭祖、农历七月和地藏菩萨圣诞前后常诵。女声读诵全经约八十四分钟，本页按品分开，一次念一品也可以；可以跟读，也可以默读。',
+    audio: RECITE.dizang.audio,
+    videos: RECITE.dizang.videos,
+    faqs: [
+      { q: '地藏经有几品、多少字？', a: `全经十三品，本页经文按 CBETA 与汉传通行本两源对照校订，共 ${dizang.charCount} 字（不算标点）。` },
+      { q: '一次念不完怎么办？', a: '可以一次念一品，隔天接着念下一品。点经文里任意一句，音频会从那一句开始。' },
+      { q: '跟读和默读有什么不同？', a: '跟读是跟着声音念出声，适合刚开始学、想把字音念熟；默读是不出声，眼看字幕、心里念，不方便出声时也能做。两种都可以，按自己的情况选。' },
     ],
   },
 ]

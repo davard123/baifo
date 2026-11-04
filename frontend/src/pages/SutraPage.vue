@@ -10,7 +10,7 @@ const route = useRoute()
 const sutra = computed(() => (route.params.slug ? SUTRA_BY_SLUG[route.params.slug] : null))
 const isList = computed(() => !route.params.slug)
 
-const versionKey = ref('read')
+const versionKey = ref('')
 const version = computed(() => sutra.value?.audio.find((a) => a.key === versionKey.value) || sutra.value?.audio[0] || null)
 const showPinyin = ref(false)
 const videoIndex = ref(0)
@@ -33,7 +33,7 @@ watch(() => [route.params.slug, route.query.v], videoFromQuery, { immediate: tru
 
 // 目录页视频墙：唱诵版排前面；电脑上鼠标移上去静音预览，移开就停；手机上滑到屏幕中间的那一个自动预览
 const wallVideos = computed(() => SUTRAS
-  .flatMap((s) => (s.videos || []).map((v) => ({ ...v, slug: s.slug, sutraTitle: s.title })))
+  .flatMap((s) => (s.videos || []).filter((v) => v.wall !== false).map((v) => ({ ...v, slug: s.slug, sutraTitle: s.title })))
   .sort((a, b) => /唱诵/.test(b.label) - /唱诵/.test(a.label))
   .filter((v) => !sutra.value || v.slug !== sutra.value.slug))
 function preview(e) {
@@ -80,7 +80,7 @@ function onTimeUpdate() {
 }
 
 function pickVersion(key) {
-  if (key === versionKey.value) return
+  if (key === version.value?.key) return
   versionKey.value = key
   currentN.value = 0
   playing.value = false
@@ -109,7 +109,7 @@ function onMeta() {
 }
 
 watch(() => route.params.slug, () => {
-  versionKey.value = 'read'
+  versionKey.value = ''
   currentN.value = 0
   playing.value = false
 })
@@ -122,7 +122,7 @@ onBeforeUnmount(() => player.value?.pause())
     <header class="jing-head">
       <p class="section-kicker">每日诵经</p>
       <h1>诵经</h1>
-      <p class="lead">常诵经咒的完整经文，带拼音，可以跟着诵读音频一句一句念。免费，不用注册。</p>
+      <p class="lead">常诵经咒的完整经文，带拼音，可以跟着女声读诵一句一句跟读，也可以默读。免费，不用注册。</p>
     </header>
     <section v-if="wallVideos.length" ref="wall" class="jing-wall" aria-label="诵经视频">
       <h2 class="jing-wall__title">诵经视频</h2>
@@ -209,8 +209,8 @@ onBeforeUnmount(() => player.value?.pause())
             :key="a.key"
             type="button"
             role="tab"
-            :aria-selected="a.key === versionKey"
-            :class="{ on: a.key === versionKey }"
+            :aria-selected="a.key === version?.key"
+            :class="{ on: a.key === version?.key }"
             @click="pickVersion(a.key)"
           >{{ a.label }}</button>
         </div>
@@ -227,6 +227,7 @@ onBeforeUnmount(() => player.value?.pause())
           @pause="playing = false"
         ></audio>
         <p class="jing-tip">播放时当前句会亮起；点任意一句，从那一句开始念。</p>
+        <p class="jing-tip jing-how"><b>可以跟读：</b>跟着声音念出声。<b>可以默读：</b>不方便出声时，眼看经文、心里默念。</p>
       </template>
       <p v-else class="jing-tip">诵读音频正在制作，先可以对着经文自己念。</p>
       <label class="jing-switch"><input v-model="showPinyin" type="checkbox" /> 显示拼音</label>
@@ -235,17 +236,18 @@ onBeforeUnmount(() => player.value?.pause())
 
     <article class="jing-text card" :class="{ 'with-pinyin': showPinyin }" aria-label="经文">
       <h2 class="jing-text__title">{{ sutra.name }}</h2>
-      <p
-        v-for="l in sutra.lines"
-        :key="l.n"
-        :ref="(el) => { if (el) lineRefs[l.n] = el }"
-        class="jing-line"
-        :class="{ current: l.n === currentN }"
-        @click="seekTo(l.n)"
-      >
-        <span v-if="showPinyin" class="jing-pinyin">{{ l.pinyin }}</span>
-        <span class="jing-hanzi">{{ l.text }}</span>
-      </p>
+      <template v-for="l in sutra.lines" :key="l.n">
+        <h3 v-if="l.heading" class="jing-heading">{{ l.heading }}</h3>
+        <p
+          :ref="(el) => { if (el) lineRefs[l.n] = el }"
+          class="jing-line"
+          :class="{ current: l.n === currentN }"
+          @click="seekTo(l.n)"
+        >
+          <span v-if="showPinyin" class="jing-pinyin">{{ l.pinyin }}</span>
+          <span class="jing-hanzi">{{ l.text }}</span>
+        </p>
+      </template>
       <p class="jing-dedication">愿以此功德，普及于一切，我等与众生，皆共成佛道。</p>
     </article>
 
@@ -295,7 +297,7 @@ onBeforeUnmount(() => player.value?.pause())
       </details>
       <p class="jing-note">
         经文出处：<a :href="sutra.source.url" target="_blank" rel="noopener">{{ sutra.source.name }} {{ sutra.source.id }}</a>
-        （CC BY-NC-SA），本站按通行课诵本校订；诵读音频为本站制作。
+        （CC BY-NC-SA），本站按通行课诵本校订；诵读音频为本站制作，女声读诵由 AI 语音合成。
       </p>
     </section>
   </main>
@@ -333,10 +335,12 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-player { display: grid; gap: 12px; padding: 18px; }
 /* 只在播放时固定在顶部，跟着高亮句子；不播放时不挡住上面的视频 */
 .jing-player.playing { position: sticky; top: 8px; z-index: 3; }
-.jing-versions { display: flex; gap: 8px; }
-.jing-versions button { flex: 1; min-height: 42px; border-radius: 10px; border: 1px solid rgba(242, 200, 121, 0.3); background: transparent; color: var(--accent); font-size: 0.95rem; cursor: pointer; }
+.jing-versions { display: flex; flex-wrap: wrap; gap: 8px; }
+.jing-versions button { flex: 1 1 auto; padding: 0 10px; white-space: nowrap; min-height: 42px; border-radius: 10px; border: 1px solid rgba(242, 200, 121, 0.3); background: transparent; color: var(--accent); font-size: 0.95rem; cursor: pointer; }
 .jing-versions button.on { background: linear-gradient(135deg, #e0b76e, #f0d091); color: #2a1c0c; font-weight: 700; border-color: transparent; }
 .jing-audio { width: 100%; }
+.jing-how b { color: var(--text, inherit); }
+.jing-heading { margin: 22px 0 8px; font-size: 1.05rem; text-align: center; }
 .jing-tip { font-size: 0.82rem; color: var(--text-muted); }
 .jing-switch { font-size: 0.88rem; color: var(--text); display: flex; gap: 6px; align-items: center; }
 
