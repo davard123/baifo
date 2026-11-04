@@ -849,6 +849,22 @@
     <priority>0.78</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/topic/foxiang-shouyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/foxiang-shouyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/foxiang-shouyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/foxiang-shouyin/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/topic/foxiang-shouyin/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/topic/foxiang-shouyin/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/topic/foxiang-shouyin/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/topic/foxiang-shouyin/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/buddha/shakyamuni/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/buddha/shakyamuni/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/buddha/shakyamuni/" />

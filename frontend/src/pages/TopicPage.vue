@@ -26,13 +26,14 @@ onMounted(() => {
     </nav>
 
     <header class="hero card">
-      <p class="eyebrow">专题指南</p>
+      <p class="eyebrow">{{ topic.eyebrow || '专题指南' }}</p>
       <h1>{{ topic.heading }}</h1>
       <p class="hero-text">{{ topic.intro }}</p>
+      <p v-if="topic.updated" class="updated">更新于 <time :datetime="topic.updated">{{ topic.updated }}</time></p>
 
     </header>
 
-    <section class="content-grid">
+    <section class="content-grid" :class="{ single: !topic.related.length }">
       <article class="main-column card">
         <section v-for="section in topic.sections" :key="section.title" class="copy-section">
           <h2>{{ section.title }}</h2>
@@ -40,7 +41,7 @@ onMounted(() => {
         </section>
 
         <section v-if="topic.faqs.length" class="copy-section">
-          <h2>使用时可能遇到的问题</h2>
+          <h2>{{ topic.faqTitle || '使用时可能遇到的问题' }}</h2>
           <div class="faq-list">
             <article v-for="faq in topic.faqs" :key="faq.q" class="faq-item">
               <h3>{{ faq.q }}</h3>
@@ -48,9 +49,18 @@ onMounted(() => {
             </article>
           </div>
         </section>
+
+        <section v-if="topic.sources?.length" class="copy-section sources">
+          <h2>资料来源</h2>
+          <ul>
+            <li v-for="source in topic.sources" :key="source.url">
+              <a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
+            </li>
+          </ul>
+        </section>
       </article>
 
-      <aside class="side-column card">
+      <aside v-if="topic.related.length" class="side-column card">
         <section class="side-section">
           <h2>相关页面</h2>
           <div class="side-links">
@@ -72,6 +82,9 @@ onMounted(() => {
 
 <style scoped>
 .topic-shell {
+  /* 卡片是浅色底，全局的浅金、浅米色文字在这里看不清 */
+  --text-muted: #5b4638;
+  --accent: #8a5a14;
   max-width: 1140px;
   margin: 0 auto;
   padding: 18px 20px 64px;
@@ -135,6 +148,31 @@ onMounted(() => {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
   gap: 20px;
+}
+
+.updated {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.sources ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.sources li {
+  margin-bottom: 6px;
+}
+
+.sources a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content-grid.single {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .copy-section + .copy-section {

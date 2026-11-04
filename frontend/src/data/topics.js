@@ -1,4 +1,5 @@
 import { QIUCAI_TOPICS } from './qiucai-topics.js'
+import { ART_TOPICS } from './art-topics.js'
 
 export const TOPICS = {
   "online-worship": {
@@ -1922,7 +1923,7 @@ export const TOPICS = {
 }
 
 // 求财专题文章另放一个文件，合并进来
-Object.assign(TOPICS, QIUCAI_TOPICS)
+Object.assign(TOPICS, QIUCAI_TOPICS, ART_TOPICS)
 
 export const TOPIC_ALIASES = {
   '/rituals/prostration': 'prostration',

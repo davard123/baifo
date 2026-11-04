@@ -217,6 +217,8 @@ export function buildArticleSchema({
   about,
   step,
   articleBody,
+  dateModified,
+  citation,
   totalTime,
   supply,
   tool,
@@ -236,6 +238,8 @@ export function buildArticleSchema({
     mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
     about,
     ...(articleBody ? { articleBody } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    ...(citation?.length ? { citation } : {}),
     ...(step ? { step } : {}),
     ...(totalTime ? { totalTime } : {}),
     ...(supply
@@ -542,6 +546,8 @@ function topicPage({ path, slug }) {
           .flatMap((section) => [section.title, ...(section.paragraphs || [])])
           .filter(Boolean)
           .join('\n'),
+        dateModified: topic.updated,
+        citation: topic.sources?.map((source) => source.url),
       }),
       buildFaqSchema(path, topic.faqs),
     ].filter(Boolean),
