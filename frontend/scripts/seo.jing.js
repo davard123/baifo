@@ -7,7 +7,6 @@ import {
   buildArticleSchema,
   buildFaqSchema,
   buildWebPageSchema,
-  canonicalUrl,
 } from './seo.config.js'
 
 function jingListPage() {
@@ -71,7 +70,7 @@ function sutraPage(item) {
         '@context': 'https://schema.org',
         '@type': 'AudioObject',
         name: `${item.title}${a.label}`,
-        contentUrl: canonicalUrl(a.src),
+        contentUrl: `${SITE.baseUrl}${a.src}`, // 是文件地址，不能用补结尾斜杠的 canonicalUrl
         encodingFormat: 'audio/mpeg',
         inLanguage: 'zh-CN',
         duration: `PT${Math.round(a.timing.duration)}S`,
