@@ -38,7 +38,7 @@ export const SUTRAS = [
     when: '早课、为家人祈求平安、身体不适或遇到困难时常念。女声读诵一遍约两分半钟，可以跟读，也可以默读。',
     audio: RECITE.dabeizhou.audio,
     videos: [
-      { id: 'dabeizhou-sing-film', label: '唱诵 · 故事片', title: '大悲咒 唱诵《千手》：一双手救不了大水，一千双手可以。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dabeizhou-sing-film.mp4', poster: '/jing/recite/dabeizhou-sing-film-poster.jpg', yt: '4PvyaEaqe3w', ytFrom: '2026-11-05' },
+      { id: 'dabeizhou-sing-film', label: '唱诵 · 故事片', title: '大悲咒 唱诵《千手》：一双手救不了大水，一千双手可以。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dabeizhou-sing-film.mp4', poster: '/jing/recite/dabeizhou-sing-film-poster.jpg', yt: 'TJx-5EvxHfQ', ytFrom: '2026-11-05' },
       ...RECITE.dabeizhou.videos,
     ],
     faqs: [
