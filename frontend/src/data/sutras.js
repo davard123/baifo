@@ -37,7 +37,10 @@ export const SUTRAS = [
     intro: '大悲咒出自《千手千眼观世音菩萨广大圆满无碍大悲心陀罗尼经》，唐代伽梵达摩译。汉传寺院早课必诵，通行的课诵本分为八十四句。',
     when: '早课、为家人祈求平安、身体不适或遇到困难时常念。女声读诵一遍约两分半钟，可以跟读，也可以默读。',
     audio: RECITE.dabeizhou.audio,
-    videos: RECITE.dabeizhou.videos,
+    videos: [
+      { id: 'dabeizhou-sing-film', label: '唱诵 · 故事片', title: '大悲咒 唱诵《千手》：一双手救不了大水，一千双手可以。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dabeizhou-sing-film.mp4', poster: '/jing/recite/dabeizhou-sing-film-poster.jpg', yt: '4PvyaEaqe3w', ytFrom: '2026-11-05' },
+      ...RECITE.dabeizhou.videos,
+    ],
     faqs: [
       { q: '大悲咒有多少句、多少字？', a: '通行的课诵本为八十四句、四百一十五字。经中原本分为八十二句，后来的课诵本按念诵时的停顿，把结尾一句拆开，成为八十四句。' },
       { q: '「唵」字怎么念？', a: '各地课诵本的注音不完全相同，常见注作 ōng。本站的诵读按通行的念法，跟着念即可，不必为个别字的读音担心。' },
