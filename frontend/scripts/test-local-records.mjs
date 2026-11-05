@@ -23,9 +23,12 @@ const pub = await (await save('李四',{storageChoice:'public',blessing:'caishen
 assert.equal(pub.published,true)
 assert.equal(readLocalRecords().length,1)
 values.delete(LOCAL_RECORDS_KEY)
-globalThis.fetch = () => { throw new Error('Network must never be called for local-only records') }
+// 只存本机：唯一允许的网络请求是匿名计数，请求体只能有类型，不能带任何用户内容。
+const counted=[]
+globalThis.fetch = async (url, init) => { assert.match(String(url),/\/count$/); const body=JSON.parse(init.body); assert.deepEqual(Object.keys(body),['kind']); counted.push(body.kind); return { ok:true, json: async()=>({status:'success'}) } }
 await save('A',{email:'synthetic@example.invalid',remind:true})
 await save('B')
+assert.deepEqual(counted,['buddha','buddha'])
 assert.equal(readLocalRecords().length,2)
 assert.equal(readLocalRecords()[0].email,undefined)
 assert.equal(readLocalRecords()[0].remind,undefined)
@@ -34,6 +37,7 @@ const original=values.get(LOCAL_RECORDS_KEY)
 localStorage.setItem=()=>{throw new Error('quota')}
 await assert.rejects(save('C'),/未保存/)
 assert.equal(values.get(LOCAL_RECORDS_KEY),original)
+assert.equal(counted.length,2) // 保存失败不计数
 values.set(LOCAL_RECORDS_KEY,'corrupt')
 await assert.rejects(save('C'),/现有数据未被覆盖/)
 assert.equal(values.get(LOCAL_RECORDS_KEY),'corrupt')
@@ -51,4 +55,4 @@ for(const name of ['pages/BuddhaPage.vue','pages/AncestorPage.vue','pages/Qiucai
 const source=fs.readFileSync(new URL('../src/api.js',import.meta.url),'utf8').replace('import.meta.env.VITE_API_BASE', "'/api'")
 const api=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'))
 for(const path of ['/wishes','/wishes?limit=50','/ancestor-wishes']) await assert.rejects(api.apiFetch(path,{method:'POST',body:'private'}),/旧记录网络接口已停用/)
-console.log('PASS local records: explicit choice, public wall publish (fields/failure),  allowlist, persistence, blocked/quota/corrupt preservation, cancellation, all four adapters, network denial')
+console.log('PASS local records: explicit choice, public wall publish (fields/failure),  allowlist, persistence, blocked/quota/corrupt preservation, cancellation, all four adapters, kind-only count, legacy network denial')

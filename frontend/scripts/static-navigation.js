@@ -42,6 +42,7 @@ const WORSHIP_TOPIC_LINKS = [
   ['/topic/worship-for-family', '替家人祈福'],
   ['/topic/prostration', '礼佛中的叩拜'],
   ['/topic/offering-incense', '上香的意义'],
+  ['/topic/foxiang-shouyin', '佛像手印怎么认'],
 ]
 
 const ANCESTOR_TOPIC_LINKS = [
@@ -63,6 +64,12 @@ const QIUCAI_TOPIC_LINKS = [
 const TOPIC_TOPIC_FALLBACKS = {
   ksitigarbha: [['/topic/online-ancestors', '网上祭祖怎么做']],
   'qiucai-bai-na-wei': [['/topic/bai-caishen-gongpin', '拜财神的供品与禁忌']],
+  'foxiang-shouyin': [
+    ['/topic/guanyin', '观音菩萨'],
+    ['/topic/manjushri', '文殊菩萨'],
+    ['/topic/samantabhadra', '普贤菩萨'],
+    ['/topic/ksitigarbha', '地藏菩萨'],
+  ],
 }
 
 function normalizePath(value) {
@@ -150,6 +157,18 @@ export function getStaticNavigation(page, pages) {
       ['/guide/ancestors', '在线祭祖指南'],
       ['/ancestors', '拜祭先人'],
       ['/qiucai', '求财祈福'],
+      ['/jing', '在线诵经'],
+    ]))
+  }
+
+  if (currentPath === '/jing' || currentPath.startsWith('/jing/')) {
+    addGroup('诵经入口', routeCandidates(pages, [['/jing', '在线诵经首页']]))
+    addGroup('常诵经咒', Array.from(byPath.entries())
+      .filter(([path]) => path.startsWith('/jing/'))
+      .map(([path, target]) => ({ path, label: target.heading })))
+    addGroup('相关礼佛内容', routeCandidates(pages, [
+      ['/nianfo', '念佛计数器'],
+      ['/guide/worship', '在线礼佛指南'],
     ]))
   }
 
