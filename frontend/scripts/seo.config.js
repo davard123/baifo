@@ -378,7 +378,7 @@ function ancestorsPage() {
   return {
     path: '/ancestors',
     title: '拜祭先人 | 在线祭拜先人',
-    description: '追思先人，超荐亡灵，虔诚祭拜，祈愿庇佑后代。可选择不同亲属牌位，完成在线祭祖、追思回向与祈愿记录。',
+    description: '网上祭祖、在线追思先人：可选择父亲、母亲、祖父母、配偶、子女或历代祖先牌位，上香、献花、供果、写追思并功德回向，祈愿先人安息、庇佑后代。适合清明、中元、冬至无法回乡扫墓的海外华人。',
     heading: '拜祭先人',
     summary: '在线祭祖追思页面，覆盖先父、先母、祖父、祖母、列祖列宗、亡偶、亡子女与一切亡灵。',
     image: '/ancestors/ancestors-20260906.webp?v=release1',
