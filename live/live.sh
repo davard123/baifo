@@ -56,7 +56,7 @@ fi
 
 log() { echo "[$(date '+%F %T')] [$name] $*"; }
 stop=0
-trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null' TERM INT
+trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null && wait "$pid" 2>/dev/null' TERM INT
 
 while (( ! stop )); do
   start=$(date +%s)

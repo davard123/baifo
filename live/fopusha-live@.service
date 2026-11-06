@@ -10,7 +10,6 @@ Restart=always
 RestartSec=15
 # 停服务时给 ffmpeg 一点时间正常断开
 TimeoutStopSec=20
-KillMode=mixed
 Nice=-5
 
 [Install]
