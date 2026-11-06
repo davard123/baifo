@@ -12,6 +12,8 @@
 #   SESSION_HOURS=11.5                        # 可选
 #   GAP_SECONDS=180                           # 可选
 #   RTMP_URL=rtmp://a.rtmp.youtube.com/live2  # 可选
+#   PLAYLIST="dabeizhou xinjing pumen"        # 可选：多部经轮流播，每场随机打乱顺序；
+#                                             # 还没生成好的素材自动跳过
 set -uo pipefail
 
 name="${1:?用法：live.sh <名称>}"
@@ -27,7 +29,24 @@ SESSION_HOURS="${SESSION_HOURS:-11.5}"
 GAP_SECONDS="${GAP_SECONDS:-180}"
 RTMP_URL="${RTMP_URL:-rtmp://a.rtmp.youtube.com/live2}"
 MEDIA="${MEDIA:-$LIVE_HOME/media/$name.mp4}"
-[[ -s "$MEDIA" ]] || { echo "素材不存在：$MEDIA，先运行 prepare.sh $name" >&2; exit 2; }
+PLAYLIST="${PLAYLIST:-}"
+LIST_FILE="$LIVE_HOME/run/$name.txt"
+if [[ -z "$PLAYLIST" ]]; then
+  [[ -s "$MEDIA" ]] || { echo "素材不存在：$MEDIA，先运行 prepare.sh $name" >&2; exit 2; }
+fi
+
+# 每场开始时生成播放清单：PLAYLIST 里已生成好的素材随机排序
+build_list() {
+  local items=() p f
+  for p in $PLAYLIST; do
+    f="$LIVE_HOME/media/$p.mp4"
+    [[ -s "$f" ]] && items+=("$f")
+  done
+  (( ${#items[@]} )) || { echo "PLAYLIST 里的素材一个都还没生成" >&2; return 1; }
+  mkdir -p "$(dirname "$LIST_FILE")"
+  printf '%s\n' "${items[@]}" | shuf | sed "s/'/'\\\\''/g; s/^/file '/; s/\$/'/" > "$LIST_FILE"
+  log "本场播放顺序：$(sed -e "s#.*/##" -e "s#\.mp4'##" "$LIST_FILE" | paste -sd ' ')"
+}
 
 session_secs=$(awk -v h="$SESSION_HOURS" 'BEGIN{printf "%d", h*3600}')
 if (( session_secs > 11*3600 + 55*60 )); then
@@ -42,12 +61,18 @@ trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null' TERM INT
 while (( ! stop )); do
   start=$(date +%s)
   log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
+  if [[ -n "$PLAYLIST" ]]; then
+    build_list || { sleep 60 & wait $!; continue; }
+    input=(-f concat -safe 0 -stream_loop -1 -i "$LIST_FILE")
+  else
+    input=(-stream_loop -1 -i "$MEDIA")
+  fi
   fails=0
   while (( ! stop )); do
     left=$(( start + session_secs - $(date +%s) ))
     (( left > 30 )) || break
     ffmpeg -nostdin -hide_banner -loglevel warning \
-      -re -stream_loop -1 -i "$MEDIA" -t "$left" \
+      -re "${input[@]}" -t "$left" \
       -c copy -f flv -flvflags no_duration_filesize \
       "$RTMP_URL/$STREAM_KEY" &
     pid=$!
