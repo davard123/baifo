@@ -134,7 +134,15 @@ export const SUTRAS = [
     intro: '《佛说阿弥陀经》，后秦鸠摩罗什译，是净土宗最常诵的经典之一。佛陀对舍利弗讲述西方极乐世界的依正庄严，劝人一心执持阿弥陀佛名号，发愿往生。',
     when: '晚课、念佛共修、为家人回向时常诵。女声读诵一遍约九分钟，可以跟读，也可以默读。',
     audio: RECITE.amituo.audio,
-    videos: RECITE.amituo.videos,
+    videos: [
+      { id: 'amituo-sing-film', label: '唱诵 · 故事片', title: '阿弥陀经 唱诵《净土变》：老画工用一辈子画极乐世界，只为去那里找她。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/amituo-sing-film.mp4', poster: '/jing/recite/amituo-sing-film-poster.jpg', yt: 'Q75SCMWTMYw', ytFrom: '2026-11-06' },
+      ...RECITE.amituo.videos,
+    ],
+    shorts: [
+      { title: '七宝池八功德水，莲花大如车轮', src: '/jing/shorts/amituo-1.mp4', poster: '/jing/shorts/amituo-1.jpg', yt: 'r-uElKO2dAY', ytFrom: '2026-11-06' },
+      { title: '为什么叫阿弥陀？光明无量，寿命无量', src: '/jing/shorts/amituo-2.mp4', poster: '/jing/shorts/amituo-2.jpg', yt: '5m5F6fn48b0', ytFrom: '2026-11-06' },
+      { title: '执持名号，一心不乱，临终佛现在其前', src: '/jing/shorts/amituo-3.mp4', poster: '/jing/shorts/amituo-3.jpg', yt: 'n5v-kioDgis', ytFrom: '2026-11-06' },
+    ],
     faqs: [
       { q: '阿弥陀经有多少字？', a: `本页经文按鸠摩罗什译本，与 CBETA 及汉传课诵本两源对照校订，共 ${amituo.charCount} 字（不算标点）。` },
       { q: '跟读和默读有什么不同？', a: '跟读是跟着声音念出声，适合刚开始学、想把字音念熟；默读是不出声，眼看字幕、心里念，不方便出声时也能做。两种都可以，按自己的情况选。' },
