@@ -1,0 +1,17 @@
+[Unit]
+Description=fopusha 竖屏诵经直播 %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/fopusha-live/live.sh %i
+Restart=always
+RestartSec=15
+# 停服务时给 ffmpeg 一点时间正常断开
+TimeoutStopSec=20
+KillMode=mixed
+Nice=-5
+
+[Install]
+WantedBy=multi-user.target
