@@ -37,9 +37,10 @@ function jingListPage() {
 function sutraPage(item) {
   const path = `/jing/${item.slug}`
   const fullText = sutraPlainText(item)
+  const hasSing = item.videos.some((v) => /唱诵|音乐/.test(v.label))
   return {
     path,
-    title: `${item.title}全文带拼音｜${item.name}诵读`,
+    title: `${item.title}全文带拼音｜${item.name}读诵${hasSing ? '、唱诵视频' : ''}`,
     description: `${item.name}全文（${item.translator}），${item.lines.length}句、${item.charCount}字，带拼音，有女声读诵，可跟读、可默读。${item.intro}`.slice(0, 160),
     heading: item.name,
     summary: item.intro,
@@ -75,6 +76,21 @@ function sutraPage(item) {
         inLanguage: 'zh-CN',
         duration: `PT${Math.round(a.timing.duration)}S`,
       })),
+      // 唱诵、读诵视频：让 Google 视频搜索和 AI 能识别到本页有视频
+      ...item.videos
+        .filter((v) => v.src && v.poster && (v.uploadDate || v.ytFrom))
+        .map((v) => ({
+          '@context': 'https://schema.org',
+          '@type': 'VideoObject',
+          name: v.title.split('。')[0],
+          description: `${v.title}。${item.title}（${item.name}）全文，${item.translator}。`.slice(0, 300),
+          thumbnailUrl: `${SITE.baseUrl}${v.poster}`,
+          contentUrl: `${SITE.baseUrl}${v.src}`,
+          ...(v.yt ? { embedUrl: `https://www.youtube.com/embed/${v.yt}` } : {}),
+          uploadDate: v.uploadDate || v.ytFrom,
+          inLanguage: 'zh-CN',
+          isPartOf: { '@type': 'WebPage', '@id': `${SITE.baseUrl}${path}/` },
+        })),
     ],
   }
 }

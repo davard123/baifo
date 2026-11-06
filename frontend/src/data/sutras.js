@@ -22,7 +22,7 @@ export const SUTRAS = [
     audio: RECITE.xinjing.audio,
     videos: [
       ...RECITE.xinjing.videos,
-      { id: 'r40dv0lA__g', label: '音乐版', title: '心经 音乐版（唱诵）', src: '/jing/xinjing-music.mp4', poster: '/jing/xinjing-music-poster.jpg', yt: 'r40dv0lA__g' },
+      { id: 'r40dv0lA__g', label: '音乐版', title: '心经 音乐版（唱诵）', src: '/jing/xinjing-music.mp4', uploadDate: '2026-10-25', poster: '/jing/xinjing-music-poster.jpg', yt: 'r40dv0lA__g' },
     ],
     faqs: [
       { q: '心经有多少字？', a: '通行的玄奘译本，正文二百六十字（不算经题）。本页经文与汉传寺院课诵本一致。' },
@@ -117,8 +117,8 @@ export const SUTRAS = [
     ],
     videos: [
       ...RECITE.jingang.videos,
-      { id: 'jingang-sing-1', label: '唱诵第一集', title: '金刚经 唱诵第一集（法会因由分第一 至 依法出生分第八）', src: '/jing/jingang-sing-1.mp4', poster: '/jing/jingang-sing-1-poster.jpg', yt: '-RoyKDYHljI' },
-      { id: 'jingang-sing-2', label: '唱诵第二集', title: '金刚经 唱诵第二集（一相无相分第九 至 如法受持分第十三）', src: '/jing/jingang-sing-2.mp4', poster: '/jing/jingang-sing-2-poster.jpg', yt: 'NeMD77R7HRQ' },
+      { id: 'jingang-sing-1', label: '唱诵第一集', title: '金刚经 唱诵第一集（法会因由分第一 至 依法出生分第八）', src: '/jing/jingang-sing-1.mp4', uploadDate: '2026-10-27', poster: '/jing/jingang-sing-1-poster.jpg', yt: '-RoyKDYHljI' },
+      { id: 'jingang-sing-2', label: '唱诵第二集', title: '金刚经 唱诵第二集（一相无相分第九 至 如法受持分第十三）', src: '/jing/jingang-sing-2.mp4', uploadDate: '2026-10-28', poster: '/jing/jingang-sing-2-poster.jpg', yt: 'NeMD77R7HRQ' },
     ],
     faqs: [
       { q: '金刚经有多少字、分几分？', a: '通行的鸠摩罗什译本共三十二分，本页经文五千一百六十七字（不算标点），按 CBETA 与汉传通行流通本两源对照校订。' },
