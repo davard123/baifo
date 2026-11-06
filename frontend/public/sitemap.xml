@@ -33,18 +33,18 @@
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://fopusha.com/qiucai/zhaogongming/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/zhaogongming/" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/zhaogongming/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/zhaogongming/" />
+    <loc>https://fopusha.com/qiucai/wulucaishen/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/wulucaishen/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/wulucaishen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/wulucaishen/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://fopusha.com/zh-hant/qiucai/zhaogongming/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/zhaogongming/" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/zhaogongming/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/zhaogongming/" />
+    <loc>https://fopusha.com/zh-hant/qiucai/wulucaishen/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/wulucaishen/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/wulucaishen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/wulucaishen/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
@@ -81,18 +81,18 @@
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://fopusha.com/qiucai/wulucaishen/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/wulucaishen/" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/wulucaishen/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/wulucaishen/" />
+    <loc>https://fopusha.com/qiucai/zhaogongming/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/zhaogongming/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/zhaogongming/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/zhaogongming/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://fopusha.com/zh-hant/qiucai/wulucaishen/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/wulucaishen/" />
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/wulucaishen/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/wulucaishen/" />
+    <loc>https://fopusha.com/zh-hant/qiucai/zhaogongming/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qiucai/zhaogongming/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qiucai/zhaogongming/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qiucai/zhaogongming/" />
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
