@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify route recovery and audio controls
+        run: node --test scripts/recovery-tests/*.test.mjs
+
       - name: Build site
         run: npm run build
 

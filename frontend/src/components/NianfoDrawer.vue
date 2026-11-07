@@ -3,6 +3,7 @@ import { stripHant } from '../i18n/hant.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import WoodenFish from './WoodenFish.vue'
+import AudioPlayer from './AudioPlayer.vue'
 import { useNianfo } from '../composables/useNianfo.js'
 
 // 念佛是唯一每天都会用的功能，此前却只是首页最后一张卡片。
@@ -153,8 +154,12 @@ onBeforeUnmount(() => {
               class="chip"
               :class="{ active: state.sound }"
               :aria-pressed="state.sound"
+              aria-describedby="drawer-woodfish-help"
               @click="toggleSound"
-            >木鱼声 {{ state.sound ? '开' : '关' }}</button>
+            >木鱼声</button>
+            <span>{{ state.sound ? '已开启' : '已关闭' }}</span>
+            <p id="drawer-woodfish-help">开启时会试响一次；关闭声音不影响计数，不关闭背景音乐。</p>
+            <AudioPlayer inline />
             <router-link to="/nianfo/" class="chip full-link" @click="close">完整记录与设置 →</router-link>
           </div>
         </aside>

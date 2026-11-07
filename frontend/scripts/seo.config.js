@@ -468,6 +468,7 @@ function guidePage({ slug, title, description, heading }) {
   heading = content.heading
   description = content.description
   const faqs = content.faqs
+  const isMemorialGuide = slug === 'ancestors'
   const about = {
     '@type': 'Thing',
     name: heading,
@@ -501,7 +502,7 @@ function guidePage({ slug, title, description, heading }) {
         about,
         articleBody: content.sections.flatMap(section => [section.title, ...section.paragraphs]).join("\n"),
       }),
-      buildFaqSchema(pagePath, faqs),
+      !isMemorialGuide && buildFaqSchema(pagePath, faqs),
     ].filter(Boolean),
   }
 }
@@ -639,7 +640,7 @@ function nianfoPage() {
     path,
     title: '念佛计数器 | 在线木鱼与每日功课',
     description:
-      '在线念佛计数器与电子木鱼，支持南无阿弥陀佛、观世音菩萨、地藏王菩萨等佛号，记录每日念诵数量、连续天数与每日目标，计数仅保存在本机。',
+      '在线念佛计数器与电子木鱼，记录今日次数和每日目标，计数仅保存在本机。了解木鱼声音设置、开启试听与安静使用方法，避免因没有听到声音而重复计数。',
     heading: '念佛计数器与在线木鱼',
     summary:
       '每日念佛计数工具，轻触木鱼记一声佛号，可选佛号与每日目标，记录今日数量、累计数量与连续天数。',

@@ -2,6 +2,7 @@
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
+import RecoveryShell from './recovery/RecoveryShell.vue'
 import NianfoDrawer from './components/NianfoDrawer.vue'
 import { warmApi } from './api.js'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
@@ -133,7 +134,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view />
+  <RecoveryShell><router-view /></RecoveryShell>
   <p v-if="showSwitch" class="script-switch" data-keep-script>
     <a v-if="isHant" :href="hansHref" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
     <a v-else :href="hantHref" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
@@ -145,12 +146,10 @@ onMounted(() => {
 <style>
 #app { min-height: 100vh; }
 /* Leave the explicit three-bow instructions unobstructed. */
-#app:has(.qc-ritual-progress) > .audio-btn,
 #app:has(.qc-ritual-progress) .nianfo-trigger {
   top: calc(160px + env(safe-area-inset-top, 0px));
 }
 /* Global floating tools must not intercept the drawer's language link or form. */
-#app:has(.qc-info-drawer.open, .panel-section.open) > .audio-btn,
 #app:has(.qc-info-drawer.open, .panel-section.open) .nianfo-trigger {
   visibility: hidden;
   pointer-events: none;

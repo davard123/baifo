@@ -147,8 +147,7 @@ export const TOPICS = {
     ],
     "related": [
       {
-        "label": "在线祭祖指南",
-        "to": "/guide/ancestors"
+        "label": "追思的话怎么写", "to": "/guide/ancestors/#memorial-writing"
       },
       {
         "label": "拜祭先人总览",
@@ -1812,8 +1811,7 @@ export const TOPICS = {
     ],
     "related": [
       {
-        "label": "在线祭祖指南",
-        "to": "/guide/ancestors"
+        "label": "追思的话怎么写", "to": "/guide/ancestors/#memorial-writing"
       },
       {
         "label": "地藏菩萨超荐回向指南",

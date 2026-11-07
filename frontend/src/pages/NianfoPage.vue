@@ -1,6 +1,7 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import WoodenFish from '../components/WoodenFish.vue'
+import SoundHelp from '../components/SoundHelp.vue'
 import { useNianfo } from '../composables/useNianfo.js'
 
 // 站内其余功能都是低频的（礼佛、祭祖一年来几次）。
@@ -13,13 +14,6 @@ const {
 
 const peak = computed(() => Math.max(1, ...days.value.map((d) => d.count)))
 
-onMounted(() => {
-  document.title = '念佛计数器 | 在线木鱼与每日功课 - fopusha.com'
-  document.querySelector('meta[name="description"]')?.setAttribute(
-    'content',
-    '在线念佛计数器与电子木鱼，支持南无阿弥陀佛、观世音菩萨等佛号，记录每日念诵数量、连续天数与每日目标。计数只保存在本机。',
-  )
-})
 </script>
 
 <template>
@@ -120,8 +114,12 @@ onMounted(() => {
           class="chip"
           :class="{ active: state.sound }"
           :aria-pressed="state.sound"
+          aria-describedby="woodfish-help"
           @click="toggleSound"
-        >{{ state.sound ? '已开启' : '已关闭' }}</button>
+        >木鱼声</button>
+        <span class="sound-state">{{ state.sound ? '已开启' : '已关闭' }}</span>
+        <p id="woodfish-help">开启时会试响一次；关闭声音不影响计数。此开关只控制木鱼音效。</p>
+        <a href="#sound-help">查看声音与安静使用说明</a>
       </div>
     </section>
 
@@ -152,6 +150,7 @@ onMounted(() => {
         <router-link to="/guide/overview/" class="page-link">查看使用说明</router-link>
       </div>
     </section>
+    <SoundHelp />
   </main>
 </template>
 
@@ -297,6 +296,9 @@ onMounted(() => {
   letter-spacing: 0.1em;
   margin-bottom: 9px;
 }
+.sound-state { margin-left: 12px; }
+#woodfish-help { margin: 10px 0; line-height: 1.8; }
+.chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
   /* 44px 是触摸目标的下限，设置项在移动端也要好按 */

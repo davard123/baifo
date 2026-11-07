@@ -1,4 +1,5 @@
 <script setup>
+import AudioPlayer from './AudioPlayer.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BLESSINGS } from '../data/blessings.js'
@@ -302,6 +303,7 @@ onBeforeUnmount(() => {
         aria-labelledby="blessing-dialog-title"
       >
         <div class="bm-top">
+          <AudioPlayer inline />
           <button ref="modalCloseButton" class="bm-back" type="button" @click="close">← 返回祈福池</button>
           <p id="blessing-dialog-title" class="bm-top-title">{{ active.label }} · 祈福</p>
         </div>

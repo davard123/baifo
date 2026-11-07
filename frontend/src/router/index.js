@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { warmApi } from '../api.js'
+import { routeRecovery } from '../recovery/index.js'
+import { recoverableLoader, observeHistory, installRecovery } from '../recovery/route-recovery.mjs'
 import { HANT_PREFIX, isHantPath, stripHant, toHant } from '../i18n/hant.js'
 
 const Home = () => import('../pages/Home.vue')
@@ -8,7 +10,7 @@ const AncestorPage = () => import('../pages/AncestorPage.vue')
 const AncestorsPage = () => import('../pages/AncestorsPage.vue')
 const GuidePage = () => import('../pages/GuidePage.vue')
 const TopicPage = () => import('../pages/TopicPage.vue')
-const NianfoPage = () => import('../pages/NianfoPage.vue')
+const NianfoPage = recoverableLoader(() => import('../pages/NianfoPage.vue'))
 const SutraPage = () => import('../pages/SutraPage.vue')
 const QiucaiPage = () => import('../pages/QiucaiPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
@@ -55,7 +57,7 @@ const HANT_ROUTES = PAGE_ROUTES.map((route) => ({
 }))
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: observeHistory(createWebHistory(), routeRecovery),
   routes: [
     ...PAGE_ROUTES,
     ...HANT_ROUTES,
@@ -73,6 +75,16 @@ const router = createRouter({
     return { top: 0 }
   },
 })
+
+// Register before URL wrappers, other guards and app.use() starts navigation.
+const disposeRecovery = installRecovery(router, routeRecovery)
+const disposeDiagnostic = router.onError(() => {
+  console.error('[route-navigation] Navigation failed.')
+})
+export function disposeRouterRecovery() {
+  disposeRecovery()
+  disposeDiagnostic()
+}
 
 const originalResolve = router.resolve.bind(router)
 router.resolve = ((to, currentLocation) =>

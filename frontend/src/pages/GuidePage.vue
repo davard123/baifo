@@ -38,7 +38,7 @@ const quickReference = computed(() => [
 </script>
 
 <template>
-  <main v-if="guide" class="guide-shell">
+  <main v-if="guide" class="guide-shell" :class="{ 'memorial-guide': route.params.slug === 'ancestors' }">
     <nav class="top-nav">
       <router-link to="/" class="back-link">← 返回首页</router-link>
       <span>/</span>
@@ -56,7 +56,7 @@ const quickReference = computed(() => [
 
     <section class="content-grid">
       <article class="main-column card">
-        <section v-for="section in guide.sections" :key="section.title" class="copy-section">
+        <section v-for="section in guide.sections" :key="section.title" :id="section.id" class="copy-section">
           <h2>{{ section.title }}</h2>
           <p v-for="paragraph in section.paragraphs" :key="paragraph">{{ paragraph }}</p>
         </section>
@@ -111,6 +111,7 @@ const quickReference = computed(() => [
 </template>
 
 <style scoped>
+.memorial-guide { --text-muted: #5a493b; --accent: #70451b; --gold: #70451b; }
 .guide-shell {
   max-width: 1140px;
   margin: 0 auto;

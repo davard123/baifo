@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url'
 import { SITE, canonicalUrl } from './seo.config.js'
 import { getStaticPages } from './seo.jing.js'
 import { getStaticNavigation } from './static-navigation.js'
+import { SOUND_HELP } from '../src/data/soundHelp.js'
+import { GUIDES } from '../src/data/guides.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -93,6 +95,18 @@ function buildFallbackContent(page, staticPages) {
     `  <p>${page.summary}</p>`,
   ]
 
+  // Visible help content, without adding FAQ rich-result markup.
+  const convert = page.hant ? toHantText : value => value
+  if (page.path === '/nianfo') {
+    lines.push('<section id="sound-help">', '<h2>'+escapeHtml(convert(SOUND_HELP.title))+'</h2>',
+      '<p>'+escapeHtml(convert(SOUND_HELP.intro))+'</p>')
+    for (const faq of SOUND_HELP.faqs) lines.push('<h3>'+escapeHtml(convert(faq.q))+'</h3>', '<p>'+escapeHtml(convert(faq.a))+'</p>')
+    lines.push('<p>'+escapeHtml(convert(SOUND_HELP.disclaimer))+'</p>', '</section>')
+  }
+  if (page.path === '/guide/ancestors') {
+    lines.push('<section id="memorial-writing"><h2>'+escapeHtml(convert('追思的话怎么写'))+'</h2></section>')
+    for (const faq of GUIDES.ancestors.faqs) lines.push('<h3>'+escapeHtml(convert(faq.q))+'</h3>', '<p>'+escapeHtml(convert(faq.a))+'</p>')
+  }
   // Flatten schema array (some entries may themselves be arrays)
   const schemas = [page.schema].flat(2).filter(Boolean)
 
