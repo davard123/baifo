@@ -96,3 +96,26 @@ PLAYLIST="dabeizhou xinjing pumen amituo puxian dizang jingang"
 - 只用自己做的视频和配乐，不要放任何第三方音乐，否则会收到社区准则警告，那一场也不计时长。
 - 用自己的频道，不要买号、不要用一次性接码注册，被封通常是一批号一起封。
 - 同一段素材一直循环，申请 YPP 审核时有可能被判为「重复内容」。多做几版素材轮换会更稳。
+
+## 七、每场自动建直播（YouTube API，推荐）
+
+用「默认推流密钥」直接推流时，第一场会自动开播，但**一场结束后 YouTube 不会自动开下一场**，要在 Studio 里再点一次「直播」。授权 YouTube API 后，每场开始前脚本会自己建一场公开直播（自动开始、自动结束），绑定到同一个推流密钥，就完全不用人管了。
+
+一次性设置（约 10 分钟，用直播频道所在的 Google 账号）：
+
+1. 打开 https://console.cloud.google.com/ ，新建一个项目（名字随意，例如 fopusha-live）。
+2. 「API 和服务」→「库」，搜索 **YouTube Data API v3**，点「启用」。
+3. 「OAuth 同意屏幕」：用户类型选「外部」，填应用名和邮箱，保存；然后在「发布状态」点 **「发布应用」** 改成「正式版」。不发布的话授权 7 天就失效。（会显示「未经验证的应用」，自己用没关系。）
+4. 「凭据」→「创建凭据」→「OAuth 客户端 ID」，应用类型选 **「电视和输入受限设备」**，创建后记下客户端 ID 和客户端密钥。
+5. 在服务器上运行，按提示输入客户端 ID 和密钥，再用手机打开它给的网址、输入验证码、允许：
+   ```bash
+   sudo python3 /opt/fopusha-live/yt_api.py auth
+   ```
+6. 写标题和说明（每路一份）：
+   ```bash
+   sudo nano /etc/fopusha-live/dabeizhou.title   # 第一行是标题，最多 100 字
+   sudo nano /etc/fopusha-live/dabeizhou.desc    # 直播说明
+   ```
+7. 重启服务：`sudo systemctl restart fopusha-live@dabeizhou`。日志里出现「已在 YouTube 建好新一场：https://www.youtube.com/watch?v=…」就成功了。
+
+每建一场约用 100 点 API 配额，每天免费 10,000 点，一天两场绰绰有余。

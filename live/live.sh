@@ -78,6 +78,16 @@ while (( ! stop )); do
     start=$(cat "$STATE"); resume=0
     log "接着上一场直播（$(( ($(date +%s) - start) / 60 )) 分钟前开始），本场还剩 $(( (start + session_secs - $(date +%s)) / 60 )) 分钟"
   else
+    # 授权过 YouTube API 的话，每场先建好一个自动开始/自动结束的直播活动
+    if [[ -s "$CONF_DIR/youtube-oauth.json" ]]; then
+      if bid=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" new-broadcast "$name" 2>&1); then
+        log "已在 YouTube 建好新一场：https://www.youtube.com/watch?v=$bid"
+      else
+        log "YouTube 建场失败，1 分钟后重试：$bid"
+        sleep 60 & wait $!
+        continue
+      fi
+    fi
     start=$(date +%s); echo "$start" > "$STATE"
     log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
   fi

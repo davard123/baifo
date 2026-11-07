@@ -11,7 +11,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg fonts-noto-cjk font
 fc-cache -f >/dev/null
 
 install -d /opt/fopusha-live/media /etc/fopusha-live
-install -m 755 "$HERE/live.sh" "$HERE/prepare.sh" /opt/fopusha-live/
+install -m 755 "$HERE/live.sh" "$HERE/prepare.sh" "$HERE/yt_api.py" /opt/fopusha-live/
 install -m 644 "$HERE/streams.conf" /opt/fopusha-live/
 install -m 644 "$HERE/fopusha-live@.service" /etc/systemd/system/
 chmod 700 /etc/fopusha-live
