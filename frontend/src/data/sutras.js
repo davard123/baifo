@@ -157,12 +157,16 @@ export const SUTRAS = [
     audio: RECITE.dizang.audio,
     videos: [
       { id: 'dizang-01-sing-film', label: '唱诵 · 第一品故事片', title: '地藏经第一品 唱诵《寻母》：她卖掉整个家，只为知道母亲去了哪里。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-01-sing-film.mp4', poster: '/jing/recite/dizang-01-sing-film-poster.jpg', yt: 'KcxmEo46pO4', ytFrom: '2026-11-07' },
+      { id: 'dizang-02-sing-film', label: '唱诵 · 第二品', title: '地藏经第二品 唱诵《分身集会》：千百亿个地藏菩萨同时来到忉利天宫，一毛一沙的善，他都来度。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-02-sing-film.mp4', poster: '/jing/recite/dizang-02-sing-film-poster.jpg', yt: 'DiEVlL1KsqM', ytFrom: '2026-11-09' },
       ...RECITE.dizang.videos,
     ],
     shorts: [
       { title: '母亲不信佛，死后堕地狱，她卖掉了整个家', src: '/jing/shorts/dizang01-1.mp4', poster: '/jing/shorts/dizang01-1.jpg', yt: '86PcA1WMC3s', ytFrom: '2026-11-07' },
       { title: '她哭到站不起来，空中有声音回答她', src: '/jing/shorts/dizang01-2.mp4', poster: '/jing/shorts/dizang01-2.jpg', yt: 'G-Bgpnl-oZM', ytFrom: '2026-11-07' },
       { title: '母亲三天前已经升天，这个女儿就是地藏菩萨', src: '/jing/shorts/dizang01-3.mp4', poster: '/jing/shorts/dizang01-3.jpg', yt: '3kak-8T2BRY', ytFrom: '2026-11-07' },
+      { title: '有人一听就信，有人劝不动，佛说：我分身千百亿去度', src: '/jing/shorts/dizang02-1.mp4', poster: '/jing/shorts/dizang02-1.jpg', yt: 'n3Ddn3sCfs4', ytFrom: '2026-11-09' },
+      { title: '国王、官员、出家人、居士，菩萨可能就在你身边', src: '/jing/shorts/dizang02-2.mp4', poster: '/jing/shorts/dizang02-2.jpg', yt: 'f8Xk3ruOQGw', ytFrom: '2026-11-09' },
+      { title: '一根毛、一粒沙那么小的善，地藏菩萨都会来度你', src: '/jing/shorts/dizang02-3.mp4', poster: '/jing/shorts/dizang02-3.jpg', yt: 'fkTlKPc-hjY', ytFrom: '2026-11-09' },
     ],
     faqs: [
       { q: '地藏经有几品、多少字？', a: `全经十三品，本页经文按 CBETA 与汉传通行本两源对照校订，共 ${dizang.charCount} 字（不算标点）。` },
