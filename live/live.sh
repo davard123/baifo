@@ -56,11 +56,32 @@ fi
 
 log() { echo "[$(date '+%F %T')] [$name] $*"; }
 stop=0
-trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null && wait "$pid" 2>/dev/null' TERM INT
+
+# 场次记录：服务重启或断线很快重连时，YouTube 还算同一场直播。
+# 所以每场的开始时间记在文件里，推流期间每 30 秒更新一次心跳；
+# 重启后如果心跳离现在不到 GAP_SECONDS 秒，就接着上一场计时，保证 YouTube 上一场不会超过 12 小时。
+STATE="$LIVE_HOME/run/$name.session"; HEART="$LIVE_HOME/run/$name.heartbeat"
+mkdir -p "$LIVE_HOME/run"
+( while sleep 30; do [[ -f "$HEART.on" ]] && touch "$HEART"; done ) &
+hb_pid=$!
+trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null && wait "$pid" 2>/dev/null; kill "$hb_pid" 2>/dev/null' TERM INT
+trap 'kill "$hb_pid" 2>/dev/null; rm -f "$HEART.on"' EXIT
+
+resume=0
+if [[ -s "$STATE" && -f "$HEART" ]]; then
+  age=$(( $(date +%s) - $(stat -c %Y "$HEART") ))
+  if (( age < GAP_SECONDS )); then resume=1; fi
+fi
 
 while (( ! stop )); do
-  start=$(date +%s)
-  log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
+  if (( resume )); then
+    start=$(cat "$STATE"); resume=0
+    log "接着上一场直播（$(( ($(date +%s) - start) / 60 )) 分钟前开始），本场还剩 $(( (start + session_secs - $(date +%s)) / 60 )) 分钟"
+  else
+    start=$(date +%s); echo "$start" > "$STATE"
+    log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
+  fi
+  touch "$HEART" "$HEART.on"
   if [[ -n "$PLAYLIST" ]]; then
     build_list || { sleep 60 & wait $!; continue; }
     input=(-f concat -safe 0 -stream_loop -1 -i "$LIST_FILE")
@@ -88,6 +109,7 @@ while (( ! stop )); do
     sleep "$wait_s" & wait $!
   done
   (( stop )) && break
+  rm -f "$HEART.on"
   log "本场到时，停 ${GAP_SECONDS} 秒等 YouTube 结束这一场"
   sleep "$GAP_SECONDS" & wait $!
 done
