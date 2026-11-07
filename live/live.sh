@@ -83,9 +83,8 @@ while (( ! stop )); do
       if bid=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" new-broadcast "$name" 2>&1); then
         log "已在 YouTube 建好新一场：https://www.youtube.com/watch?v=$bid"
       else
-        log "YouTube 建场失败，1 分钟后重试：$bid"
-        sleep 60 & wait $!
-        continue
+        # 建场失败（授权过期、配额用完等）也照样推流：频道上这时需要人在 Studio 里点一次开播
+        log "YouTube 建场失败，本场先照常推流，需要在 Studio 手动开播：$bid"
       fi
     fi
     start=$(date +%s); echo "$start" > "$STATE"
