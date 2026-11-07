@@ -155,7 +155,15 @@ export const SUTRAS = [
     intro: '《地藏菩萨本愿经》，唐代实叉难陀译，全经十三品。佛在忉利天为母说法，讲地藏菩萨的大愿、众生业缘与孝亲度亡的法门，汉传佛教常在超度、祭祖、回向先人时诵读。',
     when: '为过世的亲人回向、祭祖、农历七月和地藏菩萨圣诞前后常诵。女声读诵全经约八十四分钟，本页按品分开，一次念一品也可以；可以跟读，也可以默读。',
     audio: RECITE.dizang.audio,
-    videos: RECITE.dizang.videos,
+    videos: [
+      { id: 'dizang-01-sing-film', label: '唱诵 · 第一品故事片', title: '地藏经第一品 唱诵《寻母》：她卖掉整个家，只为知道母亲去了哪里。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-01-sing-film.mp4', poster: '/jing/recite/dizang-01-sing-film-poster.jpg', yt: 'KcxmEo46pO4', ytFrom: '2026-11-07' },
+      ...RECITE.dizang.videos,
+    ],
+    shorts: [
+      { title: '母亲不信佛，死后堕地狱，她卖掉了整个家', src: '/jing/shorts/dizang01-1.mp4', poster: '/jing/shorts/dizang01-1.jpg', yt: '86PcA1WMC3s', ytFrom: '2026-11-07' },
+      { title: '她哭到站不起来，空中有声音回答她', src: '/jing/shorts/dizang01-2.mp4', poster: '/jing/shorts/dizang01-2.jpg', yt: 'G-Bgpnl-oZM', ytFrom: '2026-11-07' },
+      { title: '母亲三天前已经升天，这个女儿就是地藏菩萨', src: '/jing/shorts/dizang01-3.mp4', poster: '/jing/shorts/dizang01-3.jpg', yt: '3kak-8T2BRY', ytFrom: '2026-11-07' },
+    ],
     faqs: [
       { q: '地藏经有几品、多少字？', a: `全经十三品，本页经文按 CBETA 与汉传通行本两源对照校订，共 ${dizang.charCount} 字（不算标点）。` },
       { q: '一次念不完怎么办？', a: '可以一次念一品，隔天接着念下一品。点经文里任意一句，音频会从那一句开始。' },
