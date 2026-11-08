@@ -82,6 +82,15 @@ while (( ! stop )); do
     if [[ -s "$CONF_DIR/youtube-oauth.json" ]]; then
       if bid=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" new-broadcast "$name" 2>&1); then
         log "已在 YouTube 建好新一场：https://www.youtube.com/watch?v=$bid"
+        # 开播后往聊天室发欢迎留言（<名称>.chat，每行一条）；直播要先进入「直播中」才能发，所以等一会儿、失败重试
+        if [[ -s "$CONF_DIR/$name.chat" ]]; then
+          ( for _ in 1 2 3 4 5 6; do
+              sleep 90
+              if out=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" chat "$name" "$bid" 2>&1); then
+                log "$out"; break
+              fi
+            done ) &
+        fi
       else
         # 建场失败（授权过期、配额用完等）也照样推流：频道上这时需要人在 Studio 里点一次开播
         log "YouTube 建场失败，本场先照常推流，需要在 Studio 手动开播：$bid"

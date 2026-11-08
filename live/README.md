@@ -119,3 +119,9 @@ PLAYLIST="dabeizhou xinjing pumen amituo puxian dizang jingang"
 7. 重启服务：`sudo systemctl restart fopusha-live@dabeizhou`。日志里出现「已在 YouTube 建好新一场：https://www.youtube.com/watch?v=…」就成功了。
 
 每建一场约用 100 点 API 配额，每天免费 10,000 点，一天两场绰绰有余。
+
+### 每场自动发聊天欢迎留言
+
+写一个 `/etc/fopusha-live/<名称>.chat`，每行一条（每条最多 200 字）。每场通过 API 建好并开播后，脚本会把这些留言发到直播聊天室。YouTube API 不支持置顶，需要置顶的话在 Studio 里手动点。
+
+手动给正在播的一场补发：`sudo python3 /opt/fopusha-live/yt_api.py chat <名称> <直播的 watch?v= 后面那串>`

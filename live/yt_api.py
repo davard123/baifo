@@ -177,9 +177,36 @@ def cmd_new_broadcast(name):
     print(bid)
 
 
+def cmd_chat(name, bid):
+    """直播开播后往聊天室发留言：/etc/fopusha-live/<名称>.chat，每行一条（每条最多 200 字）。"""
+    lines = [l.strip() for l in read_text(os.path.join(CONF_DIR, f"{name}.chat")).splitlines() if l.strip()]
+    if not lines:
+        return
+    token = access_token(load_oauth())
+    auth = {"Authorization": f"Bearer {token}"}
+    code, res = http("GET", f"{API}/liveBroadcasts?part=snippet,status&id={bid}", headers=auth)
+    items = res.get("items") or []
+    if code != 200 or not items:
+        sys.exit(f"查不到这场直播（{code}）：{res}")
+    status = items[0]["status"].get("lifeCycleStatus")
+    chat_id = items[0]["snippet"].get("liveChatId")
+    if status != "live" or not chat_id:
+        sys.exit(f"直播还没开始（{status}），稍后再发")
+    for text in lines:
+        code, res = http("POST", f"{API}/liveChat/messages?part=snippet", {
+            "snippet": {"liveChatId": chat_id, "type": "textMessageEvent",
+                        "textMessageDetails": {"messageText": text[:200]}}}, auth)
+        if code not in (200, 201):
+            sys.exit(f"发聊天留言失败（{code}）：{res}")
+        time.sleep(2)
+    print(f"已发 {len(lines)} 条聊天留言")
+
+
 def main():
     if len(sys.argv) >= 2 and sys.argv[1] == "auth":
         cmd_auth()
+    elif len(sys.argv) >= 4 and sys.argv[1] == "chat":
+        cmd_chat(sys.argv[2], sys.argv[3])
     elif len(sys.argv) >= 3 and sys.argv[1] == "new-broadcast":
         cmd_new_broadcast(sys.argv[2])
     else:
