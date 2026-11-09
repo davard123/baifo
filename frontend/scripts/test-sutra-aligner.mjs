@@ -47,4 +47,19 @@ s3[2] = []
 a = new SutraAligner(s3)
 assert.equal(a.feed(say('guān zì pú sà')), 5)
 
+// recovers after running far ahead：念快了超前 60 字以上，连续几次对不上后放大范围追回来
+{
+  const long = []
+  for (let r = 0; r < 6; r++) long.push(...PY)
+  const sl = long.map((p) => [fuzzy(p)])
+  // 让第 4 遍的「照见五蕴皆空度一切苦厄」是唯一的：改掉其他几遍里的同一段
+  for (let r = 0; r < 6; r++) if (r !== 3) for (let k = 14; k < 25; k++) sl[r * PY.length + k] = ['x' + r + k]
+  const al = new SutraAligner(sl)
+  al.seek(0)
+  const far = say('zhào jiàn wǔ yùn jiē kōng dù yí qiè kǔ è')
+  let got = -1
+  for (let i = 0; i < 12 && got < 0; i++) got = al.feed(far)
+  assert.equal(got, 3 * PY.length + 25)
+}
+
 console.log('aligner 全部通过')

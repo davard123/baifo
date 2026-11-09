@@ -185,6 +185,9 @@ export function useNianjing(slugRef) {
     }
     if (!engine) {
       engine = createVoiceEngine({
+        phrases: units.value.lines
+          .map((l) => l.tokens.filter((t) => t.u !== undefined).map((t) => t.ch).join(' '))
+          .filter(Boolean),
         onText: (t) => onHeard(t),
         onState: (s, info) => {
           voiceState.value = s
@@ -291,6 +294,7 @@ export function useNianjing(slugRef) {
 
   async function load() {
     stop()
+    engine = null // 识别范围按经文定，换经要重建
     sutra.value = null
     units.value = { chars: [], lines: [] }
     segments.value = []

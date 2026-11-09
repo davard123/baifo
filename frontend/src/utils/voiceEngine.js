@@ -89,7 +89,10 @@ function loadVoskModel(onProgress) {
  * @param {{ onText: (text: string, final: boolean) => void,
  *           onState: (state: 'loading'|'listening'|'stopped'|'error', info?: { progress?: number, reason?: string }) => void }} cb
  */
-export function createVoiceEngine({ onText, onState }) {
+export function createVoiceEngine({ onText, onState, phrases = [] }) {
+  // 把识别范围限定在本部经的句子里（每句汉字用空格隔开）：2026-11-09 用心经录音测，
+  // 1.6 倍速时处理快了约 2.6 倍、几乎一字不差，2 倍速也能一路跟到结尾。不限定时念快了手机会算不过来。
+  const grammar = phrases.length ? JSON.stringify([...phrases, '[unk]']) : null
   const native = nativeRecognitionAvailable()
   let stopFn = null
   let running = false
@@ -102,7 +105,7 @@ export function createVoiceEngine({ onText, onState }) {
     })
     const AC = window.AudioContext || window.webkitAudioContext
     const ctx = new AC()
-    const rec = new model.KaldiRecognizer(ctx.sampleRate)
+    const rec = grammar ? new model.KaldiRecognizer(ctx.sampleRate, grammar) : new model.KaldiRecognizer(ctx.sampleRate)
     rec.on('partialresult', (m) => {
       const t = (m.result.partial || '').replace(/\s+/g, '')
       if (t) onText(t, false)

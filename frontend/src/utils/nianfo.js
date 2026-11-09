@@ -102,9 +102,58 @@ export function recentDays(state, n = 14) {
   return out
 }
 
-/** 木鱼声：合成而非加载音频文件，省一个二进制资源，也避免版权问题。 */
+/**
+ * 木鱼声：合成而非加载音频文件，省一个二进制资源，也避免版权问题。
+ * 2026-11-09 重做（David 嫌旧的像敲铁）：模态合成——空心木腔三个不成整数倍的共振，
+ * 衰减几十毫秒，敲击瞬间音高略高再落下，加 4ms 带通噪声做「嗒」。
+ * 参数与 D:/document/念佛板块/audio/muyu/synth_muyu.py 的「C-小木鱼清脆」一致（David 选的）。
+ */
+const MUYU_MODES = [
+  [760, 1.0, 0.04],
+  [1690, 0.4, 0.02],
+  [3350, 0.18, 0.01],
+]
+
+function renderMuyu(sampleRate) {
+  const n = Math.floor(sampleRate * 0.3)
+  const out = new Float32Array(n)
+  for (const [f, amp, decay] of MUYU_MODES) {
+    let phase = Math.random() * Math.PI * 2
+    for (let k = 0; k < n; k += 1) {
+      const t = k / sampleRate
+      phase += (2 * Math.PI * f * (1 + 0.03 * Math.exp(-t / 0.012))) / sampleRate
+      out[k] += amp * Math.sin(phase) * Math.exp(-t / decay)
+    }
+  }
+  // 敲击的「嗒」：4ms 噪声，简单一阶高通 + 低通，留 1.2k–5k 左右
+  const m = Math.floor(sampleRate * 0.004)
+  let hp = 0
+  let prevIn = 0
+  let lp = 0
+  const aH = Math.exp((-2 * Math.PI * 1200) / sampleRate)
+  const aL = Math.exp((-2 * Math.PI * 5000) / sampleRate)
+  const burst = new Float32Array(m)
+  let peak = 1e-9
+  for (let k = 0; k < m; k += 1) {
+    const x = (Math.random() * 2 - 1) * (1 - k / m)
+    hp = aH * (hp + x - prevIn)
+    prevIn = x
+    lp = (1 - aL) * hp + aL * lp
+    burst[k] = lp
+    peak = Math.max(peak, Math.abs(lp))
+  }
+  for (let k = 0; k < m; k += 1) out[k] += (0.35 * burst[k]) / peak
+  const a = Math.floor(sampleRate * 0.001)
+  for (let k = 0; k < a; k += 1) out[k] *= k / a
+  let max = 1e-9
+  for (let k = 0; k < n; k += 1) max = Math.max(max, Math.abs(out[k]))
+  for (let k = 0; k < n; k += 1) out[k] /= max
+  return out
+}
+
 export function createWoodblock() {
   let ctx = null
+  let buffers = null
   return function play() {
     try {
       if (!ctx) {
@@ -113,43 +162,20 @@ export function createWoodblock() {
         ctx = new AC()
       }
       if (ctx.state === 'suspended') ctx.resume()
-
-      const now = ctx.currentTime
-      const gain = ctx.createGain()
-      gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.exponentialRampToValueAtTime(0.35, now + 0.004)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18)
-
-      // 主体：一个快速衰减的低频振荡，近似木头的闷响
-      const osc = ctx.createOscillator()
-      osc.type = 'triangle'
-      osc.frequency.setValueAtTime(420, now)
-      osc.frequency.exponentialRampToValueAtTime(160, now + 0.09)
-
-      // 起音的「笃」：一小段带通噪声
-      const noiseLen = Math.floor(ctx.sampleRate * 0.03)
-      const buffer = ctx.createBuffer(1, noiseLen, ctx.sampleRate)
-      const data = buffer.getChannelData(0)
-      for (let i = 0; i < noiseLen; i += 1) {
-        data[i] = (Math.random() * 2 - 1) * (1 - i / noiseLen)
+      if (!buffers) {
+        // 预先合成几下，轮流用，每下略有不同，听起来不机械
+        buffers = Array.from({ length: 4 }, () => {
+          const b = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.3), ctx.sampleRate)
+          b.getChannelData(0).set(renderMuyu(ctx.sampleRate))
+          return b
+        })
       }
-      const noise = ctx.createBufferSource()
-      noise.buffer = buffer
-      const bp = ctx.createBiquadFilter()
-      bp.type = 'bandpass'
-      bp.frequency.value = 1600
-      bp.Q.value = 1.2
-      const noiseGain = ctx.createGain()
-      noiseGain.gain.setValueAtTime(0.22, now)
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05)
-
-      osc.connect(gain).connect(ctx.destination)
-      noise.connect(bp).connect(noiseGain).connect(ctx.destination)
-
-      osc.start(now)
-      osc.stop(now + 0.2)
-      noise.start(now)
-      noise.stop(now + 0.05)
+      const src = ctx.createBufferSource()
+      src.buffer = buffers[Math.floor(Math.random() * buffers.length)]
+      const gain = ctx.createGain()
+      gain.gain.value = 0.55
+      src.connect(gain).connect(ctx.destination)
+      src.start()
     } catch {
       // 音频不可用时静默降级，计数照常
     }

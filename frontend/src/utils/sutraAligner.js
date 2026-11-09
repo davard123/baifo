@@ -4,6 +4,7 @@
 const TAIL = 10 // 只拿识别结果最后几个字去对
 const LOOK_BACK = 12 // 允许往回找几个字（重读）
 const LOOK_AHEAD = 60 // 往前找多远（跳读）
+const MAX_LOOK_AHEAD = 400 // 连续对不上时逐步放大到这么远（念快了一下超前很多也能追回来）
 
 /** 去声调；平翘舌、前后鼻音、n/l 不分。 */
 export function fuzzy(py) {
@@ -39,11 +40,13 @@ export class SutraAligner {
   constructor(script) {
     this.script = script
     this.pos = 0 // 已经念到第几个字（不含）
+    this.misses = 0 // 连续对不上的次数
   }
 
   /** 手动点到某一处后，从那里接着对。 */
   seek(i) {
     this.pos = Math.max(0, Math.min(this.script.length, i))
+    this.misses = 0
   }
 
   /**
@@ -57,7 +60,8 @@ export class SutraAligner {
     const hyp = h.slice(-TAIL)
     const m = hyp.length
     const from = Math.max(0, this.pos - LOOK_BACK)
-    const to = Math.min(this.script.length, this.pos + LOOK_AHEAD + m)
+    const ahead = Math.min(MAX_LOOK_AHEAD, LOOK_AHEAD * (1 + Math.floor(this.misses / 3)))
+    const to = Math.min(this.script.length, this.pos + ahead + m)
     const n = to - from
 
     // dp[i][j]：识别的前 i 个字对完、经文对到 from+j 为止的最高分；经文里起点随意
@@ -85,7 +89,11 @@ export class SutraAligner {
       }
     }
     // 满分每个字 2 分，至少要对上一半左右才算数
-    if (bestJ < 0 || best < Math.max(2.5, 0.9 * m)) return -1
+    if (bestJ < 0 || best < Math.max(2.5, 0.9 * m)) {
+      this.misses += 1
+      return -1
+    }
+    this.misses = 0
     this.pos = from + bestJ
     return this.pos
   }
