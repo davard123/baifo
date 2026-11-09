@@ -84,11 +84,12 @@ while (( ! stop )); do
         log "已在 YouTube 建好新一场：https://www.youtube.com/watch?v=$bid"
         # 开播后往聊天室发欢迎留言（<名称>.chat，每行一条）；直播要先进入「直播中」才能发，所以等一会儿、失败重试
         if [[ -s "$CONF_DIR/$name.chat" ]]; then
-          ( for _ in 1 2 3 4 5 6; do
-              sleep 90
+          ( for try in $(seq 1 20); do
+              sleep 120
               if out=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" chat "$name" "$bid" 2>&1); then
                 log "$out"; break
               fi
+              log "聊天留言第 $try 次没发出去：$out"
             done ) &
         fi
       else
