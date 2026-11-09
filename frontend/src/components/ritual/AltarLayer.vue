@@ -71,7 +71,8 @@ const figuresShown = computed(() => props.ritual.state.bowRun > 0)
           <span v-if="done('wine')" class="puddle"></span>
         </div>
         <div class="item basin" :class="{ shown: done('paper') }">
-          <img class="paper" :src="A('paper')" alt="" />
+          <!-- 纸只在盆口以上可见：往下落就像放进了盆里 -->
+          <span class="paper-slot"><img class="paper" :src="A('paper')" alt="" /></span>
           <img class="basin-img" :src="A('basin')" alt="" />
           <span v-if="done('paper')" class="fire">
             <i v-for="n in 5" :key="n" :style="{ '--i': n }"></i>
@@ -281,9 +282,10 @@ const figuresShown = computed(() => props.ritual.state.bowRun > 0)
   animation: wine-tilt 2.6s ease-in-out 0.9s;
 }
 .pour {
+  /* 酒爵的嘴在左上角；绕右下角向左倾 42° 后，嘴口落在杯身左外侧约 2/3 高处，酒从这里流下 */
   position: absolute;
-  left: 20%;
-  top: 20%;
+  left: calc(var(--u) * -3.1);
+  top: calc(var(--u) * 6);
   width: calc(var(--u) * 4);
   height: calc(var(--u) * 8);
 }
@@ -296,12 +298,13 @@ const figuresShown = computed(() => props.ritual.state.bowRun > 0)
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   background: linear-gradient(#fff4d6, #e8b85a);
   opacity: 0;
-  animation: pour-drop 0.9s ease-in 1.4s;
-  animation-delay: calc(1.3s + var(--i) * 0.14s);
+  animation: pour-drop 0.55s ease-in 1.7s;
+  /* 杯子倾到底（约 1.7s）后才出酒，回正（约 2.6s）前停 */
+  animation-delay: calc(1.6s + var(--i) * 0.12s);
 }
 .puddle {
   position: absolute;
-  left: -30%;
+  left: calc(var(--u) * -6.2);
   bottom: -4%;
   width: calc(var(--u) * 6);
   height: calc(var(--u) * 1.1);
@@ -312,20 +315,33 @@ const figuresShown = computed(() => props.ritual.state.bowRun > 0)
 }
 
 /* ── 烧纸 ── */
-.basin .paper {
+.paper-slot {
+  /* 盆口前沿以上的区域；纸落到这条线以下就被盆挡住 */
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: -80%;
+  bottom: 61%;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+.basin .paper-slot .paper {
   position: absolute;
   left: 50%;
-  bottom: 55%;
-  height: 70%;
-  transform: translateX(-50%);
-  z-index: 0;
+  bottom: 0;
+  width: 78%;
+  height: auto;
+  transform: translateX(-50%) translateY(-120%);
+  opacity: 0;
+  filter: none;
 }
 .basin .basin-img {
   position: relative;
   z-index: 1;
 }
 .basin.shown .paper {
-  animation: paper-burn 4.5s ease-in 0.6s forwards;
+  animation: paper-burn 4.8s ease-in 0.5s forwards;
 }
 .fire {
   position: absolute;
@@ -481,16 +497,18 @@ const figuresShown = computed(() => props.ritual.state.bowRun > 0)
 }
 @keyframes pour-drop {
   0% { transform: translate(0, 0); opacity: 1; }
-  100% { transform: translate(calc(var(--u) * -1.5), calc(var(--u) * 7)); opacity: 0; }
+  100% { transform: translate(calc(var(--u) * -0.3), calc(var(--u) * 3.4)); opacity: 0.2; }
 }
 @keyframes puddle-in {
   to { opacity: 1; }
 }
 @keyframes paper-burn {
-  0% { transform: translateX(-50%) translateY(calc(var(--u) * -8)); opacity: 0; filter: none; }
-  15% { transform: translateX(-50%) translateY(0); opacity: 1; }
-  45% { filter: brightness(1.3) sepia(0.6); }
-  100% { transform: translateX(-50%) translateY(20%) scale(0.6); opacity: 0; filter: brightness(0.2); }
+  /* 从上方落进盆里，下半截没入盆口，烧着往下沉、变暗 */
+  0% { transform: translateX(-50%) translateY(-120%); opacity: 0; filter: none; }
+  8% { opacity: 1; }
+  22% { transform: translateX(-50%) translateY(45%); opacity: 1; }
+  50% { filter: brightness(1.3) sepia(0.6); }
+  100% { transform: translateX(-50%) translateY(95%) scale(0.85); opacity: 0; filter: brightness(0.2); }
 }
 @keyframes fire-rise {
   0% { opacity: 0; transform: scaleY(0.2); }

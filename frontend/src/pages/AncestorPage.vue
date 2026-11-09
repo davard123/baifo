@@ -149,7 +149,10 @@ const ritualPanel = {
   ...ritual,
   act(key) {
     ritual.act(key)
-    if (['wine', 'paper', 'bow'].includes(key)) closeDrawer()
+    // 奠酒、烧纸点完面板不收，要手动收（2026-11-09 David，平板/横屏上面板在旁边）；
+    // 手机竖屏面板是全屏的，不收就看不到动画，仍自动收。叩拜一律自动收。
+    const panelCoversStage = window.innerWidth < 600
+    if (key === 'bow' || (panelCoversStage && ['wine', 'paper'].includes(key))) closeDrawer()
   },
 }
 
@@ -373,7 +376,7 @@ useWakeLock()
           <p class="ritual-focus-note">
             <span aria-hidden="true">🍶</span>
             <strong>祭祀动作</strong>
-            <span>奠酒、烧纸、叩拜点击后会自动收起面板，方便观看祭拜动作。</span>
+            <span>叩拜点击后会自动收起面板，方便观看祭拜动作；平板和横屏上奠酒、烧纸不收面板，看完点「收起」即可。</span>
           </p>
           <div class="ancestor-ritual-panel">
             <RitualPanel v-if="!submitted" :ritual="ritualPanel" homage-title="祭奠" />
