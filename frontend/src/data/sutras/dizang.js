@@ -2110,7 +2110,7 @@ export default {
   {
    "n": 419,
    "text": "或有地狱，纯飞𨪏鏫。",
-   "pinyin": "huò yǒu dì yù chún fēi lí"
+   "pinyin": "huò yǒu dì yù chún fēi jí lí"
   },
   {
    "n": 420,

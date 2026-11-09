@@ -22,8 +22,8 @@ export const NIANJING_BY_SLUG = Object.fromEntries(NIANJING.map((s) => [s.slug, 
 const HAN = /\p{Script=Han}/u
 
 // 读音还没核实的生僻字：不标拼音、对齐时当通配（宁缺毋错）。
-// 𨪏：地藏经「纯飞𨪏鏫」，源数据拼音缺这个字，读音待 David 确认（2026-11-09）
-export const UNVERIFIED_CHARS = new Set(['𨪏'])
+// 目前没有。（地藏经「纯飞𨪏鏫」即「纯飞蒺藜」（铁蒺藜），𨪏 读 jí，2026-11-09 David 确认后已补）
+export const UNVERIFIED_CHARS = new Set([])
 
 /** 一尊佛菩萨的所有造型图，念经页随机挑一张。 */
 export function buddhaImages(buddhaSlug) {
