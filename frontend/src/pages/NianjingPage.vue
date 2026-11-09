@@ -13,7 +13,7 @@ const slug = computed(() => (route.params.slug ? String(route.params.slug) : '')
 const nj = useNianjing(slug)
 const {
   meta, sutra, units, segments, total, finished, cursor, lineIndex, segmentIndex,
-  running, mode, view, speed, bgm, bpm, fontSize, resumeAt, voiceState, voiceProgress, voiceError,
+  running, mode, view, speed, bgm, bpm, fontSize, resumeAt, voiceState, voiceProgress, voiceError, heard,
 } = nj
 
 // 念经时人不碰手机：每念一个字都续一下常亮
@@ -173,7 +173,7 @@ const status = computed(() => {
       return voiceProgress.value > 0 && voiceProgress.value < 1
         ? `第一次使用，正在下载语音识别（约 44MB）… ${Math.round(voiceProgress.value * 100)}%`
         : '正在准备语音识别…'
-    if (voiceState.value === 'listening') return '正在听，请出声念。'
+    if (voiceState.value === 'listening') return heard.value ? `听到：${heard.value}` : '正在听，请出声念。'
   }
   return ''
 })

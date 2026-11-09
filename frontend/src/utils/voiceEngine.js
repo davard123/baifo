@@ -1,7 +1,8 @@
 // 念经「听我念」的语音识别：全部在本机，不上传声音或文字。
 // - 默认：Vosk 离线中文小模型（和 David 的安卓/电脑提词器同一个模型），国内、微信里都能用。
 //   模型约 44MB，切成 3 块放 /nianjing/model/（Pages 单文件上限 25MB），首次下载后存 Cache Storage。
-// - iPhone/iPad 的 Safari（不在微信里）：用系统自带识别，不用下模型。
+// - iPhone/iPad 也用 Vosk：系统自带识别不能限定在经文里，经文常被认成别的词，还隔一阵就自己停一下漏掉几个字。
+//   只有浏览器跑不了 WASM 时才退回系统识别。
 import { fuzzy } from './sutraAligner.js'
 
 const MODEL_BASE = '/nianjing/model/'
@@ -18,12 +19,16 @@ function isIOS() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 }
 
+function wasmOk() {
+  return typeof WebAssembly === 'object' && typeof Worker === 'function'
+}
+
 export function nativeRecognitionAvailable() {
-  return isIOS() && !isWeChat() && !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+  return !wasmOk() && isIOS() && !isWeChat() && !!(window.SpeechRecognition || window.webkitSpeechRecognition)
 }
 
 export function voiceSupported() {
-  return !!navigator.mediaDevices?.getUserMedia && (nativeRecognitionAvailable() || typeof WebAssembly === 'object')
+  return !!navigator.mediaDevices?.getUserMedia && (nativeRecognitionAvailable() || wasmOk())
 }
 
 /** 识别出的文字 → 每个汉字的模糊读音集合（多音字全收）。 */
@@ -96,15 +101,36 @@ export function createVoiceEngine({ onText, onState, phrases = [] }) {
   const native = nativeRecognitionAvailable()
   let stopFn = null
   let running = false
+  let primed = null // 点按钮那一刻建好的 AudioContext（iPhone/iPad 只允许在点击里启动声音）
+  const AC = typeof window !== 'undefined' ? window.AudioContext || window.webkitAudioContext : null
+
+  function makeCtx() {
+    try {
+      // 直接按 16kHz 收音：模型本来就是 16k，手机少算三分之二的数据，跟得更紧
+      return new AC({ sampleRate: 16000 })
+    } catch {
+      return new AC()
+    }
+  }
 
   async function startVosk() {
     onState('loading', { progress: 0 })
     const model = await loadVoskModel((p) => onState('loading', { progress: p }))
+    // 回声消除留着（木鱼、佛乐从喇叭出来会被麦克风收进去）；降噪关掉，它会把念经的尾音、轻声当噪音削掉
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 },
+      audio: { echoCancellation: true, noiseSuppression: false, autoGainControl: true, channelCount: 1 },
     })
-    const AC = window.AudioContext || window.webkitAudioContext
-    const ctx = new AC()
+    let ctx = primed && primed.state !== 'closed' ? primed : makeCtx()
+    primed = null
+    let src
+    try {
+      src = ctx.createMediaStreamSource(stream)
+    } catch {
+      // 个别浏览器不支持麦克风接到 16k 的 AudioContext：换默认采样率
+      ctx.close().catch(() => {})
+      ctx = new AC()
+      src = ctx.createMediaStreamSource(stream)
+    }
     const rec = grammar ? new model.KaldiRecognizer(ctx.sampleRate, grammar) : new model.KaldiRecognizer(ctx.sampleRate)
     rec.on('partialresult', (m) => {
       const t = (m.result.partial || '').replace(/\s+/g, '')
@@ -114,8 +140,7 @@ export function createVoiceEngine({ onText, onState, phrases = [] }) {
       const t = (m.result.text || '').replace(/\s+/g, '')
       if (t) onText(t, true)
     })
-    const src = ctx.createMediaStreamSource(stream)
-    const proc = ctx.createScriptProcessor(4096, 1, 1)
+    const proc = ctx.createScriptProcessor(ctx.sampleRate <= 16000 ? 2048 : 4096, 1, 1)
     proc.onaudioprocess = (e) => {
       try {
         rec.acceptWaveform(e.inputBuffer)
@@ -178,6 +203,16 @@ export function createVoiceEngine({ onText, onState, phrases = [] }) {
 
   return {
     kind: native ? 'native' : 'vosk',
+    /** 必须在点击事件里同步调用（任何 await 之前）。 */
+    prime() {
+      if (native || !AC || running || primed) return
+      try {
+        primed = makeCtx()
+        primed.resume?.().catch(() => {})
+      } catch {
+        primed = null
+      }
+    },
     async start() {
       if (running) return
       running = true

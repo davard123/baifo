@@ -86,6 +86,7 @@ export function useNianjing(slugRef) {
   const voiceState = ref('idle') // idle | loading | listening | stopped | error
   const voiceProgress = ref(0)
   const voiceError = ref('')
+  const heard = ref('') // 刚听到的几个字，显示出来让人知道它在听
   const canVoice = typeof window !== 'undefined' && voiceSupported()
 
   const total = computed(() => units.value.chars.length)
@@ -162,6 +163,7 @@ export function useNianjing(slugRef) {
 
   async function onHeard(text) {
     if (!aligner) return
+    heard.value = text.replace(/\[unk\]/g, '').slice(-14)
     const seq = ++feedSeq
     const hyp = await hanToPys(text)
     if (seq !== feedSeq || !running.value || mode.value !== 'voice') return
@@ -177,13 +179,20 @@ export function useNianjing(slugRef) {
 
   async function startVoice() {
     voiceError.value = ''
+    heard.value = ''
     if (!canVoice) {
       voiceError.value = '这个浏览器不支持语音识别，已改成自动往下走。'
       mode.value = 'auto'
       startAuto()
       return
     }
-    if (!engine) {
+    ensureEngine()
+    await buildAligner()
+    await engine?.start()
+  }
+
+  function ensureEngine() {
+    if (!engine && canVoice) {
       engine = createVoiceEngine({
         phrases: units.value.lines
           .map((l) => l.tokens.filter((t) => t.u !== undefined).map((t) => t.ch).join(' '))
@@ -203,8 +212,6 @@ export function useNianjing(slugRef) {
         },
       })
     }
-    await buildAligner()
-    await engine?.start()
   }
 
   // ── 自动 ──
@@ -259,6 +266,10 @@ export function useNianjing(slugRef) {
     if (finished.value) setCursor(0)
     resumeAt.value = 0
     running.value = true
+    if (mode.value === 'voice') {
+      ensureEngine()
+      engine?.prime()
+    }
     startBgm()
     if (mode.value === 'voice') await startVoice()
     else if (mode.value === 'auto') startAuto()
@@ -273,7 +284,11 @@ export function useNianjing(slugRef) {
   watch(mode, () => {
     if (!running.value) return
     stopMovers()
-    if (mode.value === 'voice') startVoice()
+    if (mode.value === 'voice') {
+      ensureEngine()
+      engine?.prime()
+      startVoice()
+    }
     else if (mode.value === 'auto') startAuto()
   })
 
@@ -333,7 +348,7 @@ export function useNianjing(slugRef) {
   return {
     meta, sutra, units, segments, loading, total, finished,
     cursor, lineIndex, segmentIndex, running, mode, view, speed, bgm, bpm, fontSize,
-    resumeAt, resume, voiceState, voiceProgress, voiceError, canVoice,
+    resumeAt, resume, voiceState, voiceProgress, voiceError, heard, canVoice,
     start, stop, setCursor, nextSegment, prevSegment, lineOf,
   }
 }
