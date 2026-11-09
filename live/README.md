@@ -58,7 +58,7 @@ systemctl stop fopusha-live@dabeizhou              # 停播
 ```
 SESSION_HOURS=11.5   # 每场时长，最多 11.9
 GAP_SECONDS=180      # 两场之间停多久
-PLAYLIST="dabeizhou xinjing pumen amituo puxian dizang jingang"
+PLAYLIST="dabeizhou_sing xinjing_music amituo_sing pumen_sing puxian_sing jingang_sing dizang_sing"
                      # 多部经轮流播放，每场开始时随机打乱顺序，避免同一段内容一天循环几百遍；
                      # 还没生成好的素材会自动跳过，生成好以后下一场自动加进来
 ```
