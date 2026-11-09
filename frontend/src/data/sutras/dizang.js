@@ -1985,7 +1985,7 @@ export default {
   {
    "n": 394,
    "text": "复有地狱，名曰铁𫓧。",
-   "pinyin": "fù yǒu dì yù míng yuē tiě"
+   "pinyin": "fù yǒu dì yù míng yuē tiě fū"
   },
   {
    "n": 395,
