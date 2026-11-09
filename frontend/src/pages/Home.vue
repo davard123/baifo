@@ -64,7 +64,7 @@ const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'h
 // hash 项是本页板块（直接滚动，不走路由，繁体页 /zh-hant/ 也能用）；to 项是独立页面。
 const homeNav = [
   { label: '求财祈福', to: '/qiucai' },
-  { label: '诵经', to: '/jing' },
+  { label: '诵经视频', to: '/jing' },
   { label: '念经', to: '/nianjing' },
   { label: '礼佛', hash: 'buddha-catalog-title' },
   { label: '祈福池', hash: 'blessing-pool-title' },
@@ -475,17 +475,28 @@ onMounted(() => {
 
 <style scoped>
 .home-nav {
+  /* 2026-11-09 David 嫌不醒目：改成深朱漆底 + 金字，像牌匾一样压住页面 */
   position: sticky;
   top: 0;
   z-index: 40;
   margin: 0 -20px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   padding-top: max(8px, env(safe-area-inset-top));
-  background: rgba(255, 250, 242, 0.92);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line-warm);
-  box-shadow: 0 6px 18px rgba(72, 42, 18, 0.08);
+  background: linear-gradient(180deg, #8a2216 0%, #6e170e 100%);
+  border-bottom: 2px solid #d9a948;
+  box-shadow: 0 6px 18px rgba(60, 12, 4, 0.35);
+}
+
+.home-nav::after {
+  /* 右侧渐隐：提示还能往右滑 */
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 2px;
+  width: 36px;
+  background: linear-gradient(90deg, rgba(110, 23, 14, 0), #6e170e 85%);
+  pointer-events: none;
 }
 
 .home-nav__scroller {
@@ -496,6 +507,7 @@ onMounted(() => {
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x proximity;
+  padding-right: 28px;
 }
 
 .home-nav__scroller::-webkit-scrollbar { display: none; }
@@ -503,25 +515,31 @@ onMounted(() => {
 .home-nav__item {
   flex: 0 0 auto;
   scroll-snap-align: center;
-  padding: 7px 14px;
+  padding: 8px 15px;
   border-radius: 999px;
-  color: var(--ink-warm);
-  font-size: 0.95rem;
-  font-weight: 600;
+  color: #fbe6b4;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 1.3;
   text-decoration: none;
   white-space: nowrap;
-  border: 1px solid transparent;
+  border: 1px solid rgba(240, 200, 120, 0.35);
+  background: rgba(255, 220, 150, 0.06);
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.home-nav__item:hover { background: rgba(230, 184, 102, 0.16); }
+@media (hover: hover) {
+  .home-nav__item:hover { background-color: rgba(255, 220, 150, 0.16); color: #fff3d2; }
+}
 
-.home-nav__item--page { border-color: rgba(178, 126, 54, 0.35); }
+.home-nav__item--page { border-color: rgba(240, 200, 120, 0.6); }
 
-.home-nav__item--active {
-  background: #b5832f;
-  color: #fffaf2;
+.home-nav__item.home-nav__item--active {
+  background: linear-gradient(180deg, #f8dc8e 0%, #d9a948 100%);
+  border-color: #f8dc8e;
+  color: #5a140c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 @media (min-width: 900px) {
