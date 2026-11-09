@@ -1,4 +1,5 @@
 <script setup>
+import { useWakeLock } from '../composables/useWakeLock.js'
 import { computed, nextTick, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { ANCESTORS } from '../data/ancestors.js'
@@ -299,6 +300,9 @@ const doneActions = computed(() => {
     { label: '进入祈福', to: { path: '/', hash: '#blessing-pool-title' } },
   ]
 })
+
+// 叩拜时不碰手机，保持屏幕常亮；最后一次触碰 5 分钟后交回系统熄屏设置
+useWakeLock()
 </script>
 
 <template>

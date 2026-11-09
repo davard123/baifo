@@ -1,4 +1,5 @@
 <script setup>
+import { useWakeLock } from '../composables/useWakeLock.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
@@ -814,6 +815,9 @@ onBeforeUnmount(() => {
   document.body.style.overflow = previousBodyOverflow
   document.body.style.overscrollBehavior = previousBodyOverscroll
 })
+
+// 叩拜时不碰手机，保持屏幕常亮；最后一次触碰 5 分钟后交回系统熄屏设置
+useWakeLock()
 </script>
 
 <template>
