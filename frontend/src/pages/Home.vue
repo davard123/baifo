@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import FestivalGreeting from '../components/FestivalGreeting.vue'
 import { HOME_ABOUT, HOME_FAQS } from '../data/homeContent.js'
 import { useRouter } from 'vue-router'
@@ -59,6 +59,65 @@ const guideCards = [
 
 
 const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'health', 'overseas-chinese', 'qingming'].map(key => ({ title: TOPICS[key].heading, body: TOPICS[key].intro, to: '/topic/' + key }))
+
+// 首页顶部固定导航（2026-11-09 David 要求恢复，固定在顶上一直跟着滑）。
+// hash 项是本页板块（直接滚动，不走路由，繁体页 /zh-hant/ 也能用）；to 项是独立页面。
+const homeNav = [
+  { label: '求财祈福', to: '/qiucai' },
+  { label: '诵经', to: '/jing' },
+  { label: '礼佛', hash: 'buddha-catalog-title' },
+  { label: '祈福池', hash: 'blessing-pool-title' },
+  { label: '祭祖', hash: 'ancestor-entry' },
+  { label: '念佛计数', to: '/nianfo' },
+  { label: '心愿墙', hash: 'wish-wall' },
+  { label: '宣传片', hash: 'intro-video' },
+  { label: '我的记录', hash: 'my-records' },
+  { label: '指南', hash: 'home-guide' },
+  { label: '常见问题', hash: 'about-site' },
+]
+const activeNav = ref('')
+const navScroller = ref(null)
+let navObserver = null
+
+function jumpTo(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  activeNav.value = id
+  const top = el.getBoundingClientRect().top + window.scrollY - 64
+  window.scrollTo({ top, behavior: 'smooth' })
+  // 图片懒加载会让版面变高，滚完再校正一次位置
+  setTimeout(() => {
+    const drift = el.getBoundingClientRect().top - 64
+    if (Math.abs(drift) > 8) window.scrollBy({ top: drift, behavior: 'smooth' })
+  }, 900)
+  history.replaceState(history.state, '', `#${id}`)
+}
+
+function revealActiveChip() {
+  // 只横向滚导航条本身；用 scrollIntoView 会打断页面正在进行的平滑滚动
+  const bar = navScroller.value
+  const chip = bar?.querySelector('.home-nav__item--active')
+  if (!chip) return
+  bar.scrollTo({ left: chip.offsetLeft - (bar.clientWidth - chip.offsetWidth) / 2, behavior: 'smooth' })
+}
+
+function watchSections() {
+  const els = homeNav.filter((n) => n.hash).map((n) => document.getElementById(n.hash)).filter(Boolean)
+  if (!('IntersectionObserver' in window) || !els.length) return
+  navObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      if (visible[0]) {
+        activeNav.value = visible[0].target.id
+        nextTick(revealActiveChip)
+      }
+    },
+    { rootMargin: '-80px 0px -55% 0px' },
+  )
+  els.forEach((el) => navObserver.observe(el))
+}
+
+onBeforeUnmount(() => navObserver?.disconnect())
 
 function resolveHref(target) {
   return router.resolve(target).href
@@ -147,11 +206,28 @@ onMounted(() => {
       '网上求财、网上祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
     )
   loadWishes()
+  nextTick(watchSections)
 })
 </script>
 
 <template>
   <main class="home-shell">
+    <nav class="home-nav" aria-label="首页板块导航">
+      <div ref="navScroller" class="home-nav__scroller">
+        <template v-for="item in homeNav" :key="item.label">
+          <a
+            v-if="item.hash"
+            :href="`#${item.hash}`"
+            class="home-nav__item"
+            :class="{ 'home-nav__item--active': activeNav === item.hash }"
+            :aria-current="activeNav === item.hash ? 'true' : undefined"
+            @click.prevent="jumpTo(item.hash)"
+          >{{ item.label }}</a>
+          <router-link v-else :to="item.to" class="home-nav__item home-nav__item--page" @mouseenter="warmApi" @touchstart.passive="warmApi">{{ item.label }}</router-link>
+        </template>
+      </div>
+    </nav>
+
     <FestivalGreeting />
 
     <a
@@ -240,7 +316,7 @@ onMounted(() => {
     <BlessingPool @wish-submitted="loadWishes" />
 
     <!-- 2026-10-24 用户要求：祈福和祭祀换位置，祭祀紧跟在祈福池下面 -->
-    <section class="ritual-stage">
+    <section id="ancestor-entry" class="ritual-stage">
       <a
         href="/ancestors/"
         class="ancestor-banner"
@@ -261,7 +337,7 @@ onMounted(() => {
     </section>
 
 
-    <section class="intro-video card" aria-labelledby="intro-video-title">
+    <section id="intro-video" class="intro-video card" aria-labelledby="intro-video-title">
       <div class="section-head">
         <p class="section-kicker">1 分钟看懂</p>
         <h2 id="intro-video-title" class="section-title">不用跑庙，手机上拜财神</h2>
@@ -272,9 +348,9 @@ onMounted(() => {
       </video>
     </section>
 
-    <PublicWishWall title="心愿墙" sub="大家在礼佛、求财、祈福、追思时公开的心愿。名字只显示第一个字，不显示年龄和联系方式。" :limit="30" />
+    <PublicWishWall id="wish-wall" title="心愿墙" sub="大家在礼佛、求财、祈福、追思时公开的心愿。名字只显示第一个字，不显示年龄和联系方式。" :limit="30" />
 
-    <section class="wishes-section card">
+    <section id="my-records" class="wishes-section card">
       <div class="section-head">
         <p class="section-kicker">当下回响</p>
         <h2 class="section-title">我的祈愿记录</h2>
@@ -326,7 +402,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section class="guide-section">
+    <section id="home-guide" class="guide-section">
       <div class="guide-section__intro">
         <p class="section-kicker">初次进入</p>
         <h2 class="section-title">礼佛与回向指南</h2>
@@ -372,7 +448,7 @@ onMounted(() => {
     </section>
 
 
-    <section class="card about-section" aria-labelledby="about-site-title">
+    <section id="about-site" class="card about-section" aria-labelledby="about-site-title">
       <div class="section-head">
         <p class="section-kicker">关于本站</p>
         <h2 id="about-site-title" class="section-title">在线礼佛与网上祭祖</h2>
@@ -397,6 +473,62 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.home-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin: 0 -20px;
+  padding: 8px 12px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: rgba(255, 250, 242, 0.92);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line-warm);
+  box-shadow: 0 6px 18px rgba(72, 42, 18, 0.08);
+}
+
+.home-nav__scroller {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
+.home-nav__scroller::-webkit-scrollbar { display: none; }
+
+.home-nav__item {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--ink-warm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.home-nav__item:hover { background: rgba(230, 184, 102, 0.16); }
+
+.home-nav__item--page { border-color: rgba(178, 126, 54, 0.35); }
+
+.home-nav__item--active {
+  background: #b5832f;
+  color: #fffaf2;
+}
+
+@media (min-width: 900px) {
+  .home-nav__scroller { justify-content: center; }
+}
+
+.home-shell :deep([id]) { scroll-margin-top: 64px; }
+
 .home-shell {
   max-width: 1120px;
   margin: 0 auto;
