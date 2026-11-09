@@ -1025,6 +1025,38 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://fopusha.com/lifo/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/lifo/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/lifo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/lifo/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/lifo/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/lifo/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/lifo/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/lifo/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/qifu/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qifu/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qifu/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qifu/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://fopusha.com/zh-hant/qifu/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/qifu/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/qifu/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fopusha.com/qifu/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://fopusha.com/nianjing/</loc>
     <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://fopusha.com/nianjing/" />
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://fopusha.com/zh-hant/nianjing/" />

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import FestivalGreeting from '../components/FestivalGreeting.vue'
 import { HOME_ABOUT, HOME_FAQS } from '../data/homeContent.js'
 import { useRouter } from 'vue-router'
@@ -60,65 +60,17 @@ const guideCards = [
 
 const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'health', 'overseas-chinese', 'qingming'].map(key => ({ title: TOPICS[key].heading, body: TOPICS[key].intro, to: '/topic/' + key }))
 
-// 首页顶部固定导航（2026-11-09 David 要求恢复，固定在顶上一直跟着滑）。
-// hash 项是本页板块（直接滚动，不走路由，繁体页 /zh-hant/ 也能用）；to 项是独立页面。
+// 首页顶部固定导航（2026-11-09 David：固定在顶上一直跟着滑；点了直接进具体页面，不在首页上下滚）
 const homeNav = [
-  { label: '求财祈福', to: '/qiucai' },
-  { label: '诵经视频', to: '/jing' },
-  { label: '念经', to: '/nianjing' },
-  { label: '礼佛', hash: 'buddha-catalog-title' },
-  { label: '祈福池', hash: 'blessing-pool-title' },
-  { label: '祭祖', hash: 'ancestor-entry' },
-  { label: '念佛计数', to: '/nianfo' },
-  { label: '心愿墙', hash: 'wish-wall' },
-  { label: '宣传片', hash: 'intro-video' },
-  { label: '我的记录', hash: 'my-records' },
-  { label: '指南', hash: 'home-guide' },
-  { label: '常见问题', hash: 'about-site' },
+  { label: '求财祈福', to: '/qiucai/' },
+  { label: '礼佛', to: '/lifo/' },
+  { label: '祈福池', to: '/qifu/' },
+  { label: '祭祖', to: '/ancestors/' },
+  { label: '念经', to: '/nianjing/' },
+  { label: '诵经视频', to: '/jing/' },
+  { label: '念佛计数', to: '/nianfo/' },
+  { label: '使用说明', to: '/guide/overview/' },
 ]
-const activeNav = ref('')
-const navScroller = ref(null)
-let navObserver = null
-
-function jumpTo(id) {
-  const el = document.getElementById(id)
-  if (!el) return
-  activeNav.value = id
-  const top = el.getBoundingClientRect().top + window.scrollY - 64
-  window.scrollTo({ top, behavior: 'smooth' })
-  // 图片懒加载会让版面变高，滚完再校正一次位置
-  setTimeout(() => {
-    const drift = el.getBoundingClientRect().top - 64
-    if (Math.abs(drift) > 8) window.scrollBy({ top: drift, behavior: 'smooth' })
-  }, 900)
-  history.replaceState(history.state, '', `#${id}`)
-}
-
-function revealActiveChip() {
-  // 只横向滚导航条本身；用 scrollIntoView 会打断页面正在进行的平滑滚动
-  const bar = navScroller.value
-  const chip = bar?.querySelector('.home-nav__item--active')
-  if (!chip) return
-  bar.scrollTo({ left: chip.offsetLeft - (bar.clientWidth - chip.offsetWidth) / 2, behavior: 'smooth' })
-}
-
-function watchSections() {
-  const els = homeNav.filter((n) => n.hash).map((n) => document.getElementById(n.hash)).filter(Boolean)
-  if (!('IntersectionObserver' in window) || !els.length) return
-  navObserver = new IntersectionObserver(
-    (entries) => {
-      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-      if (visible[0]) {
-        activeNav.value = visible[0].target.id
-        nextTick(revealActiveChip)
-      }
-    },
-    { rootMargin: '-80px 0px -55% 0px' },
-  )
-  els.forEach((el) => navObserver.observe(el))
-}
-
-onBeforeUnmount(() => navObserver?.disconnect())
 
 function resolveHref(target) {
   return router.resolve(target).href
@@ -207,25 +159,21 @@ onMounted(() => {
       '网上求财、网上祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
     )
   loadWishes()
-  nextTick(watchSections)
 })
 </script>
 
 <template>
   <main class="home-shell">
-    <nav class="home-nav" aria-label="首页板块导航">
-      <div ref="navScroller" class="home-nav__scroller">
-        <template v-for="item in homeNav" :key="item.label">
-          <a
-            v-if="item.hash"
-            :href="`#${item.hash}`"
-            class="home-nav__item"
-            :class="{ 'home-nav__item--active': activeNav === item.hash }"
-            :aria-current="activeNav === item.hash ? 'true' : undefined"
-            @click.prevent="jumpTo(item.hash)"
-          >{{ item.label }}</a>
-          <router-link v-else :to="item.to" class="home-nav__item home-nav__item--page" @mouseenter="warmApi" @touchstart.passive="warmApi">{{ item.label }}</router-link>
-        </template>
+    <nav class="home-nav" aria-label="网站栏目导航">
+      <div class="home-nav__scroller">
+        <router-link
+          v-for="item in homeNav"
+          :key="item.label"
+          :to="item.to"
+          class="home-nav__item"
+          @mouseenter="warmApi"
+          @touchstart.passive="warmApi"
+        >{{ item.label }}</router-link>
       </div>
     </nav>
 
@@ -533,20 +481,12 @@ onMounted(() => {
   .home-nav__item:hover { background-color: rgba(255, 220, 150, 0.16); color: #fff3d2; }
 }
 
-.home-nav__item--page { border-color: rgba(240, 200, 120, 0.6); }
 
-.home-nav__item.home-nav__item--active {
-  background: linear-gradient(180deg, #f8dc8e 0%, #d9a948 100%);
-  border-color: #f8dc8e;
-  color: #5a140c;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
 
 @media (min-width: 900px) {
   .home-nav__scroller { justify-content: center; }
 }
 
-.home-shell :deep([id]) { scroll-margin-top: 64px; }
 
 .home-shell {
   max-width: 1120px;

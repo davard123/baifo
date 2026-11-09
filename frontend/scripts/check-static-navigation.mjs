@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..')
 const baseOrigin = new URL(SITE.baseUrl).origin
 const HANT_PREFIX = '/zh-hant'
-// 简体页面总数（新增页面时同步改；2026-11-09 加念经 13 页后为 93，之前诵经页上线时没跟着改）
-const EXPECTED_PAGES = 93
+// 简体页面总数（新增页面时同步改；2026-11-09 加念经 13 页、礼佛 /lifo、祈福池 /qifu 后为 95）
+const EXPECTED_PAGES = 95
 const EXPECTED_HREFLANGS = ['zh-Hans', 'zh-Hant', 'x-default']
 const MAX_NAV_LINKS = 40
 

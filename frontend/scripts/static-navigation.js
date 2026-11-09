@@ -159,7 +159,20 @@ export function getStaticNavigation(page, pages) {
       ['/qiucai', '求财祈福'],
       ['/jing', '在线诵经'],
       ['/nianjing', '在线念经（带拼音）'],
+      ['/lifo', '礼佛祈愿'],
+      ['/qifu', '祈福池'],
     ]))
+  }
+
+  if (currentPath === '/lifo' || currentPath === '/qifu') {
+    addGroup('礼佛与祈福', routeCandidates(pages, [
+      ['/lifo', '礼佛祈愿：八位佛菩萨'],
+      ['/qifu', '祈福池'],
+      ['/qiucai', '求财祈福'],
+      ['/ancestors', '拜祭先人'],
+      ['/nianjing', '在线念经（带拼音）'],
+    ]))
+    if (currentPath === '/lifo') addGroup('诸佛菩萨', BUDDHA_LINKS)
   }
 
   if (currentPath === '/nianjing' || currentPath.startsWith('/nianjing/')) {

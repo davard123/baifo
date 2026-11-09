@@ -126,6 +126,10 @@ https://fopusha.com/ancestors/
 https://fopusha.com/zh-hant/ancestors/
 https://fopusha.com/nianfo/
 https://fopusha.com/zh-hant/nianfo/
+https://fopusha.com/lifo/
+https://fopusha.com/zh-hant/lifo/
+https://fopusha.com/qifu/
+https://fopusha.com/zh-hant/qifu/
 https://fopusha.com/nianjing/
 https://fopusha.com/zh-hant/nianjing/
 https://fopusha.com/nianjing/xinjing/

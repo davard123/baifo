@@ -13,6 +13,8 @@ const TopicPage = () => import('../pages/TopicPage.vue')
 const NianfoPage = recoverableLoader(() => import('../pages/NianfoPage.vue'))
 const SutraPage = () => import('../pages/SutraPage.vue')
 const NianjingPage = () => import('../pages/NianjingPage.vue')
+const LifoPage = () => import('../pages/LifoPage.vue')
+const QifuPage = () => import('../pages/QifuPage.vue')
 const QiucaiPage = () => import('../pages/QiucaiPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
@@ -47,6 +49,8 @@ const PAGE_ROUTES = [
     { path: '/nianfo', component: NianfoPage },
     { path: '/jing', component: SutraPage },
     { path: '/jing/:slug', component: SutraPage },
+    { path: '/lifo', component: LifoPage },
+    { path: '/qifu', component: QifuPage },
     { path: '/nianjing', component: NianjingPage },
     { path: '/nianjing/:slug', component: NianjingPage },
     { path: '/qiucai', component: QiucaiPage },

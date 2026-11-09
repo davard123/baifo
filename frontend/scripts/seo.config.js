@@ -635,6 +635,54 @@ function caishenPage(item) {
   }
 }
 
+function simpleEntryPage({ path, title, description, heading, summary, crumb, about }) {
+  return {
+    path,
+    title,
+    description,
+    heading,
+    summary,
+    image: SITE.defaultImage,
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: crumb,
+        description,
+        breadcrumbItems: [
+          { name: '求财祈福拜佛网', path: '/' },
+          { name: crumb, path },
+        ],
+        about: { '@type': 'Thing', name: crumb, description: about },
+        selectors: ['h1'],
+      }),
+    ],
+  }
+}
+
+function lifoPage() {
+  return simpleEntryPage({
+    path: '/lifo',
+    title: '在线礼佛 | 释迦牟尼佛、阿弥陀佛、药师佛、观音、地藏等八位佛菩萨，供花点灯上香',
+    description: '在线礼佛入口：释迦牟尼佛、阿弥陀佛、药师佛、弥勒佛、文殊菩萨、普贤菩萨、观音菩萨、地藏菩萨。选一位佛菩萨，供花、点灯、上香，写下祈愿与回向。免费、不用注册。',
+    heading: '礼佛祈愿：八位佛菩萨',
+    summary: BUDDHAS.map((b) => `${b.name}（${b.subtitle}）`).join('；') + '。',
+    crumb: '礼佛',
+    about: '礼敬佛菩萨、供养与回向。',
+  })
+}
+
+function qifuPage() {
+  return simpleEntryPage({
+    path: '/qifu',
+    title: '网上祈福池 | 求财、求健康、求平安、求学业、求姻缘，写下心愿祈福',
+    description: '网上祈福池：求财、求宅运、求健康、求平安、求学业、求长寿、求姻缘、求子嗣、求消灾、求功名、求福禄、求家亲十二项，选一项写下给自己或家人的心愿。免费、不用注册。',
+    heading: '祈福池：选一项心愿，写下祝愿',
+    summary: '十二项祈福：求财、求宅运、求健康、求平安、求学业、求长寿、求姻缘、求子嗣、求消灾、求功名、求福禄、求家亲。',
+    crumb: '祈福池',
+    about: '为自己或家人写下祝愿的祈福方式。',
+  })
+}
+
 // 念经板块：自己看拼音出声念，页面听声音跟上。只放简介，经文全文在 /jing/ 和页面运行时加载。
 function nianjingListPage() {
   const path = '/nianjing'
@@ -772,6 +820,8 @@ export function assemblePages(jingPages) {
     ...BUDDHAS.map(buddhaPage),
     ancestorsPage(),
     nianfoPage(),
+    lifoPage(),
+    qifuPage(),
     nianjingListPage(),
     ...NIANJING.map(nianjingPage),
     ...jingPages,
