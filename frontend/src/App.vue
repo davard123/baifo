@@ -126,7 +126,9 @@ const hansHref = computed(() => stripHant(route.path))
 const hantHref = computed(() => toHant(route.path))
 // Full-viewport rituals keep navigation inside their drawers. Qiucai provides
 // its language link there, so a document footer must not add a scroll target.
-const showSwitch = computed(() => !/^\/(buddha|ancestor|qiucai)(\/|$)/.test(stripHant(route.path)))
+// 念经页满屏，底部是自己的控制条和木鱼/佛乐，全站浮动按钮和背景音乐都不放
+const isNianjingReader = computed(() => /^\/nianjing\/[^/]+/.test(stripHant(route.path)))
+const showSwitch = computed(() => !isNianjingReader.value && !/^\/(buddha|ancestor|qiucai)(\/|$)/.test(stripHant(route.path)))
 
 onMounted(() => {
   warmApi()
@@ -139,8 +141,8 @@ onMounted(() => {
     <a v-if="isHant" :href="hansHref" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>
     <a v-else :href="hantHref" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a>
   </p>
-  <AudioPlayer />
-  <NianfoDrawer />
+  <AudioPlayer v-if="!isNianjingReader" />
+  <NianfoDrawer v-if="!isNianjingReader" />
 </template>
 
 <style>

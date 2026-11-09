@@ -1,0 +1,10 @@
+{
+ "version": "cn-small-0.22-v1",
+ "size": 43987374,
+ "sha256": "90f7671e4043a3b96c57a66b0930ec7c8a3d5c152d88232804a154249530920c",
+ "parts": [
+  "part-00.bin",
+  "part-01.bin",
+  "part-02.bin"
+ ]
+}

@@ -9,6 +9,8 @@ const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..')
 const baseOrigin = new URL(SITE.baseUrl).origin
 const HANT_PREFIX = '/zh-hant'
+// 简体页面总数（新增页面时同步改；2026-11-09 加念经 13 页后为 93，之前诵经页上线时没跟着改）
+const EXPECTED_PAGES = 93
 const EXPECTED_HREFLANGS = ['zh-Hans', 'zh-Hant', 'x-default']
 const MAX_NAV_LINKS = 40
 
@@ -124,8 +126,8 @@ function expectedRoutes() {
   const basePages = getStaticPages()
   const basePaths = basePages.map((page) => normalizeRoute(page.path))
   const uniqueBasePaths = new Set(basePaths)
-  if (basePages.length !== 71 || uniqueBasePaths.size !== 71) {
-    fail(`seo.config expected 71 unique Hans pages, found ${basePages.length} entries / ${uniqueBasePaths.size} unique paths`)
+  if (basePages.length !== EXPECTED_PAGES || uniqueBasePaths.size !== EXPECTED_PAGES) {
+    fail(`seo.config expected ${EXPECTED_PAGES} unique Hans pages, found ${basePages.length} entries / ${uniqueBasePaths.size} unique paths`)
   }
 
   const expected = new Map()
@@ -211,10 +213,10 @@ function checkSitemap(distRoot, expected) {
     try { return isHantPath(new URL(loc).pathname) } catch { return false }
   })
 
-  if (locs.length !== 142) fail(`Sitemap must contain 142 <loc> entries (71 Hans + 71 Hant), found ${locs.length}`)
+  if (locs.length !== EXPECTED_PAGES * 2) fail(`Sitemap must contain ${EXPECTED_PAGES * 2} <loc> entries (${EXPECTED_PAGES} Hans + ${EXPECTED_PAGES} Hant), found ${locs.length}`)
   if (uniqueLocs.size !== locs.length) fail(`Sitemap contains ${locs.length - uniqueLocs.size} duplicate <loc> entries`)
-  if (hans.length !== 71) fail(`Sitemap must contain 71 Hans locs, found ${hans.length}`)
-  if (hant.length !== 71) fail(`Sitemap must contain 71 Hant locs, found ${hant.length}`)
+  if (hans.length !== EXPECTED_PAGES) fail(`Sitemap must contain ${EXPECTED_PAGES} Hans locs, found ${hans.length}`)
+  if (hant.length !== EXPECTED_PAGES) fail(`Sitemap must contain ${EXPECTED_PAGES} Hant locs, found ${hant.length}`)
 
   const actualSet = new Set(locs)
   const expectedSet = new Set(expected.keys())
@@ -401,7 +403,7 @@ function graphReport(pageRecords, expected) {
       }
     }
     reachable[hant ? 'zh-Hant' : 'zh-Hans'] = seen.size
-    if (seen.size !== 71) fail(`${hant ? 'zh-Hant' : 'zh-Hans'} route graph reaches ${seen.size}/71 generated pages`)
+    if (seen.size !== EXPECTED_PAGES) fail(`${hant ? 'zh-Hant' : 'zh-Hans'} route graph reaches ${seen.size}/${EXPECTED_PAGES} generated pages`)
   }
   if (incomingZeros.length) fail(`Route graph has ${incomingZeros.length} zero-incoming pages: ${incomingZeros.slice(0, 12).map(routeLabel).join(', ')}${incomingZeros.length > 12 ? ', …' : ''}`)
   return { incomingZeros, reachable }
@@ -464,7 +466,7 @@ function main() {
     console.log(`Sitemap locs: ${locs.length} total (${hansLocs.length} Hans / ${hantLocs.length} Hant), unique ${new Set(locs).size}`)
     console.log(`Pages checked: ${records.length}/${expected.size}; unique internal edges: ${edgeCount}`)
     console.log(`Incoming zeros: ${graph.incomingZeros.length ? graph.incomingZeros.map(routeLabel).join(', ') : 'none'}`)
-    console.log(`Language graph reachable: zh-Hans ${graph.reachable['zh-Hans']}/71, zh-Hant ${graph.reachable['zh-Hant']}/71`)
+    console.log(`Language graph reachable: zh-Hans ${graph.reachable['zh-Hans']}/${EXPECTED_PAGES}, zh-Hant ${graph.reachable['zh-Hant']}/${EXPECTED_PAGES}`)
     console.log(`Max generated links/page: ${maxInternal.count}${maxInternal.url ? ` (${routeLabel(maxInternal.url)})` : ''}; max nav links/block: ${maxNav.count}${maxNav.url ? ` (${routeLabel(maxNav.url)})` : ''}`)
 
     if (warnings.length) {

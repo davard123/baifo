@@ -65,6 +65,7 @@ const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'h
 const homeNav = [
   { label: '求财祈福', to: '/qiucai' },
   { label: '诵经', to: '/jing' },
+  { label: '念经', to: '/nianjing' },
   { label: '礼佛', hash: 'buddha-catalog-title' },
   { label: '祈福池', hash: 'blessing-pool-title' },
   { label: '祭祖', hash: 'ancestor-entry' },

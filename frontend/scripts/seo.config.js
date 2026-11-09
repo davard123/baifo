@@ -2,6 +2,7 @@ import { GUIDES } from '../src/data/guides.js'
 import { CAISHEN, QIUCAI_ARTICLE, QIUCAI_FAQS } from '../src/data/qiucai.js'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../src/data/caishen-detail.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
+import { NIANJING } from '../src/data/nianjing.js'
 import { ANCESTORS } from '../src/data/ancestors.js'
 import { TOPICS, getTopicEntries } from '../src/data/topics.js'
 import { HOME_ABOUT, HOME_FAQS } from '../src/data/homeContent.js'
@@ -634,6 +635,60 @@ function caishenPage(item) {
   }
 }
 
+// 念经板块：自己看拼音出声念，页面听声音跟上。只放简介，经文全文在 /jing/ 和页面运行时加载。
+function nianjingListPage() {
+  const path = '/nianjing'
+  const description = '心经、大悲咒、往生咒、六字大明咒、金刚经、地藏经、药师经等十二部经咒，每个字都标拼音。自己出声念，手机听你的声音，念到哪一句就亮到哪一句；也能自动滚动、手动翻页，可配木鱼或佛乐。免费、不用注册，声音不上传。'
+  return {
+    path,
+    title: '在线念经 | 经文带拼音，念到哪里走到哪里（心经、大悲咒、金刚经、地藏经）',
+    description,
+    heading: '在线念经：经文带拼音，念到哪里走到哪里',
+    summary: NIANJING.map((s) => `${s.title}（${s.note}）`).join('；') + '。',
+    image: SITE.defaultImage,
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: '在线念经',
+        description,
+        breadcrumbItems: [
+          { name: '求财祈福拜佛网', path: '/' },
+          { name: '念经', path },
+        ],
+        about: { '@type': 'Thing', name: '念经', description: '出声读诵佛经与经咒的日常修持方式。' },
+        selectors: ['h1'],
+      }),
+    ],
+  }
+}
+
+function nianjingPage(item) {
+  const path = `/nianjing/${item.slug}`
+  const description = `${item.title}全文，每个字都标了拼音（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；手机竖屏卡拉OK或提词器、平板横屏左右两栏，可配木鱼或佛乐。声音只在手机上识别，不上传。`
+  return {
+    path,
+    title: `念${item.title} · 带拼音跟着念，念到哪里走到哪里 | 在线念经`,
+    description,
+    heading: `念${item.title}（带拼音）`,
+    summary: description,
+    image: SITE.defaultImage,
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: `念${item.title}`,
+        description,
+        breadcrumbItems: [
+          { name: '求财祈福拜佛网', path: '/' },
+          { name: '念经', path: '/nianjing' },
+          { name: item.title, path },
+        ],
+        about: { '@type': 'Thing', name: item.title },
+        selectors: ['h1'],
+      }),
+    ],
+  }
+}
+
 function nianfoPage() {
   const path = '/nianfo'
   return {
@@ -717,6 +772,8 @@ export function assemblePages(jingPages) {
     ...BUDDHAS.map(buddhaPage),
     ancestorsPage(),
     nianfoPage(),
+    nianjingListPage(),
+    ...NIANJING.map(nianjingPage),
     ...jingPages,
     ...ANCESTORS.map(ancestorPage),
   ]

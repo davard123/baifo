@@ -158,6 +158,18 @@ export function getStaticNavigation(page, pages) {
       ['/ancestors', '拜祭先人'],
       ['/qiucai', '求财祈福'],
       ['/jing', '在线诵经'],
+      ['/nianjing', '在线念经（带拼音）'],
+    ]))
+  }
+
+  if (currentPath === '/nianjing' || currentPath.startsWith('/nianjing/')) {
+    addGroup('念经入口', routeCandidates(pages, [['/nianjing', '在线念经首页']]))
+    addGroup('带拼音念经', Array.from(byPath.entries())
+      .filter(([path]) => path.startsWith('/nianjing/'))
+      .map(([path, target]) => ({ path, label: target.heading })))
+    addGroup('相关内容', routeCandidates(pages, [
+      ['/jing', '在线诵经（读诵、唱诵视频）'],
+      ['/nianfo', '念佛计数器'],
     ]))
   }
 
@@ -167,6 +179,7 @@ export function getStaticNavigation(page, pages) {
       .filter(([path]) => path.startsWith('/jing/'))
       .map(([path, target]) => ({ path, label: target.heading })))
     addGroup('相关礼佛内容', routeCandidates(pages, [
+      ['/nianjing', '自己念经（带拼音，念到哪里走到哪里）'],
       ['/nianfo', '念佛计数器'],
       ['/guide/worship', '在线礼佛指南'],
     ]))
