@@ -130,6 +130,11 @@ fi
 while (( ! stop )); do
   if (( resume )); then
     start=$s_start; end=$s_end; resume=0
+    # 改了共修钟点后重启：本场最晚在下一个钟点前收，好让共修准点开场
+    if [[ -n "$SESSION_STARTS" ]] && slot=$(clock_slot); then
+      read -r wait_s c_end <<< "$slot"
+      (( wait_s == 0 && c_end < end )) && { end=$c_end; echo "$start $end" > "$STATE"; }
+    fi
     bid=$(cat "$BID_FILE" 2>/dev/null || true)
     log "接着上一场直播（$(( ($(date +%s) - start) / 60 )) 分钟前开始），本场还剩 $(( (end - $(date +%s)) / 60 )) 分钟"
     opening_skip=1
