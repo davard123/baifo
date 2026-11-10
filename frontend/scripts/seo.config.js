@@ -9,7 +9,7 @@ import { HOME_ABOUT, HOME_FAQS } from '../src/data/homeContent.js'
 
 export const SITE = {
   name: '求财祈福拜佛网',
-  shortName: 'Fopusha',
+  shortName: '求财祈福拜佛网',
   baseUrl: 'https://fopusha.com',
   defaultImage: '/fopusha-share-20260906.png?v=release1',
   defaultLocale: 'zh_CN',
@@ -131,7 +131,8 @@ function orgRef() {
   return {
     '@type': 'Organization',
     '@id': `${SITE.baseUrl}/#organization`,
-    name: '求财祈福拜佛网 Fopusha',
+    name: '求财祈福拜佛网',
+    alternateName: ['fopusha.com', 'Fopusha'],
     url: SITE.baseUrl,
   }
 }
@@ -276,7 +277,7 @@ function homePage() {
         '@type': 'WebSite',
         '@id': `${SITE.baseUrl}/#website`,
         name: SITE.name,
-        alternateName: SITE.shortName,
+        alternateName: ['fopusha.com', 'Fopusha'],
         url: absoluteUrl('/'),
         inLanguage: 'zh-CN',
 
@@ -285,12 +286,12 @@ function homePage() {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
         '@id': `${SITE.baseUrl}/#webapp`,
-        name: '求财祈福拜佛网 Fopusha',
+        name: '求财祈福拜佛网',
         url: absoluteUrl('/'),
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
         inLanguage: 'zh-CN',
-        description: 'fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供在线礼佛祈愿、供花、点灯、上香、在线祭祖和功德回向，也整理礼佛步骤与佛教主题说明。',
+        description: '求财祈福拜佛网（fopusha.com）是一个免费、不用注册的中文网上求财祈福网站：可以在线拜财神，也可以在线礼佛、诵经、念经和网上祭祖。在线礼佛、供花、点灯、上香、祭祖和功德回向也都有，并整理礼佛步骤与佛教主题说明。',
       },
       {
         '@context': 'https://schema.org',
@@ -298,7 +299,7 @@ function homePage() {
         '@id': `${absoluteUrl('/')}#collection`,
         name: SITE.name,
         url: absoluteUrl('/'),
-        description: 'fopusha.com 是一个在线拜佛、祭祀追思与祈福回向的网站，提供八位佛菩萨礼佛祈愿与功德回向入口。',
+        description: '求财祈福拜佛网（fopusha.com）是一个免费、不用注册的中文网上求财祈福网站：可以在线拜财神，也可以在线礼佛、诵经、念经和网上祭祖。',
         inLanguage: 'zh-CN',
         speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child']),
         mainEntity: {
@@ -790,7 +791,7 @@ export function assemblePages(jingPages) {
     ...CAISHEN.map(caishenPage),
     guidePage({
       slug: 'overview',
-      title: '使用说明 | 礼佛祈愿',
+      title: '使用说明 | 求财祈福拜佛网',
       heading: '使用说明与礼佛流程',
       description: '汇总礼佛祈愿、祭祖追思、供花点灯、上香回向与隐私说明，帮助用户快速了解网站主要功能与使用方式。',
     }),
