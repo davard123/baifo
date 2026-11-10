@@ -69,6 +69,7 @@ function printCard() { window.print() }
         <div>
           <p>祝新居平安、阖家兴旺。</p>
           <p class="rz-card-sign">David Dai · DRE# 02202763 · NMLS# 2454756</p>
+          <p class="rz-card-small">Universal Elite Realty 环球地产 · DRE# 02121645<br />NDF Lending（新梦想）· NMLS# 1952245</p>
           <p class="rz-card-small">更多吉日：fopusha.com/ruzhai-jiri</p>
         </div>
         <figure>
