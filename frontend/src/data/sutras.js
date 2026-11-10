@@ -159,6 +159,7 @@ export const SUTRAS = [
       { id: 'dizang-01-sing-film', label: '唱诵 · 第一品故事片', title: '地藏经第一品 唱诵《寻母》：她卖掉整个家，只为知道母亲去了哪里。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-01-sing-film.mp4', poster: '/jing/recite/dizang-01-sing-film-poster.jpg', yt: 'KcxmEo46pO4', ytFrom: '2026-11-07' },
       { id: 'dizang-02-sing-film', label: '唱诵 · 第二品', title: '地藏经第二品 唱诵《分身集会》：千百亿个地藏菩萨同时来到忉利天宫，一毛一沙的善，他都来度。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-02-sing-film.mp4', poster: '/jing/recite/dizang-02-sing-film-poster.jpg', yt: 'DiEVlL1KsqM', ytFrom: '2026-11-09' },
       { id: 'dizang-03-sing-film', label: '唱诵 · 第三品', title: '地藏经第三品 唱诵《观众生业缘》：佛的母亲问造了恶业的人去哪里，地藏菩萨讲无间地狱为什么叫无间。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-03-sing-film.mp4', poster: '/jing/recite/dizang-03-sing-film-poster.jpg', yt: 'SIoHeEWbfiE', ytFrom: '2026-11-11' },
+      { id: 'dizang-04-sing-film', label: '唱诵 · 第四品故事片', title: '地藏经第四品 唱诵《光目》：母亲生前爱吃鱼鳖，死后堕入恶道，女儿为救母亲发下「地狱不空，誓不成佛」的大愿。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-04-sing-film.mp4', poster: '/jing/recite/dizang-04-sing-film-poster.jpg', yt: 'npkw2JVcAHI', ytFrom: '2026-11-13' },
       ...RECITE.dizang.videos,
     ],
     shorts: [
@@ -171,6 +172,9 @@ export const SUTRAS = [
       { title: '不孝父母、偷寺里一粒米，地藏菩萨说都堕无间', src: '/jing/shorts/dizang03-1.mp4', poster: '/jing/shorts/dizang03-1.jpg', yt: '1PChILtLFs4', ytFrom: '2026-11-11' },
       { title: '无间地狱到底什么样？一人受罪，自见满床', src: '/jing/shorts/dizang03-2.mp4', poster: '/jing/shorts/dizang03-2.jpg', yt: 'YsS2nK7xmak', ytFrom: '2026-11-11' },
       { title: '为什么叫无间地狱？地藏菩萨说了五个原因', src: '/jing/shorts/dizang03-3.mp4', poster: '/jing/shorts/dizang03-3.jpg', yt: '-TQFy-9P0Os', ytFrom: '2026-11-11' },
+      { title: '母亲爱吃鱼鳖，死后受大苦；女儿卖掉玉镯为她画佛', src: '/jing/shorts/dizang04-1.mp4', poster: '/jing/shorts/dizang04-1.jpg', yt: 'YiA_q0K4ISk', ytFrom: '2026-11-13' },
+      { title: '母亲转生到婢女家，开口第一句话让她痛哭', src: '/jing/shorts/dizang04-2.mp4', poster: '/jing/shorts/dizang04-2.jpg', yt: 'D4RopiJGRn0', ytFrom: '2026-11-14' },
+      { title: '地狱不空，誓不成佛——这个愿最早是她发的', src: '/jing/shorts/dizang04-3.mp4', poster: '/jing/shorts/dizang04-3.jpg', yt: 'ILusQqWimZY', ytFrom: '2026-11-14' },
     ],
     faqs: [
       { q: '地藏经有几品、多少字？', a: `全经十三品，本页经文按 CBETA 与汉传通行本两源对照校订，共 ${dizang.charCount} 字（不算标点）。` },
