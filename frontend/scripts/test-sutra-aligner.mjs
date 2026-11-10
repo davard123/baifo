@@ -58,8 +58,26 @@ assert.equal(a.feed(say('guān zì pú sà')), 5)
   al.seek(0)
   const far = say('zhào jiàn wǔ yùn jiē kōng dù yí qiè kǔ è')
   let got = -1
-  for (let i = 0; i < 12 && got < 0; i++) got = al.feed(far)
-  assert.equal(got, 3 * PY.length + 25)
+  for (let i = 0; i < 30 && got < 0; i++) got = al.feed(far)
+  assert.ok(got > 3 * PY.length + 14, `追到第 4 遍：${got}`)
+  assert.equal(al.feed(far), 3 * PY.length + 25) // 范围放大时可能先停在边上，下一次就对齐
+}
+
+// 经文有重复的句子：近处那句里有个字认错了，也不能跳到后面一模一样的那句去
+{
+  const long = [...PY, ...PY, ...PY].map((p) => [fuzzy(p)])
+  long[PY.length + 10] = [fuzzy('mā')] // 第二遍里恰好有个字和认错的字同音
+  const al = new SutraAligner(long)
+  al.seek(5)
+  assert.equal(al.feed(say('xíng shēn bō rě bō mā mì duō')), 13)
+}
+
+// 一点杂音、零碎的结果不会让查找范围放大
+{
+  const al = new SutraAligner(script())
+  al.seek(5)
+  for (let i = 0; i < 20; i++) al.feed(say('jīn tiān'))
+  assert.equal(al.misses, 0)
 }
 
 console.log('aligner 全部通过')

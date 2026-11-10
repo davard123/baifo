@@ -5,6 +5,9 @@ const TAIL = 10 // 只拿识别结果最后几个字去对
 const LOOK_BACK = 12 // 允许往回找几个字（重读）
 const LOOK_AHEAD = 60 // 往前找多远（跳读）
 const MAX_LOOK_AHEAD = 400 // 连续对不上时逐步放大到这么远（念快了一下超前很多也能追回来）
+const WIDEN_EVERY = 8 // 每连续对不上这么多次才放大一档（识别每零点几秒出一次结果，3 次太快，会跳过头）
+const NEAR = 0.03 // 离当前位置每远一个字扣的分
+const FAR = 0.25 // 超出「这次最多可能念到的地方」后每多一个字再扣的分：经文重复句多，宁可认近处有错字的那句
 
 /** 去声调；平翘舌、前后鼻音、n/l 不分。 */
 export function fuzzy(py) {
@@ -60,7 +63,7 @@ export class SutraAligner {
     const hyp = h.slice(-TAIL)
     const m = hyp.length
     const from = Math.max(0, this.pos - LOOK_BACK)
-    const ahead = Math.min(MAX_LOOK_AHEAD, LOOK_AHEAD * (1 + Math.floor(this.misses / 3)))
+    const ahead = Math.min(MAX_LOOK_AHEAD, LOOK_AHEAD * (1 + Math.floor(this.misses / WIDEN_EVERY)))
     const to = Math.min(this.script.length, this.pos + ahead + m)
     const n = to - from
 
@@ -78,19 +81,22 @@ export class SutraAligner {
       ;[prev, cur] = [cur, prev]
     }
 
+    // 满分每个字 2 分，至少要对上一半左右才算数；够分的里面，挑离当前位置近的
+    const need = Math.max(2.5, 0.9 * m)
     let best = -Infinity
     let bestJ = -1
     for (let j = 1; j <= n; j++) {
-      // 离当前位置越远扣一点分，同分时选近的
-      const s = prev[j] - 0.03 * Math.abs(from + j - this.pos)
+      if (prev[j] < need) continue
+      const end = from + j
+      const s = prev[j] - NEAR * Math.abs(end - this.pos) - FAR * Math.max(0, end - this.pos - m)
       if (s > best) {
         best = s
         bestJ = j
       }
     }
-    // 满分每个字 2 分，至少要对上一半左右才算数
-    if (bestJ < 0 || best < Math.max(2.5, 0.9 * m)) {
-      this.misses += 1
+    if (bestJ < 0) {
+      // 只有三四个字的零碎结果对不上不算数，免得一点杂音就把查找范围放大
+      if (m >= 4) this.misses += 1
       return -1
     }
     this.misses = 0
