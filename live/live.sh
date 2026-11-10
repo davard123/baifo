@@ -101,6 +101,9 @@ while (( ! stop )); do
     log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
   fi
   touch "$HEART" "$HEART.on"
+  # 每场重新读一次 env 里的 PLAYLIST：改了播放列表不用重启，下一场自动生效
+  # shellcheck disable=SC1090
+  PLAYLIST="$(source "$env_file" >/dev/null 2>&1; printf '%s' "${PLAYLIST:-}")"
   if [[ -n "$PLAYLIST" ]]; then
     build_list || { sleep 60 & wait $!; continue; }
     input=(-f concat -safe 0 -stream_loop -1 -i "$LIST_FILE")
