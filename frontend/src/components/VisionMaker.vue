@@ -3,6 +3,7 @@
 // （职业是画面主角，如餐馆、房子），再在下方印上名字、祝福语和日期，供下载。
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { PROFESSIONS, THEMES } from '../data/vision.js'
+import { track } from '../utils/analytics.js'
 
 const props = defineProps({
   unlocked: { type: Boolean, default: false },
@@ -168,6 +169,8 @@ async function generate() {
   form.append('theme', theme.value)
   form.append('custom', custom.value.trim())
   form.append('cf-turnstile-response', turnstileToken.value)
+  const choice = { profession: profession.value, theme: theme.value }
+  track('vision_generate', choice)
   loading.value = true
   cardUrl.value = ''
   waitSeconds.value = 0
@@ -180,7 +183,9 @@ async function generate() {
     if (!response.ok || !data.image) throw new Error(data.error || '生成没有成功，请稍后再试。')
     left.value = data.left
     cardUrl.value = await composeCard(data.image)
+    track('vision_generate_success', choice)
   } catch (err) {
+    track('vision_generate_fail', choice)
     error.value = err.message || '生成没有成功，请稍后再试。'
   } finally {
     clearInterval(waitTimer)
@@ -237,7 +242,7 @@ onBeforeUnmount(() => {
       <div v-else class="vision-result">
         <img :src="cardUrl" alt="我的成功愿景图" />
         <div class="vision-result__btns">
-          <a :href="cardUrl" :download="`愿景图-${name || '有缘人'}.jpg`" class="submit-btn">下载愿景图</a>
+          <a :href="cardUrl" :download="`愿景图-${name || '有缘人'}.jpg`" class="submit-btn" @click="track('vision_download', { profession, theme })">下载愿景图</a>
           <button v-if="left !== 0" type="button" class="ghost-btn" @click="cardUrl = ''">换个主题再画一张</button>
         </div>
         <p v-if="left !== null" class="qc-note">今天还可以生成 {{ left }} 张。</p>

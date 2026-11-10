@@ -4,9 +4,11 @@ import App from './App.vue'
 import router, { disposeRouterRecovery } from './router/index.js'
 import { routeRecovery } from './recovery/index.js'
 import { warmApi } from './api.js'
+import { initAnalytics } from './utils/analytics.js'
 
 // App 启动立即预热后端，避免首次提交冷启动卡顿
 warmApi()
+initAnalytics()
 
 const app = createApp(App)
 app.provide('routeRecovery', routeRecovery)

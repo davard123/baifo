@@ -27,6 +27,7 @@ import VisionMaker from '../components/VisionMaker.vue'
 import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
 import SanctuaryBackdrop from '../components/ritual/SanctuaryBackdrop.vue'
+import { track } from '../utils/analytics.js'
 import { CAISHEN_DETAIL, CAISHEN_SLUG } from '../data/caishen-detail.js'
 import { pickCaishenLook } from '../data/caishen-looks.js'
 import { isHantPath, stripHant, toHant } from '../i18n/hant.js'
@@ -240,6 +241,9 @@ function burst(kind, count) {
 function act(way) {
   if (way.key === 'bow' && bowProgress.value.complete) return
   if (!way.repeat && done.value[way.key]) return
+  if (!Object.keys(done.value).length && !bowCount.value) {
+    track('qiucai_start', { deity: slugOf(deity.value) })
+  }
   done.value = { ...done.value, [way.key]: true }
   qi.value += way.qi
   stats.value = { ...stats.value, totalQi: (stats.value.totalQi || 0) + way.qi }
@@ -273,6 +277,8 @@ function act(way) {
   if (FULL_OFFERINGS.every((key) => done.value[key]) && bowCount.value >= 3 && markDeityComplete(deity.value.key)) {
     const count = completedDeities.value.length
     const total = CAISHEN.length
+    track('qiucai_deity_complete', { deity: slugOf(deity.value), completed_count: count })
+    if (count >= total) track('qiucai_all_complete', { completed_count: count })
     scheduleRitualToast(count >= total
       ? '八位神仙全部拜圆满！打开「写心愿 · 说明」，可以生成你的成功愿景图了。'
       : `${deity.value.name}已拜圆满（${count}/${total}），再去拜拜其他神仙吧。`, 1400)
@@ -612,6 +618,7 @@ async function submit() {
       image: poseReady.value[lookKey.value] ? (look.value?.bless || look.value?.image) : look.value?.image,
     }
     burst('full', 24)
+    track('qiucai_wish_submit', { deity: slugOf(deity.value), scene: form.value.scene })
     try { cardUrl.value = await drawCard(result.value) } catch { cardUrl.value = '' }
     loadWall()
   } catch (error) {
@@ -763,6 +770,7 @@ function applyMeta() {
 
 // 在财神页里换一位财神，网址跟着换；网址变了（前进后退、点卡片），神像跟着换
 function pickDeity(item) {
+  track('qiucai_select_deity', { deity: slugOf(item) })
   if (pageDeity.value && pageDeity.value.key !== item.key) {
     router.replace(`${route.path.startsWith('/zh-hant') ? '/zh-hant' : ''}/qiucai/${slugOf(item)}/`)
   }
@@ -1111,7 +1119,7 @@ useWakeLock()
           <p class="qc-result__couplet">{{ result.couplet[0] }}　{{ result.couplet[1] }}　· {{ result.couplet[2] }}</p>
           <img v-if="cardUrl" :src="cardUrl" alt="求财祝福卡" class="qc-card" />
           <div class="qc-result__btns">
-            <a v-if="cardUrl" :href="cardUrl" :download="`求财祝福卡-${result.name}.png`" class="submit-btn">保存祝福卡</a>
+            <a v-if="cardUrl" :href="cardUrl" :download="`求财祝福卡-${result.name}.png`" class="submit-btn" @click="track('qiucai_card_download', { deity: slugOf(deity) })">保存祝福卡</a>
             <button type="button" class="ghost-btn" @click="anotherBlessing">换一句祝福</button>
             <button type="button" class="ghost-btn" @click="resetAll">再拜一次</button>
           </div>

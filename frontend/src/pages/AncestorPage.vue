@@ -23,6 +23,7 @@ import {
   relationshipLabel,
 } from '../utils/memorialInscription.js'
 import NotFoundPage from './NotFoundPage.vue'
+import { track } from '../utils/analytics.js'
 
 const route = useRoute()
 
@@ -290,6 +291,7 @@ async function onSubmit(payload) {
   if (!res.ok || data.status !== 'success') {
     throw new Error(data.message || '提交失败')
   }
+  track('ancestor_worship_submit', { ancestor: ancestor.value?.slug })
   submitted.value = payload
   drawerOpen.value = true
 }

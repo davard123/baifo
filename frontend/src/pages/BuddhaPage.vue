@@ -14,6 +14,7 @@ import InviteBanner from '../components/InviteBanner.vue'
 import PanelTabs from '../components/PanelTabs.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
+import { track } from '../utils/analytics.js'
 
 const route = useRoute()
 
@@ -123,6 +124,7 @@ async function onSubmit(payload) {
     if (!response.ok || data.status !== 'success') {
       throw new Error(data.message || 'Submission failed')
     }
+    track('buddha_wish_submit', { buddha: buddha.value?.slug })
     submitted.value = payload
     blessingPhase.value = 'closing'
     drawerOpen.value = false
