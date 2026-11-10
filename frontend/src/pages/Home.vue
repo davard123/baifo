@@ -1,9 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue'
 import FestivalGreeting from '../components/FestivalGreeting.vue'
-import { HOME_ABOUT, HOME_FAQS } from '../data/homeContent.js'
 import { useRouter } from 'vue-router'
-import { TOPICS } from '../data/topics.js'
 import { BUDDHAS } from '../data/buddhas.js'
 import BlessingPool from '../components/BlessingPool.vue'
 import WishList from '../components/WishList.vue'
@@ -39,37 +37,25 @@ async function startSutraTeaser() {
 }
 const router = useRouter()
 
-const guideCards = [
-  {
-    title: '在线礼佛怎么开始',
-    body: '从任意佛菩萨页面进入后，按顺序完成供花、点灯、上香，再留下祈愿内容与回向。',
-  },
-  {
-    title: '适合哪些祈愿主题',
-    body: '可以为自己或家人祝愿平安、表达感谢，也可以追思亲人。',
-  },
-  {
-    title: '祭祀页面与礼佛页面的区别',
-    body: '纪念亲人请进入祭祀先人；日常礼敬佛菩萨，可以从首页的佛像中选择。',
-  },
-]
 
 
 
 
 
-const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'health', 'overseas-chinese', 'qingming'].map(key => ({ title: TOPICS[key].heading, body: TOPICS[key].intro, to: '/topic/' + key }))
 
 // 首页顶部固定导航（2026-11-09 David：固定在顶上一直跟着滑；点了直接进具体页面，不在首页上下滚）
-const homeNav = [
+const homeNavMain = [
   { label: '求财祈福', to: '/qiucai/' },
-  { label: '财神方位', to: '/caishen-fangwei/' },
   { label: '礼佛', to: '/lifo/' },
-  { label: '祈福池', to: '/qifu/' },
   { label: '祭祖', to: '/ancestors/' },
+  { label: '诵经', to: '/jing/' },
+]
+// 第二层：查询和小工具，字小一号，和主栏目分开
+const homeNavTools = [
+  { label: '财神方位', to: '/caishen-fangwei/' },
   { label: '入宅吉日', to: '/ruzhai-jiri/' },
-  { label: '念经', to: '/nianjing/' },
-  { label: '诵经视频', to: '/jing/' },
+  { label: '祈福池', to: '/qifu/' },
+  { label: '跟读念经', to: '/nianjing/' },
   { label: '念佛计数', to: '/nianfo/' },
   { label: '使用说明', to: '/guide/overview/' },
 ]
@@ -167,15 +153,26 @@ onMounted(() => {
 <template>
   <main class="home-shell">
     <nav class="home-nav" aria-label="网站栏目导航">
-      <div class="home-nav__scroller">
+      <div class="home-nav__main">
         <router-link
-          v-for="item in homeNav"
+          v-for="item in homeNavMain"
           :key="item.label"
           :to="item.to"
           class="home-nav__item"
           @mouseenter="warmApi"
           @touchstart.passive="warmApi"
         >{{ item.label }}</router-link>
+      </div>
+      <div class="home-nav__tools" aria-label="查询与小工具">
+        <span class="home-nav__tools-label">工具</span>
+        <div class="home-nav__scroller">
+          <router-link
+            v-for="item in homeNavTools"
+            :key="item.label"
+            :to="item.to"
+            class="home-nav__tool"
+          >{{ item.label }}</router-link>
+        </div>
       </div>
     </nav>
 
@@ -192,7 +189,7 @@ onMounted(() => {
     >
       <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" />
       <div class="qiucai-banner__content">
-        <h1 class="qiucai-banner__kicker">网上求财 · 网上祈福 · 在线拜财神</h1>
+        <h1 class="qiucai-banner__kicker">在线拜财神 · 求财祈福</h1>
         <h2>拜一拜，给自己添一份财气</h2>
         <ul class="qiucai-banner__gains">
           <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
@@ -299,125 +296,65 @@ onMounted(() => {
       </video>
     </section>
 
-    <PublicWishWall id="wish-wall" title="心愿墙" sub="大家在礼佛、求财、祈福、追思时公开的心愿。名字只显示第一个字，不显示年龄和联系方式。" :limit="30" />
+    <PublicWishWall id="wish-wall" title="心愿墙" sub="大家在礼佛、求财、祈福、追思时公开的心愿。名字只显示第一个字，不显示年龄和联系方式。" :limit="8" />
 
     <section id="my-records" class="wishes-section card">
       <div class="section-head">
-        <p class="section-kicker">当下回响</p>
-        <h2 class="section-title">我的祈愿记录</h2>
-        <p class="section-sub">仅显示此浏览器中保存的记录，不按姓名查询服务器。记录不跨设备；清理浏览器数据可能丢失。历史服务器记录未导入，也不会公开。</p>
+                <h2 class="section-title">我的祈愿记录</h2>
+        <p class="section-sub">只保存在你这台手机或电脑上，别人看不到；换一台设备就看不到了。</p>
       </div>
       <p v-if="recordsError" role="alert">{{ recordsError }}</p>
       <div class="record-grid">
         <section class="record-panel" aria-labelledby="buddha-wishes-title">
           <h3 id="buddha-wishes-title" class="record-title">我的拜佛记录</h3>
-          <p class="record-note">显示你最近 5 条礼佛与回向记录。</p>
           <WishList
             :wishes="buddhaRecentWishes"
             :loading="loadingRecords"
             :empty-message="
               viewerName
                 ? '你最近还没有礼佛记录。'
-                : '先到任一佛菩萨页面填写名字并仅保存到本机一次礼佛，之后这里会显示你最近的 5 条记录。'
+                : '礼佛一次之后，这里会显示你最近的记录。'
             "
           />
         </section>
 
         <section class="record-panel" aria-labelledby="ancestor-wishes-title">
           <h3 id="ancestor-wishes-title" class="record-title">我的祭祀记录</h3>
-          <p class="record-note">显示你最近 5 条祭祀、追思与回向记录。</p>
           <WishList
             :wishes="ancestorRecentWishes"
             :loading="loadingRecords"
             :empty-message="
               viewerName
                 ? '你最近还没有祭祀记录。'
-                : '先到祭祀先人页面填写名字并仅保存到本机一次回向，之后这里会显示你最近的 5 条记录。'
+                : '祭拜一次之后，这里会显示你最近的记录。'
             "
           />
         </section>
 
         <section class="record-panel" aria-labelledby="blessing-wishes-title">
           <h3 id="blessing-wishes-title" class="record-title">我的求福记录</h3>
-          <p class="record-note">显示你最近 5 条祈福池求福记录。</p>
           <WishList
             :wishes="blessingRecentWishes"
             :loading="loadingRecords"
             :empty-message="
               viewerName
                 ? '你最近还没有求福记录。'
-                : '先到祈福池填写名字并仅保存到本机一次求福，之后这里会显示你最近的 5 条记录。'
+                : '在祈福池求福一次之后，这里会显示你最近的记录。'
             "
           />
         </section>
       </div>
     </section>
 
-    <section id="home-guide" class="guide-section">
-      <div class="guide-section__intro">
-        <p class="section-kicker">初次进入</p>
-        <h2 class="section-title">礼佛与回向指南</h2>
-        <p class="section-sub">不熟悉操作时，可以先看下面的说明。不必一次完成所有步骤。</p>
-      </div>
-      <div class="guide-grid">
-        <article v-for="item in guideCards" :key="item.title" class="guide-card">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.body }}</p>
-        </article>
-      </div>
-      <div class="guide-links">
-        <router-link to="/guide/worship">查看在线礼佛指南</router-link>
-        <router-link to="/guide/online-worship">网上拜佛怎么拜</router-link>
-        <router-link to="/guide/overseas-worship">海外华人怎么拜佛</router-link>
-        <router-link to="/guide/home-worship">在家拜佛怎么拜</router-link>
-        <router-link to="/guide/ancestors">查看在线祭祀指南</router-link>
-        <router-link to="/ancestors">查看祭祀先人总览</router-link>
-        <router-link to="/guide/dongzhi-2026">冬至祭祖指南</router-link>
-        <router-link to="/guide/qingming-2027">清明祭祖指南</router-link>
-        <router-link :to="'/buddha/' + BUDDHAS[0].slug">从本师释迦牟尼佛开始礼佛</router-link>
-      </div>
-    </section>
-
-    <section class="card privacy-note" aria-labelledby="privacy-note-title">
-      <h2 id="privacy-note-title" class="section-title">免费，不用注册，不收任何费用</h2>
-      <p>牌位照片、先人姓名和你写的祈愿，默认只保存在你自己的手机里，不上传。只有你选了「公开到心愿墙」，祈愿才会显示在网站上，名字只显示第一个字；公开的内容请不要写住址、电话等私密信息。</p>
-    </section>
-
-    <section class="topics-section">
-      <div class="section-head">
-        <p class="section-kicker">专题说明</p>
-        <h2 class="section-title">供养、回向与追思</h2>
-        <p class="section-sub">供花、上香或回向时有疑问，可以查阅这些说明。</p>
-      </div>
-      <div class="topics-list">
-        <router-link v-for="item in topicPages" :key="item.title" :to="item.to" class="topic-row">
-          <span class="topic-row__title">{{ item.title }}</span>
-          <span class="topic-row__body">{{ item.body }}</span>
-          <span class="topic-row__cta">查看专题</span>
-        </router-link>
-      </div>
-    </section>
-
-
-    <section id="about-site" class="card about-section" aria-labelledby="about-site-title">
-      <div class="section-head">
-        <p class="section-kicker">关于本站</p>
-        <h2 id="about-site-title" class="section-title">在线礼佛与网上祭祖</h2>
-      </div>
-      <p v-for="line in HOME_ABOUT" :key="line" class="about-text">{{ line }}</p>
-
-      <h3 class="faq-heading">常见问题</h3>
-      <div class="faq-list">
-        <details v-for="faq in HOME_FAQS" :key="faq.q" class="faq-item">
-          <summary>{{ faq.q }}</summary>
-          <p>{{ faq.a }}</p>
-        </details>
-      </div>
-    </section>
+    <p class="home-promise">免费 · 不用注册 · 不收任何费用。牌位照片和你写的祈愿默认只存在你自己的手机上。</p>
 
     <footer class="site-footer">
       <p class="footer-brand">求财祈福拜佛网 · fopusha.com</p>
       <p>愿以此功德，庄严佛净土，上报四重恩，下济三途苦。</p>
+      <p class="footer-links">
+        <router-link to="/about/">关于本站 · 常见问题</router-link>
+        <router-link to="/guide/overview/">使用说明</router-link>
+      </p>
       <p class="footer-contact">意见反馈与联系：<a href="mailto:fopushacom@gmail.com">fopushacom@gmail.com</a></p>
     </footer>
   </main>
@@ -437,57 +374,94 @@ onMounted(() => {
   box-shadow: 0 6px 18px rgba(60, 12, 4, 0.35);
 }
 
-.home-nav::after {
-  /* 右侧渐隐：提示还能往右滑 */
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 2px;
-  width: 36px;
-  background: linear-gradient(90deg, rgba(110, 23, 14, 0), #6e170e 85%);
-  pointer-events: none;
+.home-nav__main {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.home-nav__item {
+  padding: 9px 4px;
+  border-radius: 10px;
+  color: #fff0c8;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid rgba(240, 200, 120, 0.45);
+  background: rgba(255, 220, 150, 0.1);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* 第二层：小工具。字小、无边框，一眼看出不是同一级 */
+.home-nav__tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 720px;
+  margin: 7px auto 0;
+  padding-top: 6px;
+  border-top: 1px solid rgba(240, 200, 120, 0.22);
+}
+
+.home-nav__tools-label {
+  flex: 0 0 auto;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(240, 200, 120, 0.2);
+  color: #f4d9a0;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
 }
 
 .home-nav__scroller {
-  position: relative;
   display: flex;
-  gap: 6px;
+  gap: 16px;
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
-  padding-right: 28px;
+  mask-image: linear-gradient(90deg, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+  padding-right: 24px;
 }
 
 .home-nav__scroller::-webkit-scrollbar { display: none; }
 
-.home-nav__item {
+.home-nav__tool {
   flex: 0 0 auto;
-  scroll-snap-align: center;
-  padding: 8px 15px;
-  border-radius: 999px;
-  color: #fbe6b4;
-  font-size: 1.02rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.3;
+  padding: 3px 0;
+  color: rgba(251, 230, 180, 0.86);
+  font-size: 0.9rem;
   text-decoration: none;
   white-space: nowrap;
-  border: 1px solid rgba(240, 200, 120, 0.35);
-  background: rgba(255, 220, 150, 0.06);
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 @media (hover: hover) {
-  .home-nav__item:hover { background-color: rgba(255, 220, 150, 0.16); color: #fff3d2; }
+  .home-nav__item:hover { background-color: rgba(255, 220, 150, 0.2); color: #fff; }
+  .home-nav__tool:hover { color: #fff; text-decoration: underline; }
 }
-
-
 
 @media (min-width: 900px) {
-  .home-nav__scroller { justify-content: center; }
+  .home-nav__scroller { mask-image: none; -webkit-mask-image: none; padding-right: 0; }
 }
+
+.home-promise {
+  margin: 28px auto 0;
+  max-width: 40em;
+  text-align: center;
+  color: var(--text-muted, #756558);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.footer-links { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+.footer-links a { color: inherit; }
+
 
 
 .home-shell {

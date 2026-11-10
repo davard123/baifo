@@ -12,7 +12,7 @@ const baseOrigin = new URL(SITE.baseUrl).origin
 const HANT_PREFIX = '/zh-hant'
 // 简体页面总数（新增页面时同步改；2026-11-09 加念经 13 页、礼佛 /lifo、祈福池 /qifu 后为 95）
 // 财神方位、入宅吉日页按构建日期滚动生成，数量另算（2026-11-09 加）
-const EXPECTED_PAGES = 95 + getFangweiPages().length
+const EXPECTED_PAGES = 96 + getFangweiPages().length
 const EXPECTED_HREFLANGS = ['zh-Hans', 'zh-Hant', 'x-default']
 const MAX_NAV_LINKS = 40
 

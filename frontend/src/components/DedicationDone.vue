@@ -22,11 +22,11 @@ defineProps({
     <p class="done-mark" aria-hidden="true">🙏</p>
 
     <h2 class="done-title">
-      {{ lastSavePublished ? '已公开到心愿墙 · 回向完成' : '已保存在本机 · 回向完成' }}
+      {{ lastSavePublished ? '已公开到心愿墙 · 回向完成' : '已保存 · 回向完成' }}
     </h2>
 
-    <p v-if="lastSavePublished">这份心愿已公开到首页心愿墙（名字只显示第一个字），本机也留了一份记录。</p>
-    <p v-else>本次内容未上传，也未发布到主页心愿墙。</p>
+    <p v-if="lastSavePublished">这份心愿已公开到首页心愿墙，名字只显示第一个字。</p>
+    <p v-else>这份心愿只有你自己能看，没有公开。</p>
     <div class="done-actions" aria-label="下一步">
       <router-link
         v-for="action in actions"

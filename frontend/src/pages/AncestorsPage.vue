@@ -14,7 +14,7 @@ const ancestorFaqs = [
   },
   {
     q: '照片和姓名会上传吗？',
-    a: '不会。页面里个性化照片和姓名设置只保存在本地设备，用于本机显示，不进入服务器数据库。',
+    a: '不会。照片和姓名只保存在你自己的手机或电脑上，不会上传，别人看不到。',
   },
 ]
 
@@ -147,7 +147,7 @@ onMounted(() => {
       </div>
 
       <div class="selection-guide">
-        <p>选择一位先人，可修改牌位显示文字后进入正式祭拜页。随时可返回此页重新选择，不会被锁定。步骤：选牌位 → 改文字（可选）→ 进入祭拜。</p>
+        <p>选一位先人，可以先改牌位上的字，再进去祭拜。</p>
       </div>
     </section>
 
@@ -159,7 +159,7 @@ onMounted(() => {
             <h2>个性化照片设置</h2>
             <button class="setup-close" @click="showSetup = false">✕</button>
           </div>
-          <p class="setup-note">📱 照片仅保存在您的设备本地，不会上传到服务器，其他人无法看到。</p>
+          <p class="setup-note">📱 照片只保存在你自己的手机上，不会上传，别人看不到。</p>
           <div class="setup-grid">
             <div v-for="a in ANCESTORS" :key="a.slug" class="setup-item">
               <div class="setup-preview">
@@ -190,12 +190,7 @@ onMounted(() => {
     </Teleport>
 
     <section class="guide-section dim-section">
-      <h2 class="section-title">祭祖与追思说明</h2>
-      <p class="section-sub">如果你想进一步了解适合的祭拜场景、隐私说明或牌位设置方式，可以在这里查看。</p>
-      <div class="guide-copy">
-        <p>拜祭先人页面适合用于追思祖先、家族祈愿、超荐亡灵与回向功德。不同牌位覆盖先父、先母、祖父、祖母、列祖列宗，以及亡偶、亡子女与一切亡灵等主题。</p>
-        <p>如果你希望做更个性化的追思展示，可以在本地设备中设置牌位照片和称呼。这样既保留纪念意义，也不会把私密图片上传到服务器。</p>
-      </div>
+      <h2 class="section-title">常见问题</h2>
       <div class="faq-list">
         <article v-for="faq in ancestorFaqs" :key="faq.q" class="faq-item">
           <h3>{{ faq.q }}</h3>

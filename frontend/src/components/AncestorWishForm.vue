@@ -43,13 +43,13 @@ onMounted(() => {
   wish.value = getField(props.slug, 'wish') || props.defaultWish || ''
   } catch {
     wish.value = props.defaultWish || ''
-    error.value = '本机存储暂不可读，请检查浏览器存储设置。'
+    error.value = '暂时读不到之前保存的内容，请检查浏览器设置。'
   }
 })
 
 // 每次字段变化都实时保存
 function saveDraft(write) {
-  try { write() } catch { error.value = '草稿未保存：本机存储不可用。请保留输入并检查浏览器设置。' }
+  try { write() } catch { error.value = '草稿没有保存成功，请先不要关掉页面，检查一下浏览器设置。' }
 }
 function onUsernameChange() { saveDraft(() => saveGlobal('username', username.value)) }
 function onAgeChange() { saveDraft(() => saveGlobal('age', age.value)) }
@@ -192,8 +192,8 @@ async function handleSubmit() {
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '保存到本机…' }}</span>
-        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向先人' : '仅保存到本机 · 回向先人' }}</span>
+        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
+        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向先人' : '回向先人（只有自己能看）' }}</span>
       </button>
     </form>
   </div>

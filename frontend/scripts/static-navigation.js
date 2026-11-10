@@ -164,6 +164,17 @@ export function getStaticNavigation(page, pages) {
       ['/qifu', '祈福池'],
       ['/caishen-fangwei', '今日财神方位'],
       ['/ruzhai-jiri', '入宅吉日'],
+      ['/about', '关于本站'],
+    ]))
+  }
+
+  if (currentPath === '/about') {
+    addGroup('主要功能', routeCandidates(pages, [
+      ['/qiucai', '在线拜财神'],
+      ['/lifo', '礼佛祈愿'],
+      ['/ancestors', '拜祭先人'],
+      ['/jing', '在线诵经'],
+      ['/guide/overview', '使用说明'],
     ]))
   }
 

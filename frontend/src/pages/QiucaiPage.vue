@@ -655,7 +655,7 @@ async function submit() {
     try { cardUrl.value = await drawCard(result.value) } catch { cardUrl.value = '' }
     loadWall()
   } catch (error) {
-    submitError.value = error.message || '本机保存未成功，请稍后重试。'
+    submitError.value = error.message || '保存没有成功，请稍后再试。'
   } finally {
     submitting.value = false
   }
@@ -1142,12 +1142,12 @@ useWakeLock()
           <RecordSaveChoice v-model="storageChoice" :disabled="submitting" />
           <p v-if="submitError" class="error-msg">{{ submitError }}</p>
           <button type="submit" class="submit-btn" :disabled="submitting">
-            {{ submitting ? '祈福中……' : (storageChoice === 'public' ? '公开到心愿墙，领取祝福卡' : '仅保存到本机，领取祝福卡') }}
+            {{ submitting ? '祈福中……' : (storageChoice === 'public' ? '公开到心愿墙，领取祝福卡' : '领取祝福卡（只有自己能看）') }}
           </button>
         </form>
 
         <div v-else class="qc-result">
-          <h2>{{ result.name }}，{{ result.published ? '祈愿已公开到心愿墙' : '祈愿已保存在本机，未上传' }}</h2>
+          <h2>{{ result.name }}，{{ result.published ? '祈愿已公开到心愿墙' : '祈愿已保存，只有你自己能看' }}</h2>
           <p class="qc-result__blessing">{{ result.blessing }}</p>
           <p class="qc-result__couplet">{{ result.couplet[0] }}　{{ result.couplet[1] }}　· {{ result.couplet[2] }}</p>
           <img v-if="cardUrl" :src="cardUrl" alt="求财祝福卡" class="qc-card" />
@@ -1208,9 +1208,9 @@ useWakeLock()
 
     <p v-if="recordsError" role="alert">{{ recordsError }}</p>
     <section v-show="infoTab === 'do'" class="card qc-wall" aria-labelledby="qc-wall-title">
-      <h2 id="qc-wall-title">我的本机求财记录</h2>
-      <p>仅此浏览器可回看，不跨设备；清理浏览器数据可能丢失。没有导入服务器历史记录。</p>
-      <p v-if="!wall.length">本机暂无求财记录。</p>
+      <h2 id="qc-wall-title">我的求财记录</h2>
+      <p>只保存在你这台手机或电脑上，换一台设备就看不到了。</p>
+      <p v-if="!wall.length">还没有求财记录。</p>
       <ul>
         <li v-for="item in wall" :key="item.id">
           <strong>{{ maskName(item.username) }}</strong>

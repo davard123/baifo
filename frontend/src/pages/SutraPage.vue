@@ -196,7 +196,7 @@ onBeforeUnmount(() => player.value?.pause())
       </div>
       <p class="jing-tip">{{ video.title }}。</p>
       <p v-if="ytUrl(video)" class="jing-tip jing-yt">
-        能打开 YouTube 的话，也可以<a :href="ytUrl(video)" target="_blank" rel="noopener">到 YouTube 看这个视频</a>（画质更清楚），并订阅频道「求財祈福網・每日誦經」。
+        能打开 YouTube 的话，也可以<a :href="ytUrl(video)" target="_blank" rel="noopener">到 YouTube 看这个视频</a>（画质更清楚），并订阅频道「求财祈福拜佛网」。
       </p>
     </section>
 

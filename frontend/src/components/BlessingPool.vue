@@ -194,13 +194,13 @@ async function submit() {
     stage.value = 'done'
     storageChoice.value = ''
     closeDrawer()
-    toast.value = data.published ? '祈愿已公开到心愿墙，本机也保存了一份。回向完成。' : '祈愿已保存在本机，未上传。回向完成。'
+    toast.value = data.published ? '祈愿已公开到心愿墙。回向完成。' : '祈愿已保存，只有你自己能看。回向完成。'
     resultPublished.value = !!data.published
     clearToastSoon()
     emit('wish-submitted')
   } catch (error) {
     if (controller.signal.aborted || requestController !== controller) return
-    toast.value = error.message || '本机保存失败，请稍后重试。'
+    toast.value = error.message || '保存没有成功，请稍后再试。'
     clearToastSoon()
   } finally {
     if (requestController === controller) {
@@ -358,7 +358,7 @@ onBeforeUnmount(() => {
 
             <div v-if="stage === 'done'" class="scene-result">
               <p class="result-user">
-                {{ form.age }} 岁的 {{ form.name }} {{ resultPublished ? '已将这份祈愿公开到心愿墙。' : '已将这份祈愿保存在本机，未上传。' }}
+                {{ form.age }} 岁的 {{ form.name }} {{ resultPublished ? '已将这份祈愿公开到心愿墙。' : '已保存这份祈愿，只有自己能看。' }}
               </p>
               <p v-if="form.target" class="result-user">{{ form.target }}</p>
               <div class="result-btns">
@@ -421,7 +421,7 @@ onBeforeUnmount(() => {
                   aria-describedby="blessing-target-help"
                   placeholder="可修改推荐词，或写下自己的祝愿"
                 />
-                <p id="blessing-target-help" class="target-help">可直接修改；本主题上次填写的内容仅在本机保留。</p>
+                <p id="blessing-target-help" class="target-help">可以直接修改。</p>
                 <div class="target-suggestions" role="group" aria-label="推荐祈福词">
                   <button
                     v-for="suggestion in targetSuggestions"
@@ -441,7 +441,7 @@ onBeforeUnmount(() => {
             <div v-if="stage === 'form'" class="bm-completion">
               <button class="submit-btn" type="submit" form="blessing-form" :disabled="loading">
                 <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
-                <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '仅保存到本机 · 回向' }}</span>
+                <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '回向（只有自己能看）' }}</span>
               </button>
             </div>
           </section>

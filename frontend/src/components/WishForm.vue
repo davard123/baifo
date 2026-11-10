@@ -107,8 +107,8 @@ async function handleSubmit() {
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '保存到本机…' }}</span>
-        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '仅保存到本机 · 回向' }}</span>
+        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
+        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '回向（只有自己能看）' }}</span>
       </button>
     </form>
   </div>

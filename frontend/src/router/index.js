@@ -18,6 +18,7 @@ const QifuPage = () => import('../pages/QifuPage.vue')
 const QiucaiPage = () => import('../pages/QiucaiPage.vue')
 const FangweiPage = () => import('../pages/FangweiPage.vue')
 const RuzhaiPage = () => import('../pages/RuzhaiPage.vue')
+const AboutPage = () => import('../pages/AboutPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
 function withTrailingSlashTarget(target) {
@@ -57,6 +58,7 @@ const PAGE_ROUTES = [
     { path: '/nianjing/:slug', component: NianjingPage },
     { path: '/qiucai', component: QiucaiPage },
     { path: '/qiucai/:slug', component: QiucaiPage },
+    { path: '/about', component: AboutPage },
     { path: '/caishen-fangwei', component: FangweiPage },
     { path: '/caishen-fangwei/:date', component: FangweiPage },
     { path: '/ruzhai-jiri', component: RuzhaiPage },

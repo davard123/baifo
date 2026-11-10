@@ -312,16 +312,43 @@ function homePage() {
           })),
         },
       },
+    ],
+  }
+}
+
+// 关于本站：网站是什么、有哪些功能、常见问题。2026-11-09 从首页搬出来（David：首页不要堆说明文字）。
+function aboutPage() {
+  const path = '/about'
+  const heading = '关于求财祈福拜佛网'
+  return {
+    path,
+    title: '关于求财祈福拜佛网（fopusha.com）｜网站介绍与常见问题',
+    description: HOME_ABOUT[0],
+    heading,
+    summary: HOME_ABOUT[0],
+    image: SITE.defaultImage,
+    schema: [
+      buildWebPageSchema({
+        path,
+        name: heading,
+        description: HOME_ABOUT[0],
+        breadcrumbItems: [
+          { name: SITE.shortName, path: '/' },
+          { name: '关于本站', path },
+        ],
+        about: { '@type': 'Thing', name: SITE.name, description: HOME_ABOUT[0] },
+        selectors: ['h1', '.about-text'],
+      }),
       buildArticleSchema({
-        path: '/',
+        path,
         idSuffix: 'about',
-        headline: '在线礼佛与网上祭祖',
-        name: '关于求财祈福拜佛网',
+        headline: heading,
+        name: heading,
         description: HOME_ABOUT[0],
         articleBody: HOME_ABOUT.join('\n'),
       }),
-      buildFaqSchema('/', HOME_FAQS),
-    ],
+      buildFaqSchema(path, HOME_FAQS),
+    ].filter(Boolean),
   }
 }
 
@@ -787,6 +814,7 @@ function nianfoPage() {
 export function assemblePages(jingPages) {
   return [
     homePage(),
+    aboutPage(),
     qiucaiPage(),
     ...CAISHEN.map(caishenPage),
     guidePage({

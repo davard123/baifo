@@ -131,7 +131,7 @@ const peak = computed(() => Math.max(1, ...days.value.map((d) => d.count)))
           <span class="bar-day">{{ Number(d.date.slice(-2)) }}</span>
         </div>
       </div>
-      <p class="history-note">仅显示本机记录。换设备或清除浏览器数据后会重新开始。</p>
+      <p class="history-note">记录只保存在这台手机或电脑上，换一台设备会重新开始。</p>
     </section>
 
     <section class="explain card">
