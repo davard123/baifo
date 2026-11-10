@@ -125,3 +125,36 @@ PLAYLIST="dabeizhou_sing xinjing_music amituo_sing pumen_sing puxian_sing jingan
 写一个 `/etc/fopusha-live/<名称>.chat`，每行一条（每条最多 200 字）。每场通过 API 建好并开播后，脚本会把这些留言发到直播聊天室。YouTube API 不支持置顶，需要置顶的话在 Studio 里手动点。
 
 手动给正在播的一场补发：`sudo python3 /opt/fopusha-live/yt_api.py chat <名称> <直播的 watch?v= 后面那串>`
+
+## 八、按时段换标题、聊天室回向（2026-11-09 新增，都是可选的）
+
+后台数据显示直播几乎带不来新观众（28 天 11 人），而且每场标题一模一样。这两项是为了让直播间看起来有人在、有回应。
+
+### 按时段换标题
+
+写一个 `/etc/fopusha-live/<名称>.titles`，每行「开始小时-结束小时|标题」，按开播时的当地钟点挑一条。时区默认美西，可在 env 里用 `TITLE_TZ=Asia/Shanghai` 之类改掉。
+
+```
+04-11|早课诵经直播｜心经 大悲咒 普门品 唱诵 可跟读｜Morning Buddhist Chanting Live
+11-18|午间诵经直播｜金刚经 阿弥陀经 地藏经 唱诵｜Buddhist Chanting Live
+18-04|晚课 · 静心助眠诵经直播｜大悲咒 心经 唱诵｜Evening Buddhist Chanting Live
+```
+
+没有这个文件，或钟点不在任何一行里，就照旧用 `<名称>.title`。
+
+### 聊天室回向
+
+在 `/etc/fopusha-live/<名称>.env` 里加一行 `BLESS=1`，下一场开始生效。之后观众在聊天室留言，脚本每隔几分钟把这段时间留言的人合成一条回向发回聊天室，例如：
+
+> 愿以此功德，回向王小明、Amy Chen：平安吉祥，所求如愿。🙏
+
+- `BLESS_POLL=180`：多久读一次聊天室（秒，最少 60）。
+- `BLESS_MAX=20`：每场最多回几条。
+- 频道自己发的留言不算；一次最多列 8 个名字，更多的写「等 N 位」。
+- 建议同时在 `<名称>.chat` 里加一条欢迎语，告诉观众可以这么做，例如：`在聊天里写下想为谁祈福，每隔几分钟会为大家一起回向 🙏`
+
+**注意 API 配额**：读聊天室和发留言都要用 YouTube API 配额（每天免费 10,000 点）。开启后第一天请到 Google Cloud Console →「API 和服务」→「配额」看实际用量；如果接近上限，把 `BLESS_POLL` 调大、`BLESS_MAX` 调小。
+
+名字不会印到直播画面上：画面是预先做好直接推送的，不重新编码。要印到画面上得改成实时编码，1 核的服务器带不动。
+
+手动试一次：`sudo python3 /opt/fopusha-live/yt_api.py bless <名称> <直播的 watch?v= 后面那串> 600`

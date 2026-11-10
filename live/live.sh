@@ -14,6 +14,9 @@
 #   RTMP_URL=rtmp://a.rtmp.youtube.com/live2  # 可选
 #   PLAYLIST="dabeizhou xinjing pumen"        # 可选：多部经轮流播，每场随机打乱顺序；
 #                                             # 还没生成好的素材自动跳过
+#   BLESS=1                                   # 可选：聊天室回向。观众留言后，每隔几分钟把名字合成一条回向发回聊天室
+#   BLESS_POLL=180                            # 可选：多久读一次聊天室（秒），BLESS_MAX=20 每场最多回几条
+#   TITLE_TZ=America/Los_Angeles              # 可选：<名称>.titles 按哪个时区的钟点挑标题
 set -uo pipefail
 
 name="${1:?用法：live.sh <名称>}"
@@ -65,7 +68,7 @@ mkdir -p "$LIVE_HOME/run"
 ( while sleep 30; do [[ -f "$HEART.on" ]] && touch "$HEART"; done ) &
 hb_pid=$!
 trap 'stop=1; [[ -n "${pid:-}" ]] && kill "$pid" 2>/dev/null && wait "$pid" 2>/dev/null; kill "$hb_pid" 2>/dev/null' TERM INT
-trap 'kill "$hb_pid" 2>/dev/null; rm -f "$HEART.on"' EXIT
+trap 'kill "$hb_pid" 2>/dev/null; [[ -n "${bless_pid:-}" ]] && kill "$bless_pid" 2>/dev/null; rm -f "$HEART.on"' EXIT
 
 resume=0
 if [[ -s "$STATE" && -f "$HEART" ]]; then
@@ -91,6 +94,11 @@ while (( ! stop )); do
               fi
               log "聊天留言第 $try 次没发出去：$out"
             done ) &
+        fi
+        # 聊天室回向：BLESS=1 时开一个后台进程，本场结束时一并停掉
+        if [[ "$(source "$env_file" >/dev/null 2>&1; printf '%s' "${BLESS:-}")" == "1" ]]; then
+          CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" bless "$name" "$bid" "$session_secs" > >(while IFS= read -r line; do log "$line"; done) 2>&1 &
+          bless_pid=$!
         fi
       else
         # 建场失败（授权过期、配额用完等）也照样推流：频道上这时需要人在 Studio 里点一次开播
@@ -130,6 +138,7 @@ while (( ! stop )); do
     log "推流中断（ffmpeg 退出码 $code），${wait_s} 秒后重连，本场还剩 $((left / 60)) 分钟"
     sleep "$wait_s" & wait $!
   done
+  [[ -n "${bless_pid:-}" ]] && { kill "$bless_pid" 2>/dev/null; bless_pid=""; }
   (( stop )) && break
   rm -f "$HEART.on"
   log "本场到时，停 ${GAP_SECONDS} 秒等 YouTube 结束这一场"

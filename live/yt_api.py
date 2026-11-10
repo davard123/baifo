@@ -12,6 +12,17 @@ live.sh 每开新的一场时会调用：
 它从 /etc/fopusha-live/<名称>.env 读 STREAM_KEY，
 从 /etc/fopusha-live/<名称>.title 读标题（第一行）、<名称>.desc 读说明，
 建一个公开的、自动开始/自动结束的直播，并绑定到这个推流密钥对应的直播流。
+
+按时段换标题（可选）：写一个 /etc/fopusha-live/<名称>.titles，每行「开始小时-结束小时|标题」，
+按开播时的当地时间挑一条；时区用 env 里的 TITLE_TZ（默认 America/Los_Angeles）。例如：
+    04-11|早课诵经直播｜心经 大悲咒 …
+    11-18|午间诵经直播｜…
+    18-04|晚课 · 助眠诵经直播｜…
+没有 .titles 或没有匹配的时段时，仍用 .title。
+
+聊天室回向（可选，env 里写 BLESS=1 开启）：
+    python3 yt_api.py bless <名称> <直播 id> [最长秒数]
+每隔 BLESS_POLL 秒（默认 180）读一次聊天室，把这段时间留言的观众名字合成一条回向发回聊天室。
 """
 import json
 import os
@@ -147,6 +158,34 @@ def find_stream_id(token, stream_key):
             sys.exit("没找到和 STREAM_KEY 对应的直播流：请确认密钥是这个频道的")
 
 
+def pick_title(name, env, now=None):
+    """按开播时的当地时间从 <名称>.titles 里挑标题；挑不到就用 <名称>.title 的第一行。"""
+    default = (read_text(os.path.join(CONF_DIR, f"{name}.title"), "24小时诵经直播").splitlines() or ["24小时诵经直播"])[0]
+    rows = read_text(os.path.join(CONF_DIR, f"{name}.titles"))
+    if not rows:
+        return default[:100]
+    if now is None:
+        try:
+            from zoneinfo import ZoneInfo
+            now = datetime.now(ZoneInfo(env.get("TITLE_TZ", "America/Los_Angeles")))
+        except Exception:
+            now = datetime.now()
+    hour = now.hour
+    for line in rows.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "|" not in line:
+            continue
+        span, title = line.split("|", 1)
+        try:
+            start, end = (int(x) for x in span.strip().split("-", 1))
+        except ValueError:
+            continue
+        inside = start <= hour < end if start < end else (hour >= start or hour < end)
+        if inside and title.strip():
+            return title.strip()[:100]
+    return default[:100]
+
+
 def cmd_new_broadcast(name):
     env = read_env(name)
     cfg = load_oauth()
@@ -154,7 +193,7 @@ def cmd_new_broadcast(name):
     auth = {"Authorization": f"Bearer {token}"}
     stream_id = find_stream_id(token, env["STREAM_KEY"])
 
-    title = read_text(os.path.join(CONF_DIR, f"{name}.title"), "24小时诵经直播").splitlines()[0][:100]
+    title = pick_title(name, env)
     desc = read_text(os.path.join(CONF_DIR, f"{name}.desc"))[:5000]
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
     body = {
@@ -202,6 +241,77 @@ def cmd_chat(name, bid):
     print(f"已发 {len(lines)} 条聊天留言")
 
 
+BLESS_WORDS = ("愿以此功德，回向{names}：平安吉祥，所求如愿。🙏",
+               "为{names}回向：身心安康，阖家平安。🙏",
+               "已为{names}一同回向：消灾免难，福慧增长。🙏")
+
+
+def bless_text(names, index=0):
+    """把一批观众名字合成一条回向留言（最多 200 字）。名字去重、保持先后，太多时只列前几位。"""
+    seen = []
+    for n in names:
+        n = " ".join(str(n).split())[:20]
+        if n and n not in seen:
+            seen.append(n)
+    if not seen:
+        return ""
+    shown = seen[:8]
+    label = "、".join(shown) + (f" 等 {len(seen)} 位" if len(seen) > len(shown) else "")
+    return BLESS_WORDS[index % len(BLESS_WORDS)].format(names=label)[:200]
+
+
+def cmd_bless(name, bid, max_seconds=None):
+    """聊天室回向：定时读聊天室，把新留言的观众名字合成一条回向发回去。
+
+    只读文字留言，不回应频道自己发的话；每场最多发 BLESS_MAX 条（默认 20），省 API 配额。
+    """
+    env = read_env(name)
+    poll = max(60, int(float(env.get("BLESS_POLL", "180"))))
+    limit = int(env.get("BLESS_MAX", "20"))
+    deadline = time.time() + (float(max_seconds) if max_seconds else 12 * 3600)
+    cfg = load_oauth()
+
+    chat_id = None
+    while time.time() < deadline and not chat_id:      # 等直播进入「直播中」
+        auth = {"Authorization": f"Bearer {access_token(cfg)}"}
+        code, res = http("GET", f"{API}/liveBroadcasts?part=snippet,status&id={bid}", headers=auth)
+        items = res.get("items") or [] if code == 200 else []
+        if items and items[0]["status"].get("lifeCycleStatus") == "live":
+            chat_id = items[0]["snippet"].get("liveChatId")
+        if items and items[0]["status"].get("lifeCycleStatus") == "complete":
+            return
+        if not chat_id:
+            time.sleep(120)
+    if not chat_id:
+        return
+
+    page, sent = "", 0
+    while time.time() < deadline and sent < limit:
+        auth = {"Authorization": f"Bearer {access_token(cfg)}"}
+        url = f"{API}/liveChat/messages?liveChatId={chat_id}&part=snippet,authorDetails&maxResults=200" + (f"&pageToken={page}" if page else "")
+        code, res = http("GET", url, headers=auth)
+        if code in (403, 404):                           # 聊天室已关（直播结束）或配额用完
+            print(f"聊天室回向结束（{code}），本场发了 {sent} 条", flush=True)
+            return
+        if code == 200:
+            page = res.get("nextPageToken", page)
+            names = [m["authorDetails"].get("displayName", "")
+                     for m in res.get("items", [])
+                     if m.get("snippet", {}).get("type") == "textMessageEvent"
+                     and not m.get("authorDetails", {}).get("isChatOwner")]
+            # 第一次读到的是开播以来的留言，也一并回向；之后靠 pageToken 只拿新留言
+            text = bless_text(names, sent)
+            if text:
+                code, out = http("POST", f"{API}/liveChat/messages?part=snippet", {
+                    "snippet": {"liveChatId": chat_id, "type": "textMessageEvent",
+                                "textMessageDetails": {"messageText": text}}}, auth)
+                if code in (200, 201):
+                    sent += 1
+                    print(f"已回向：{text}", flush=True)
+        time.sleep(poll)
+    print(f"聊天室回向结束，本场发了 {sent} 条", flush=True)
+
+
 def main():
     if len(sys.argv) >= 2 and sys.argv[1] == "auth":
         cmd_auth()
@@ -209,6 +319,8 @@ def main():
         cmd_chat(sys.argv[2], sys.argv[3])
     elif len(sys.argv) >= 3 and sys.argv[1] == "new-broadcast":
         cmd_new_broadcast(sys.argv[2])
+    elif len(sys.argv) >= 4 and sys.argv[1] == "bless":
+        cmd_bless(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) >= 5 else None)
     else:
         sys.exit(__doc__)
 
