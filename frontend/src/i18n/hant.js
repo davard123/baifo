@@ -17,6 +17,32 @@ export function toHant(path = '/') {
   return `${HANT_PREFIX}${path === '/' ? '/' : path}`
 }
 
+// 简繁偏好：访客手动点过「简体中文 / 繁體中文」就记住；没点过的，按浏览器语言判断。
+// 频道观众七成在台湾、香港、马来西亚（2026-11 YouTube 后台），从频道点进来的人不该先看到简体。
+const SCRIPT_KEY = 'fopusha-script-v1'
+
+export function rememberScript(value) {
+  try { localStorage.setItem(SCRIPT_KEY, value) } catch { /* 存不了就算了 */ }
+}
+
+function savedScript() {
+  try { return localStorage.getItem(SCRIPT_KEY) || '' } catch { return '' }
+}
+
+// 浏览器语言列表里第一个中文项是台湾、香港、澳门或标了 Hant，就算读繁体的人
+export function prefersTraditional(languages = []) {
+  const first = languages.map((l) => String(l).toLowerCase()).find((l) => l.startsWith('zh'))
+  return !!first && /^zh-(tw|hk|mo|hant)/.test(first)
+}
+
+// 当前在简体网址上、又该看繁体的话，返回要跳去的繁体网址；否则返回空字符串
+export function autoHantTarget(location, languages, saved = savedScript()) {
+  if (isHantPath(location.pathname)) return ''
+  if (saved === 'hans') return ''
+  if (saved !== 'hant' && !prefersTraditional(languages)) return ''
+  return toHant(location.pathname) + (location.search || '') + (location.hash || '')
+}
+
 let converterPromise = null
 export function loadConverter() {
   if (!converterPromise) {
