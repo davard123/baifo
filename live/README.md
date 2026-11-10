@@ -158,3 +158,27 @@ PLAYLIST="dabeizhou_sing xinjing_music amituo_sing pumen_sing puxian_sing jingan
 名字不会印到直播画面上：画面是预先做好直接推送的，不重新编码。要印到画面上得改成实时编码，1 核的服务器带不动。
 
 手动试一次：`sudo python3 /opt/fopusha-live/yt_api.py bless <名称> <直播的 watch?v= 后面那串> 600`
+
+## 九、按钟点换场 + 开场共修（2026-11-09 新增）
+
+在 env 里加：
+
+```
+SESSION_STARTS="06:00 18:00"   # 每天几点开新一场（共修时间），空格分隔
+SESSION_TZ=America/Los_Angeles # 上面钟点的时区，默认美西（夏令时自动跟着变）
+END_EARLY_MIN=10               # 每场提前几分钟收，留给 YouTube 结束上一场；6:00 开的那场 17:50 结束
+OPENING=xinjing_music          # 每场开场先连播的素材
+OPENING_REPEAT=7               # 连播几遍，再进入 PLAYLIST 随机轮播
+```
+
+- 设了 `SESSION_STARTS` 就不再按 `SESSION_HOURS` 计时，换场永远对齐钟点，不会每天往前漂。一场最长 11 小时 55 分。
+- 服务在空档里（离钟点不到 END_EARLY_MIN + 5 分钟）启动，会先等到钟点再开播；在场次中间启动，就开一场到下一个钟点前结束的短场。
+- 服务重启接着上一场时不重复开场共修，直接进轮播。
+- 标题配合 `<名称>.titles` 按开播钟点挑（见第八节），例如：
+
+```
+00-12|每日6点共修·心经｜美西早6点 北京晚10点｜24小时佛经唱诵｜Buddhist Chanting Live
+12-24|每日6点共修·心经｜美西晚6点 北京早10点｜24小时佛经唱诵｜Buddhist Chanting Live
+```
+
+注意：北京时间写在标题里是死的，美国夏令时（3 月到 11 月）期间要改成北京晚 9 点、早 9 点。
