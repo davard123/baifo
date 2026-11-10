@@ -241,9 +241,10 @@ def cmd_chat(name, bid):
     print(f"已发 {len(lines)} 条聊天留言")
 
 
-BLESS_WORDS = ("愿以此功德，回向{names}：平安吉祥，所求如愿。🙏",
-               "为{names}回向：身心安康，阖家平安。🙏",
-               "已为{names}一同回向：消灾免难，福慧增长。🙏")
+# 观众七成在台湾等东八区，回向用繁体
+BLESS_WORDS = ("願以此功德，迴向{names}：平安吉祥，所求如願。🙏",
+               "為{names}迴向：身心安康，闔家平安。🙏",
+               "已為{names}一同迴向：消災免難，福慧增長。🙏")
 
 
 def bless_text(names, index=0):
