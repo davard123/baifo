@@ -1,6 +1,7 @@
 // 诵经页的 SEO。经文全文和逐句时间轴都从这里进来，所以不能被主包静态引用：
 // 构建脚本（预渲染、sitemap、检查）静态 import；浏览器只在访问 /jing 时由 getSeoByPath 动态加载。
 import { SUTRAS, sutraPlainText } from '../src/data/sutras.js'
+import { getFangweiPages } from './seo.fangwei.js'
 import {
   SITE,
   assemblePages,
@@ -99,7 +100,7 @@ export function getJingPages() {
   return [jingListPage(), ...SUTRAS.map(sutraPage)]
 }
 
-// 全站页面（含诵经页），给构建脚本用
+// 全站页面（含诵经页、财神方位与入宅吉日页），给构建脚本用
 export function getStaticPages() {
-  return assemblePages(getJingPages())
+  return [...assemblePages(getJingPages()), ...getFangweiPages()]
 }

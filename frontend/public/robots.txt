@@ -51,3 +51,4 @@ Allow: /
 Crawl-delay: 1
 Sitemap: https://fopusha.com/sitemap.xml
 Sitemap: https://fopusha.com/sitemap.txt
+Sitemap: https://fopusha.com/sitemap-en.xml

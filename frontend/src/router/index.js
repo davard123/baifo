@@ -16,6 +16,8 @@ const NianjingPage = () => import('../pages/NianjingPage.vue')
 const LifoPage = () => import('../pages/LifoPage.vue')
 const QifuPage = () => import('../pages/QifuPage.vue')
 const QiucaiPage = () => import('../pages/QiucaiPage.vue')
+const FangweiPage = () => import('../pages/FangweiPage.vue')
+const RuzhaiPage = () => import('../pages/RuzhaiPage.vue')
 const NotFoundPage = () => import('../pages/NotFoundPage.vue')
 
 function withTrailingSlashTarget(target) {
@@ -55,6 +57,10 @@ const PAGE_ROUTES = [
     { path: '/nianjing/:slug', component: NianjingPage },
     { path: '/qiucai', component: QiucaiPage },
     { path: '/qiucai/:slug', component: QiucaiPage },
+    { path: '/caishen-fangwei', component: FangweiPage },
+    { path: '/caishen-fangwei/:date', component: FangweiPage },
+    { path: '/ruzhai-jiri', component: RuzhaiPage },
+    { path: '/ruzhai-jiri/:month', component: RuzhaiPage },
 ]
 
 // 繁体版：每个页面在 /zh-hant 下各有一份，组件相同，文字在显示时转换

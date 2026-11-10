@@ -53,6 +53,7 @@ const ANCESTOR_TOPIC_LINKS = [
 ]
 
 const QIUCAI_TOPIC_LINKS = [
+  ['/caishen-fangwei', '今日财神方位'],
   ['/topic/ying-caishen', '正月初五迎财神'],
   ['/topic/qiucai-bai-na-wei', '求财拜哪位财神'],
   ['/topic/bai-caishen-gongpin', '拜财神的供品与禁忌'],
@@ -161,6 +162,42 @@ export function getStaticNavigation(page, pages) {
       ['/nianjing', '在线念经（带拼音）'],
       ['/lifo', '礼佛祈愿'],
       ['/qifu', '祈福池'],
+      ['/caishen-fangwei', '今日财神方位'],
+      ['/ruzhai-jiri', '入宅吉日'],
+    ]))
+  }
+
+  if (currentPath === '/caishen-fangwei' || currentPath.startsWith('/caishen-fangwei/')) {
+    // 按日期的方位页串成一条链：首页列出最近两周，每一页再链到前一天、后一天，保证不开 JS 也能逐页爬到
+    const dayPaths = Array.from(byPath.keys()).filter((path) => /^\/caishen-fangwei\/\d{4}-\d{2}-\d{2}$/.test(path)).sort()
+    const dayLabel = (path) => `${path.slice(-10)} 财神方位`
+    if (currentPath === '/caishen-fangwei') {
+      addGroup('最近两周', dayPaths.slice(0, 14).map((path) => ({ path, label: dayLabel(path) })))
+    } else {
+      const index = dayPaths.indexOf(currentPath)
+      addGroup('前后几天', [dayPaths[index - 1], dayPaths[index + 1]]
+        .filter(Boolean)
+        .map((path) => ({ path, label: dayLabel(path) })))
+    }
+    addGroup('财神方位', routeCandidates(pages, [['/caishen-fangwei', '今日财神方位']]))
+    addGroup('节日财神方位', Array.from(byPath.entries())
+      .filter(([path, target]) => path.startsWith('/caishen-fangwei/') && /除夕|大年初一|迎财神|元宵/.test(target.title))
+      .map(([path, target]) => ({ path, label: target.title.split('：')[0] })))
+    addGroup('拜财神', routeCandidates(pages, [
+      ['/qiucai', '在线拜财神'],
+      ['/topic/ying-caishen', '正月初五迎财神'],
+      ['/ruzhai-jiri', '入宅吉日'],
+    ]))
+  }
+
+  if (currentPath === '/ruzhai-jiri' || currentPath.startsWith('/ruzhai-jiri/')) {
+    addGroup('入宅吉日', routeCandidates(pages, [['/ruzhai-jiri', '入宅吉日首页']]))
+    addGroup('按月查', Array.from(byPath.entries())
+      .filter(([path]) => path.startsWith('/ruzhai-jiri/'))
+      .map(([path, target]) => ({ path, label: target.heading })))
+    addGroup('相关', routeCandidates(pages, [
+      ['/caishen-fangwei', '今日财神方位'],
+      ['/qiucai', '在线拜财神'],
     ]))
   }
 

@@ -108,6 +108,37 @@ const submitting = ref(false)
 const submitError = ref('')
 const result = ref(null)
 const cardUrl = ref('')
+// 祝福卡两种：自己的求财卡；给爸妈的祈福卡（转发到家人群用）
+const cardKind = ref('self')
+const PARENT_BLESSINGS = [
+  '今天在网上为全家拜了{deity}，上了香、点了灯。愿爸妈身体健康、福寿安康，家里平平安安。',
+  '替爸妈在{deity}面前上了一炷香：愿二老吃得香、睡得好、少操心，福气满满，长命百岁。',
+  '人不在身边，心意先到。为爸妈拜了{deity}，愿家中财源广进、福寿双全，事事顺心。',
+]
+function pickParentBlessing(deityName) {
+  const text = PARENT_BLESSINGS[Math.floor(Math.random() * PARENT_BLESSINGS.length)]
+  return text.replaceAll('{deity}', deityName)
+}
+function parentCardData(base) {
+  return {
+    ...base,
+    title: '为爸妈祈福',
+    subline: `敬拜 ${base.deity} · 祝爸妈福寿安康`,
+    blessing: pickParentBlessing(base.deity),
+    signoff: `${base.name} 敬上`,
+  }
+}
+async function makeParentsCard() {
+  if (!result.value) return
+  cardKind.value = 'parents'
+  cardUrl.value = await drawCard(parentCardData(result.value))
+  track('qiucai_parents_card', { deity: slugOf(deity.value) })
+}
+async function makeSelfCard() {
+  if (!result.value) return
+  cardKind.value = 'self'
+  cardUrl.value = await drawCard(result.value)
+}
 
 const stats = ref({ lastDay: '', streak: 0, totalQi: 0, totalDays: 0 })
 const wall = ref([])
@@ -540,6 +571,7 @@ function resetRitual() {
   particles.value = []
   result.value = null
   cardUrl.value = ''
+  cardKind.value = 'self'
   form.value.wish = ''
 }
 
@@ -619,6 +651,7 @@ async function submit() {
     }
     burst('full', 24)
     track('qiucai_wish_submit', { deity: slugOf(deity.value), scene: form.value.scene })
+    cardKind.value = 'self'
     try { cardUrl.value = await drawCard(result.value) } catch { cardUrl.value = '' }
     loadWall()
   } catch (error) {
@@ -635,7 +668,7 @@ async function anotherBlessing() {
     blessing: pickWish(form.value.scene, result.value.name),
     couplet: pickCouplet(),
   }
-  cardUrl.value = await drawCard(result.value)
+  cardUrl.value = await drawCard(cardKind.value === 'parents' ? parentCardData(result.value) : result.value)
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -707,11 +740,11 @@ async function drawCard(data) {
 
   ctx.fillStyle = '#ffd86b'
   ctx.font = `bold 96px ${serif}`
-  ctx.fillText('求财祝福', canvas.width / 2, 270)
+  ctx.fillText(data.title || '求财祝福', canvas.width / 2, 270)
 
   ctx.fillStyle = '#fdecc1'
   ctx.font = `36px ${serif}`
-  ctx.fillText(`敬拜 ${data.deity} · ${data.scene}`, canvas.width / 2, 340)
+  ctx.fillText(data.subline || `敬拜 ${data.deity} · ${data.scene}`, canvas.width / 2, 340)
 
   // 两侧对联（竖排）
   ctx.font = `bold 40px ${serif}`
@@ -731,7 +764,7 @@ async function drawCard(data) {
 
   ctx.fillStyle = '#ffd86b'
   ctx.font = `bold 52px ${serif}`
-  ctx.fillText(`${data.name} 鸿运当头`, canvas.width / 2, 1095)
+  ctx.fillText(data.signoff || `${data.name} 鸿运当头`, canvas.width / 2, 1095)
 
   ctx.fillStyle = '#fdecc1'
   ctx.font = `28px ${serif}`
@@ -837,7 +870,7 @@ useWakeLock()
         <h1>{{ pageDeity ? `在线拜${pageDeity.name}` : '求财祈福' }}</h1>
         <span class="qc-full__today">
           <strong class="qc-full__deity">{{ deity.name }} · {{ deity.title }}</strong>
-          <span>今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></span>
+          <router-link to="/caishen-fangwei/" class="qc-full__fangwei">今日{{ todayInfo.ganzhi }} · 财神方位 <strong>{{ todayInfo.direction }}</strong></router-link>
         </span>
         <button
           type="button"
@@ -1119,7 +1152,9 @@ useWakeLock()
           <p class="qc-result__couplet">{{ result.couplet[0] }}　{{ result.couplet[1] }}　· {{ result.couplet[2] }}</p>
           <img v-if="cardUrl" :src="cardUrl" alt="求财祝福卡" class="qc-card" />
           <div class="qc-result__btns">
-            <a v-if="cardUrl" :href="cardUrl" :download="`求财祝福卡-${result.name}.png`" class="submit-btn" @click="track('qiucai_card_download', { deity: slugOf(deity) })">保存祝福卡</a>
+            <a v-if="cardUrl" :href="cardUrl" :download="`${cardKind === 'parents' ? '给爸妈的祈福卡' : '求财祝福卡'}-${result.name}.png`" class="submit-btn" @click="track('qiucai_card_download', { deity: slugOf(deity), kind: cardKind })">保存祝福卡</a>
+            <button v-if="cardKind === 'self'" type="button" class="ghost-btn" @click="makeParentsCard">做一张给爸妈的</button>
+            <button v-else type="button" class="ghost-btn" @click="makeSelfCard">换回我的求财卡</button>
             <button type="button" class="ghost-btn" @click="anotherBlessing">换一句祝福</button>
             <button type="button" class="ghost-btn" @click="resetAll">再拜一次</button>
           </div>
@@ -1340,6 +1375,8 @@ useWakeLock()
 .qc-full__today { margin-left: auto; display: grid; gap: 1px; font-size: 12px; color: rgba(245, 227, 191, 0.72); text-align: right; }
 .qc-full__deity { font-size: 15px; }
 .qc-full__today strong { color: #f4ca73; }
+.qc-full__fangwei { color: inherit; text-decoration: none; }
+.qc-full__fangwei:hover { text-decoration: underline; }
 .qc-full__fullscreen {
   flex: none;
   min-width: 40px;
@@ -1832,7 +1869,7 @@ useWakeLock()
 @media (max-width: 380px) {
   .qc-full__bar h1 { font-size: 14px; }
   .qc-full__today { max-width: 76px; }
-  .qc-full__today > span { display: none; }
+  .qc-full__today > span, .qc-full__today > .qc-full__fangwei { display: none; }
   .qc-way { font-size: 11px; }
   .qc-way__img { width: 28px; height: 28px; }
   .qc-deity__seal { width: 38px; height: 38px; }

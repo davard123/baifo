@@ -835,5 +835,9 @@ export async function getSeoByPath(path) {
     const { getJingPages } = await import('./seo.jing.js')
     return getJingPages().find((page) => page.path === normalizedPath) ?? null
   }
+  if (/^\/(caishen-fangwei|ruzhai-jiri)(\/|$)/.test(normalizedPath)) {
+    const { getFangweiSeo } = await import('./seo.fangwei.js')
+    return getFangweiSeo(normalizedPath)
+  }
   return assemblePages([]).find((page) => page.path === normalizedPath) ?? null
 }

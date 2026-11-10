@@ -21,6 +21,8 @@ const loading = ref(false)
 const waitSeconds = ref(0)
 const error = ref('')
 const cardUrl = ref('')
+// 同一张 AI 图再排一张竖版手机壁纸（锁屏时钟在上方，主体放中间偏下）
+const wallpaperUrl = ref('')
 const left = ref(null)
 let waitTimer = null
 
@@ -154,6 +156,48 @@ async function composeCard(imageSrc) {
   return canvas.toDataURL('image/jpeg', 0.9)
 }
 
+async function composeWallpaper(imageSrc) {
+  const img = await loadImage(imageSrc)
+  const W = 1080
+  const H = 2340
+  const canvas = document.createElement('canvas')
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')
+  const serif = "'Noto Serif SC', 'Source Han Serif CN', STSong, SimSun, serif"
+
+  // 底色：同一张图放大铺满再压暗，避免上下留白太素
+  const coverScale = Math.max(W / img.width, H / img.height)
+  ctx.filter = 'blur(28px) brightness(0.55)'
+  ctx.drawImage(img, (W - img.width * coverScale) / 2, (H - img.height * coverScale) / 2, img.width * coverScale, img.height * coverScale)
+  ctx.filter = 'none'
+
+  // 主图：宽度占满，放在锁屏时钟下方
+  // 竖图最高 1200，超过就等比缩小居中，避免压到下面的字
+  const fit = Math.min(W / img.width, 1200 / img.height)
+  const mainW = Math.round(img.width * fit)
+  const mainH = Math.round(img.height * fit)
+  const top = 760
+  ctx.drawImage(img, (W - mainW) / 2, top, mainW, mainH)
+  ctx.fillStyle = '#e6b866'
+  ctx.fillRect((W - mainW) / 2, top - 4, mainW, 4)
+  ctx.fillRect((W - mainW) / 2, top + mainH, mainW, 4)
+
+  ctx.textAlign = 'center'
+  ctx.fillStyle = '#ffd86b'
+  ctx.font = `bold 64px ${serif}`
+  ctx.fillText(currentTheme.value.label, W / 2, top + mainH + 110)
+  ctx.fillStyle = '#fff3d6'
+  ctx.font = `40px ${serif}`
+  wrap(ctx, currentTheme.value.blessing, W - 160).slice(0, 2).forEach((line, i) => {
+    ctx.fillText(line, W / 2, top + mainH + 180 + i * 56)
+  })
+  ctx.fillStyle = 'rgba(253, 236, 193, 0.8)'
+  ctx.font = `28px ${serif}`
+  ctx.fillText(`${name.value.trim() || '有缘人'}的开运壁纸 · AI 祈愿图 · fopusha.com`, W / 2, H - 90)
+  return canvas.toDataURL('image/jpeg', 0.9)
+}
+
 async function generate() {
   error.value = ''
   if (profession.value === 'other' && !custom.value.trim()) {
@@ -173,6 +217,7 @@ async function generate() {
   track('vision_generate', choice)
   loading.value = true
   cardUrl.value = ''
+  wallpaperUrl.value = ''
   waitSeconds.value = 0
   waitTimer = setInterval(() => {
     waitSeconds.value += 1
@@ -183,6 +228,7 @@ async function generate() {
     if (!response.ok || !data.image) throw new Error(data.error || '生成没有成功，请稍后再试。')
     left.value = data.left
     cardUrl.value = await composeCard(data.image)
+    wallpaperUrl.value = await composeWallpaper(data.image).catch(() => '')
     track('vision_generate_success', choice)
   } catch (err) {
     track('vision_generate_fail', choice)
@@ -243,6 +289,7 @@ onBeforeUnmount(() => {
         <img :src="cardUrl" alt="我的成功愿景图" />
         <div class="vision-result__btns">
           <a :href="cardUrl" :download="`愿景图-${name || '有缘人'}.jpg`" class="submit-btn" @click="track('vision_download', { profession, theme })">下载愿景图</a>
+          <a v-if="wallpaperUrl" :href="wallpaperUrl" :download="`开运壁纸-${name || '有缘人'}.jpg`" class="submit-btn" @click="track('vision_wallpaper_download', { profession, theme })">下载手机壁纸</a>
           <button v-if="left !== 0" type="button" class="ghost-btn" @click="cardUrl = ''">换个主题再画一张</button>
         </div>
         <p v-if="left !== null" class="qc-note">今天还可以生成 {{ left }} 张。</p>

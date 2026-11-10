@@ -200,7 +200,7 @@ onBeforeUnmount(() => ro?.disconnect())
 <template>
   <!-- 经目 -->
   <main v-if="!slug" class="nj-list">
-    <nav class="nj-crumb"><router-link to="/">← 返回首页</router-link></nav>
+    <nav class="nj-crumb"><router-link to="/">← 返回首页</router-link><a href="/chant/" class="nj-en" lang="en" data-keep-script>English</a></nav>
     <header class="nj-list-head">
       <p class="nj-kicker">在线念经</p>
       <h1>经文带拼音，念到哪里走到哪里</h1>
@@ -340,6 +340,7 @@ onBeforeUnmount(() => ro?.disconnect())
   color: var(--ink-warm, #392b24);
 }
 .nj-crumb a { color: var(--ink-soft, #756558); text-decoration: none; }
+.nj-crumb .nj-en { float: right; color: #8a4a1c; font-size: 0.9rem; }
 .nj-list-head { margin: 18px 0 24px; }
 .nj-kicker { color: #b5832f; letter-spacing: 0.2em; font-size: 0.82rem; margin: 0; }
 .nj-list-head h1 { font-size: clamp(1.5rem, 4.6vw, 2.2rem); margin: 6px 0 10px; color: #7a2a1c; }
