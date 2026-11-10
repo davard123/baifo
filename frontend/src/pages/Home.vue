@@ -1357,4 +1357,41 @@ onMounted(() => {
   .sutra-banner__media { min-height: 0; aspect-ratio: 16 / 9; }
   .sutra-banner__content { padding: 20px; }
 }
+
+/* READABLE-ON-PAPER · 2026-11-09
+   首页底色早已换成米白，但这些字还留着给深色底用的浅金色，对比度只有 1.1–1.6，几乎看不见（David 截图反馈）。
+   这里按底色分开：米白底上用深褐、朱红；深色卡片（祈福池、视频、心愿墙）里的字不动。 */
+.section-title {
+  font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  font-size: clamp(1.75rem, 4.4vw, 2.4rem);
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+}
+.catalog-section .section-kicker,
+.wishes-section .section-kicker { color: #855408; font-size: 0.85rem; font-weight: 600; }
+.catalog-section .section-title,
+.wishes-section .section-title { color: #8a2216; }
+.catalog-section .section-title::after,
+.wishes-section .section-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #c9952f, rgba(201, 149, 47, 0));
+}
+.catalog-section .section-sub,
+.wishes-section .section-sub { color: #5a4a3e; font-size: 1.02rem; line-height: 1.85; }
+.catalog-section .catalog-links a { color: #8a4a1c; font-weight: 600; }
+.wishes-section .record-title { color: #392b24; }
+.home-promise { color: #5a4a3e; }
+.qiucai-banner .qiucai-banner__kicker { color: #855408; }
+.qiucai-banner .qiucai-banner__note { color: #6a5540; }
+.site-footer,
+.site-footer p,
+.site-footer .footer-contact { color: #756558; }
+.site-footer .footer-brand { color: #8a5a14; }
+.site-footer a,
+.site-footer .footer-contact a { color: #8a4a1c; }
 </style>

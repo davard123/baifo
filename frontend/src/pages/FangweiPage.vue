@@ -192,7 +192,7 @@ function goWorship() {
 .sub-crumb a { color: #756558; text-decoration: none; }
 .sub-crumb span { color: #b8a898; }
 .sub-head { margin: 18px 0 18px; }
-.sub-kicker { margin: 0; color: #b5832f; letter-spacing: 0.2em; font-size: 0.82rem; }
+.sub-kicker { margin: 0; color: #855408; letter-spacing: 0.2em; font-size: 0.82rem; }
 .sub-head h1 { margin: 6px 0 0; font-size: clamp(1.6rem, 5vw, 2.3rem); color: #7a2a1c; }
 
 .fw-card {

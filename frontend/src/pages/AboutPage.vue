@@ -70,7 +70,7 @@ const topics = [
 }
 .sub-crumb a { color: #756558; text-decoration: none; }
 .sub-head { margin: 18px 0 8px; }
-.sub-kicker { margin: 0; color: #b5832f; letter-spacing: 0.2em; font-size: 0.82rem; }
+.sub-kicker { margin: 0; color: #855408; letter-spacing: 0.2em; font-size: 0.82rem; }
 .sub-head h1 { margin: 6px 0 0; font-size: clamp(1.6rem, 5vw, 2.2rem); color: #7a2a1c; }
 .ab-block { margin-top: 26px; }
 .ab-block h2 { margin: 18px 0 10px; font-size: 1.2rem; color: #7a2a1c; }

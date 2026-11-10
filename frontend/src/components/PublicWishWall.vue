@@ -85,7 +85,7 @@ watch(statsVersion, () => setTimeout(() => loadTotal(true), 1500))
 .public-wall__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
 .public-wall__item { padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(165, 100, 26, .22); background: #fff3df; min-width: 0; }
 .public-wall__meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; font-size: 13px; color: #392b24; }
-.public-wall__tag { color: #a5641a; }
-.public-wall__date { margin-left: auto; color: #8a7764; font-size: 12px; }
+.public-wall__tag { color: #8a4f10; }
+.public-wall__date { margin-left: auto; color: #6f5d4b; font-size: 12px; }
 .public-wall__wish { margin: 6px 0 0; font-size: 15px; line-height: 1.75; color: #2f241e; overflow-wrap: anywhere; white-space: pre-line; }
 </style>

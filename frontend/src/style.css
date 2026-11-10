@@ -230,3 +230,21 @@ button, .page-link, .back-link, .entry-btn, .setup-btn { min-height: 44px; }
   .guide-shell .hero, .topic-shell .hero { padding: 26px 20px; }
   .home-shell .catalog-section, .home-shell .wishes-section { border-radius: 18px; }
 }
+
+/* READABLE-ON-PAPER · 2026-11-09
+   米白底页面上残留的浅金色字（对比度 1.1–1.5，几乎看不见）。上面「FULL-SITE READING SYSTEM」那组规则
+   会被各页面自己的样式盖掉，这里用更具体的选择器钉住。深色卡片里的字不受影响。 */
+main.ancestors-shell .site-header h1,
+main.guide-shell .hero.card h1,
+main.topic-shell .hero.card h1,
+main.ancestors-shell .catalog-section .section-title,
+main.guide-shell .copy-section h2,
+main.guide-shell .copy-section h3,
+main.guide-shell .side-section h2 { color: #8a2216 !important; }
+main.ancestors-shell .site-header p,
+main.ancestors-shell .catalog-section .section-sub,
+main.ancestors-shell .catalog-section .selection-guide p,
+main.guide-shell .copy-section p,
+main.guide-shell .side-section p { color: #5a4a3e !important; }
+main.guide-shell .side-links a,
+main.guide-shell .copy-section p a { color: #8a4a1c !important; }
