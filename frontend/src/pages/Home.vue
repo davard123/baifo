@@ -63,9 +63,11 @@ const topicPages = ['merit-dedication', 'offering-incense', 'offering-light', 'h
 // 首页顶部固定导航（2026-11-09 David：固定在顶上一直跟着滑；点了直接进具体页面，不在首页上下滚）
 const homeNav = [
   { label: '求财祈福', to: '/qiucai/' },
+  { label: '财神方位', to: '/caishen-fangwei/' },
   { label: '礼佛', to: '/lifo/' },
   { label: '祈福池', to: '/qifu/' },
   { label: '祭祖', to: '/ancestors/' },
+  { label: '入宅吉日', to: '/ruzhai-jiri/' },
   { label: '念经', to: '/nianjing/' },
   { label: '诵经视频', to: '/jing/' },
   { label: '念佛计数', to: '/nianfo/' },
