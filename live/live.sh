@@ -63,7 +63,7 @@ stop=0
 # 场次记录：服务重启或断线很快重连时，YouTube 还算同一场直播。
 # 所以每场的开始时间记在文件里，推流期间每 30 秒更新一次心跳；
 # 重启后如果心跳离现在不到 GAP_SECONDS 秒，就接着上一场计时，保证 YouTube 上一场不会超过 12 小时。
-STATE="$LIVE_HOME/run/$name.session"; HEART="$LIVE_HOME/run/$name.heartbeat"
+STATE="$LIVE_HOME/run/$name.session"; BID_FILE="$LIVE_HOME/run/$name.bid"; HEART="$LIVE_HOME/run/$name.heartbeat"
 mkdir -p "$LIVE_HOME/run"
 ( while sleep 30; do [[ -f "$HEART.on" ]] && touch "$HEART"; done ) &
 hb_pid=$!
@@ -79,8 +79,10 @@ fi
 while (( ! stop )); do
   if (( resume )); then
     start=$(cat "$STATE"); resume=0
+    bid=$(cat "$BID_FILE" 2>/dev/null || true)
     log "接着上一场直播（$(( ($(date +%s) - start) / 60 )) 分钟前开始），本场还剩 $(( (start + session_secs - $(date +%s)) / 60 )) 分钟"
   else
+    bid=""
     # 授权过 YouTube API 的话，每场先建好一个自动开始/自动结束的直播活动
     if [[ -s "$CONF_DIR/youtube-oauth.json" ]]; then
       if bid=$(CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" new-broadcast "$name" 2>&1); then
@@ -95,18 +97,21 @@ while (( ! stop )); do
               log "聊天留言第 $try 次没发出去：$out"
             done ) &
         fi
-        # 聊天室回向：BLESS=1 时开一个后台进程，本场结束时一并停掉
-        if [[ "$(source "$env_file" >/dev/null 2>&1; printf '%s' "${BLESS:-}")" == "1" ]]; then
-          CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" bless "$name" "$bid" "$session_secs" > >(while IFS= read -r line; do log "$line"; done) 2>&1 &
-          bless_pid=$!
-        fi
+        echo "$bid" > "$BID_FILE"
       else
         # 建场失败（授权过期、配额用完等）也照样推流：频道上这时需要人在 Studio 里点一次开播
         log "YouTube 建场失败，本场先照常推流，需要在 Studio 手动开播：$bid"
+        bid=""; rm -f "$BID_FILE"
       fi
     fi
     start=$(date +%s); echo "$start" > "$STATE"
     log "开始新一场直播，最长 $((session_secs / 60)) 分钟"
+  fi
+  # 聊天室回向：BLESS=1 时开一个后台进程，本场结束时一并停掉；服务重启接着上一场时也照样开
+  if [[ -n "${bid:-}" && "$(source "$env_file" >/dev/null 2>&1; printf '%s' "${BLESS:-}")" == "1" ]]; then
+    CONF_DIR="$CONF_DIR" python3 "$(dirname "$0")/yt_api.py" bless "$name" "$bid" "$(( start + session_secs - $(date +%s) ))" > >(while IFS= read -r line; do log "$line"; done) 2>&1 &
+    bless_pid=$!
+    log "聊天室回向已开启（每 $(source "$env_file" >/dev/null 2>&1; printf '%s' "${BLESS_POLL:-180}") 秒读一次聊天室）"
   fi
   touch "$HEART" "$HEART.on"
   # 每场重新读一次 env 里的 PLAYLIST：改了播放列表不用重启，下一场自动生效
