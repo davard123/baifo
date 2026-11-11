@@ -181,3 +181,40 @@ OPENING_REPEAT=7               # 连播几遍，再进入 PLAYLIST 随机轮播
 00-12|早課 · 心經共修｜每天台灣早上8點｜24小時佛經唱誦 大悲咒 金剛經 普門品｜Buddhist Chanting Live
 12-24|晚課 · 心經共修｜每天台灣晚上8點｜24小時佛經唱誦 地藏經 阿彌陀經 普賢行願品｜Buddhist Chanting Live
 ```
+
+## 十、早课 / 晚课：开头固定念诵，再进唱诵轮播（2026-11-11 新增）
+
+早课、晚课开头念什么、按什么顺序是固定的，不打乱；念完再进入 PLAYLIST 随机轮播唱诵。
+上午开的场（台湾早 8 点）用 `OPENING_AM`，下午/晚上开的场（台湾晚 8 点）用 `OPENING_PM`。
+每项写素材名，要连念几遍就写 `名称*遍数`。还没生成好的素材自动跳过，生成好以后下一场自动加进来，不用改配置。
+
+env 里：
+
+```
+OPENING_AM="lengyan_recite shixiaozhou_recite dabeizhou_recite*3 xinjing_recite*3"
+OPENING_PM="amituo_recite xinjing_recite*3"
+```
+
+| | 顺序（照汉传寺院课诵本） | 大约时长 |
+|---|---|---|
+| 早课 | 楞严咒 → 十小咒 → 大悲咒 ×3 → 心经 ×3 | 楞严咒做好前约 15 分钟 |
+| 晚课 | 阿弥陀经 → 心经 ×3 | 约 13 分钟 |
+
+晚课的往生咒、八十八佛大忏悔文、蒙山施食暂时没有素材，做好以后按同样方法加进 `OPENING_PM`。
+
+第一次启用：
+
+```bash
+cd /opt/fopusha-live
+./prepare.sh dabeizhou_recite && ./prepare.sh xinjing_recite && ./prepare.sh amituo_recite && ./prepare.sh shixiaozhou_recite
+sudo nano /etc/fopusha-live/<名称>.env      # 加上面两行，可以删掉旧的 OPENING / OPENING_REPEAT
+```
+
+不用重启，下一场开播时生效。日志会写「本场播放：开场 dabeizhou_recite×3 xinjing_recite×3，然后轮播 …」。
+
+新的读诵视频（十小咒起）用 `recite/` 里的脚本做，不再用本地 pipeline：
+
+```bash
+python3 recite/tts.py <经文.json> <输出目录>          # 女声逐句合成，咒语特殊读音自动换同音字
+python3 recite/render.py <输出目录> recite/<名>.json <输出.mp4>   # 佛像推近漂移、光芒、光点、逐字变色字幕
+```

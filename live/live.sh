@@ -21,7 +21,10 @@
 #                                             # 每场在下一个钟点前 END_EARLY_MIN 分钟结束，到钟点再开新一场
 #   SESSION_TZ=America/Los_Angeles            # 可选：SESSION_STARTS 用哪个时区，默认美西
 #   END_EARLY_MIN=10                          # 可选：提前几分钟收场，留给 YouTube 结束上一场
-#   OPENING=xinjing_music OPENING_REPEAT=7    # 可选：每场开场先连播某个素材若干遍（共修），再进入轮播
+#   OPENING_AM="lengyan_recite shixiaozhou_recite dabeizhou_recite*3 xinjing_recite*3"
+#                                             # 可选：上午开的场（早课）开头按顺序固定念诵，再进入轮播
+#   OPENING_PM="amituo_recite xinjing_recite*3"   # 可选：下午/晚上开的场（晚课）开头固定念诵
+#   OPENING=xinjing_music OPENING_REPEAT=7    # 旧写法：没设 OPENING_AM/PM 时，开场连播某个素材若干遍
 set -uo pipefail
 
 name="${1:?用法：live.sh <名称>}"
@@ -44,30 +47,49 @@ SESSION_TZ="${SESSION_TZ:-America/Los_Angeles}"
 END_EARLY_MIN="${END_EARLY_MIN:-10}"
 OPENING="${OPENING:-}"
 OPENING_REPEAT="${OPENING_REPEAT:-7}"
+OPENING_AM="${OPENING_AM:-}"
+OPENING_PM="${OPENING_PM:-}"
 if [[ -z "$PLAYLIST" ]]; then
   [[ -s "$MEDIA" ]] || { echo "素材不存在：$MEDIA，先运行 prepare.sh $name" >&2; exit 2; }
 fi
 
-# 每场开始时生成播放清单：开场素材（OPENING）连播 OPENING_REPEAT 遍，再接 PLAYLIST 随机轮播。
+# 每场开始时生成播放清单：先按固定顺序念开场（早课/晚课），再接 PLAYLIST 随机轮播。
+# 开场顺序：上午开的场用 OPENING_AM，下午/晚上开的场用 OPENING_PM（按 SESSION_TZ 的钟点算），
+# 都没设就用旧写法 OPENING × OPENING_REPEAT。每项写「素材名」或「素材名*遍数」，
+# 例如 OPENING_AM="lengyan_recite shixiaozhou_recite dabeizhou_recite*3 xinjing_recite*3"。
+# 还没生成好的素材自动跳过，生成好以后下一场自动加进来。
 # 轮播部分每轮重新打乱、连写多轮，ffmpeg 的 -stream_loop 只是兜底。
 # 用法：build_list [skip_opening]
 build_list() {
-  local items=() p f r opening="" n=0
+  local items=() p f r n=0 seq_spec="" item cnt opening=() desc=()
   for p in $PLAYLIST; do
     f="$LIVE_HOME/media/$p.mp4"
     [[ -s "$f" ]] && items+=("$f")
   done
   (( ${#items[@]} )) || { echo "PLAYLIST 里的素材一个都还没生成" >&2; return 1; }
-  [[ -n "$OPENING" && -s "$LIVE_HOME/media/$OPENING.mp4" ]] && opening="$LIVE_HOME/media/$OPENING.mp4"
+  if [[ -z "${1:-}" ]]; then
+    local hour; hour=$(TZ="$SESSION_TZ" date +%-H)
+    if (( hour < 12 )); then seq_spec="${OPENING_AM:-}"; else seq_spec="${OPENING_PM:-}"; fi
+    [[ -z "$seq_spec" && -n "$OPENING" ]] && seq_spec="$OPENING*$OPENING_REPEAT"
+    for item in $seq_spec; do
+      cnt=1
+      if [[ "$item" == *\** ]]; then cnt="${item##*\*}"; item="${item%\**}"; fi
+      f="$LIVE_HOME/media/$item.mp4"
+      if [[ -s "$f" ]]; then
+        for ((r = 0; r < cnt; r++)); do opening+=("$f"); done
+        (( cnt > 1 )) && desc+=("$item×$cnt") || desc+=("$item")
+      else
+        log "开场素材 $item 还没生成，先跳过"
+      fi
+    done
+  fi
   mkdir -p "$(dirname "$LIST_FILE")"
   {
-    if [[ -n "$opening" && -z "${1:-}" ]]; then
-      for ((r = 0; r < OPENING_REPEAT; r++)); do echo "$opening"; done
-    fi
+    (( ${#opening[@]} )) && printf '%s\n' "${opening[@]}"
     for ((r = 0; r < 12; r++)); do printf '%s\n' "${items[@]}" | shuf; done
   } | sed "s/'/'\\\\''/g; s/^/file '/; s/\$/'/" > "$LIST_FILE"
-  local head="" skip=0
-  if [[ -n "$opening" && -z "${1:-}" ]]; then head="开场 $OPENING × $OPENING_REPEAT，然后"; skip=$OPENING_REPEAT; fi
+  local head="" skip=${#opening[@]}
+  (( skip )) && head="开场 ${desc[*]}，然后"
   n=${#items[@]}
   log "本场播放：${head}轮播 $(sed -e "s#.*/##" -e "s#\.mp4'##" "$LIST_FILE" | tail -n +$(( skip + 1 )) | head -n "$n" | paste -sd ' ')"
 }
@@ -191,6 +213,8 @@ while (( ! stop )); do
   # 每场重新读一次 env 里的 PLAYLIST：改了播放列表不用重启，下一场自动生效
   # shellcheck disable=SC1090
   PLAYLIST="$(source "$env_file" >/dev/null 2>&1; printf '%s' "${PLAYLIST:-}")"
+  OPENING_AM="$(source "$env_file" >/dev/null 2>&1; printf '%s' "${OPENING_AM:-}")"
+  OPENING_PM="$(source "$env_file" >/dev/null 2>&1; printf '%s' "${OPENING_PM:-}")"
   if [[ -n "$PLAYLIST" ]]; then
     build_list $opening_skip || { sleep 60 & wait $!; continue; }
     input=(-f concat -safe 0 -stream_loop -1 -i "$LIST_FILE")
