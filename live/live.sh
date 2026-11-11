@@ -21,7 +21,11 @@
 #                                             # 每场在下一个钟点前 END_EARLY_MIN 分钟结束，到钟点再开新一场
 #   SESSION_TZ=America/Los_Angeles            # 可选：SESSION_STARTS 用哪个时区，默认美西
 #   END_EARLY_MIN=10                          # 可选：提前几分钟收场，留给 YouTube 结束上一场
-#   OPENING=xinjing_music OPENING_REPEAT=7    # 可选：每场开场先连播某个素材若干遍（共修），再进入轮播
+#   OPENING_0800="lengyan_recite dabeizhou_recite*7 shixiaozhou_recite xinjing_recite*3"
+#                                             # 可选：08:00 场固定开场顺序；名称*N 表示连播 N 遍
+#   OPENING_2000="amituo_recite wangsheng_recite*3"
+#                                             # 可选：20:00 场固定开场顺序；然后进入轮播
+#   OPENING=xinjing_music OPENING_REPEAT=7    # 没有对应 OPENING_HHMM 时的旧版 fallback
 set -uo pipefail
 
 name="${1:?用法：live.sh <名称>}"
@@ -48,52 +52,170 @@ if [[ -z "$PLAYLIST" ]]; then
   [[ -s "$MEDIA" ]] || { echo "素材不存在：$MEDIA，先运行 prepare.sh $name" >&2; exit 2; }
 fi
 
-# 每场开始时生成播放清单：开场素材（OPENING）连播 OPENING_REPEAT 遍，再接 PLAYLIST 随机轮播。
-# 轮播部分每轮重新打乱、连写多轮，ffmpeg 的 -stream_loop 只是兜底。
+# 每场开始时生成播放清单：按本场钟点挑 OPENING_HHMM，按顺序连播后再接
+# PLAYLIST 随机轮播。名称*N 表示同一条视频连播 N 遍；没有对应变量时保留
+# OPENING × OPENING_REPEAT 的旧行为。轮播部分每轮重新打乱、连写多轮，ffmpeg
+# 的 -stream_loop 只是兜底。
 # 用法：build_list [skip_opening]
 build_list() {
-  local items=() p f r opening="" n=0
+  local items=() p f r n=0
+  local opening_spec="" opening_slot="${OPENING_SLOT:-}"
+  local opening_var="" token base repeat raw_repeat i path
+  local session_label="共修" opening_desc="" playlist_desc=""
+  local -a opening_paths=() opening_order=() opening_tokens=()
+  local max_opening_repeat=1000
   for p in $PLAYLIST; do
     f="$LIVE_HOME/media/$p.mp4"
-    [[ -s "$f" ]] && items+=("$f")
+    if [[ -s "$f" ]]; then
+      items+=("$f")
+    else
+      log "缺少轮播素材，跳过：$p（$f）"
+    fi
   done
   (( ${#items[@]} )) || { echo "PLAYLIST 里的素材一个都还没生成" >&2; return 1; }
-  [[ -n "$OPENING" && -s "$LIVE_HOME/media/$OPENING.mp4" ]] && opening="$LIVE_HOME/media/$OPENING.mp4"
+
+  case "${opening_slot//:/}" in
+    0800) session_label="早课" ;;
+    2000) session_label="晚课" ;;
+    "")   session_label="常规场" ;;
+    *)    session_label="共修 ${opening_slot}" ;;
+  esac
+
+  if [[ -n "${1:-}" ]]; then
+    opening_desc="续场跳过开场"
+    log "本场：$session_label（${opening_slot:-无钟点}），续场跳过固定开场"
+  else
+    opening_slot="${opening_slot//:/}"
+    if [[ -n "$opening_slot" ]]; then
+      opening_var="OPENING_$opening_slot"
+      # 间接展开只读取由 clock_slot 生成的安全变量名。
+      if [[ -n "${!opening_var+x}" && -n "${!opening_var}" ]]; then
+        opening_spec="${!opening_var}"
+      fi
+    fi
+    if [[ -z "$opening_spec" && -n "$OPENING" ]]; then
+      if [[ "$OPENING_REPEAT" =~ ^[0-9]{1,4}$ ]]; then
+        repeat=$((10#$OPENING_REPEAT))
+        if (( repeat >= 1 && repeat <= max_opening_repeat )); then
+          opening_spec="$OPENING*$repeat"
+        else
+          log "无效 OPENING_REPEAT=$OPENING_REPEAT（须为 1-$max_opening_repeat），跳过旧版 fallback 开场"
+        fi
+      else
+        log "无效 OPENING_REPEAT=$OPENING_REPEAT（须为 1-$max_opening_repeat），跳过旧版 fallback 开场"
+      fi
+    fi
+
+    if [[ -n "$opening_spec" ]]; then
+      read -r -a opening_tokens <<< "$opening_spec"
+      for token in "${opening_tokens[@]}"; do
+        base="$token"
+        repeat=1
+        if [[ "$token" == *"*"* ]]; then
+          if [[ "$token" =~ ^([^*]+)\*([0-9]{1,4})$ ]]; then
+            base="${BASH_REMATCH[1]}"
+            raw_repeat="${BASH_REMATCH[2]}"
+            repeat=$((10#$raw_repeat))
+            if (( repeat < 1 || repeat > max_opening_repeat )); then
+              log "无效开场遍数，跳过：$token（须为 1-$max_opening_repeat）"
+              opening_order+=("$token（无效遍数）")
+              continue
+            fi
+          else
+            log "无效开场项，跳过：$token（格式应为 name 或 name*N）"
+            opening_order+=("$token（无效）")
+            continue
+          fi
+        fi
+        path="$LIVE_HOME/media/$base.mp4"
+        opening_order+=("$base×$repeat")
+        if [[ ! -s "$path" ]]; then
+          log "缺少开场素材，跳过：$base（$path）"
+          continue
+        fi
+        for ((i = 0; i < repeat; i++)); do
+          opening_paths+=("$path")
+        done
+      done
+    fi
+    if (( ${#opening_order[@]} )); then
+      opening_desc="${opening_order[0]}"
+      for ((i = 1; i < ${#opening_order[@]}; i++)); do
+        opening_desc+=" → ${opening_order[i]}"
+      done
+    elif [[ -n "$opening_slot" ]]; then
+      opening_desc="（未配置 $opening_var，使用旧版 fallback）"
+    else
+      opening_desc="（无固定钟点开场）"
+    fi
+    log "本场：$session_label（${opening_slot:-无钟点}），开场顺序：$opening_desc"
+  fi
+
   mkdir -p "$(dirname "$LIST_FILE")"
   {
-    if [[ -n "$opening" && -z "${1:-}" ]]; then
-      for ((r = 0; r < OPENING_REPEAT; r++)); do echo "$opening"; done
-    fi
+    for path in "${opening_paths[@]}"; do printf '%s\n' "$path"; done
     for ((r = 0; r < 12; r++)); do printf '%s\n' "${items[@]}" | shuf; done
   } | sed "s/'/'\\\\''/g; s/^/file '/; s/\$/'/" > "$LIST_FILE"
   local head="" skip=0
-  if [[ -n "$opening" && -z "${1:-}" ]]; then head="开场 $OPENING × $OPENING_REPEAT，然后"; skip=$OPENING_REPEAT; fi
+  if (( ${#opening_paths[@]} )); then
+    head="开场 $opening_desc，然后"
+    skip=${#opening_paths[@]}
+  fi
   n=${#items[@]}
-  log "本场播放：${head}轮播 $(sed -e "s#.*/##" -e "s#\.mp4'##" "$LIST_FILE" | tail -n +$(( skip + 1 )) | head -n "$n" | paste -sd ' ')"
+  playlist_desc=$(sed -e "s#.*/##" -e "s#\.mp4'##" "$LIST_FILE" | tail -n +$(( skip + 1 )) | head -n "$n" | paste -sd ' ')
+  log "本场播放：${head}轮播 $playlist_desc"
 }
 
-# 按钟点换场：输出「还要等几秒 本场结束的时间戳」。
+# 按钟点换场：输出「还要等几秒 本场结束的时间戳 归属钟点(HHMM)」。
 # 离下一个钟点不到 END_EARLY_MIN 分钟时（正处在换场空档里），先等到钟点再开播。
 clock_slot() {
   python3 - "$SESSION_STARTS" "$SESSION_TZ" "$END_EARLY_MIN" <<'PY'
+import os
 import sys
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-starts, tz, early = sys.argv[1].split(), ZoneInfo(sys.argv[2]), int(sys.argv[3]) * 60
-now = datetime.now(tz)
-cands = []
-for d in range(3):
-    day = (now + timedelta(days=d)).date()
-    for hm in starts:
+starts_raw, tz, early = sys.argv[1].split(), ZoneInfo(sys.argv[2]), int(sys.argv[3]) * 60
+starts = []
+for hm in starts_raw:
+    try:
         h, m = (int(x) for x in hm.split(":"))
-        cands.append(datetime(day.year, day.month, day.day, h, m, tzinfo=tz))
-cands = sorted(c for c in cands if c.timestamp() > now.timestamp())
+        if not (0 <= h <= 23 and 0 <= m <= 59):
+            raise ValueError
+    except ValueError:
+        raise SystemExit(f"invalid SESSION_STARTS item: {hm}")
+    starts.append((h, m))
+# 离线测试可用 CLOCK_NOW 注入固定时刻；不设置时保持真实当前时间。
+now_text = os.environ.get("CLOCK_NOW")
+if now_text:
+    try:
+        now = datetime.fromisoformat(now_text)
+    except ValueError:
+        raise SystemExit(f"invalid CLOCK_NOW: {now_text}")
+    now = now.replace(tzinfo=tz) if now.tzinfo is None else now.astimezone(tz)
+else:
+    now = datetime.now(tz)
+all_cands = []
+for d in range(-1, 4):
+    day = (now + timedelta(days=d)).date()
+    for h, m in starts:
+        all_cands.append(datetime(day.year, day.month, day.day, h, m, tzinfo=tz))
+cands = sorted(c for c in all_cands if c.timestamp() > now.timestamp())
+if not cands:
+    raise SystemExit("no future SESSION_STARTS")
 b = cands[0]
 wait = 0
 if b.timestamp() - now.timestamp() <= early + 300:
     wait = int(b.timestamp() - now.timestamp()) + 1
+    # 空档内启动：等到 b 这个钟点，本场归属 b；结束时间看下一个钟点。
+    slot = b
     b = cands[1]
-print(wait, int(b.timestamp()) - early)
+else:
+    # 已经在一场中间启动：归属当前时刻之前最近的钟点。
+    past = [c for c in sorted(all_cands) if c.timestamp() <= now.timestamp()]
+    if not past:
+        raise SystemExit("no past SESSION_STARTS")
+    slot = past[-1]
+print(wait, int(b.timestamp()) - early, slot.strftime("%H%M"))
 PY
 }
 
@@ -122,7 +244,7 @@ max_secs=$((11*3600 + 55*60))
 resume=0
 if [[ -s "$STATE" && -f "$HEART" ]]; then
   age=$(( $(date +%s) - $(stat -c %Y "$HEART") ))
-  read -r s_start s_end < "$STATE"
+  read -r s_start s_end state_slot < "$STATE"
   s_end="${s_end:-$(( s_start + session_secs ))}"
   if (( age < GAP_SECONDS && s_end - $(date +%s) > 60 )); then resume=1; fi
 fi
@@ -130,20 +252,23 @@ fi
 while (( ! stop )); do
   if (( resume )); then
     start=$s_start; end=$s_end; resume=0
+    OPENING_SLOT="${state_slot:-}"
     # 改了共修钟点后重启：本场最晚在下一个钟点前收，好让共修准点开场
     if [[ -n "$SESSION_STARTS" ]] && slot=$(clock_slot); then
-      read -r wait_s c_end <<< "$slot"
-      (( wait_s == 0 && c_end < end )) && { end=$c_end; echo "$start $end" > "$STATE"; }
+      read -r wait_s c_end c_slot <<< "$slot"
+      [[ -n "$OPENING_SLOT" ]] || OPENING_SLOT="$c_slot"
+      (( wait_s == 0 && c_end < end )) && { end=$c_end; echo "$start $end $OPENING_SLOT" > "$STATE"; }
     fi
     bid=$(cat "$BID_FILE" 2>/dev/null || true)
     log "接着上一场直播（$(( ($(date +%s) - start) / 60 )) 分钟前开始），本场还剩 $(( (end - $(date +%s)) / 60 )) 分钟"
     opening_skip=1
   else
     opening_skip=""
+    OPENING_SLOT=""
     # 按钟点换场：先算好本场到几点结束；正处在换场空档就等到钟点
     if [[ -n "$SESSION_STARTS" ]]; then
       if ! slot=$(clock_slot); then log "SESSION_STARTS 写得不对：$SESSION_STARTS"; exit 2; fi
-      read -r wait_s end <<< "$slot"
+      read -r wait_s end OPENING_SLOT <<< "$slot"
       if (( wait_s > 0 )); then
         log "等 $((wait_s / 60)) 分钟到下一个共修钟点再开播"
         sleep "$wait_s" & wait $!
@@ -178,7 +303,7 @@ while (( ! stop )); do
     else
       end=$(( start + session_secs ))
     fi
-    echo "$start $end" > "$STATE"
+    echo "$start $end $OPENING_SLOT" > "$STATE"
     log "开始新一场直播，到 $(date -d "@$end" '+%F %T %Z') 结束（$(( (end - start) / 60 )) 分钟）"
   fi
   # 聊天室回向：BLESS=1 时开一个后台进程，本场结束时一并停掉；服务重启接着上一场时也照样开

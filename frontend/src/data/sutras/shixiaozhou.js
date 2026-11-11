@@ -226,25 +226,25 @@ export default {
    "n": 36,
    "text": "南无阿弥多婆夜，哆他伽多夜，哆地夜他：",
    "pinyin": "nā mó ā mí duō pó yè duō tuō qié duō yè duō dì yè tuō",
-   "section": "拔一切业障根本得生净土陀罗尼"
+   "section": "往生净土神咒"
   },
   {
    "n": 37,
    "text": "阿弥利都婆毗，阿弥利哆，悉耽婆毗，",
    "pinyin": "ā mí lì dū pó pí ā mí lì duō xī dān pó pí",
-   "section": "拔一切业障根本得生净土陀罗尼"
+   "section": "往生净土神咒"
   },
   {
    "n": 38,
    "text": "阿弥利哆，毗迦兰帝，阿弥利哆，毗迦兰多，",
    "pinyin": "ā mí lì duō pí jiā lán dì ā mí lì duō pí jiā lán duō",
-   "section": "拔一切业障根本得生净土陀罗尼"
+   "section": "往生净土神咒"
   },
   {
    "n": 39,
    "text": "伽弥腻，伽伽那，枳多迦隶，娑婆诃。",
    "pinyin": "qié mí nì qié qié nuó zhǐ duō jiā lì suō pó hē",
-   "section": "拔一切业障根本得生净土陀罗尼"
+   "section": "往生净土神咒"
   },
   {
    "n": 40,

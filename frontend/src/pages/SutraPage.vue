@@ -23,7 +23,23 @@ function ytUrl(v) {
   if (v.ytFrom && now.value < Date.parse(`${v.ytFrom}T21:00:00-07:00`)) return ''
   return v.src.includes('/shorts/') ? `https://www.youtube.com/shorts/${v.yt}` : `https://www.youtube.com/watch?v=${v.yt}`
 }
+function sourceText(source) {
+  if (typeof source === 'string') return source
+  return [source?.name, source?.id].filter(Boolean).join(' ') || '经文来源'
+}
+function sourceHref(source) {
+  return typeof source === 'object' ? source?.url || '' : ''
+}
+function sourceLicense(sourceSutra) {
+  const stated = typeof sourceSutra?.license === 'string' ? sourceSutra.license.trim() : ''
+  if (stated) return stated
+  const source = sourceSutra?.source
+  const name = typeof source === 'string' ? source : source?.name || ''
+  const url = typeof source === 'object' ? source?.url || '' : ''
+  return /cbeta/i.test(`${name} ${url}`) ? 'CBETA 电子佛典，CC BY-NC-SA 3.0 TW' : ''
+}
 const video = computed(() => sutra.value?.videos?.[videoIndex.value] || null)
+const license = computed(() => sourceLicense(sutra.value))
 // 从目录页的视频墙点进来时带 ?v=视频id，直接切到那一个
 function videoFromQuery() {
   const i = sutra.value?.videos?.findIndex((v) => v.id === route.query.v) ?? -1
@@ -152,7 +168,7 @@ onBeforeUnmount(() => player.value?.pause())
         </div>
       </router-link>
     </section>
-    <p class="jing-note">经文出处：CBETA 电子佛典（CC BY-NC-SA），本站按通行课诵本校订。</p>
+    <p class="jing-note">经文出处与许可信息见各部经文页面；本站按通行课诵本校订。</p>
   </main>
 
   <main v-else-if="sutra" class="jing-shell">
@@ -236,8 +252,8 @@ onBeforeUnmount(() => player.value?.pause())
 
     <article class="jing-text card" :class="{ 'with-pinyin': showPinyin }" aria-label="经文">
       <h2 class="jing-text__title">{{ sutra.name }}</h2>
-      <template v-for="l in sutra.lines" :key="l.n">
-        <h3 v-if="l.heading" class="jing-heading">{{ l.heading }}</h3>
+      <template v-for="(l, i) in sutra.lines" :key="l.n">
+        <h3 v-if="l.heading || (l.section && l.section !== sutra.lines[i - 1]?.section)" class="jing-heading">{{ l.heading || l.section }}</h3>
         <p
           :ref="(el) => { if (el) lineRefs[l.n] = el }"
           class="jing-line"
@@ -296,8 +312,11 @@ onBeforeUnmount(() => player.value?.pause())
         <p>{{ f.a }}</p>
       </details>
       <p class="jing-note">
-        经文出处：<a :href="sutra.source.url" target="_blank" rel="noopener">{{ sutra.source.name }} {{ sutra.source.id }}</a>
-        （CC BY-NC-SA），本站按通行课诵本校订；诵读音频为本站制作，女声读诵由 AI 语音合成。
+        经文出处：
+        <a v-if="sourceHref(sutra.source)" :href="sourceHref(sutra.source)" target="_blank" rel="noopener">{{ sourceText(sutra.source) }}</a>
+        <span v-else>{{ sourceText(sutra.source) }}</span>
+        <span v-if="license" class="jing-license">许可：{{ license }}</span>
+        <span>本站按通行课诵本校订；诵读音频为本站制作，女声读诵由 AI 语音合成。</span>
       </p>
     </section>
   </main>
@@ -363,6 +382,7 @@ onBeforeUnmount(() => player.value?.pause())
 .jing-faq p { color: var(--text-muted); }
 .jing-note { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
 .jing-note a { color: var(--accent); }
+.jing-license { display: block; margin-top: 4px; line-height: 1.7; overflow-wrap: anywhere; }
 @media (max-width: 520px) { .jing-actions { grid-template-columns: 1fr; } }
 .jing-video { padding: 18px; }
 .jing-video__title { margin: 0 0 10px; font-size: 1.05rem; }

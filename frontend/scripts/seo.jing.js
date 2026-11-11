@@ -14,8 +14,8 @@ function jingListPage() {
   const path = '/jing'
   return {
     path,
-    title: '在线诵经 | 心经、大悲咒、金刚经、地藏经、阿弥陀经全文带拼音，女声读诵可跟读',
-    description: '常诵经咒全文：心经、大悲咒、金刚经、地藏经、阿弥陀经、普门品、普贤行愿品，有女声读诵和唱诵视频，带拼音，可跟读、可默读。经文按汉传通行课诵本校订，免费、不用注册。',
+    title: '在线诵经 | 楞严咒、大悲咒、十小咒、心经、阿弥陀经全文带拼音，女声读诵可跟读',
+    description: '常诵经咒全文：楞严咒、大悲咒、十小咒、心经、阿弥陀经、往生咒、金刚经、地藏经、普门品、普贤行愿品，有女声读诵和唱诵视频，带拼音，可跟读、可默读。经文按汉传通行课诵本校订，免费、不用注册。',
     heading: '在线诵经',
     summary: SUTRAS.map((s) => `${s.name}（${s.title}，${s.lines.length}句）`).join('；') + '。',
     image: SITE.defaultImage,

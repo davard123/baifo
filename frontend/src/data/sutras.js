@@ -2,6 +2,8 @@
 // 经文出处 CBETA 电子佛典（CC BY-NC-SA），页面上注明；音频为本站制作，只在音频定稿后才填 audio。
 import xinjing from './sutras/xinjing.js'
 import dabeizhou from './sutras/dabeizhou.js'
+import shixiaozhou from './sutras/shixiaozhou.js'
+import lengyan from './sutras/lengyan.js'
 import puxian from './sutras/puxian.js'
 import jingang from './sutras/jingang.js'
 import jingangSing1 from './sutras/jingang-sing1-timing.js'
@@ -9,10 +11,27 @@ import jingangSing2 from './sutras/jingang-sing2-timing.js'
 import pumen from './sutras/pumen.js'
 import pumenSing from './sutras/pumen-sing-timing.js'
 import amituo from './sutras/amituo.js'
+import wangsheng from './sutras/wangsheng.js'
 import dizang from './sutras/dizang.js'
 import { RECITE } from './sutras-recite.js'
 
 export const SUTRAS = [
+  {
+    ...lengyan,
+    name: '大佛顶首楞严神咒',
+    image: '/buddha-variants/a3-standard-20261024.webp',
+    intro: '《楞严咒》全名《大佛顶首楞严神咒》，是汉传佛教早课常诵的长咒，出自《大佛顶如来密因修证了义诸菩萨万行首楞严经》。本页按寺院通行五会课诵本分段，带拼音，方便跟着念。',
+    when: '早课、礼佛、为家人祈求平安时常诵。楞严咒篇幅较长，可以按五会分段跟读，也可以先从每天一会开始。',
+    audio: [],
+    videos: [
+      { id: 'lengyan-recite', label: '女声读诵', title: '楞严咒 女声读诵（全文）。带拼音，可跟读、可默读，字幕逐字显示', src: '/jing/recite/lengyan-recite.mp4', poster: '/jing/recite/lengyan-recite-poster.jpg', uploadDate: '2026-11-10' },
+    ],
+    faqs: [
+      { q: '楞严咒有几会？', a: '寺院通行课诵本分为五会。本页按五会分段，全文从「南无萨怛他苏伽多耶」起，依通行本读法排列。' },
+      { q: '楞严咒很长，一次念不完怎么办？', a: '可以按五会分段念，先固定每天念一会，熟悉后再完整持诵；重在恭敬、专心，不必勉强赶进度。' },
+      { q: '咒语需要翻译吗？', a: '咒语以传统音声持诵为主，本页保留通行课诵本的字音和拼音，跟着字幕念即可。' },
+    ],
+  },
   {
     ...xinjing,
     name: '般若波罗蜜多心经',
@@ -45,6 +64,22 @@ export const SUTRAS = [
       { q: '大悲咒有多少句、多少字？', a: '通行的课诵本为八十四句、四百一十五字。经中原本分为八十二句，后来的课诵本按念诵时的停顿，把结尾一句拆开，成为八十四句。' },
       { q: '「唵」字怎么念？', a: '各地课诵本的注音不完全相同，常见注作 ōng。本站的诵读按通行的念法，跟着念即可，不必为个别字的读音担心。' },
       { q: '不懂意思也可以念吗？', a: '可以。咒语传统上保留原音、不作翻译，诚心持念就好。' },
+    ],
+  },
+  {
+    ...shixiaozhou,
+    name: '十小咒',
+    image: '/buddha-variants/a7-white-standing-20261024.webp',
+    intro: '十小咒是汉传寺院早课常诵的十部陀罗尼，依次为如意宝轮王陀罗尼、消灾吉祥神咒、功德宝山神咒、准提神咒、圣无量寿决定光明王陀罗尼、药师灌顶真言、观音灵感真言、七佛灭罪真言、往生净土神咒和大吉祥天女咒。',
+    when: '早课、礼佛、祈求消灾增福时常诵。十个咒各念一遍，跟着每段咒名和拼音念即可。',
+    audio: [],
+    videos: [
+      { id: 'shixiaozhou-recite', label: '女声读诵', title: '十小咒 女声读诵（十咒全文）。带拼音，可跟读、可默读，字幕逐字显示', src: '/jing/recite/shixiaozhou-recite.mp4', poster: '/jing/recite/shixiaozhou-recite-poster.jpg', uploadDate: '2026-11-10' },
+    ],
+    faqs: [
+      { q: '十小咒是哪十个咒？', a: '本页按汉传寺院早课通行次序，收录如意宝轮王陀罗尼、消灾吉祥神咒、功德宝山神咒、准提神咒、圣无量寿决定光明王陀罗尼、药师灌顶真言、观音灵感真言、七佛灭罪真言、往生净土神咒和大吉祥天女咒。' },
+      { q: '十小咒每天要念几遍？', a: '按寺院早课通行做法，十个咒各念一遍；具体功课可依自己的时间和师承安排。' },
+      { q: '咒名为什么也放在经文里？', a: '咒名前后分段有助于跟上早课次序，也方便查找每一部咒；正式持诵时按自己熟悉的课诵本念即可。' },
     ],
   },
   {
@@ -146,6 +181,22 @@ export const SUTRAS = [
     faqs: [
       { q: '阿弥陀经有多少字？', a: `本页经文按鸠摩罗什译本，与 CBETA 及汉传课诵本两源对照校订，共 ${amituo.charCount} 字（不算标点）。` },
       { q: '跟读和默读有什么不同？', a: '跟读是跟着声音念出声，适合刚开始学、想把字音念熟；默读是不出声，眼看字幕、心里念，不方便出声时也能做。两种都可以，按自己的情况选。' },
+    ],
+  },
+  {
+    ...wangsheng,
+    name: '往生咒',
+    image: '/buddha-variants/a2-mituo-20261024.webp',
+    intro: '《往生咒》全名《拔一切业障根本得生净土陀罗尼》，是汉传净土法门常诵的陀罗尼。经文短而完整，适合日常念佛、晚课和回向时持诵。',
+    when: '晚课、念佛共修、为家人和先人回向时常诵。固定晚课会连续念三遍；本页视频每次读一遍，跟着同一条视频重复即可。',
+    audio: [],
+    videos: [
+      { id: 'wangsheng-recite', label: '女声读诵', title: '往生咒 女声读诵（全文）。带拼音，可跟读、可默读，字幕逐字显示', src: '/jing/recite/wangsheng-recite.mp4', poster: '/jing/recite/wangsheng-recite-poster.jpg', uploadDate: '2026-11-10' },
+    ],
+    faqs: [
+      { q: '往生咒一遍有多少句？', a: '本页按通行课诵本分为十四句，保留传统咒语音声并配有拼音。' },
+      { q: '往生咒晚课念几遍？', a: '本次固定晚课安排连续念三遍；视频本身只读一遍，播放结束后再重复两遍即可。' },
+      { q: '不懂咒语意思也可以念吗？', a: '可以。陀罗尼传统上以音声持诵为主，跟着通行课诵本和拼音恭敬念诵即可。' },
     ],
   },
   {

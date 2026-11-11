@@ -159,7 +159,7 @@ PLAYLIST="dabeizhou_sing xinjing_music amituo_sing pumen_sing puxian_sing jingan
 
 手动试一次：`sudo python3 /opt/fopusha-live/yt_api.py bless <名称> <直播的 watch?v= 后面那串> 600`
 
-## 九、按钟点换场 + 开场共修（2026-11-09 新增）
+## 九、按钟点换场 + 早晚课固定开场（2026-11-10 更新）
 
 频道观众七成以上在东八区（台湾最多），所以共修按台湾时间：早 8 点、晚 8 点。env 里加：
 
@@ -168,16 +168,23 @@ SESSION_STARTS="08:00 20:00"   # 每天几点开新一场（共修时间），�
 SESSION_TZ=Asia/Taipei         # 上面钟点的时区（默认 America/Los_Angeles）
 TITLE_TZ=Asia/Taipei           # 标题也按台湾钟点挑
 END_EARLY_MIN=10               # 每场提前 10 分钟收，留给 YouTube 结束上一场：8:00 开的那场 19:50 结束，一场 11 小时 50 分
-OPENING=xinjing_music          # 每场开场先连播的素材
-OPENING_REPEAT=7               # 连播几遍，再进入 PLAYLIST 随机轮播
+OPENING_0800="lengyan_recite dabeizhou_recite*7 shixiaozhou_recite xinjing_recite*3"
+                               # 台湾早上 8 点：楞严咒 1 遍、大悲咒 7 遍、十小咒 1 遍、心经 3 遍
+OPENING_2000="amituo_recite wangsheng_recite*3"
+                               # 台湾晚上 8 点：阿弥陀经 1 遍、往生咒 3 遍
+# 名称*N 表示同一条视频连续播放 N 遍；不写 *N 就是 1 遍。
+# N 按十进制读取（`08`、`09` 也有效），范围为 1–1000；超出范围或格式错误会记日志并跳过。
+# 遍数只改 env，不用重做视频。没有对应 OPENING_HHMM 时仍可用旧版：
+# OPENING=xinjing_music OPENING_REPEAT=7
 ```
 
 - 设了 `SESSION_STARTS` 就不再按 `SESSION_HOURS` 计时，换场永远对齐钟点，不会每天往前漂。一场最长 11 小时 55 分。
+- `OPENING_0800` 和 `OPENING_2000` 的顺序分别是早课、晚课；开场素材缺失会写日志并跳过，随后进入 `PLAYLIST` 随机轮播。
 - 服务在空档里（离钟点不到 END_EARLY_MIN + 5 分钟）启动，会先等到钟点再开播；在场次中间启动，就开一场到下一个钟点前结束的短场。
 - 服务重启接着上一场时不重复开场共修，直接进轮播。
 - 标题配合 `<名称>.titles`（第八节）按开播钟点挑，标题、说明、聊天留言都用繁体，链接用 https://fopusha.com/zh-hant/ ：
 
 ```
-00-12|早課 · 心經共修｜每天台灣早上8點｜24小時佛經唱誦 大悲咒 金剛經 普門品｜Buddhist Chanting Live
-12-24|晚課 · 心經共修｜每天台灣晚上8點｜24小時佛經唱誦 地藏經 阿彌陀經 普賢行願品｜Buddhist Chanting Live
+00-12|早課 · 楞嚴咒 大悲咒 十小咒 心經｜每天台灣早上8點｜24小時佛經讀誦與唱誦｜Buddhist Chanting Live
+12-24|晚課 · 阿彌陀經 往生咒｜每天台灣晚上8點｜24小時佛經讀誦與唱誦｜Buddhist Chanting Live
 ```
