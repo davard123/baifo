@@ -94,15 +94,18 @@ for (const s of NIANJING) {
   console.log('ok', s.slug, blocks.length, '块', segs.length, '段')
 }
 
-// 普贤行愿品：两句一排
+// 普贤行愿品：长行连排、偈颂两句一排
 {
   const m = NIANJING.find((x) => x.slug === 'puxian')
   const d = (await m.load()).default
   const u = toUnits(d.lines)
   const b = buildBlocks(u.lines)
-  assert.ok(b.every((x) => x.kind === 'verse'))
-  assert.ok(b.every((x) => x.rows.every((r) => r.lines.length === 2)))
-  const first = buildSegments(u.lines, b)[0]
+  const verse = b.filter((x) => x.kind === 'verse')
+  assert.equal(verse.length, 1, '偈颂应是一整块')
+  assert.ok(verse[0].rows.every((r) => r.lines.length === 2))
+  assert.equal(verse[0].rows.length, 124)
+  assert.ok(b.at(0).kind === 'para' && b.at(-1).kind === 'para', '长行在前、流通分在后')
+  const first = buildSegments(u.lines, b).find((g) => g.gapBefore !== undefined)
   assert.equal(first.tokens.map((t) => t.ch).join(''), '所有十方世界中，　三世一切人师子，')
 }
 console.log('排版测试全部通过')
