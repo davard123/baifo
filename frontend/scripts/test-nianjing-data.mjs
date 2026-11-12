@@ -1,6 +1,6 @@
 // 念经板块数据检查：每部经都能加载；每行汉字数 = 拼音音节数（否则拼音会错位）。
 import assert from 'node:assert/strict'
-import { NIANJING, toUnits, hanCount, buddhaImages, labelTokens, UNVERIFIED_CHARS } from '../src/data/nianjing.js'
+import { NIANJING, toUnits, hanCount, buddhaImages, labelTokens, sourceNote, UNVERIFIED_CHARS } from '../src/data/nianjing.js'
 
 assert.equal(NIANJING.length, 12)
 for (const s of NIANJING) {
@@ -34,4 +34,6 @@ assert.deepEqual(x.lines[0].tokens.at(-1), { ch: '，' })
 assert.equal(x.chars[4].py, 'sà')
 const y = toUnits([{ text: '甲，', pinyin: 'jiǎ', heading: '乙' }, { text: '丙。', pinyin: 'bǐng' }])
 assert.equal(y.lines[1].heading, '乙', '品名要一路带下去')
+assert.equal(sourceNote('T08n0251'), '经文依 CBETA 电子佛典（T08n0251）校对注音')
+assert.equal(sourceNote('T19/T20 各咒出处原经'), '经文依 CBETA 电子佛典各咒原经校对注音')
 console.log('全部通过')

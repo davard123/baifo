@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 import SutraLine from '../components/nianjing/SutraLine.vue'
 import SutraSeg from '../components/nianjing/SutraSeg.vue'
 import SutraHeader from '../components/nianjing/SutraHeader.vue'
-import { labelTokens } from '../data/nianjing.js'
+import { labelTokens, sourceNote } from '../data/nianjing.js'
 import { paginate } from '../utils/nianjingLayout.js'
 import { NIANJING, buddhaImages } from '../data/nianjing.js'
 import { useNianjing } from '../composables/useNianjing.js'
@@ -40,6 +40,7 @@ const showSettings = ref(false)
 const FONT_PX = { m: 25, l: 30, xl: 36 }
 const fontPx = computed(() => FONT_PX[fontSize.value] || 25)
 const header = computed(() => meta.value?.header || null)
+const headerNote = computed(() => sourceNote(sutra.value?.source?.id))
 
 // ── 卡拉OK：当前一段 + 前后各一段 ──
 const curSeg = computed(() => segments.value[segmentIndex.value])
@@ -80,7 +81,7 @@ function headerRows(cpr) {
     const n = labelTokens(text).length
     return (Math.ceil((n * scale) / cpr) * scale * lh) / 2.25
   }
-  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + 0.4
+  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / 2.25 : 0) + 0.4
 }
 const pages = computed(() => {
   const { w, h } = bookSize.value
@@ -222,7 +223,7 @@ onBeforeUnmount(() => ro?.disconnect())
           <img v-if="image" :src="image" :alt="`${meta.title}对应的佛菩萨像`" />
         </div>
         <div class="nj-kline">
-          <SutraHeader v-if="showKHeader" :header="header" class="nj-kheader" />
+          <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" class="nj-kheader" />
           <p v-if="curHeading" class="nj-heading">{{ curHeading }}</p>
           <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
           <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
@@ -232,7 +233,7 @@ onBeforeUnmount(() => ro?.disconnect())
 
       <!-- 提词器（竖屏可选） -->
       <div ref="promptBox" class="nj-pane nj-prompt" @scroll.passive="onPromptScroll" @touchstart.passive="onPromptTouch" @wheel.passive="onPromptTouch">
-        <SutraHeader v-if="header" :header="header" class="nj-pheader" />
+        <SutraHeader v-if="header" :header="header" :note="headerNote" class="nj-pheader" />
         <template v-for="(b, bi) in blocks" :key="bi">
           <p v-if="b.headStart" class="nj-hd">{{ b.heading }}</p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
@@ -264,7 +265,7 @@ onBeforeUnmount(() => ro?.disconnect())
       <!-- 书页（横屏右栏） -->
       <div class="nj-pane nj-book" @touchstart.passive="onBookTouchStart" @touchend.passive="onBookTouchEnd">
         <div ref="bookBox" class="nj-book__page">
-          <SutraHeader v-if="header && bookPage === 0" :header="header" />
+          <SutraHeader v-if="header && bookPage === 0" :header="header" :note="headerNote" />
           <template v-if="pages[bookPage]">
             <template v-for="g in pages[bookPage].groups" :key="g.segs[0].start">
               <p v-if="g.heading" class="nj-hd">{{ g.heading }}</p>

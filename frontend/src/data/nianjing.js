@@ -92,6 +92,13 @@ export function labelTokens(text, py = '') {
   return out
 }
 
+/** 经题块最下面一行小字：校对来源。id 是多个出处（含「/」）时写成各咒原经。 */
+export function sourceNote(id) {
+  const t = String(id || '').trim()
+  if (!t) return ''
+  return t.includes('/') ? '经文依 CBETA 电子佛典各咒原经校对注音' : `经文依 CBETA 电子佛典（${t}）校对注音`
+}
+
 /** 一行里应有拼音的汉字数（不含读音待核实的字）。 */
 export function hanCount(text) {
   let n = 0

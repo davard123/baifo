@@ -5,6 +5,7 @@ import { labelTokens } from '../../data/nianjing.js'
 
 const props = defineProps({
   header: { type: Object, required: true },
+  note: { type: String, default: '' },
 })
 const rows = computed(() => {
   const h = props.header
@@ -21,6 +22,7 @@ const rows = computed(() => {
     <p v-for="r in rows" :key="r.cls" :class="r.cls">
       <template v-for="(t, i) in r.tokens" :key="i"><ruby v-if="t.py">{{ t.ch }}<rt>{{ t.py }}</rt></ruby><span v-else-if="t.gap" class="sh-gap"></span><template v-else>{{ t.ch }}</template></template>
     </p>
+    <p v-if="note" class="sh-note">{{ note }}</p>
   </div>
 </template>
 
@@ -57,6 +59,11 @@ const rows = computed(() => {
   font-size: 0.7em;
   color: #756558;
   line-height: 2.3;
+}
+.sh-note {
+  font-size: 0.62em;
+  color: #9a8a7a;
+  line-height: 2;
 }
 .sh-gap { display: inline-block; width: 0.5em; }
 </style>
