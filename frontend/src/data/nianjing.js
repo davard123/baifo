@@ -3,18 +3,18 @@
 import { BUDDHAS } from './buddhas.js'
 
 export const NIANJING = [
-  { slug: 'xinjing', title: '心经', buddha: 'guanyin', jingSlug: 'xinjing', note: '二百六十字，几分钟念完', load: () => import('./sutras/xinjing.js') },
-  { slug: 'dabeizhou', title: '大悲咒', buddha: 'guanyin', jingSlug: 'dabeizhou', note: '八十四句，早课必诵', load: () => import('./sutras/dabeizhou.js') },
-  { slug: 'liuzi', title: '六字大明咒', buddha: 'guanyin', note: '唵嘛呢叭咪吽', load: () => import('./sutras/liuzi.js') },
-  { slug: 'wangsheng', title: '往生咒', buddha: 'amitabha', note: '为亲人回向常念', load: () => import('./sutras/wangsheng.js') },
-  { slug: 'yaoshi-zhenyan', title: '药师灌顶真言', buddha: 'medicine', note: '祈求身体康健', load: () => import('./sutras/yaoshi-zhenyan.js') },
-  { slug: 'shixiaozhou', title: '十小咒', buddha: 'shakyamuni', note: '早课十小咒全文', load: () => import('./sutras/shixiaozhou.js') },
-  { slug: 'pumen', title: '普门品', buddha: 'guanyin', jingSlug: 'pumen', note: '观世音菩萨普门品', load: () => import('./sutras/pumen.js') },
-  { slug: 'amituo', title: '阿弥陀经', buddha: 'amitabha', jingSlug: 'amituo', note: '净土宗日课', load: () => import('./sutras/amituo.js') },
-  { slug: 'puxian', title: '普贤行愿品偈颂', buddha: 'samantabhadra', jingSlug: 'puxian', note: '十大愿王偈颂', load: () => import('./sutras/puxian.js') },
-  { slug: 'jingang', title: '金刚经', buddha: 'shakyamuni', jingSlug: 'jingang', note: '三十二分全文', load: () => import('./sutras/jingang.js') },
-  { slug: 'yaoshi', title: '药师经', buddha: 'medicine', note: '药师琉璃光如来本愿功德经', load: () => import('./sutras/yaoshi.js') },
-  { slug: 'dizang', title: '地藏经', buddha: 'ksitigarbha', jingSlug: 'dizang', note: '十三品全文', load: () => import('./sutras/dizang.js') },
+  { slug: 'xinjing', title: '心经', buddha: 'guanyin', jingSlug: 'xinjing', note: '二百六十字，几分钟念完', header: { title: '般若波罗蜜多心经', titlePy: 'bō rě bō luó mì duō xīn jīng', translator: '唐 三藏法师玄奘 译', translatorPy: 'táng sān zàng fǎ shī xuán zàng yì' }, load: () => import('./sutras/xinjing.js') },
+  { slug: 'dabeizhou', title: '大悲咒', buddha: 'guanyin', jingSlug: 'dabeizhou', note: '八十四句，早课必诵', header: { title: '千手千眼无碍大悲心陀罗尼', titlePy: 'qiān shǒu qiān yǎn wú ài dà bēi xīn tuó luó ní', translator: '唐 伽梵达摩 译', translatorPy: 'táng qié fàn dá mó yì' }, load: () => import('./sutras/dabeizhou.js') },
+  { slug: 'liuzi', title: '六字大明咒', buddha: 'guanyin', note: '唵嘛呢叭咪吽', header: { title: '观世音菩萨六字大明陀罗尼', titlePy: 'guān shì yīn pú sà liù zì dà míng tuó luó ní', translator: '宋 中印度惹烂驮啰国密丰寺三藏赐紫沙门天息灾 奉诏译', translatorPy: 'sòng zhōng yìn dù rě làn tuó luó guó mì fēng sì sān zàng cì zǐ shā mén tiān xī zāi fèng zhào yì' }, load: () => import('./sutras/liuzi.js') },
+  { slug: 'wangsheng', title: '往生咒', buddha: 'amitabha', note: '为亲人回向常念', header: { title: '拔一切业障根本得生净土陀罗尼', titlePy: 'bá yí qiè yè zhàng gēn běn dé shēng jìng tǔ tuó luó ní', translator: '刘宋 天竺三藏求那跋陀罗 奉诏重译', translatorPy: 'liú sòng tiān zhú sān zàng qiú nà bá tuó luó fèng zhào chóng yì' }, load: () => import('./sutras/wangsheng.js') },
+  { slug: 'yaoshi-zhenyan', title: '药师灌顶真言', buddha: 'medicine', note: '祈求身体康健', header: { title: '药师琉璃光如来灌顶真言', titlePy: 'yào shī liú lí guāng rú lái guàn dǐng zhēn yán', translator: '唐 三藏法师玄奘 奉诏译', translatorPy: 'táng sān zàng fǎ shī xuán zàng fèng zhào yì' }, load: () => import('./sutras/yaoshi-zhenyan.js') },
+  { slug: 'shixiaozhou', title: '十小咒', buddha: 'shakyamuni', note: '早课十小咒全文', header: { title: '十小咒', titlePy: 'shí xiǎo zhòu', sub: '早课课诵', subPy: 'zǎo kè kè sòng', translator: '历代三藏法师 译 / 寺院课诵集辑', translatorPy: '' }, load: () => import('./sutras/shixiaozhou.js') },
+  { slug: 'pumen', title: '普门品', buddha: 'guanyin', jingSlug: 'pumen', note: '观世音菩萨普门品', header: { title: '妙法莲华经', titlePy: 'miào fǎ lián huá jīng', sub: '观世音菩萨普门品第二十五', subPy: 'guān shì yīn pú sà pǔ mén pǐn dì èr shí wǔ', translator: '后秦 龟兹三藏法师鸠摩罗什 译', translatorPy: 'hòu qín qiū cí sān zàng fǎ shī jiū mó luó shí yì' }, load: () => import('./sutras/pumen.js') },
+  { slug: 'amituo', title: '阿弥陀经', buddha: 'amitabha', jingSlug: 'amituo', note: '净土宗日课', header: { title: '佛说阿弥陀经', titlePy: 'fó shuō ā mí tuó jīng', translator: '后秦 龟兹三藏法师鸠摩罗什 译', translatorPy: 'hòu qín qiū cí sān zàng fǎ shī jiū mó luó shí yì' }, load: () => import('./sutras/amituo.js') },
+  { slug: 'puxian', title: '普贤行愿品偈颂', buddha: 'samantabhadra', jingSlug: 'puxian', note: '十大愿王偈颂', header: { title: '大方广佛华严经 卷第四十', titlePy: 'dà fāng guǎng fó huá yán jīng juàn dì sì shí', sub: '入不思议解脱境界普贤行愿品', subPy: 'rù bù sī yì jiě tuō jìng jiè pǔ xián xíng yuàn pǐn', translator: '唐 罽宾国三藏般若 奉诏译', translatorPy: 'táng jì bīn guó sān zàng bō rě fèng zhào yì' }, load: () => import('./sutras/puxian.js') },
+  { slug: 'jingang', title: '金刚经', buddha: 'shakyamuni', jingSlug: 'jingang', note: '三十二分全文', header: { title: '金刚般若波罗蜜经', titlePy: 'jīn gāng bō rě bō luó mì jīng', translator: '姚秦 三藏法师鸠摩罗什 译', translatorPy: 'yáo qín sān zàng fǎ shī jiū mó luó shí yì' }, load: () => import('./sutras/jingang.js') },
+  { slug: 'yaoshi', title: '药师经', buddha: 'medicine', note: '药师琉璃光如来本愿功德经', header: { title: '药师琉璃光如来本愿功德经', titlePy: 'yào shī liú lí guāng rú lái běn yuàn gōng dé jīng', translator: '唐 三藏法师玄奘 奉诏译', translatorPy: 'táng sān zàng fǎ shī xuán zàng fèng zhào yì' }, load: () => import('./sutras/yaoshi.js') },
+  { slug: 'dizang', title: '地藏经', buddha: 'ksitigarbha', jingSlug: 'dizang', note: '十三品全文', header: { title: '地藏菩萨本愿经', titlePy: 'dì zàng pú sà běn yuàn jīng', translator: '唐 于阗国三藏沙门实叉难陀 译', translatorPy: 'táng yú tián guó sān zàng shā mén shí chā nán tuó yì' }, load: () => import('./sutras/dizang.js') },
 ]
 
 export const NIANJING_BY_SLUG = Object.fromEntries(NIANJING.map((s) => [s.slug, s]))
@@ -40,6 +40,7 @@ export function buddhaImages(buddhaSlug) {
 export function toUnits(rawLines) {
   const chars = []
   const lines = []
+  let carried = '' // 品名/分名/咒名只标在第一行的经（地藏经）也要一路带下去
   rawLines.forEach((l, line) => {
     const pys = String(l.pinyin || '').trim().split(/\s+/).filter(Boolean)
     const start = chars.length
@@ -59,15 +60,36 @@ export function toUnits(rawLines) {
         tokens.push({ ch })
       }
     }
+    carried = l.heading || l.fenName || l.section || carried
     lines.push({
       text: l.text,
-      heading: l.heading || l.fenName || l.section || '',
+      heading: carried,
+      stanza: l.stanza,
+      part: l.part,
       start,
       end: chars.length,
       tokens,
     })
   })
   return { chars, lines }
+}
+
+/**
+ * 经题块里一行文字（经题/译者）的显示片段：汉字配拼音，空格变成留白，其他符号原样。
+ * py 为空时不标拼音。返回 [{ ch, py } | { gap: true } | { ch }]
+ */
+export function labelTokens(text, py = '') {
+  const pys = String(py || '').trim().split(/\s+/).filter(Boolean)
+  const out = []
+  let k = 0
+  for (const ch of String(text || '')) {
+    if (HAN.test(ch)) {
+      out.push({ ch, py: pys[k] || '' })
+      k += 1
+    } else if (/\s/.test(ch)) out.push({ gap: true })
+    else out.push({ ch })
+  }
+  return out
 }
 
 /** 一行里应有拼音的汉字数（不含读音待核实的字）。 */

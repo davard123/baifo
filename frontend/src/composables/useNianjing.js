@@ -5,12 +5,10 @@ import { NIANJING_BY_SLUG, UNVERIFIED_CHARS, toUnits } from '../data/nianjing.js
 import { SutraAligner, fuzzy } from '../utils/sutraAligner.js'
 import { createVoiceEngine, hanToPys, loadPinyin, voiceSupported } from '../utils/voiceEngine.js'
 import { createWoodblock } from '../utils/nianfo.js'
+import { buildBlocks, buildSegments } from '../utils/nianjingLayout.js'
 
 const PREFS_KEY = 'nianjing:prefs'
 const posKey = (slug) => `nianjing:pos:${slug}`
-
-// 卡拉OK一屏显示的一段：按标点切，再拼成不超过这么多字
-const SEGMENT_MAX = 16
 
 function readPrefs() {
   try {
@@ -20,50 +18,7 @@ function readPrefs() {
   }
 }
 
-/** 把一行切成卡拉OK用的小段（在标点处断开，每段不超过 SEGMENT_MAX 字）。 */
-export function buildSegments(lines) {
-  const segs = []
-  lines.forEach((line, li) => {
-    let cur = []
-    let n = 0
-    const flush = () => {
-      if (cur.length) {
-        const us = cur.filter((t) => t.u !== undefined)
-        segs.push({ line: li, tokens: cur, start: us.length ? us[0].u : line.start, end: us.length ? us.at(-1).u + 1 : line.start })
-      }
-      cur = []
-      n = 0
-    }
-    // 先按标点拆成短语
-    const phrases = []
-    let ph = []
-    for (const t of line.tokens) {
-      ph.push(t)
-      if (t.u === undefined) {
-        phrases.push(ph)
-        ph = []
-      }
-    }
-    if (ph.length) phrases.push(ph)
-    for (const p of phrases) {
-      const len = p.filter((t) => t.u !== undefined).length
-      if (n && n + len > SEGMENT_MAX) flush()
-      if (len > SEGMENT_MAX) {
-        // 一个短语就超长（咒语常见）：硬切
-        for (const t of p) {
-          cur.push(t)
-          if (t.u !== undefined) n += 1
-          if (n >= SEGMENT_MAX) flush()
-        }
-      } else {
-        cur.push(...p)
-        n += len
-      }
-    }
-    flush()
-  })
-  return segs.filter((s) => s.end > s.start)
-}
+export { buildSegments }
 
 export function useNianjing(slugRef) {
   const prefs = readPrefs()
@@ -71,6 +26,7 @@ export function useNianjing(slugRef) {
   const sutra = shallowRef(null)
   const units = shallowRef({ chars: [], lines: [] })
   const segments = shallowRef([])
+  const blocks = shallowRef([])
   const loading = ref(false)
 
   const cursor = ref(0)
@@ -313,6 +269,7 @@ export function useNianjing(slugRef) {
     sutra.value = null
     units.value = { chars: [], lines: [] }
     segments.value = []
+    blocks.value = []
     aligner = null
     cursor.value = 0
     resumeAt.value = 0
@@ -323,7 +280,8 @@ export function useNianjing(slugRef) {
     if (slug !== slugRef.value) return
     sutra.value = mod.default
     units.value = toUnits(mod.default.lines)
-    segments.value = buildSegments(units.value.lines)
+    blocks.value = buildBlocks(units.value.lines)
+    segments.value = buildSegments(units.value.lines, blocks.value)
     loading.value = false
     try {
       const saved = Number(localStorage.getItem(posKey(slug)) || 0)
@@ -346,7 +304,7 @@ export function useNianjing(slugRef) {
   })
 
   return {
-    meta, sutra, units, segments, loading, total, finished,
+    meta, sutra, units, segments, blocks, loading, total, finished,
     cursor, lineIndex, segmentIndex, running, mode, view, speed, bgm, bpm, fontSize,
     resumeAt, resume, voiceState, voiceProgress, voiceError, heard, canVoice,
     start, stop, setCursor, nextSegment, prevSegment, lineOf,

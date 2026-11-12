@@ -4,6 +4,10 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SutraLine from '../components/nianjing/SutraLine.vue'
+import SutraSeg from '../components/nianjing/SutraSeg.vue'
+import SutraHeader from '../components/nianjing/SutraHeader.vue'
+import { labelTokens } from '../data/nianjing.js'
+import { paginate } from '../utils/nianjingLayout.js'
 import { NIANJING, buddhaImages } from '../data/nianjing.js'
 import { useNianjing } from '../composables/useNianjing.js'
 import { useWakeLock } from '../composables/useWakeLock.js'
@@ -12,7 +16,7 @@ const route = useRoute()
 const slug = computed(() => (route.params.slug ? String(route.params.slug) : ''))
 const nj = useNianjing(slug)
 const {
-  meta, sutra, units, segments, total, finished, cursor, lineIndex, segmentIndex,
+  meta, sutra, units, segments, blocks, total, finished, cursor, lineIndex, segmentIndex,
   running, mode, view, speed, bgm, bpm, fontSize, resumeAt, voiceState, voiceProgress, voiceError, heard,
 } = nj
 
@@ -33,14 +37,17 @@ watch(
 )
 
 const showSettings = ref(false)
-const FONT_PX = { m: 22, l: 27, xl: 33 }
-const fontPx = computed(() => FONT_PX[fontSize.value] || 22)
+const FONT_PX = { m: 25, l: 30, xl: 36 }
+const fontPx = computed(() => FONT_PX[fontSize.value] || 25)
+const header = computed(() => meta.value?.header || null)
 
 // ── 卡拉OK：当前一段 + 前后各一段 ──
 const curSeg = computed(() => segments.value[segmentIndex.value])
 const prevSeg = computed(() => segments.value[segmentIndex.value - 1])
 const nextSeg = computed(() => segments.value[segmentIndex.value + 1])
 const curHeading = computed(() => units.value.lines[lineIndex.value]?.heading || '')
+// 念到第一段之前（cursor 在第一段内）卡拉OK上方显示经题块
+const showKHeader = computed(() => !!header.value && segmentIndex.value === 0)
 
 // ── 提词器：整篇，当前行固定在屏幕上方约三分之一处 ──
 const promptBox = ref(null)
@@ -56,7 +63,7 @@ function scrollPromptToCurrent(smooth = true) {
   if (!box || Date.now() < userScrollUntil) return
   const el = box.querySelector(`[data-line="${lineIndex.value}"]`)
   if (!el) return
-  const top = el.offsetTop - box.clientHeight / 3
+  const top = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - box.clientHeight / 3
   box.scrollTo({ top: Math.max(0, top), behavior: smooth ? 'smooth' : 'auto' })
 }
 watch(lineIndex, () => nextTick(() => scrollPromptToCurrent()))
@@ -65,6 +72,16 @@ watch(lineIndex, () => nextTick(() => scrollPromptToCurrent()))
 const bookBox = ref(null)
 const bookSize = ref({ w: 0, h: 0 })
 let ro = null
+// 经题块占几行（书页第 1 页顶上）：按字号倍数粗估，宁大勿小
+function headerRows(cpr) {
+  const h = header.value
+  if (!h) return 0
+  const one = (text, scale, lh) => {
+    const n = labelTokens(text).length
+    return (Math.ceil((n * scale) / cpr) * scale * lh) / 2.25
+  }
+  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + 0.4
+}
 const pages = computed(() => {
   const { w, h } = bookSize.value
   if (!w || !h || !segments.value.length) return []
@@ -72,38 +89,7 @@ const pages = computed(() => {
   const rowH = fontPx.value * 2.25
   const cpr = Math.max(4, Math.floor(w / charW))
   const rows = Math.max(3, Math.floor(h / rowH))
-  const out = []
-  let page = { groups: [], start: segments.value[0].start }
-  let used = 0
-  let lineChars = 0
-  let lastLine = -1
-  for (const s of segments.value) {
-    const len = s.tokens.length
-    const newLine = s.line !== lastLine
-    const before = newLine ? used + Math.ceil(lineChars / cpr) : used
-    const lineAfter = (newLine ? 0 : lineChars) + len
-    const need = before + Math.ceil(lineAfter / cpr)
-    if (page.groups.length && need > rows) {
-      out.push(page)
-      page = { groups: [], start: s.start }
-      used = 0
-      lineChars = len
-      lastLine = s.line
-      page.groups.push({ line: s.line, segs: [s] })
-      continue
-    }
-    if (newLine) {
-      used = before
-      lineChars = len
-      page.groups.push({ line: s.line, segs: [s] })
-    } else {
-      lineChars = lineAfter
-      page.groups.at(-1).segs.push(s)
-    }
-    lastLine = s.line
-  }
-  if (page.groups.length) out.push(page)
-  return out
+  return paginate(segments.value, { width: w, fontPx: fontPx.value, rows, topRows: headerRows(cpr) })
 })
 const cursorPage = computed(() => {
   const ps = pages.value
@@ -236,40 +222,67 @@ onBeforeUnmount(() => ro?.disconnect())
           <img v-if="image" :src="image" :alt="`${meta.title}对应的佛菩萨像`" />
         </div>
         <div class="nj-kline">
+          <SutraHeader v-if="showKHeader" :header="header" class="nj-kheader" />
           <p v-if="curHeading" class="nj-heading">{{ curHeading }}</p>
-          <p class="nj-k nj-k--prev"><SutraLine v-if="prevSeg" :tokens="prevSeg.tokens" :cursor="Infinity" @pick="pick" /></p>
-          <p class="nj-k nj-k--cur"><SutraLine v-if="curSeg" :tokens="curSeg.tokens" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
-          <p class="nj-k nj-k--next"><SutraLine v-if="nextSeg" :tokens="nextSeg.tokens" :cursor="-1" @pick="pick" /></p>
+          <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
+          <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
+          <p class="nj-k nj-k--next"><SutraSeg v-if="nextSeg" :seg="nextSeg" :cursor="-1" @pick="pick" /></p>
         </div>
       </div>
 
       <!-- 提词器（竖屏可选） -->
       <div ref="promptBox" class="nj-pane nj-prompt" @scroll.passive="onPromptScroll" @touchstart.passive="onPromptTouch" @wheel.passive="onPromptTouch">
-        <div class="nj-prompt__pad"></div>
-        <p
-          v-for="(l, i) in units.lines"
-          :key="i"
-          :data-line="i"
-          class="nj-pline"
-          :class="{ now: i === lineIndex }"
-        >
-          <span v-if="l.heading && (i === 0 || units.lines[i - 1].heading !== l.heading)" class="nj-pheading">{{ l.heading }}</span>
-          <SutraLine
-            :tokens="l.tokens"
-            :cursor="i < lineIndex ? Infinity : i > lineIndex ? -1 : cursor"
+        <SutraHeader v-if="header" :header="header" class="nj-pheader" />
+        <template v-for="(b, bi) in blocks" :key="bi">
+          <p v-if="b.headStart" class="nj-hd">{{ b.heading }}</p>
+          <p v-if="b.kind === 'para'" class="nj-para"><span
+            v-for="li in b.lines"
+            :key="li"
+            :data-line="li"
+            class="nj-ln"
+            :class="{ now: li === lineIndex }"
+          ><SutraLine
+            :tokens="units.lines[li].tokens"
+            :cursor="li < lineIndex ? Infinity : li > lineIndex ? -1 : cursor"
             @pick="pick"
-          />
-        </p>
+          /></span></p>
+          <div v-else class="nj-verse">
+            <p v-for="row in b.rows" :key="row.lines[0]" class="nj-vrow" :class="{ gap: row.gapBefore }"><template v-for="(li, k) in row.lines" :key="li"><template v-if="k">　</template><span
+              :data-line="li"
+              class="nj-ln"
+              :class="{ now: li === lineIndex }"
+            ><SutraLine
+              :tokens="units.lines[li].tokens"
+              :cursor="li < lineIndex ? Infinity : li > lineIndex ? -1 : cursor"
+              @pick="pick"
+            /></span></template></p>
+          </div>
+        </template>
         <div class="nj-prompt__pad nj-prompt__pad--end"></div>
       </div>
 
       <!-- 书页（横屏右栏） -->
       <div class="nj-pane nj-book" @touchstart.passive="onBookTouchStart" @touchend.passive="onBookTouchEnd">
         <div ref="bookBox" class="nj-book__page">
+          <SutraHeader v-if="header && bookPage === 0" :header="header" />
           <template v-if="pages[bookPage]">
-            <p v-for="g in pages[bookPage].groups" :key="g.line + '-' + g.segs[0].start" class="nj-bline" :class="{ now: g.line === lineIndex }">
-              <SutraLine v-for="s in g.segs" :key="s.start" :tokens="s.tokens" :cursor="cursorFor(s)" @pick="pick" />
-            </p>
+            <template v-for="g in pages[bookPage].groups" :key="g.segs[0].start">
+              <p v-if="g.heading" class="nj-hd">{{ g.heading }}</p>
+              <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span
+                v-for="pt in sg.parts"
+                :key="pt.line + '-' + pt.tokens[0].u"
+                :data-line="pt.line"
+                class="nj-ln"
+                :class="{ now: pt.line === lineIndex }"
+              ><SutraLine :tokens="pt.tokens" :cursor="cursorFor(sg)" @pick="pick" /></span></template></p>
+              <div v-else class="nj-verse">
+                <p v-for="sg in g.segs" :key="sg.start" class="nj-vrow" :class="{ gap: sg.gapBefore }"><template v-for="(pt, k) in sg.parts" :key="pt.line"><template v-if="k">　</template><span
+                  :data-line="pt.line"
+                  class="nj-ln"
+                  :class="{ now: pt.line === lineIndex }"
+                ><SutraLine :tokens="pt.tokens.filter((t) => !t.sep)" :cursor="cursorFor(sg)" @pick="pick" /></span></template></p>
+              </div>
+            </template>
           </template>
         </div>
         <div class="nj-book__nav">
@@ -432,9 +445,11 @@ onBeforeUnmount(() => ro?.disconnect())
 .nj-view-prompt .nj-karaoke { display: none; }
 
 /* 卡拉OK */
-.nj-karaoke { display: flex; flex-direction: column; }
+.nj-karaoke { display: flex; flex-direction: column; overflow: hidden; }
 .nj-pic {
-  flex: 0 0 38%;
+  flex: 1 1 0;
+  min-height: 64px;
+  max-height: 40%;
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 60%, #fff6e2, #efe0c6 70%);
   display: flex;
@@ -453,8 +468,7 @@ onBeforeUnmount(() => ro?.disconnect())
   to { transform: scale(1.14) translate(-2%, 2%); }
 }
 .nj-kline {
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -463,11 +477,12 @@ onBeforeUnmount(() => ro?.disconnect())
   padding: 12px 14px;
   text-align: center;
 }
-.nj-heading { margin: 0; font-size: 0.85rem; color: #9a8a7a; font-family: 'Noto Sans SC', system-ui, sans-serif; }
+.nj-heading { margin: 0; font-size: calc(var(--nj-font) * 0.72); font-weight: 600; color: #7a2a1c; }
+.nj-kheader { font-size: calc(var(--nj-font) * 0.82); margin-bottom: 0.2em; }
 .nj-k { margin: 0; line-height: 2.2; }
-.nj-k--prev { font-size: calc(var(--nj-font) * 0.72); opacity: 0.55; }
+.nj-k--prev { font-size: calc(var(--nj-font) * 0.85); opacity: 0.55; }
 .nj-k--cur { font-size: calc(var(--nj-font) * 1.35); }
-.nj-k--next { font-size: calc(var(--nj-font) * 0.82); color: #6d5d50; }
+.nj-k--next { font-size: calc(var(--nj-font) * 0.9); color: #6d5d50; }
 
 /* 提词器 */
 .nj-prompt {
@@ -476,23 +491,30 @@ onBeforeUnmount(() => ro?.disconnect())
   padding: 0 16px;
   font-size: var(--nj-font);
 }
-.nj-prompt__pad { height: 30%; }
 .nj-prompt__pad--end { height: 60%; }
-.nj-pline {
-  margin: 0;
-  padding: 2px 10px;
-  border-radius: 10px;
-  line-height: 2.25;
+/* 连排的段落、行内高亮 */
+.nj-para { margin: 0 0 0.6em; line-height: 2.25; }
+.nj-ln {
+  border-radius: 6px;
+  padding: 0 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   transition: background 0.3s;
 }
-.nj-pline.now { background: rgba(230, 184, 102, 0.26); }
-.nj-pheading {
-  display: block;
-  font-size: 0.6em;
-  color: #9a8a7a;
-  font-family: 'Noto Sans SC', system-ui, sans-serif;
-  margin-top: 0.8em;
+.nj-ln.now { background: rgba(230, 184, 102, 0.34); }
+.nj-hd {
+  margin: 1.3em 0 0.4em;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #7a2a1c;
+  line-height: 1.8;
 }
+.nj-verse { margin: 0 0 0.6em; }
+.nj-vrow { margin: 0; text-align: center; line-height: 2.25; }
+.nj-vrow.gap { margin-top: 0.7em; }
+.nj-vrow .nj-ln { display: inline-block; }
+.nj-pheader { padding-top: 0.6em; }
 
 /* 书页 */
 .nj-book { flex-direction: column; background: #fffaf2; }
@@ -503,8 +525,6 @@ onBeforeUnmount(() => ro?.disconnect())
   padding: 14px 20px;
   font-size: var(--nj-font);
 }
-.nj-bline { margin: 0; padding: 0 6px; border-radius: 8px; line-height: 2.25; }
-.nj-bline.now { background: rgba(230, 184, 102, 0.22); }
 .nj-book__nav {
   display: flex;
   justify-content: space-between;
@@ -523,7 +543,6 @@ onBeforeUnmount(() => ro?.disconnect())
   .nj-reader .nj-karaoke { display: flex; flex: 0 0 42%; border-right: 1px solid rgba(122, 86, 51, 0.2); }
   .nj-reader .nj-prompt { display: none; }
   .nj-reader .nj-book { display: flex; }
-  .nj-pic { flex-basis: 42%; }
 }
 
 .nj-status {

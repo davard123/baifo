@@ -25,7 +25,7 @@ defineEmits(['pick'])
 }
 .sl-ch rt {
   font-family: 'Noto Sans SC', system-ui, sans-serif;
-  font-size: 0.42em;
+  font-size: 0.45em;
   color: var(--nj-py, #9a8a7a);
   letter-spacing: 0;
   font-weight: 400;
