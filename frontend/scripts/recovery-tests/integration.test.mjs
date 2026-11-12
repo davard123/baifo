@@ -41,7 +41,7 @@ test('sound settings, unavailable storage, audio failure and independent music c
  globalThis.localStorage={getItem(){if(throwStorage)throw Error();return storageValue},setItem(k,v){if(throwStorage)throw Error();storageValue=v}};
  const param={setValueAtTime(){},exponentialRampToValueAtTime(){}};
  const node=()=>({gain:param,frequency:{...param,value:0},Q:{value:0},connect(){return this},start(){},stop(){}});
- class AC{constructor(){if(throwAudio)throw Error('audio failed');this.state='running';this.currentTime=0;this.sampleRate=48000;this.destination={}}createGain(){return node()}createOscillator(){hits++;return node()}createBuffer(){return {getChannelData:()=>new Float32Array(1440)}}createBufferSource(){return node()}createBiquadFilter(){return node()}}
+ class AC{constructor(){if(throwAudio)throw Error('audio failed');this.state='running';this.currentTime=0;this.sampleRate=48000;this.destination={}}createGain(){return node()}createOscillator(){return node()}createBuffer(_channels,length){return {getChannelData:()=>new Float32Array(length)}}createBufferSource(){hits++;return node()}createBiquadFilter(){return node()}}
  globalThis.window={AudioContext:AC};
  const {loadState}=await import('../../src/utils/nianfo.js');
  assert.equal(loadState().sound,false);storageValue=JSON.stringify({sound:true});assert.equal(loadState().sound,true);storageValue=JSON.stringify({sound:false});assert.equal(loadState().sound,false);
