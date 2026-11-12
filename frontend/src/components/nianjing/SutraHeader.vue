@@ -53,6 +53,8 @@ onMounted(() => {
 })
 onBeforeUnmount(() => ro?.disconnect())
 watch(() => [props.header, props.note], () => nextTick(fit))
+// 来源行按词块折行，避免「校对注 / 音」这种断法
+const noteParts = computed(() => props.note.split(/(?<=佛典)|(?=（)|(?=校对注音)/).filter(Boolean))
 </script>
 
 <template>
@@ -60,7 +62,7 @@ watch(() => [props.header, props.note], () => nextTick(fit))
     <p v-for="r in rows" :key="r.cls" :class="r.cls" data-fit>
       <template v-for="(c, ci) in r.chunks" :key="ci"><template v-if="ci">{{ ' ' }}</template><span class="sh-chunk"><template v-for="(t, i) in c" :key="i"><ruby v-if="t.py">{{ t.ch }}<rt>{{ t.py }}</rt></ruby><template v-else>{{ t.ch }}</template></template></span></template>
     </p>
-    <p v-if="note" class="sh-note">{{ note }}</p>
+    <p v-if="note" class="sh-note"><span v-for="(part, pi) in noteParts" :key="pi" class="sh-chunk">{{ part }}</span></p>
   </div>
 </template>
 
