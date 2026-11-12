@@ -15,22 +15,22 @@ export default {
   {
    "n": 1,
    "text": "南谟薄伽伐帝，鞞杀社，窭噜薜琉璃，",
-   "pinyin": "nā mó bó qié fá dì pí shā shè jù lū bì liú lí"
+   "pinyin": "nā mō bó qié fā dì pí shā shè jù lǔ bì liú lì"
   },
   {
    "n": 2,
    "text": "跋喇婆，喝啰阇也，怛他揭多也，",
-   "pinyin": "bá là pó hē là shé yě dá tuō jiē duō yě"
+   "pinyin": "bá là pó hé là shé yě dá tā jié duō yě"
   },
   {
    "n": 3,
    "text": "阿啰喝帝，三藐三勃陀耶，怛侄他：",
-   "pinyin": "ā là hè dì sān miǎo sān bó tuó yē dá zhí tuō"
+   "pinyin": "wō là hē dì sān miǎo sān bó tuó yē dá zhí tā"
   },
   {
    "n": 4,
    "text": "唵，鞞杀逝，鞞杀逝，鞞杀社，三没揭帝，娑婆诃。",
-   "pinyin": "ōng pí shā shì pí shā shì pí shā shè sān mò jiē dì suō pó hē"
+   "pinyin": "ān pí shā shì pí shā shì pí shā shè sān mō jié dì suō pó hē"
   }
  ]
 }

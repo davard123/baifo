@@ -240,7 +240,7 @@ export default {
   {
    "n": 46,
    "text": "菩提萨婆诃。",
-   "pinyin": "pú tí sà pó hē"
+   "pinyin": "pú tí sā pó hē"
   }
  ]
 }

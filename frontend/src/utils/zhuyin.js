@@ -98,3 +98,48 @@ export function syllableToZhuyin(syl) {
 export function pinyinToZhuyin(py) {
   return String(py || '').trim().split(/\s+/).filter(Boolean).map(syllableToZhuyin)
 }
+
+// ── 反过来：注音 → 带声调拼音（咒语按课诵本注音改读音时，拼音跟着注音走）──
+const INI_R = { ㄅ: 'b', ㄆ: 'p', ㄇ: 'm', ㄈ: 'f', ㄉ: 'd', ㄊ: 't', ㄋ: 'n', ㄌ: 'l', ㄍ: 'g', ㄎ: 'k', ㄏ: 'h', ㄐ: 'j', ㄑ: 'q', ㄒ: 'x', ㄓ: 'zh', ㄔ: 'ch', ㄕ: 'sh', ㄖ: 'r', ㄗ: 'z', ㄘ: 'c', ㄙ: 's' }
+const FIN_R = Object.fromEntries(Object.entries(FINALS).filter(([k]) => !['iou', 'uei', 'uen', 'ueng', 'ê'].includes(k)).map(([k, v]) => [v, k]))
+FIN_R['ㄨㄥ'] = 'ong'
+FIN_R['ㄝ'] = 'ê'
+const ZERO = { i: 'yi', ia: 'ya', io: 'yo', ie: 'ye', iai: 'yai', iao: 'yao', iu: 'you', ian: 'yan', in: 'yin', iang: 'yang', ing: 'ying', iong: 'yong', u: 'wu', ua: 'wa', uo: 'wo', uai: 'wai', ui: 'wei', uan: 'wan', un: 'wen', uang: 'wang', ong: 'weng', ü: 'yu', üe: 'yue', üan: 'yuan', ün: 'yun' }
+const MARKS = { a: 'āáǎà', e: 'ēéěè', i: 'īíǐì', o: 'ōóǒò', u: 'ūúǔù', ü: 'ǖǘǚǜ', ê: 'ê̄ếê̌ề' }
+
+function addTone(base, tone) {
+  if (tone === 5) return base
+  let idx = base.search(/[ae]/)
+  if (idx < 0) idx = base.indexOf('ou') >= 0 ? base.indexOf('o') : -1
+  if (idx < 0) {
+    for (let k = base.length - 1; k >= 0; k -= 1) if ('iouü'.includes(base[k])) { idx = k; break }
+  }
+  if (idx < 0) return base
+  const v = base[idx]
+  return base.slice(0, idx) + [...MARKS[v]][tone - 1] + base.slice(idx + 1)
+}
+
+/** 一个注音音节 → 带声调拼音；认不出来返回空字符串。例：ㄋㄨㄛˊ → nuó，˙ㄇㄜ → me，ㄓ → zhī */
+export function zhuyinToPinyin(zy) {
+  let s = String(zy || '').trim()
+  if (!s) return ''
+  let tone = 1
+  if (s.startsWith('˙')) { tone = 5; s = s.slice(1) }
+  const t = { 'ˊ': 2, 'ˇ': 3, 'ˋ': 4 }[s.at(-1)]
+  if (t) { tone = t; s = s.slice(0, -1) }
+  let ini = ''
+  if (INI_R[s[0]]) { ini = INI_R[s[0]]; s = s.slice(1) }
+  let fin
+  if (!s) {
+    if (!/^(zh|ch|sh|r|z|c|s)$/.test(ini)) return ''
+    fin = 'i'
+  } else {
+    fin = FIN_R[s]
+    if (fin === undefined) return ''
+  }
+  let base
+  if (!ini) base = ZERO[fin] || fin
+  else if (/^[jqx]$/.test(ini) && fin.startsWith('ü')) base = ini + 'u' + fin.slice(1)
+  else base = ini + fin
+  return addTone(base, tone)
+}

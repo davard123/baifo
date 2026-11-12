@@ -15,27 +15,27 @@ export default {
   {
    "n": 1,
    "text": "南无阿弥多婆夜，",
-   "pinyin": "nā mó ā mí duō pó yè"
+   "pinyin": "nā mō wō mí duō pó yè"
   },
   {
    "n": 2,
    "text": "哆他伽多夜，",
-   "pinyin": "duō tuō qié duō yè"
+   "pinyin": "duō tā qié duō yè"
   },
   {
    "n": 3,
    "text": "哆地夜他。",
-   "pinyin": "duō dì yè tuō"
+   "pinyin": "duō dì yè tā"
   },
   {
    "n": 4,
    "text": "阿弥利都婆毗，",
-   "pinyin": "ā mí lì dū pó pí"
+   "pinyin": "wō mí lì dū pó pí"
   },
   {
    "n": 5,
    "text": "阿弥利哆，",
-   "pinyin": "ā mí lì duō"
+   "pinyin": "wō mí lì duō"
   },
   {
    "n": 6,
@@ -45,7 +45,7 @@ export default {
   {
    "n": 7,
    "text": "阿弥利哆，",
-   "pinyin": "ā mí lì duō"
+   "pinyin": "wō mí lì duō"
   },
   {
    "n": 8,
@@ -55,7 +55,7 @@ export default {
   {
    "n": 9,
    "text": "阿弥利哆，",
-   "pinyin": "ā mí lì duō"
+   "pinyin": "wō mí lì duō"
   },
   {
    "n": 10,
@@ -70,7 +70,7 @@ export default {
   {
    "n": 12,
    "text": "伽伽那，",
-   "pinyin": "qié qié nuó"
+   "pinyin": "qié qié nà"
   },
   {
    "n": 13,

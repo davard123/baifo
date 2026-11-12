@@ -39,163 +39,163 @@ export default {
   {
    "n": 1,
    "text": "南无萨怛他苏伽多耶阿啰诃帝三藐三菩陀写",
-   "pinyin": "nā mó sà dá tā sū jiā duō yē ā là hē dì sān miǎo sān pú tuó xiě",
+   "pinyin": "ná mó sā dá tā sū qié duō yě ā là hē dì sān miǎo sān pú tuó xiè",
    "section": "第一会"
   },
   {
    "n": 2,
    "text": "萨怛他佛陀俱胝瑟尼钐",
-   "pinyin": "sà dá tā fó tuó jù zhī sè ní shān",
+   "pinyin": "sā dá tā fó tuó jù zhǐ sè ní shān",
    "section": "第一会"
   },
   {
    "n": 3,
    "text": "南无萨婆勃陀勃地萨跢鞞弊",
-   "pinyin": "nā mó sà pó bó tuó bó dì sà dài pí bì",
+   "pinyin": "ná mó sā pó bó tuó bó dì sā duō pí bì",
    "section": "第一会"
   },
   {
    "n": 4,
    "text": "南无萨多南三藐三菩陀俱知喃",
-   "pinyin": "nā mó sà duō nán sān miǎo sān pú tuó jù zhī nán",
+   "pinyin": "ná mó sā duō nán sān miǎo sān pú tuó jù zhī nán",
    "section": "第一会"
   },
   {
    "n": 5,
    "text": "娑舍啰婆迦僧伽喃",
-   "pinyin": "suō shè là pó jiā sēng jiā nán",
+   "pinyin": "suō shě là pó jiā sēng qié nán",
    "section": "第一会"
   },
   {
    "n": 6,
    "text": "南无卢鸡阿罗汉跢喃",
-   "pinyin": "nā mó lú jī ā luó hàn dài nán",
+   "pinyin": "ná mó lú jī ā luó hàn duō nán",
    "section": "第一会"
   },
   {
    "n": 7,
    "text": "南无苏卢多波那喃",
-   "pinyin": "nā mó sū lú duō bō nà nán",
+   "pinyin": "ná mó sū lú duō bō nú nán",
    "section": "第一会"
   },
   {
    "n": 8,
    "text": "南无娑羯唎陀伽弥喃",
-   "pinyin": "nā mó suō jié lì tuó jiā mí nán",
+   "pinyin": "ná mó suō jié lì tuó qié mí nán",
    "section": "第一会"
   },
   {
    "n": 9,
    "text": "南无卢鸡三藐伽跢喃",
-   "pinyin": "nā mó lú jī sān miǎo jiā dài nán",
+   "pinyin": "ná mó lú jī sān miǎo qié duō nán",
    "section": "第一会"
   },
   {
    "n": 10,
    "text": "三藐伽波啰底波多那喃",
-   "pinyin": "sān miǎo jiā bō là dǐ bō duō nà nán",
+   "pinyin": "sān miǎo qié bō là dǐ bō duō nú nán",
    "section": "第一会"
   },
   {
    "n": 11,
    "text": "南无提婆离瑟赧",
-   "pinyin": "nā mó tí pó lí sè nǎn",
+   "pinyin": "ná mó tí pó lí sè nán",
    "section": "第一会"
   },
   {
    "n": 12,
    "text": "南无悉陀耶毗地耶陀啰离瑟赧",
-   "pinyin": "nā mó xī tuó yē pí dì yē tuó là lí sè nǎn",
+   "pinyin": "ná mó xī tuó yě pí dì yě tuó là lí sè nán",
    "section": "第一会"
   },
   {
    "n": 13,
    "text": "舍波奴揭啰诃娑诃娑啰摩他喃",
-   "pinyin": "shè bō nú jiē là hē suō hē suō là mó tā nán",
+   "pinyin": "shě bō nú jié là hē suō hē suō là mó tā nán",
    "section": "第一会"
   },
   {
    "n": 14,
    "text": "南无跋啰诃摩尼",
-   "pinyin": "nā mó bá là hē mó ní",
+   "pinyin": "ná mó bā là hē mó ní",
    "section": "第一会"
   },
   {
    "n": 15,
    "text": "南无因陀啰耶",
-   "pinyin": "nā mó yīn tuó là yē",
+   "pinyin": "ná mó yīn tuó là yě",
    "section": "第一会"
   },
   {
    "n": 16,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 17,
    "text": "嚧陀啰耶",
-   "pinyin": "lú tuó là yē",
+   "pinyin": "lú tuó là yě",
    "section": "第一会"
   },
   {
    "n": 18,
    "text": "乌摩般帝",
-   "pinyin": "wū mó bān dì",
+   "pinyin": "wū mó bó dì",
    "section": "第一会"
   },
   {
    "n": 19,
    "text": "娑醯夜耶",
-   "pinyin": "suō xī yè yē",
+   "pinyin": "suō xī yè yě",
    "section": "第一会"
   },
   {
    "n": 20,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 21,
    "text": "那啰野拏耶",
-   "pinyin": "nà là yě ná yē",
+   "pinyin": "nú là yě nú yě",
    "section": "第一会"
   },
   {
    "n": 22,
    "text": "槃遮摩诃三慕陀啰",
-   "pinyin": "pán zhē mó hē sān mù tuó là",
+   "pinyin": "pán zhé mó hē sān mù tuó là",
    "section": "第一会"
   },
   {
    "n": 23,
    "text": "南无悉羯唎多耶",
-   "pinyin": "nā mó xī jié lì duō yē",
+   "pinyin": "ná mó xī jié lì duō yě",
    "section": "第一会"
   },
   {
    "n": 24,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 25,
    "text": "摩诃迦啰耶",
-   "pinyin": "mó hē jiā là yē",
+   "pinyin": "mó hē jiā là yé",
    "section": "第一会"
   },
   {
    "n": 26,
    "text": "地唎般剌那伽啰",
-   "pinyin": "dì lì bān là nà jiā là",
+   "pinyin": "dì lì bó là nú qié là",
    "section": "第一会"
   },
   {
    "n": 27,
    "text": "毗陀啰波拏迦啰耶",
-   "pinyin": "pí tuó là bō ná jiā là yē",
+   "pinyin": "pí tuó là bō nú jiā là yě",
    "section": "第一会"
   },
   {
@@ -207,97 +207,97 @@ export default {
   {
    "n": 29,
    "text": "尸摩舍那泥婆悉泥",
-   "pinyin": "shī mó shè nà ní pó xī ní",
+   "pinyin": "shī mó shě nú ní pó xī ní",
    "section": "第一会"
   },
   {
    "n": 30,
    "text": "摩怛唎伽拏",
-   "pinyin": "mó dá lì jiā ná",
+   "pinyin": "mó dá lì qié nú",
    "section": "第一会"
   },
   {
    "n": 31,
    "text": "南无悉羯唎多耶",
-   "pinyin": "nā mó xī jié lì duō yē",
+   "pinyin": "ná mó xī jié lì duō yě",
    "section": "第一会"
   },
   {
    "n": 32,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 33,
    "text": "多他伽跢俱啰耶",
-   "pinyin": "duō tā jiā dài jù là yē",
+   "pinyin": "duō tā qié duō jù là yě",
    "section": "第一会"
   },
   {
    "n": 34,
    "text": "南无般头摩俱啰耶",
-   "pinyin": "nā mó bān tóu mó jù là yē",
+   "pinyin": "ná mó bó tóu mó jù là yě",
    "section": "第一会"
   },
   {
    "n": 35,
    "text": "南无跋阇啰俱啰耶",
-   "pinyin": "nā mó bá shé là jù là yē",
+   "pinyin": "ná mó bā shé là jù là yě",
    "section": "第一会"
   },
   {
    "n": 36,
    "text": "南无摩尼俱啰耶",
-   "pinyin": "nā mó mó ní jù là yē",
+   "pinyin": "ná mó mó ní jù là yě",
    "section": "第一会"
   },
   {
    "n": 37,
    "text": "南无伽阇俱啰耶",
-   "pinyin": "nā mó jiā shé jù là yē",
+   "pinyin": "ná mó qié shé jù là yě",
    "section": "第一会"
   },
   {
    "n": 38,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 39,
    "text": "帝唎茶输啰西那",
-   "pinyin": "dì lì chá shū là xī nà",
+   "pinyin": "dì lì chá shū là xī nú",
    "section": "第一会"
   },
   {
    "n": 40,
    "text": "波啰诃啰拏啰阇耶",
-   "pinyin": "bō là hē là ná là shé yē",
+   "pinyin": "bō là hē là nú là shé yě",
    "section": "第一会"
   },
   {
    "n": 41,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
    "n": 42,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 43,
    "text": "南无阿弥多婆耶",
-   "pinyin": "nā mó ā mí duō pó yē",
+   "pinyin": "ná mó ā mí duō pó yě",
    "section": "第一会"
   },
   {
    "n": 44,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
@@ -309,25 +309,25 @@ export default {
   {
    "n": 46,
    "text": "三藐三菩陀耶",
-   "pinyin": "sān miǎo sān pú tuó yē",
+   "pinyin": "sān miǎo sān pú tuó yě",
    "section": "第一会"
   },
   {
    "n": 47,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 48,
    "text": "阿刍鞞耶",
-   "pinyin": "ā chú pí yē",
+   "pinyin": "ā chú pí yě",
    "section": "第一会"
   },
   {
    "n": 49,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
@@ -339,37 +339,37 @@ export default {
   {
    "n": 51,
    "text": "三藐三菩陀耶",
-   "pinyin": "sān miǎo sān pú tuó yē",
+   "pinyin": "sān miǎo sān pú tuó yě",
    "section": "第一会"
   },
   {
    "n": 52,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 53,
    "text": "鞞沙阇耶俱卢吠柱唎耶",
-   "pinyin": "pí shā shé yē jù lú fèi zhù lì yē",
+   "pinyin": "pí shā shé yě jù lú fèi zhù lì yě",
    "section": "第一会"
   },
   {
    "n": 54,
    "text": "般啰婆啰阇耶",
-   "pinyin": "bān là pó là shé yē",
+   "pinyin": "bó là pó là shé yě",
    "section": "第一会"
   },
   {
    "n": 55,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
    "n": 56,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
@@ -381,13 +381,13 @@ export default {
   {
    "n": 58,
    "text": "萨怜捺啰剌阇耶",
-   "pinyin": "sà lián nà là là shé yē",
+   "pinyin": "sà lián nà là là shé yě",
    "section": "第一会"
   },
   {
    "n": 59,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
@@ -399,25 +399,25 @@ export default {
   {
    "n": 61,
    "text": "三藐三菩陀耶",
-   "pinyin": "sān miǎo sān pú tuó yē",
+   "pinyin": "sān miǎo sān pú tuó yě",
    "section": "第一会"
   },
   {
    "n": 62,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 63,
    "text": "舍鸡野母那曳",
-   "pinyin": "shè jī yě mǔ nà yè",
+   "pinyin": "shě jī yě mǔ nú yì",
    "section": "第一会"
   },
   {
    "n": 64,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
@@ -429,25 +429,25 @@ export default {
   {
    "n": 66,
    "text": "三藐三菩陀耶",
-   "pinyin": "sān miǎo sān pú tuó yē",
+   "pinyin": "sān miǎo sān pú tuó yě",
    "section": "第一会"
   },
   {
    "n": 67,
    "text": "南无婆伽婆帝",
-   "pinyin": "nā mó pó jiā pó dì",
+   "pinyin": "ná mó pó qié pó dì",
    "section": "第一会"
   },
   {
    "n": 68,
    "text": "剌怛那鸡都啰阇耶",
-   "pinyin": "là dá nà jī dōu là shé yē",
+   "pinyin": "là dá nú jī dū là shé yě",
    "section": "第一会"
   },
   {
    "n": 69,
    "text": "跢他伽多耶",
-   "pinyin": "dài tā jiā duō yē",
+   "pinyin": "duō tā qié duō yě",
    "section": "第一会"
   },
   {
@@ -459,61 +459,61 @@ export default {
   {
    "n": 71,
    "text": "三藐三菩陀耶",
-   "pinyin": "sān miǎo sān pú tuó yē",
+   "pinyin": "sān miǎo sān pú tuó yě",
    "section": "第一会"
   },
   {
    "n": 72,
    "text": "帝瓢南无萨羯唎多",
-   "pinyin": "dì piáo nā mó sà jié lì duō",
+   "pinyin": "dì piāo ná mó sā jié lì duō",
    "section": "第一会"
   },
   {
    "n": 73,
    "text": "翳昙婆伽婆多",
-   "pinyin": "yì tán pó jiā pó duō",
+   "pinyin": "yì tán pó qié pó duō",
    "section": "第一会"
   },
   {
    "n": 74,
    "text": "萨怛他伽都瑟尼钐",
-   "pinyin": "sà dá tā jiā dōu sè ní shān",
+   "pinyin": "sā dá tā qié dū sè ní shān",
    "section": "第一会"
   },
   {
    "n": 75,
    "text": "萨怛多般怛蓝",
-   "pinyin": "sà dá duō bān dá lán",
+   "pinyin": "sā dá duō bó dá lán",
    "section": "第一会"
   },
   {
    "n": 76,
    "text": "南无阿婆啰视耽",
-   "pinyin": "nā mó ā pó là shì dān",
+   "pinyin": "ná mó ā pó là shì dān",
    "section": "第一会"
   },
   {
    "n": 77,
    "text": "般啰帝扬岐啰",
-   "pinyin": "bān là dì yáng qí là",
+   "pinyin": "bó là dì yáng qǐ là",
    "section": "第一会"
   },
   {
    "n": 78,
    "text": "萨啰婆部多揭啰诃",
-   "pinyin": "sà là pó bù duō jiē là hē",
+   "pinyin": "sà là pó bù duō jié là hē",
    "section": "第一会"
   },
   {
    "n": 79,
    "text": "尼揭啰诃羯迦啰诃尼",
-   "pinyin": "ní jiē là hē jié jiā là hē ní",
+   "pinyin": "ní jié là hē jié jiā là hē ní",
    "section": "第一会"
   },
   {
    "n": 80,
    "text": "跋啰毖地耶叱陀你",
-   "pinyin": "bá là bì dì yē chì tuó nǐ",
+   "pinyin": "bā là bì dì yě qī tuó nǐ",
    "section": "第一会"
   },
   {
@@ -525,43 +525,43 @@ export default {
   {
    "n": 82,
    "text": "般唎怛啰耶儜揭唎",
-   "pinyin": "bān lì dá là yē níng jiē lì",
+   "pinyin": "bó lì dá là yě níng jié lì",
    "section": "第一会"
   },
   {
    "n": 83,
    "text": "萨啰婆槃陀那目叉尼",
-   "pinyin": "sà là pó pán tuó nà mù chā ní",
+   "pinyin": "sā là pó pán tuó nú mù chà ní",
    "section": "第一会"
   },
   {
    "n": 84,
    "text": "萨啰婆突瑟吒",
-   "pinyin": "sà là pó tū sè zhà",
+   "pinyin": "sā là pó tù sè zhà",
    "section": "第一会"
   },
   {
    "n": 85,
    "text": "突悉乏般那你伐啰尼",
-   "pinyin": "tū xī fá bān nà nǐ fá là ní",
+   "pinyin": "tù xī fàn bó nú ní fá là ní",
    "section": "第一会"
   },
   {
    "n": 86,
    "text": "赭都啰失帝南",
-   "pinyin": "zhě dōu là shī dì nán",
+   "pinyin": "zhě dū là shī dì nán",
    "section": "第一会"
   },
   {
    "n": 87,
    "text": "羯啰诃娑诃萨啰若阇",
-   "pinyin": "jié là hē suō hē sà là ruò shé",
+   "pinyin": "jié là hē suō hē sā là ruò shé",
    "section": "第一会"
   },
   {
    "n": 88,
    "text": "毗多崩娑那羯唎",
-   "pinyin": "pí duō bēng suō nà jié lì",
+   "pinyin": "pí duō bēng suō nú jié lì",
    "section": "第一会"
   },
   {
@@ -573,13 +573,13 @@ export default {
   {
    "n": 90,
    "text": "那叉刹怛啰若阇",
-   "pinyin": "nà chā chà dá là ruò shé",
+   "pinyin": "nú chà shā dá là ruò shé",
    "section": "第一会"
   },
   {
    "n": 91,
    "text": "波啰萨陀那羯唎",
-   "pinyin": "bō là sà tuó nà jié lì",
+   "pinyin": "bō là sā tuó nú jié lì",
    "section": "第一会"
   },
   {
@@ -591,31 +591,31 @@ export default {
   {
    "n": 93,
    "text": "摩诃揭啰诃若阇",
-   "pinyin": "mó hē jiē là hē ruò shé",
+   "pinyin": "mó hē jié là hē ruò shé",
    "section": "第一会"
   },
   {
    "n": 94,
    "text": "毗多崩萨那羯唎",
-   "pinyin": "pí duō bēng sà nà jié lì",
+   "pinyin": "pí duō bēng sā nú jié lì",
    "section": "第一会"
   },
   {
    "n": 95,
    "text": "萨婆舍都嚧你婆啰若阇",
-   "pinyin": "sà pó shè dōu lú nǐ pó là ruò shé",
+   "pinyin": "sā pó shě dū lú nǐ pó là ruò shé",
    "section": "第一会"
   },
   {
    "n": 96,
    "text": "呼蓝突悉乏难遮那舍尼",
-   "pinyin": "hū lán tū xī fá nán zhē nà shè ní",
+   "pinyin": "hū lán tù xī fàn nàn zhé nú shě ní",
    "section": "第一会"
   },
   {
    "n": 97,
    "text": "毖沙舍悉怛啰",
-   "pinyin": "bì shā shè xī dá là",
+   "pinyin": "bì shā shě xī dá là",
    "section": "第一会"
   },
   {
@@ -627,13 +627,13 @@ export default {
   {
    "n": 99,
    "text": "阿般啰视多具啰",
-   "pinyin": "ā bān là shì duō jù là",
+   "pinyin": "ā bó là shì duō jù là",
    "section": "第一会"
   },
   {
    "n": 100,
    "text": "摩诃般啰战持",
-   "pinyin": "mó hē bān là zhàn chí",
+   "pinyin": "mó hē bó là zhàn chí",
    "section": "第一会"
   },
   {
@@ -657,13 +657,13 @@ export default {
   {
    "n": 104,
    "text": "摩诃跋啰槃陀啰婆悉你",
-   "pinyin": "mó hē bá là pán tuó là pó xī nǐ",
+   "pinyin": "mó hē bā là pán tuó là pó xī nǐ",
    "section": "第一会"
   },
   {
    "n": 105,
    "text": "阿唎耶多啰",
-   "pinyin": "ā lì yē duō là",
+   "pinyin": "ā lì yě duō là",
    "section": "第一会"
   },
   {
@@ -675,19 +675,19 @@ export default {
   {
    "n": 107,
    "text": "誓婆毗阇耶",
-   "pinyin": "shì pó pí shé yē",
+   "pinyin": "shì pó pí shé yě",
    "section": "第一会"
   },
   {
    "n": 108,
    "text": "跋阇啰摩礼底",
-   "pinyin": "bá shé là mó lǐ dǐ",
+   "pinyin": "bā shé là mó lǐ dǐ",
    "section": "第一会"
   },
   {
    "n": 109,
    "text": "毗舍嚧多",
-   "pinyin": "pí shè lú duō",
+   "pinyin": "pí shě lú duō",
    "section": "第一会"
   },
   {
@@ -699,31 +699,31 @@ export default {
   {
    "n": 111,
    "text": "跋阇啰制喝那阿遮",
-   "pinyin": "bá shé là zhì hē nà ā zhē",
+   "pinyin": "bā shé là zhì hé nú ā zhé",
    "section": "第一会"
   },
   {
    "n": 112,
    "text": "摩啰制婆般啰质多",
-   "pinyin": "mó là zhì pó bān là zhì duō",
+   "pinyin": "mó là zhì pó bó là zhì duō",
    "section": "第一会"
   },
   {
    "n": 113,
    "text": "跋阇啰擅持",
-   "pinyin": "bá shé là shàn chí",
+   "pinyin": "bā shé là shàn chí",
    "section": "第一会"
   },
   {
    "n": 114,
    "text": "毗舍啰遮",
-   "pinyin": "pí shè là zhē",
+   "pinyin": "pí shě là zhé",
    "section": "第一会"
   },
   {
    "n": 115,
    "text": "扇多舍鞞提婆补视多",
-   "pinyin": "shàn duō shè pí tí pó bǔ shì duō",
+   "pinyin": "shàn duō shě pí tí pó bǔ shì duō",
    "section": "第一会"
   },
   {
@@ -741,25 +741,25 @@ export default {
   {
    "n": 118,
    "text": "阿唎耶多啰",
-   "pinyin": "ā lì yē duō là",
+   "pinyin": "ā lì yě duō là",
    "section": "第一会"
   },
   {
    "n": 119,
    "text": "摩诃婆啰阿般啰",
-   "pinyin": "mó hē pó là ā bān là",
+   "pinyin": "mó hē pó là ā bó là",
    "section": "第一会"
   },
   {
    "n": 120,
    "text": "跋阇啰商揭啰制婆",
-   "pinyin": "bá shé là shāng jiē là zhì pó",
+   "pinyin": "bā shé là shāng jiē là zhì pó",
    "section": "第一会"
   },
   {
    "n": 121,
    "text": "跋阇啰俱摩唎",
-   "pinyin": "bá shé là jù mó lì",
+   "pinyin": "bā shé là jù mó lì",
    "section": "第一会"
   },
   {
@@ -771,61 +771,61 @@ export default {
   {
    "n": 123,
    "text": "跋阇啰喝萨多遮",
-   "pinyin": "bá shé là hē sà duō zhē",
+   "pinyin": "bā shé là hé sā duō zhé",
    "section": "第一会"
   },
   {
    "n": 124,
    "text": "毗地耶干遮那摩唎迦",
-   "pinyin": "pí dì yē gān zhē nà mó lì jiā",
+   "pinyin": "pí dì yě qián zhé nú mó lì jiā",
    "section": "第一会"
   },
   {
    "n": 125,
    "text": "啒苏母婆羯啰多那",
-   "pinyin": "gǔ sū mǔ pó jié là duō nà",
+   "pinyin": "gǔ sū mǔ pó jié là duō nú",
    "section": "第一会"
   },
   {
    "n": 126,
    "text": "鞞嚧遮那俱唎耶",
-   "pinyin": "pí lú zhē nà jù lì yē",
+   "pinyin": "pí lú zhé nú jù lì yě",
    "section": "第一会"
   },
   {
    "n": 127,
    "text": "夜啰菟瑟尼钐",
-   "pinyin": "yè là tú sè ní shān",
+   "pinyin": "yè là tù sè ní shān",
    "section": "第一会"
   },
   {
    "n": 128,
    "text": "毗折蓝婆摩尼遮",
-   "pinyin": "pí zhé lán pó mó ní zhē",
+   "pinyin": "pí jì lán pó mó ní zhé",
    "section": "第一会"
   },
   {
    "n": 129,
    "text": "跋阇啰迦那迦波啰婆",
-   "pinyin": "bá shé là jiā nà jiā bō là pó",
+   "pinyin": "bā shé là jiā nú jiā bō là pó",
    "section": "第一会"
   },
   {
    "n": 130,
    "text": "嚧阇那跋阇啰顿稚遮",
-   "pinyin": "lú shé nà bá shé là dùn zhì zhē",
+   "pinyin": "lú shé nú bā shé là dùn zhī zhé",
    "section": "第一会"
   },
   {
    "n": 131,
    "text": "税多遮迦摩啰",
-   "pinyin": "shuì duō zhē jiā mó là",
+   "pinyin": "shuì duō zhé jiā mó là",
    "section": "第一会"
   },
   {
    "n": 132,
    "text": "刹奢尸波啰婆",
-   "pinyin": "chà shē shī bō là pó",
+   "pinyin": "shā shē shī bō là pó",
    "section": "第一会"
   },
   {
@@ -837,7 +837,7 @@ export default {
   {
    "n": 134,
    "text": "母陀啰羯拏",
-   "pinyin": "mǔ tuó là jié ná",
+   "pinyin": "mǔ tuó là jié nú",
    "section": "第一会"
   },
   {
@@ -849,109 +849,109 @@ export default {
   {
    "n": 136,
    "text": "掘梵都",
-   "pinyin": "jué fàn dōu",
+   "pinyin": "jué fàn dū",
    "section": "第一会"
   },
   {
    "n": 137,
    "text": "印兔那么么写",
-   "pinyin": "yìn tù nà me me xiě",
+   "pinyin": "yìn tù nú mē mē xiè",
    "section": "第一会"
   },
   {
    "n": 138,
    "text": "乌𤙖",
-   "pinyin": "wū hōng",
+   "pinyin": "wū xìn",
    "section": "第二会"
   },
   {
    "n": 139,
    "text": "唎瑟揭拏",
-   "pinyin": "lì sè jiē ná",
+   "pinyin": "lì sè jié nú",
    "section": "第二会"
   },
   {
    "n": 140,
    "text": "般刺舍悉多",
-   "pinyin": "bān cì shè xī duō",
+   "pinyin": "bó cì shě xī duō",
    "section": "第二会"
   },
   {
    "n": 141,
    "text": "萨怛他伽都瑟尼钐",
-   "pinyin": "sà dá tā jiā dōu sè ní shān",
+   "pinyin": "sā dá tā qié dū sè ní shān",
    "section": "第二会"
   },
   {
    "n": 142,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 143,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 144,
    "text": "瞻婆那",
-   "pinyin": "zhān pó nà",
+   "pinyin": "zhān pó nú",
    "section": "第二会"
   },
   {
    "n": 145,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 146,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 147,
    "text": "悉耽婆那",
-   "pinyin": "xī dān pó nà",
+   "pinyin": "xī dān pó nú",
    "section": "第二会"
   },
   {
    "n": 148,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 149,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 150,
    "text": "波罗瑟地耶三般叉拏羯啰",
-   "pinyin": "bō luó sè dì yē sān bān chā ná jié là",
+   "pinyin": "bō luó sè dì yě sān bó chà nú jié là",
    "section": "第二会"
   },
   {
    "n": 151,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 152,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 153,
    "text": "萨婆药叉喝啰刹娑",
-   "pinyin": "sà pó yào chā hē là chà suō",
+   "pinyin": "sā pó yào chà hé là shā suō",
    "section": "第二会"
   },
   {
@@ -963,67 +963,67 @@ export default {
   {
    "n": 155,
    "text": "毗腾崩萨那羯啰",
-   "pinyin": "pí téng bēng sà nà jié là",
+   "pinyin": "pí téng bēng sā nú jié là",
    "section": "第二会"
   },
   {
    "n": 156,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 157,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 158,
    "text": "者都啰尸底南",
-   "pinyin": "zhě dōu là shī dǐ nán",
+   "pinyin": "zhě dū là shī dǐ nán",
    "section": "第二会"
   },
   {
    "n": 159,
    "text": "揭啰诃娑诃萨啰南",
-   "pinyin": "jiē là hē suō hē sà là nán",
+   "pinyin": "jié là hē suō hē sā là nán",
    "section": "第二会"
   },
   {
    "n": 160,
    "text": "毗腾崩萨那啰",
-   "pinyin": "pí téng bēng sà nà là",
+   "pinyin": "pí téng bēng sā nú là",
    "section": "第二会"
   },
   {
    "n": 161,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第二会"
   },
   {
    "n": 162,
    "text": "都卢雍",
-   "pinyin": "dōu lú yōng",
+   "pinyin": "dū lú yōng",
    "section": "第二会"
   },
   {
    "n": 163,
    "text": "啰叉",
-   "pinyin": "là chā",
+   "pinyin": "là chà",
    "section": "第二会"
   },
   {
    "n": 164,
    "text": "婆伽梵",
-   "pinyin": "pó jiā fàn",
+   "pinyin": "pó qié fàn",
    "section": "第二会"
   },
   {
    "n": 165,
    "text": "萨怛他伽都瑟尼钐",
-   "pinyin": "sà dá tā jiā dōu sè ní shān",
+   "pinyin": "sā dá tā qié dū sè ní shān",
    "section": "第二会"
   },
   {
@@ -1035,19 +1035,19 @@ export default {
   {
    "n": 167,
    "text": "摩诃娑诃萨啰",
-   "pinyin": "mó hē suō hē sà là",
+   "pinyin": "mó hē suō hē sā là",
    "section": "第二会"
   },
   {
    "n": 168,
    "text": "勃树娑诃萨啰室唎沙",
-   "pinyin": "bó shù suō hē sà là shì lì shā",
+   "pinyin": "bó shù suō hē sā là shǐ lì shā",
    "section": "第二会"
   },
   {
    "n": 169,
    "text": "俱知娑诃萨泥帝隶",
-   "pinyin": "jù zhī suō hē sà ní dì lì",
+   "pinyin": "jù zhī suō hē sā ní dì lì",
    "section": "第二会"
   },
   {
@@ -1059,19 +1059,19 @@ export default {
   {
    "n": 171,
    "text": "吒吒甖迦",
-   "pinyin": "zhà zhà yīng jiā",
+   "pinyin": "zhà zhà yìn jiā",
    "section": "第二会"
   },
   {
    "n": 172,
    "text": "摩诃跋阇嚧陀啰",
-   "pinyin": "mó hē bá shé lú tuó là",
+   "pinyin": "mó hē bā shé lú tuó là",
    "section": "第二会"
   },
   {
    "n": 173,
    "text": "帝唎菩婆那",
-   "pinyin": "dì lì pú pó nà",
+   "pinyin": "dì lì pú pó nú",
    "section": "第二会"
   },
   {
@@ -1083,25 +1083,25 @@ export default {
   {
    "n": 175,
    "text": "乌𤙖",
-   "pinyin": "wū hōng",
+   "pinyin": "wū xìn",
    "section": "第二会"
   },
   {
    "n": 176,
    "text": "莎悉帝薄婆都",
-   "pinyin": "suō xī dì báo pó dōu",
+   "pinyin": "suō xī dì bó pó dū",
    "section": "第二会"
   },
   {
    "n": 177,
    "text": "么么",
-   "pinyin": "me me",
+   "pinyin": "mē mē",
    "section": "第二会"
   },
   {
    "n": 178,
    "text": "印兔那么么写",
-   "pinyin": "yìn tù nà me me xiě",
+   "pinyin": "yìn tù nú mē mē xiè",
    "section": "第二会"
   },
   {
@@ -1131,31 +1131,31 @@ export default {
   {
    "n": 183,
    "text": "毗沙婆夜",
-   "pinyin": "pí shā pó yè",
+   "pinyin": "pí suō pó yè",
    "section": "第三会"
   },
   {
    "n": 184,
    "text": "舍萨多啰婆夜",
-   "pinyin": "shè sà duō là pó yè",
+   "pinyin": "shě sā duō là pó yè",
    "section": "第三会"
   },
   {
    "n": 185,
    "text": "婆啰斫羯啰婆夜",
-   "pinyin": "pó là zhuó jié là pó yè",
+   "pinyin": "pó là zuò jié là pó yè",
    "section": "第三会"
   },
   {
    "n": 186,
    "text": "突瑟叉婆夜",
-   "pinyin": "tū sè chā pó yè",
+   "pinyin": "tù sè chà pó yè",
    "section": "第三会"
   },
   {
    "n": 187,
    "text": "阿舍你婆夜",
-   "pinyin": "ā shè nǐ pó yè",
+   "pinyin": "ā shě nǐ pó yè",
    "section": "第三会"
   },
   {
@@ -1167,7 +1167,7 @@ export default {
   {
    "n": 189,
    "text": "陀啰尼部弥剑波伽波陀婆夜",
-   "pinyin": "tuó là ní bù mí jiàn bō jiā bō tuó pó yè",
+   "pinyin": "tuó là ní bù mí jiàn bō qié bō tuó pó yè",
    "section": "第三会"
   },
   {
@@ -1179,13 +1179,13 @@ export default {
   {
    "n": 191,
    "text": "剌阇坛茶婆夜",
-   "pinyin": "là shé tán chá pó yè",
+   "pinyin": "là shě tán chá pó yè",
    "section": "第三会"
   },
   {
    "n": 192,
    "text": "那伽婆夜",
-   "pinyin": "nà jiā pó yè",
+   "pinyin": "nú qié pó yè",
    "section": "第三会"
   },
   {
@@ -1197,85 +1197,85 @@ export default {
   {
    "n": 194,
    "text": "苏波啰拏婆夜",
-   "pinyin": "sū bō là ná pó yè",
+   "pinyin": "sū bō là nú pó yè",
    "section": "第三会"
   },
   {
    "n": 195,
    "text": "药叉揭啰诃",
-   "pinyin": "yào chā jiē là hē",
+   "pinyin": "yào chà jié là hē",
    "section": "第三会"
   },
   {
    "n": 196,
    "text": "啰叉私揭啰诃",
-   "pinyin": "là chā sī jiē là hē",
+   "pinyin": "là chà sī jié là hē",
    "section": "第三会"
   },
   {
    "n": 197,
    "text": "毕唎多揭啰诃",
-   "pinyin": "bì lì duō jiē là hē",
+   "pinyin": "bì lì duō jié là hē",
    "section": "第三会"
   },
   {
    "n": 198,
    "text": "毗舍遮揭啰诃",
-   "pinyin": "pí shè zhē jiē là hē",
+   "pinyin": "pí shě zhé jié là hē",
    "section": "第三会"
   },
   {
    "n": 199,
    "text": "部多揭啰诃",
-   "pinyin": "bù duō jiē là hē",
+   "pinyin": "bù duō jié là hē",
    "section": "第三会"
   },
   {
    "n": 200,
    "text": "鸠槃茶揭啰诃",
-   "pinyin": "jiū pán chá jiē là hē",
+   "pinyin": "jiū pán chá jié là hē",
    "section": "第三会"
   },
   {
    "n": 201,
    "text": "补单那揭啰诃",
-   "pinyin": "bǔ dān nà jiē là hē",
+   "pinyin": "bǔ dān nú jié là hē",
    "section": "第三会"
   },
   {
    "n": 202,
    "text": "迦吒补单那揭啰诃",
-   "pinyin": "jiā zhà bǔ dān nà jiē là hē",
+   "pinyin": "jiā zhà bǔ dān nú jié là hē",
    "section": "第三会"
   },
   {
    "n": 203,
    "text": "悉干度揭啰诃",
-   "pinyin": "xī gān dù jiē là hē",
+   "pinyin": "xī qián dù jié là hē",
    "section": "第三会"
   },
   {
    "n": 204,
    "text": "阿播悉摩啰揭啰诃",
-   "pinyin": "ā bō xī mó là jiē là hē",
+   "pinyin": "ā bò xī mó là jié là hē",
    "section": "第三会"
   },
   {
    "n": 205,
    "text": "乌檀摩陀揭啰诃",
-   "pinyin": "wū tán mó tuó jiē là hē",
+   "pinyin": "wū tán mó tuó jié là hē",
    "section": "第三会"
   },
   {
    "n": 206,
    "text": "车夜揭啰诃",
-   "pinyin": "chē yè jiē là hē",
+   "pinyin": "chē yè jié là hē",
    "section": "第三会"
   },
   {
    "n": 207,
    "text": "醯唎婆帝揭啰诃",
-   "pinyin": "xī lì pó dì jiē là hē",
+   "pinyin": "xī lì pó dì jié là hē",
    "section": "第三会"
   },
   {
@@ -1287,7 +1287,7 @@ export default {
   {
    "n": 209,
    "text": "揭婆诃唎南",
-   "pinyin": "jiē pó hē lì nán",
+   "pinyin": "jié pó hē lì nán",
    "section": "第三会"
   },
   {
@@ -1341,7 +1341,7 @@ export default {
   {
    "n": 218,
    "text": "阿输遮诃唎女",
-   "pinyin": "ā shū zhē hē lì nǚ",
+   "pinyin": "ā shū zhé hē lì nǚ",
    "section": "第三会"
   },
   {
@@ -1353,19 +1353,19 @@ export default {
   {
    "n": 220,
    "text": "帝钐萨鞞钐",
-   "pinyin": "dì shān sà pí shān",
+   "pinyin": "dì shān sā pí shān",
    "section": "第三会"
   },
   {
    "n": 221,
    "text": "萨婆揭啰诃南",
-   "pinyin": "sà pó jiē là hē nán",
+   "pinyin": "sā pó jié là hē nán",
    "section": "第三会"
   },
   {
    "n": 222,
    "text": "毗陀耶阇嗔陀夜弥",
-   "pinyin": "pí tuó yē shé chēn tuó yè mí",
+   "pinyin": "pí tuó yè shé chēn tuó yè mí",
    "section": "第三会"
   },
   {
@@ -1377,7 +1377,7 @@ export default {
   {
    "n": 224,
    "text": "波唎跋啰者迦讫唎担",
-   "pinyin": "bō lì bá là zhě jiā qì lì dān",
+   "pinyin": "bō lì bā là zhě jiā qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1395,7 +1395,7 @@ export default {
   {
    "n": 227,
    "text": "茶演尼讫唎担",
-   "pinyin": "chá yǎn ní qì lì dān",
+   "pinyin": "chá yǎn ní qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1413,13 +1413,13 @@ export default {
   {
    "n": 230,
    "text": "摩诃般输般怛夜",
-   "pinyin": "mó hē bān shū bān dá yè",
+   "pinyin": "mó hē bō shū bó dá yè",
    "section": "第三会"
   },
   {
    "n": 231,
    "text": "嚧陀啰讫唎担",
-   "pinyin": "lú tuó là qì lì dān",
+   "pinyin": "lú tuó là qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1437,7 +1437,7 @@ export default {
   {
    "n": 234,
    "text": "那啰夜拏讫唎担",
-   "pinyin": "nà là yè ná qì lì dān",
+   "pinyin": "nú là yè nú qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1455,7 +1455,7 @@ export default {
   {
    "n": 237,
    "text": "怛埵伽嚧茶西讫唎担",
-   "pinyin": "dá duǒ jiā lú chá xī qì lì dān",
+   "pinyin": "dá duò qié lú chá xī qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1473,7 +1473,7 @@ export default {
   {
    "n": 240,
    "text": "摩诃迦啰摩怛唎伽拏讫唎担",
-   "pinyin": "mó hē jiā là mó dá lì jiā ná qì lì dān",
+   "pinyin": "mó hē jiā là mó dá lì qié nú qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1491,7 +1491,7 @@ export default {
   {
    "n": 243,
    "text": "迦波唎迦讫唎担",
-   "pinyin": "jiā bō lì jiā qì lì dān",
+   "pinyin": "jiā bō lì jiā qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1515,7 +1515,7 @@ export default {
   {
    "n": 247,
    "text": "萨婆啰他娑达那讫唎担",
-   "pinyin": "sà pó là tā suō dá nà qì lì dān",
+   "pinyin": "sā pó là tuō suō dá nú qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1533,7 +1533,7 @@ export default {
   {
    "n": 250,
    "text": "赭咄啰婆耆你讫唎担",
-   "pinyin": "zhě duō là pó qí nǐ qì lì dān",
+   "pinyin": "zhě dū là pó qī nǐ qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1551,19 +1551,19 @@ export default {
   {
    "n": 253,
    "text": "毗唎羊讫唎知",
-   "pinyin": "pí lì yáng qì lì zhī",
+   "pinyin": "pí lì yáng qǐ lì zhī",
    "section": "第三会"
   },
   {
    "n": 254,
    "text": "难陀鸡沙啰伽拏般帝",
-   "pinyin": "nán tuó jī shā là jiā ná bān dì",
+   "pinyin": "nán tuó jī shā là qié nú bó dì",
    "section": "第三会"
   },
   {
    "n": 255,
    "text": "索醯夜讫唎担",
-   "pinyin": "suǒ xī yè qì lì dān",
+   "pinyin": "suǒ xī yè qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1581,7 +1581,7 @@ export default {
   {
    "n": 258,
    "text": "那揭那舍啰婆拏讫唎担",
-   "pinyin": "nà jiē nà shè là pó ná qì lì dān",
+   "pinyin": "nú jié nú shě là pó nú qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1599,7 +1599,7 @@ export default {
   {
    "n": 261,
    "text": "阿罗汉讫唎担毗陀夜阇嗔陀夜弥",
-   "pinyin": "ā luó hàn qì lì dān pí tuó yè shé chēn tuó yè mí",
+   "pinyin": "ā luó hàn qǐ lì dàn pí tuó yè shé chēn tuó yè mí",
    "section": "第三会"
   },
   {
@@ -1611,7 +1611,7 @@ export default {
   {
    "n": 263,
    "text": "毗多啰伽讫唎担",
-   "pinyin": "pí duō là jiā qì lì dān",
+   "pinyin": "pí duō là qié qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1623,7 +1623,7 @@ export default {
   {
    "n": 265,
    "text": "鸡啰夜弥跋阇啰波你",
-   "pinyin": "jī là yè mí bá shé là bō nǐ",
+   "pinyin": "jī là yè mí bā shé là bō nǐ",
    "section": "第三会"
   },
   {
@@ -1635,7 +1635,7 @@ export default {
   {
    "n": 267,
    "text": "迦地般帝讫唎担",
-   "pinyin": "jiā dì bān dì qì lì dān",
+   "pinyin": "jiā dì bó dì qǐ lì dàn",
    "section": "第三会"
   },
   {
@@ -1653,43 +1653,43 @@ export default {
   {
    "n": 270,
    "text": "啰叉罔",
-   "pinyin": "là chā wǎng",
+   "pinyin": "là chà wǎng",
    "section": "第三会"
   },
   {
    "n": 271,
    "text": "婆伽梵",
-   "pinyin": "pó jiā fàn",
+   "pinyin": "pó qié fàn",
    "section": "第三会"
   },
   {
    "n": 272,
    "text": "印兔那么么写",
-   "pinyin": "yìn tù nà me me xiě",
+   "pinyin": "yìn tù nú mē mē xiè",
    "section": "第三会"
   },
   {
    "n": 273,
    "text": "婆伽梵",
-   "pinyin": "pó jiā fàn",
+   "pinyin": "pó qié fàn",
    "section": "第四会"
   },
   {
    "n": 274,
    "text": "萨怛多般怛啰",
-   "pinyin": "sà dá duō bān dá là",
+   "pinyin": "sā dá duō bó dá là",
    "section": "第四会"
   },
   {
    "n": 275,
    "text": "南无粹都帝",
-   "pinyin": "nā mó cuì dōu dì",
+   "pinyin": "ná mó cuì dū dì",
    "section": "第四会"
   },
   {
    "n": 276,
    "text": "阿悉多那啰剌迦",
-   "pinyin": "ā xī duō nà là là jiā",
+   "pinyin": "ā xī duō nú là là jiā",
    "section": "第四会"
   },
   {
@@ -1701,13 +1701,13 @@ export default {
   {
    "n": 278,
    "text": "毗迦萨怛多钵帝唎",
-   "pinyin": "pí jiā sà dá duō bō dì lì",
+   "pinyin": "pí jiā sā dá duō bó dì lì",
    "section": "第四会"
   },
   {
    "n": 279,
    "text": "什佛啰什佛啰",
-   "pinyin": "shén fó là shén fó là",
+   "pinyin": "shí fó là shí fó là",
    "section": "第四会"
   },
   {
@@ -1725,13 +1725,13 @@ export default {
   {
    "n": 282,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第四会"
   },
   {
    "n": 283,
    "text": "虎𤙖",
-   "pinyin": "hǔ hōng",
+   "pinyin": "hǔ xìn",
    "section": "第四会"
   },
   {
@@ -1761,7 +1761,7 @@ export default {
   {
    "n": 288,
    "text": "阿牟迦耶泮",
-   "pinyin": "ā mù jiā yē pàn",
+   "pinyin": "ā móu jiā yě pàn",
    "section": "第四会"
   },
   {
@@ -1785,85 +1785,85 @@ export default {
   {
    "n": 292,
    "text": "萨婆提鞞弊泮",
-   "pinyin": "sà pó tí pí bì pàn",
+   "pinyin": "sā pó tí pí bì pàn",
    "section": "第四会"
   },
   {
    "n": 293,
    "text": "萨婆那伽弊泮",
-   "pinyin": "sà pó nà jiā bì pàn",
+   "pinyin": "sā pó nú qié bì pàn",
    "section": "第四会"
   },
   {
    "n": 294,
    "text": "萨婆药叉弊泮",
-   "pinyin": "sà pó yào chā bì pàn",
+   "pinyin": "sā pó yào chà bì pàn",
    "section": "第四会"
   },
   {
    "n": 295,
    "text": "萨婆干闼婆弊泮",
-   "pinyin": "sà pó gān tà pó bì pàn",
+   "pinyin": "sā pó qián tà pó bì pàn",
    "section": "第四会"
   },
   {
    "n": 296,
    "text": "萨婆补丹那弊泮",
-   "pinyin": "sà pó bǔ dān nà bì pàn",
+   "pinyin": "sā pó bǔ dān nú bì pàn",
    "section": "第四会"
   },
   {
    "n": 297,
    "text": "迦吒补丹那弊泮",
-   "pinyin": "jiā zhà bǔ dān nà bì pàn",
+   "pinyin": "jiā zhà bǔ dān nú bì pàn",
    "section": "第四会"
   },
   {
    "n": 298,
    "text": "萨婆突狼枳帝弊泮",
-   "pinyin": "sà pó tū láng zhǐ dì bì pàn",
+   "pinyin": "sā pó tú láng zhǐ dì bì pàn",
    "section": "第四会"
   },
   {
    "n": 299,
    "text": "萨婆突澁比犁讫瑟帝弊泮",
-   "pinyin": "sà pó tū sè bǐ lí qì sè dì bì pàn",
+   "pinyin": "sā pó tú sè bǐ lì qǐ sè dì bì pàn",
    "section": "第四会"
   },
   {
    "n": 300,
    "text": "萨婆什婆利弊泮",
-   "pinyin": "sà pó shén pó lì bì pàn",
+   "pinyin": "sā pó shí pó lì bì pàn",
    "section": "第四会"
   },
   {
    "n": 301,
    "text": "萨婆阿播悉摩犁弊泮",
-   "pinyin": "sà pó ā bō xī mó lí bì pàn",
+   "pinyin": "sā pó ā bò xī mó lì bì pàn",
    "section": "第四会"
   },
   {
    "n": 302,
    "text": "萨婆舍啰婆拏弊泮",
-   "pinyin": "sà pó shè là pó ná bì pàn",
+   "pinyin": "sā pó shě là pó nú bì pàn",
    "section": "第四会"
   },
   {
    "n": 303,
    "text": "萨婆地帝鸡弊泮",
-   "pinyin": "sà pó dì dì jī bì pàn",
+   "pinyin": "sā pó dì dì jī bì pàn",
    "section": "第四会"
   },
   {
    "n": 304,
    "text": "萨婆怛摩陀继弊泮",
-   "pinyin": "sà pó dá mó tuó jì bì pàn",
+   "pinyin": "sā pó dá mó tuó jì bì pàn",
    "section": "第四会"
   },
   {
    "n": 305,
    "text": "萨婆毗陀耶啰誓遮犁弊泮",
-   "pinyin": "sà pó pí tuó yē là shì zhē lí bì pàn",
+   "pinyin": "sā pó pí tuó yě là shì zhé lì bì pàn",
    "section": "第四会"
   },
   {
@@ -1875,25 +1875,25 @@ export default {
   {
    "n": 307,
    "text": "萨婆啰他娑陀鸡弊泮",
-   "pinyin": "sà pó là tā suō tuó jī bì pàn",
+   "pinyin": "sā pó là tā suō tuó jī bì pàn",
    "section": "第四会"
   },
   {
    "n": 308,
    "text": "毗地夜遮唎弊泮",
-   "pinyin": "pí dì yè zhē lì bì pàn",
+   "pinyin": "pí dì yè zhé lì bì pàn",
    "section": "第四会"
   },
   {
    "n": 309,
    "text": "者都啰缚耆你弊泮",
-   "pinyin": "zhě dōu là fù qí nǐ bì pàn",
+   "pinyin": "zhě dū là wā qī nǐ bì pàn",
    "section": "第四会"
   },
   {
    "n": 310,
    "text": "跋阇啰俱摩唎",
-   "pinyin": "bá shé là jù mó lì",
+   "pinyin": "bā shé là jù mó lì",
    "section": "第四会"
   },
   {
@@ -1905,19 +1905,19 @@ export default {
   {
    "n": 312,
    "text": "摩诃波啰丁羊乂耆唎弊泮",
-   "pinyin": "mó hē bō là dīng yáng yì qí lì bì pàn",
+   "pinyin": "mó hē bō là dīng yáng ài qí lì bì pàn",
    "section": "第四会"
   },
   {
    "n": 313,
    "text": "跋阇啰商羯啰夜",
-   "pinyin": "bá shé là shāng jié là yè",
+   "pinyin": "bā shé là shāng jié là yè",
    "section": "第四会"
   },
   {
    "n": 314,
    "text": "波啰丈耆啰阇耶泮",
-   "pinyin": "bō là zhàng qí là shé yē pàn",
+   "pinyin": "bō là zhàng qí là shé yě pàn",
    "section": "第四会"
   },
   {
@@ -1929,85 +1929,85 @@ export default {
   {
    "n": 316,
    "text": "摩诃末怛唎迦拏",
-   "pinyin": "mó hē mò dá lì jiā ná",
+   "pinyin": "mó hē mò dá lì jiā nú",
    "section": "第四会"
   },
   {
    "n": 317,
    "text": "南无娑羯唎多夜泮",
-   "pinyin": "nā mó suō jié lì duō yè pàn",
+   "pinyin": "ná mó suō jié lì duō yè pàn",
    "section": "第四会"
   },
   {
    "n": 318,
    "text": "毖瑟拏婢曳泮",
-   "pinyin": "bì sè ná bì yè pàn",
+   "pinyin": "bì sè nú bēi yì pàn",
    "section": "第四会"
   },
   {
    "n": 319,
    "text": "勃啰诃牟尼曳泮",
-   "pinyin": "bó là hē mù ní yè pàn",
+   "pinyin": "bó là hē móu ní yì pàn",
    "section": "第四会"
   },
   {
    "n": 320,
    "text": "阿耆尼曳泮",
-   "pinyin": "ā qí ní yè pàn",
+   "pinyin": "ā qī ní yì pàn",
    "section": "第四会"
   },
   {
    "n": 321,
    "text": "摩诃羯唎曳泮",
-   "pinyin": "mó hē jié lì yè pàn",
+   "pinyin": "mó hē jié lì yì pàn",
    "section": "第四会"
   },
   {
    "n": 322,
    "text": "羯啰檀迟曳泮",
-   "pinyin": "jié là tán chí yè pàn",
+   "pinyin": "jié là tán chí yì pàn",
    "section": "第四会"
   },
   {
    "n": 323,
    "text": "蔑怛唎曳泮",
-   "pinyin": "miè dá lì yè pàn",
+   "pinyin": "miè dá lì yì pàn",
    "section": "第四会"
   },
   {
    "n": 324,
    "text": "唠怛唎曳泮",
-   "pinyin": "lào dá lì yè pàn",
+   "pinyin": "láo dá lì yì pàn",
    "section": "第四会"
   },
   {
    "n": 325,
    "text": "遮文茶曳泮",
-   "pinyin": "zhē wén chá yè pàn",
+   "pinyin": "zhé wén chá yì pàn",
    "section": "第四会"
   },
   {
    "n": 326,
    "text": "羯逻啰怛唎曳泮",
-   "pinyin": "jié luó là dá lì yè pàn",
+   "pinyin": "jié luó là dá lì yì pàn",
    "section": "第四会"
   },
   {
    "n": 327,
    "text": "迦般唎曳泮",
-   "pinyin": "jiā bān lì yè pàn",
+   "pinyin": "jiā bó lì yì pàn",
    "section": "第四会"
   },
   {
    "n": 328,
    "text": "阿地目质多迦尸摩舍那",
-   "pinyin": "ā dì mù zhì duō jiā shī mó shè nà",
+   "pinyin": "ā dì mù zhì duō jiā shī mó shě nú",
    "section": "第四会"
   },
   {
    "n": 329,
    "text": "婆私你曳泮",
-   "pinyin": "pó sī nǐ yè pàn",
+   "pinyin": "pó sī nǐ yì pàn",
    "section": "第四会"
   },
   {
@@ -2019,19 +2019,19 @@ export default {
   {
    "n": 331,
    "text": "萨埵婆写",
-   "pinyin": "sà duǒ pó xiě",
+   "pinyin": "sà duò pó xiè",
    "section": "第四会"
   },
   {
    "n": 332,
    "text": "么么印兔那么么写",
-   "pinyin": "me me yìn tù nà me me xiě",
+   "pinyin": "mē mē yìn tù nú mē mē xiè",
    "section": "第四会"
   },
   {
    "n": 333,
    "text": "突瑟吒质多",
-   "pinyin": "tū sè zhà zhì duō",
+   "pinyin": "tù sè zhà zhì duō",
    "section": "第五会"
   },
   {
@@ -2049,7 +2049,7 @@ export default {
   {
    "n": 336,
    "text": "伽婆诃啰",
-   "pinyin": "jiā pó hē là",
+   "pinyin": "qié pó hē là",
    "section": "第五会"
   },
   {
@@ -2085,13 +2085,13 @@ export default {
   {
    "n": 342,
    "text": "跋略夜诃啰",
-   "pinyin": "bá lüè yè hē là",
+   "pinyin": "bā lüè yè hē là",
    "section": "第五会"
   },
   {
    "n": 343,
    "text": "干陀诃啰",
-   "pinyin": "gān tuó hē là",
+   "pinyin": "qián tuó hē là",
    "section": "第五会"
   },
   {
@@ -2103,139 +2103,139 @@ export default {
   {
    "n": 345,
    "text": "颇啰诃啰",
-   "pinyin": "pō là hē là",
+   "pinyin": "pó là hē là",
    "section": "第五会"
   },
   {
    "n": 346,
    "text": "婆写诃啰",
-   "pinyin": "pó xiě hē là",
+   "pinyin": "pó xiè hē là",
    "section": "第五会"
   },
   {
    "n": 347,
    "text": "般波质多",
-   "pinyin": "bān bō zhì duō",
+   "pinyin": "bó bō zhì duō",
    "section": "第五会"
   },
   {
    "n": 348,
    "text": "突瑟吒质多",
-   "pinyin": "tū sè zhà zhì duō",
+   "pinyin": "tù sè zhà zhì duō",
    "section": "第五会"
   },
   {
    "n": 349,
    "text": "唠陀啰质多",
-   "pinyin": "lào tuó là zhì duō",
+   "pinyin": "láo tuó là zhì duō",
    "section": "第五会"
   },
   {
    "n": 350,
    "text": "药叉揭啰诃",
-   "pinyin": "yào chā jiē là hē",
+   "pinyin": "yào chà jié là hē",
    "section": "第五会"
   },
   {
    "n": 351,
    "text": "啰刹娑揭啰诃",
-   "pinyin": "là chà suō jiē là hē",
+   "pinyin": "là chà suō jié là hē",
    "section": "第五会"
   },
   {
    "n": 352,
    "text": "闭隶多揭啰诃",
-   "pinyin": "bì lì duō jiē là hē",
+   "pinyin": "bì lì duō jié là hē",
    "section": "第五会"
   },
   {
    "n": 353,
    "text": "毗舍遮揭啰诃",
-   "pinyin": "pí shè zhē jiē là hē",
+   "pinyin": "pí shě zhé jié là hē",
    "section": "第五会"
   },
   {
    "n": 354,
    "text": "部多揭啰诃",
-   "pinyin": "bù duō jiē là hē",
+   "pinyin": "bù duō jié là hē",
    "section": "第五会"
   },
   {
    "n": 355,
    "text": "鸠槃茶揭啰诃",
-   "pinyin": "jiū pán chá jiē là hē",
+   "pinyin": "jiū pán chá jié là hē",
    "section": "第五会"
   },
   {
    "n": 356,
    "text": "悉干陀揭啰诃",
-   "pinyin": "xī gān tuó jiē là hē",
+   "pinyin": "xī qián tuó jié là hē",
    "section": "第五会"
   },
   {
    "n": 357,
    "text": "乌怛摩陀揭啰诃",
-   "pinyin": "wū dá mó tuó jiē là hē",
+   "pinyin": "wū dá mó tuó jié là hē",
    "section": "第五会"
   },
   {
    "n": 358,
    "text": "车夜揭啰诃",
-   "pinyin": "chē yè jiē là hē",
+   "pinyin": "chē yè jié là hē",
    "section": "第五会"
   },
   {
    "n": 359,
    "text": "阿播萨摩啰揭啰诃",
-   "pinyin": "ā bō sà mó là jiē là hē",
+   "pinyin": "ā bò sā mó là jié là hē",
    "section": "第五会"
   },
   {
    "n": 360,
    "text": "宅袪革茶耆尼揭啰诃",
-   "pinyin": "zhái qū gé chá qí ní jiē là hē",
+   "pinyin": "zhái qié gé chá qí ní jié là hē",
    "section": "第五会"
   },
   {
    "n": 361,
    "text": "唎佛帝揭啰诃",
-   "pinyin": "lì fó dì jiē là hē",
+   "pinyin": "lì fó dì jié là hē",
    "section": "第五会"
   },
   {
    "n": 362,
    "text": "阇弥迦揭啰诃",
-   "pinyin": "shé mí jiā jiē là hē",
+   "pinyin": "shé mí jiā jié là hē",
    "section": "第五会"
   },
   {
    "n": 363,
    "text": "舍俱尼揭啰诃",
-   "pinyin": "shè jù ní jiē là hē",
+   "pinyin": "shě jù ní jié là hē",
    "section": "第五会"
   },
   {
    "n": 364,
    "text": "姥陀啰难地迦揭啰诃",
-   "pinyin": "lǎo tuó là nán dì jiā jiē là hē",
+   "pinyin": "mǔ tuó là nàn dì jiā jié là hē",
    "section": "第五会"
   },
   {
    "n": 365,
    "text": "阿蓝婆揭啰诃",
-   "pinyin": "ā lán pó jiē là hē",
+   "pinyin": "ā lán pó jié là hē",
    "section": "第五会"
   },
   {
    "n": 366,
    "text": "干度波尼揭啰诃",
-   "pinyin": "gān dù bō ní jiē là hē",
+   "pinyin": "qián dù bō ní jié là hē",
    "section": "第五会"
   },
   {
    "n": 367,
    "text": "什伐啰堙迦醯迦",
-   "pinyin": "shén fá là yīn jiā xī jiā",
+   "pinyin": "shí fá là yān jiā xī jiā",
    "section": "第五会"
   },
   {
@@ -2253,19 +2253,19 @@ export default {
   {
    "n": 370,
    "text": "者突托迦",
-   "pinyin": "zhě tū tuō jiā",
+   "pinyin": "zhě tù tuō jiā",
    "section": "第五会"
   },
   {
    "n": 371,
    "text": "尼提什伐啰毖钐摩什伐啰",
-   "pinyin": "ní tí shén fá là bì shān mó shén fá là",
+   "pinyin": "ní tí shí fá là bì shān mó shí fá là",
    "section": "第五会"
   },
   {
    "n": 372,
    "text": "薄底迦",
-   "pinyin": "báo dǐ jiā",
+   "pinyin": "bó dǐ jiā",
    "section": "第五会"
   },
   {
@@ -2277,25 +2277,25 @@ export default {
   {
    "n": 374,
    "text": "室隶瑟密迦",
-   "pinyin": "shì lì sè mì jiā",
+   "pinyin": "shǐ lì sè mì jiā",
    "section": "第五会"
   },
   {
    "n": 375,
    "text": "娑你般帝迦",
-   "pinyin": "suō nǐ bān dì jiā",
+   "pinyin": "suō nǐ bó dì jiā",
    "section": "第五会"
   },
   {
    "n": 376,
    "text": "萨婆什伐啰",
-   "pinyin": "sà pó shén fá là",
+   "pinyin": "sā pó shí fá là",
    "section": "第五会"
   },
   {
    "n": 377,
    "text": "室嚧吉帝",
-   "pinyin": "shì lú jí dì",
+   "pinyin": "shǐ lú jí dì",
    "section": "第五会"
   },
   {
@@ -2307,31 +2307,31 @@ export default {
   {
    "n": 379,
    "text": "阿绮嚧钳",
-   "pinyin": "ā qǐ lú qián",
+   "pinyin": "ā qǐ lú qiān",
    "section": "第五会"
   },
   {
    "n": 380,
    "text": "目佉嚧钳",
-   "pinyin": "mù qū lú qián",
+   "pinyin": "mù qié lú qiān",
    "section": "第五会"
   },
   {
    "n": 381,
    "text": "羯唎突嚧钳",
-   "pinyin": "jié lì tū lú qián",
+   "pinyin": "jié lì tù lú qiān",
    "section": "第五会"
   },
   {
    "n": 382,
    "text": "揭啰诃揭蓝",
-   "pinyin": "jiē là hē jiē lán",
+   "pinyin": "jié là hē jié lán",
    "section": "第五会"
   },
   {
    "n": 383,
    "text": "羯拏输蓝",
-   "pinyin": "jié ná shū lán",
+   "pinyin": "jié nú shū lán",
    "section": "第五会"
   },
   {
@@ -2343,19 +2343,19 @@ export default {
   {
    "n": 385,
    "text": "迄唎夜输蓝",
-   "pinyin": "qì lì yè shū lán",
+   "pinyin": "qǐ lì yè shū lán",
    "section": "第五会"
   },
   {
    "n": 386,
    "text": "末么输蓝",
-   "pinyin": "mò me shū lán",
+   "pinyin": "mò mē shū lán",
    "section": "第五会"
   },
   {
    "n": 387,
    "text": "跋唎室婆输蓝",
-   "pinyin": "bá lì shì pó shū lán",
+   "pinyin": "bā lì shǐ pó shū lán",
    "section": "第五会"
   },
   {
@@ -2379,7 +2379,7 @@ export default {
   {
    "n": 391,
    "text": "跋悉帝输蓝",
-   "pinyin": "bá xī dì shū lán",
+   "pinyin": "bā xī dì shū lán",
    "section": "第五会"
   },
   {
@@ -2391,25 +2391,25 @@ export default {
   {
    "n": 393,
    "text": "常伽输蓝",
-   "pinyin": "cháng jiā shū lán",
+   "pinyin": "cháng qié shū lán",
    "section": "第五会"
   },
   {
    "n": 394,
    "text": "喝悉多输蓝",
-   "pinyin": "hē xī duō shū lán",
+   "pinyin": "hé xī duō shū lán",
    "section": "第五会"
   },
   {
    "n": 395,
    "text": "跋陀输蓝",
-   "pinyin": "bá tuó shū lán",
+   "pinyin": "bā tuó shū lán",
    "section": "第五会"
   },
   {
    "n": 396,
    "text": "娑房盎伽般啰丈伽输蓝",
-   "pinyin": "suō fáng àng jiā bān là zhàng jiā shū lán",
+   "pinyin": "suō fáng áng qié bō là zhàng qié shū lán",
    "section": "第五会"
   },
   {
@@ -2421,25 +2421,25 @@ export default {
   {
    "n": 398,
    "text": "茶耆尼什婆啰",
-   "pinyin": "chá qí ní shén pó là",
+   "pinyin": "chá qí ní shí pó là",
    "section": "第五会"
   },
   {
    "n": 399,
    "text": "陀突嚧迦建咄嚧吉知婆路多毗",
-   "pinyin": "tuó tū lú jiā jiàn duō lú jí zhī pó lù duō pí",
+   "pinyin": "tuó tù lú jiā jiàn dū lú jí zhī pó lù duō pí",
    "section": "第五会"
   },
   {
    "n": 400,
    "text": "萨般嚧诃凌伽",
-   "pinyin": "sà bān lú hē líng jiā",
+   "pinyin": "sā bó lú hē líng qié",
    "section": "第五会"
   },
   {
    "n": 401,
    "text": "输沙怛啰娑那羯啰",
-   "pinyin": "shū shā dá là suō nà jié là",
+   "pinyin": "shū shā dá là suō nú jié là",
    "section": "第五会"
   },
   {
@@ -2451,19 +2451,19 @@ export default {
   {
    "n": 403,
    "text": "阿耆尼乌陀迦",
-   "pinyin": "ā qí ní wū tuó jiā",
+   "pinyin": "ā qī ní wū tuó jiā",
    "section": "第五会"
   },
   {
    "n": 404,
    "text": "末啰鞞啰建跢啰",
-   "pinyin": "mò là pí là jiàn dài là",
+   "pinyin": "mò là pí là jiàn duō là",
    "section": "第五会"
   },
   {
    "n": 405,
    "text": "阿迦啰蜜唎咄怛敛部迦",
-   "pinyin": "ā jiā là mì lì duō dá liǎn bù jiā",
+   "pinyin": "ā jiā là mì lì dū dá liàn bù jiā",
    "section": "第五会"
   },
   {
@@ -2481,13 +2481,13 @@ export default {
   {
    "n": 408,
    "text": "萨婆那俱啰",
-   "pinyin": "sà pó nà jù là",
+   "pinyin": "sā pó nú jù là",
    "section": "第五会"
   },
   {
    "n": 409,
    "text": "肆引伽弊揭啰唎药叉怛啰刍",
-   "pinyin": "sì yǐn jiā bì jiē là lì yào chā dá là chú",
+   "pinyin": "sì yǐn qié bì jié là lì yào chà dá là chū",
    "section": "第五会"
   },
   {
@@ -2499,37 +2499,37 @@ export default {
   {
    "n": 411,
    "text": "悉怛多钵怛啰",
-   "pinyin": "xī dá duō bō dá là",
+   "pinyin": "xī dá duō bó dá là",
    "section": "第五会"
   },
   {
    "n": 412,
    "text": "摩诃跋阇嚧瑟尼钐",
-   "pinyin": "mó hē bá shé lú sè ní shān",
+   "pinyin": "mó hē bā shé lú sè ní shān",
    "section": "第五会"
   },
   {
    "n": 413,
    "text": "摩诃般赖丈耆蓝",
-   "pinyin": "mó hē bān lài zhàng qí lán",
+   "pinyin": "mó hē bó lài zhàng qí lán",
    "section": "第五会"
   },
   {
    "n": 414,
    "text": "夜波突陀舍喻阇那",
-   "pinyin": "yè bō tū tuó shè yù shé nà",
+   "pinyin": "yè bō tù tuó shě yù shé nú",
    "section": "第五会"
   },
   {
    "n": 415,
    "text": "辫怛隶拏",
-   "pinyin": "biàn dá lì ná",
+   "pinyin": "biàn dá lì nú",
    "section": "第五会"
   },
   {
    "n": 416,
    "text": "毗陀耶槃昙迦嚧弥",
-   "pinyin": "pí tuó yē pán tán jiā lú mí",
+   "pinyin": "pí tuó yě pán tán jiā lú mí",
    "section": "第五会"
   },
   {
@@ -2541,7 +2541,7 @@ export default {
   {
    "n": 418,
    "text": "般啰毘陀槃昙迦嚧弥",
-   "pinyin": "bān là pí tuó pán tán jiā lú mí",
+   "pinyin": "bō là pí tuó pán tán jiā lú mí",
    "section": "第五会"
   },
   {
@@ -2553,25 +2553,25 @@ export default {
   {
    "n": 420,
    "text": "唵",
-   "pinyin": "ōng",
+   "pinyin": "òng",
    "section": "第五会"
   },
   {
    "n": 421,
    "text": "阿那隶",
-   "pinyin": "ā nà lì",
+   "pinyin": "ā nú lì",
    "section": "第五会"
   },
   {
    "n": 422,
    "text": "毘舍提",
-   "pinyin": "pí shè tí",
+   "pinyin": "pí shě tí",
    "section": "第五会"
   },
   {
    "n": 423,
    "text": "鞞啰跋阇啰陀唎",
-   "pinyin": "pí là bá shé là tuó lì",
+   "pinyin": "pí là bā shé là tuó lì",
    "section": "第五会"
   },
   {
@@ -2583,13 +2583,13 @@ export default {
   {
    "n": 425,
    "text": "跋阇啰谤尼泮",
-   "pinyin": "bá shé là bàng ní pàn",
+   "pinyin": "bā shě là bàng ní pàn",
    "section": "第五会"
   },
   {
    "n": 426,
    "text": "虎𤙖都嚧瓮泮",
-   "pinyin": "hǔ hōng dōu lú yōng pàn",
+   "pinyin": "hǔ xìn dū lú yìn pàn",
    "section": "第五会"
   },
   {

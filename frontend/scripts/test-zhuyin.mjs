@@ -3,7 +3,9 @@
 import assert from 'node:assert/strict'
 import OpenCC from 'opencc-js/cn2t'
 import { NIANJING, toUnits, decorateUnits } from '../src/data/nianjing.js'
-import { syllableToZhuyin, pinyinToZhuyin } from '../src/utils/zhuyin.js'
+import { syllableToZhuyin, pinyinToZhuyin, zhuyinToPinyin } from '../src/utils/zhuyin.js'
+import { zhuyinForChars } from '../src/data/zhuyinReadings.js'
+import lengyan from '../src/data/sutras/lengyan.js'
 import { zhuyinForText } from '../src/data/zhuyinReadings.js'
 import { hantSutraText } from '../src/i18n/hantSutra.js'
 
@@ -32,6 +34,32 @@ assert.equal(z('地藏菩萨', 'dì zàng pú sà'), 'ㄉㄧˋ ㄗㄤˋ ㄆㄨˊ
 assert.equal(z('日月薄蚀', 'rì yuè bó shí'), 'ㄖˋ ㄩㄝˋ ㄅㄛˊ ㄕˊ')
 assert.equal(z('白毫相光', 'bái háo xiàng guāng'), 'ㄅㄞˊ ㄏㄠˊ ㄒㄧㄤˋ ㄍㄨㄤ')
 assert.equal(z('九横', 'jiǔ hèng'), 'ㄐㄧㄡˇ ㄏㄥˋ')
+
+// 注音 → 拼音反查：每个注音音节都能转回去，再转成注音不变
+for (const z of ['ㄋㄨㄛˊ', '˙ㄇㄜ', 'ㄓ', 'ㄨㄛ', 'ㄧㄝˊ', 'ㄌㄩˋ', 'ㄐㄩㄝˊ', 'ㄒㄧㄣˋ', 'ㄙㄥ', 'ㄢ', 'ㄧㄡˇ', 'ㄍㄨㄟ', 'ㄑㄩㄥˊ', 'ㄩㄥ', 'ㄦˊ', 'ㄕˇ']) {
+  assert.equal(syllableToZhuyin(zhuyinToPinyin(z)), z, z)
+}
+
+// 咒语按淨律寺《佛门必备课诵本》（佛陀教育基金会 2011 重排版）：拼音和注音要一致，几处课诵本读法不能被改回去
+const MANTRAS = ['dabeizhou', 'wangsheng', 'yaoshi-zhenyan', 'liuzi', 'shixiaozhou']
+const mantraLines = {}
+for (const slug of MANTRAS) mantraLines[slug] = (await NIANJING.find((s) => s.slug === slug).load()).default.lines
+mantraLines.lengyan = lengyan.lines
+for (const [slug, lines] of Object.entries(mantraLines)) {
+  lines.forEach((l) => {
+    const u = toUnits([l])
+    const zy = zhuyinForChars(u.chars)
+    u.chars.forEach((c, k) => {
+      if (slug === 'shixiaozhou' && /麻曷倪|班札|室哩多/.test(l.text)) return // 观音灵感真言：课诵本是另一版本，没对
+      assert.equal(syllableToZhuyin(c.py), zy[k], `${slug} 第 ${l.n} 行「${c.ch}」拼音 ${c.py} 和注音 ${zy[k]} 不一致：${l.text}`)
+    })
+  })
+}
+const zyOf = (slug, n) => { const l = mantraLines[slug].find((x) => x.n === n); return zhuyinForChars(toUnits([l]).chars).join(' ') }
+assert.equal(zyOf('dabeizhou', 1), 'ㄋㄚˊ ㄇㄛˊ ㄏㄜ ㄌㄚˋ ㄉㄚˊ ㄋㄨㄛˊ ㄉㄨㄛ ㄌㄚˋ ㄧㄝˋ ㄧㄝˊ')
+assert.equal(zyOf('wangsheng', 1), 'ㄋㄚ ㄇㄛ ㄨㄛ ㄇㄧˊ ㄉㄨㄛ ㄆㄛˊ ㄧㄝˋ')
+assert.ok(zyOf('yaoshi-zhenyan', 4).startsWith('ㄢ '), '药师灌顶真言的唵读 ㄢ')
+assert.equal(zyOf('liuzi', 1), 'ㄨㄥ ㄇㄚ ㄋㄧ ㄅㄚ ㄇㄧ ㄏㄨㄥˋ')
 
 const cv = OpenCC.Converter({ from: 'cn', to: 'tw' })
 assert.equal(hantSutraText('于汝意云何？', cv), '於汝意云何？')

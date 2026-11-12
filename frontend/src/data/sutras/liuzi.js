@@ -15,7 +15,7 @@ export default {
   {
    "n": 1,
    "text": "唵嘛呢叭咪吽。",
-   "pinyin": "ōng mā nī bā mī hōng"
+   "pinyin": "ōng mā nī bā mī hòng"
   }
  ]
 }

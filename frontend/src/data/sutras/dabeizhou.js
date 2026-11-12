@@ -15,37 +15,37 @@ export default {
   {
    "n": 1,
    "text": "南无喝啰怛那哆啰夜耶，",
-   "pinyin": "nā mó hē là dá nā duō là yà yē"
+   "pinyin": "ná mó hē là dá nuó duō là yè yé"
   },
   {
    "n": 2,
    "text": "南无阿唎耶，",
-   "pinyin": "nā mó ā lì yē"
+   "pinyin": "ná mó ā lì yé"
   },
   {
    "n": 3,
    "text": "婆卢羯帝烁钵啰耶，",
-   "pinyin": "pó lú jié dì shuò bō là yē"
+   "pinyin": "pó lú jié dì shuò bō là yé"
   },
   {
    "n": 4,
    "text": "菩提萨埵婆耶，",
-   "pinyin": "pú tí sà duǒ pó yē"
+   "pinyin": "pú tí sà duò pó yé"
   },
   {
    "n": 5,
    "text": "摩诃萨埵婆耶，",
-   "pinyin": "mó hē sà duǒ pó yē"
+   "pinyin": "mó hē sà duò pó yé"
   },
   {
    "n": 6,
    "text": "摩诃迦卢尼迦耶，",
-   "pinyin": "mó hē jiā lú ní jiā yē"
+   "pinyin": "mó hē jiā lú ní jiā yé"
   },
   {
    "n": 7,
    "text": "唵，",
-   "pinyin": "ōng"
+   "pinyin": "òng"
   },
   {
    "n": 8,
@@ -55,12 +55,12 @@ export default {
   {
    "n": 9,
    "text": "数怛那怛写，",
-   "pinyin": "shù dá nā dá xià"
+   "pinyin": "shù dá nuó dá xià"
   },
   {
    "n": 10,
    "text": "南无悉吉栗埵伊蒙阿唎耶，",
-   "pinyin": "nā mó xī jí lì duǒ yī méng ā lì yē"
+   "pinyin": "ná mó xī jí lì duò yī méng ā lì yé"
   },
   {
    "n": 11,
@@ -70,12 +70,12 @@ export default {
   {
    "n": 12,
    "text": "南无那啰谨墀，",
-   "pinyin": "nā mó nā là jǐn chí"
+   "pinyin": "ná mó nuó là jǐn chí"
   },
   {
    "n": 13,
    "text": "醯利摩诃皤哆沙咩，",
-   "pinyin": "xī lì mó hē pó duō shā miē"
+   "pinyin": "xī lì mó hē bó duō shā miē"
   },
   {
    "n": 14,
@@ -90,7 +90,7 @@ export default {
   {
    "n": 16,
    "text": "萨婆萨哆那摩婆萨哆那摩婆伽，",
-   "pinyin": "sà pó sà duō nā mó pó sà duō nā mó pó qié"
+   "pinyin": "sà pó sà duō nuó mó pó sà duō nuó mó pó qié"
   },
   {
    "n": 17,
@@ -105,7 +105,7 @@ export default {
   {
    "n": 19,
    "text": "唵阿婆卢醯，",
-   "pinyin": "ōng ā pó lú xī"
+   "pinyin": "òng ā pó lú xī"
   },
   {
    "n": 20,
@@ -125,7 +125,7 @@ export default {
   {
    "n": 23,
    "text": "摩诃菩提萨埵，",
-   "pinyin": "mó hē pú tí sà duǒ"
+   "pinyin": "mó hē pú tí sà duò"
   },
   {
    "n": 24,
@@ -150,12 +150,12 @@ export default {
   {
    "n": 28,
    "text": "度卢度卢罚阇耶帝，",
-   "pinyin": "dù lú dù lú fá shé yē dì"
+   "pinyin": "dù lú dù lú fá shé yé dì"
   },
   {
    "n": 29,
    "text": "摩诃罚阇耶帝，",
-   "pinyin": "mó hē fá shé yē dì"
+   "pinyin": "mó hē fá shé yé dì"
   },
   {
    "n": 30,
@@ -165,12 +165,12 @@ export default {
   {
    "n": 31,
    "text": "地唎尼，",
-   "pinyin": "dì lì ní"
+   "pinyin": "zài lì ní"
   },
   {
    "n": 32,
    "text": "室佛啰耶，",
-   "pinyin": "shì fó là yē"
+   "pinyin": "shì fó là yé"
   },
   {
    "n": 33,
@@ -180,7 +180,7 @@ export default {
   {
    "n": 34,
    "text": "摩么罚摩啰，",
-   "pinyin": "mó mó fá mó là"
+   "pinyin": "mó me fá mó là"
   },
   {
    "n": 35,
@@ -195,22 +195,22 @@ export default {
   {
    "n": 37,
    "text": "室那室那，",
-   "pinyin": "shì nā shì nā"
+   "pinyin": "shì nuò shì nuò"
   },
   {
    "n": 38,
    "text": "阿啰参佛啰舍利，",
-   "pinyin": "ā là shēn fó là shě lì"
+   "pinyin": "ā là sēng fó là shè lì"
   },
   {
    "n": 39,
    "text": "罚沙罚参，",
-   "pinyin": "fá shā fá shēn"
+   "pinyin": "fá suō fá sēng"
   },
   {
    "n": 40,
    "text": "佛啰舍耶，",
-   "pinyin": "fó là shě yē"
+   "pinyin": "fó là shè yé"
   },
   {
    "n": 41,
@@ -255,17 +255,17 @@ export default {
   {
    "n": 49,
    "text": "那啰谨墀，",
-   "pinyin": "nā là jǐn chí"
+   "pinyin": "nuó là jǐn chí"
   },
   {
    "n": 50,
    "text": "地利瑟尼那，",
-   "pinyin": "dì lì sè ní nā"
+   "pinyin": "zài lì sè ní nuó"
   },
   {
    "n": 51,
    "text": "波夜摩那，",
-   "pinyin": "bō yè mó nā"
+   "pinyin": "bō yè mó nuó"
   },
   {
    "n": 52,
@@ -300,7 +300,7 @@ export default {
   {
    "n": 58,
    "text": "室皤啰耶，",
-   "pinyin": "shì pó là yē"
+   "pinyin": "shì pó là yé"
   },
   {
    "n": 59,
@@ -310,7 +310,7 @@ export default {
   {
    "n": 60,
    "text": "那啰谨墀，",
-   "pinyin": "nā là jǐn chí"
+   "pinyin": "nuó là jǐn chí"
   },
   {
    "n": 61,
@@ -320,7 +320,7 @@ export default {
   {
    "n": 62,
    "text": "摩啰那啰，",
-   "pinyin": "mó là nā là"
+   "pinyin": "mó là nuó là"
   },
   {
    "n": 63,
@@ -330,7 +330,7 @@ export default {
   {
    "n": 64,
    "text": "悉啰僧阿穆佉耶，",
-   "pinyin": "xī là sēng ā mù qié yē"
+   "pinyin": "xī là sēng ā mù qié yé"
   },
   {
    "n": 65,
@@ -360,7 +360,7 @@ export default {
   {
    "n": 70,
    "text": "波陀摩羯悉陀夜，",
-   "pinyin": "bō tuó mó jié xī tuó yè"
+   "pinyin": "pō tuó mó jié xī tuó yè"
   },
   {
    "n": 71,
@@ -370,7 +370,7 @@ export default {
   {
    "n": 72,
    "text": "那啰谨墀皤伽啰耶，",
-   "pinyin": "nā là jǐn chí pó qié là yē"
+   "pinyin": "nuó là jǐn chí bó qié là yé"
   },
   {
    "n": 73,
@@ -390,12 +390,12 @@ export default {
   {
    "n": 76,
    "text": "南无喝啰怛那哆啰夜耶，",
-   "pinyin": "nā mó hē là dá nā duō là yà yē"
+   "pinyin": "ná mó hē là dá nuó duō là yè yé"
   },
   {
    "n": 77,
    "text": "南无阿唎耶，",
-   "pinyin": "nā mó ā lì yē"
+   "pinyin": "ná mó ā lì yé"
   },
   {
    "n": 78,
@@ -405,7 +405,7 @@ export default {
   {
    "n": 79,
    "text": "烁皤啰夜，",
-   "pinyin": "shuò pó là yè"
+   "pinyin": "shuò bó là yè"
   },
   {
    "n": 80,
@@ -415,7 +415,7 @@ export default {
   {
    "n": 81,
    "text": "唵悉殿都，",
-   "pinyin": "ōng xī diàn dū"
+   "pinyin": "òng xī diàn dū"
   },
   {
    "n": 82,
@@ -425,7 +425,7 @@ export default {
   {
    "n": 83,
    "text": "跋陀耶，",
-   "pinyin": "bá tuó yē"
+   "pinyin": "bá tuó yé"
   },
   {
    "n": 84,
