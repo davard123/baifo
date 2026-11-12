@@ -130,7 +130,7 @@ export default {
   {
    "n": 24,
    "text": "以三十二大丈夫相、八十随好，庄严其身；",
-   "pinyin": "yǐ sān shí èr dà zhàng fū xiāng bā shí suí hǎo zhuāng yán qí shēn"
+   "pinyin": "yǐ sān shí èr dà zhàng fū xiàng bā shí suí hǎo zhuāng yán qí shēn"
   },
   {
    "n": 25,
@@ -235,7 +235,7 @@ export default {
   {
    "n": 45,
    "text": "闻我名已，一切皆得转女成男，具丈夫相，乃至证得无上菩提。",
-   "pinyin": "wén wǒ míng yǐ yī qiè jiē dé zhuǎn nǚ chéng nán jù zhàng fū xiāng nǎi zhì zhèng dé wú shàng pú tí"
+   "pinyin": "wén wǒ míng yǐ yī qiè jiē dé zhuǎn nǚ chéng nán jù zhàng fū xiàng nǎi zhì zhèng dé wú shàng pú tí"
   },
   {
    "n": 46,
@@ -330,7 +330,7 @@ export default {
   {
    "n": 64,
    "text": "及彼佛土功德庄严，我若一劫，若一劫余，说不能尽。",
-   "pinyin": "jí bǐ fó tǔ gōng dé zhuāng yán wǒ ruò yī jié ruò yī jié yú shuō bù néng jǐn"
+   "pinyin": "jí bǐ fó tǔ gōng dé zhuāng yán wǒ ruò yī jié ruò yī jié yú shuō bù néng jìn"
   },
   {
    "n": 65,
@@ -410,7 +410,7 @@ export default {
   {
    "n": 80,
    "text": "暂得忆念彼如来名，即于念时，从彼处没，还生人中，",
-   "pinyin": "zàn dé yì niàn bǐ rú lái míng jí yú niàn shí cóng bǐ chù méi hái shēng rén zhōng"
+   "pinyin": "zàn dé yì niàn bǐ rú lái míng jí yú niàn shí cóng bǐ chù mò hái shēng rén zhōng"
   },
   {
    "n": 81,
@@ -645,17 +645,17 @@ export default {
   {
    "n": 127,
    "text": "天上寿尽，还生人间，或为轮王，统摄四洲，威德自在，安立无量百千有情于十善道；",
-   "pinyin": "tiān shàng shòu jǐn hái shēng rén jiān huò wèi lún wáng tǒng shè sì zhōu wēi dé zì zài ān lì wú liàng bǎi qiān yǒu qíng yú shí shàn dào"
+   "pinyin": "tiān shàng shòu jìn hái shēng rén jiān huò wèi lún wáng tǒng shè sì zhōu wēi dé zì zài ān lì wú liàng bǎi qiān yǒu qíng yú shí shàn dào"
   },
   {
    "n": 128,
    "text": "或生刹帝利、婆罗门、居士大家，多饶财宝，仓库盈溢，",
-   "pinyin": "huò shēng shā dì lì pó luó mén jū shì dà jiā duō ráo cái bǎo cāng kù yíng yì"
+   "pinyin": "huò shēng chà dì lì pó luó mén jū shì dà jiā duō ráo cái bǎo cāng kù yíng yì"
   },
   {
    "n": 129,
    "text": "形相端严，眷属具足，聪明智慧，勇健威猛，如大力士。",
-   "pinyin": "xíng xiāng duān yán juàn shǔ jù zú cōng míng zhì huì yǒng jiàn wēi měng rú dà lì shì"
+   "pinyin": "xíng xiàng duān yán juàn shǔ jù zú cōng míng zhì huì yǒng jiàn wēi měng rú dà lì shì"
   },
   {
    "n": 130,
@@ -1160,12 +1160,12 @@ export default {
   {
    "n": 230,
    "text": "我若一劫，若一劫余而广说者，劫可速尽，彼佛行愿，",
-   "pinyin": "wǒ ruò yī jié ruò yī jié yú ér guǎng shuō zhě jié kě sù jǐn bǐ fó xíng yuàn"
+   "pinyin": "wǒ ruò yī jié ruò yī jié yú ér guǎng shuō zhě jié kě sù jìn bǐ fó xíng yuàn"
   },
   {
    "n": 231,
    "text": "善巧方便，无有尽也。",
-   "pinyin": "shàn qiǎo fāng biàn wú yǒu jǐn yě"
+   "pinyin": "shàn qiǎo fāng biàn wú yǒu jìn yě"
   },
   {
    "n": 232,
@@ -1185,7 +1185,7 @@ export default {
   {
    "n": 235,
    "text": "不能饮食，喉唇干燥，见诸方暗，死相现前；",
-   "pinyin": "bù néng yǐn shí hóu chún gān zào jiàn zhū fāng àn sǐ xiāng xiàn qián"
+   "pinyin": "bù néng yǐn shí hóu chún gān zào jiàn zhū fāng àn sǐ xiàng xiàn qián"
   },
   {
    "n": 236,
@@ -1200,7 +1200,7 @@ export default {
   {
    "n": 238,
    "text": "然诸有情，有俱生神，随其所作，若罪若福，皆具书之，尽持授与琰魔法王。",
-   "pinyin": "rán zhū yǒu qíng yǒu jù shēng shén suí qí suǒ zuò ruò zuì ruò fú jiē jù shū zhī jǐn chí shòu yǔ yǎn mó fǎ wáng"
+   "pinyin": "rán zhū yǒu qíng yǒu jù shēng shén suí qí suǒ zuò ruò zuì ruò fú jiē jù shū zhī jìn chí shòu yǔ yǎn mó fǎ wáng"
   },
   {
    "n": 239,
@@ -1320,12 +1320,12 @@ export default {
   {
    "n": 262,
    "text": "若刹帝利灌顶王等，灾难起时，所谓人众疾疫难，",
-   "pinyin": "ruò shā dì lì guàn dǐng wáng děng zāi nàn qǐ shí suǒ wèi rén zhòng jí yì nán"
+   "pinyin": "ruò chà dì lì guàn dǐng wáng děng zāi nàn qǐ shí suǒ wèi rén zhòng jí yì nán"
   },
   {
    "n": 263,
    "text": "他国侵逼难，自界叛逆难，星宿变怪难，日月薄蚀难，",
-   "pinyin": "tā guó qīn bī nán zì jiè pàn nì nán xīng xiù biàn guài nán rì yuè báo shí nán"
+   "pinyin": "tā guó qīn bī nán zì jiè pàn nì nán xīng xiù biàn guài nán rì yuè bó shí nán"
   },
   {
    "n": 264,
@@ -1335,7 +1335,7 @@ export default {
   {
    "n": 265,
    "text": "彼刹帝利灌顶王等，尔时应于一切有情起慈悲心，赦诸系闭；",
-   "pinyin": "bǐ shā dì lì guàn dǐng wáng děng ěr shí yīng yú yī qiè yǒu qíng qǐ cí bēi xīn shè zhū xì bì"
+   "pinyin": "bǐ chà dì lì guàn dǐng wáng děng ěr shí yīng yú yī qiè yǒu qíng qǐ cí bēi xīn shè zhū xì bì"
   },
   {
    "n": 266,
@@ -1370,7 +1370,7 @@ export default {
   {
    "n": 272,
    "text": "而刹帝利灌顶王等，寿命色力，无病自在，皆得增益。",
-   "pinyin": "ér shā dì lì guàn dǐng wáng děng shòu mìng sè lì wú bìng zì zài jiē dé zēng yì"
+   "pinyin": "ér chà dì lì guàn dǐng wáng děng shòu mìng sè lì wú bìng zì zài jiē dé zēng yì"
   },
   {
    "n": 273,
@@ -1405,7 +1405,7 @@ export default {
   {
    "n": 279,
    "text": "云何已尽之命而可增益？",
-   "pinyin": "yún hé yǐ jǐn zhī mìng ér kě zēng yì"
+   "pinyin": "yún hé yǐ jìn zhī mìng ér kě zēng yì"
   },
   {
    "n": 280,
@@ -1425,7 +1425,7 @@ export default {
   {
    "n": 283,
    "text": "以修福故，尽其寿命，不经苦患。",
-   "pinyin": "yǐ xiū fú gù jǐn qí shòu mìng bù jīng kǔ huàn"
+   "pinyin": "yǐ xiū fú gù jìn qí shòu mìng bù jīng kǔ huàn"
   },
   {
    "n": 284,

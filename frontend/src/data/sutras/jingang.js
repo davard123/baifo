@@ -1193,7 +1193,7 @@ export default {
    "fen": 12,
    "fenName": "尊重正教分第十二",
    "text": "如佛塔庙，何况有人尽能受持读诵？",
-   "pinyin": "rú fó tǎ miào hé kuàng yǒu rén jǐn néng shòu chí dú sòng"
+   "pinyin": "rú fó tǎ miào hé kuàng yǒu rén jìn néng shòu chí dú sòng"
   },
   {
    "n": 170,

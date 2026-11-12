@@ -176,7 +176,7 @@ export default {
   {
    "n": 33,
    "text": "一界之内，一尘一劫，一劫之内，所积尘数，尽充为劫。",
-   "pinyin": "yī jiè zhī nèi yī chén yī jié yī jié zhī nèi suǒ jī chén shù jǐn chōng wèi jié"
+   "pinyin": "yī jiè zhī nèi yī chén yī jié yī jié zhī nèi suǒ jī chén shù jìn chōng wèi jié"
   },
   {
    "n": 34,
@@ -231,7 +231,7 @@ export default {
   {
    "n": 44,
    "text": "时长者子，见佛相好，千福庄严，因问彼佛：作何行愿，而得此相？",
-   "pinyin": "shí zhǎng zhě zǐ jiàn fó xiāng hǎo qiān fú zhuāng yán yīn wèn bǐ fó zuò hé xíng yuàn ér dé cǐ xiāng"
+   "pinyin": "shí zhǎng zhě zǐ jiàn fó xiàng hǎo qiān fú zhuāng yán yīn wèn bǐ fó zuò hé xíng yuàn ér dé cǐ xiàng"
   },
   {
    "n": 45,
@@ -246,12 +246,12 @@ export default {
   {
    "n": 47,
    "text": "时长者子，因发愿言：我今尽未来际不可计劫，",
-   "pinyin": "shí zhǎng zhě zǐ yīn fā yuàn yán wǒ jīn jǐn wèi lái jì bù kě jì jié"
+   "pinyin": "shí zhǎng zhě zǐ yīn fā yuàn yán wǒ jīn jìn wèi lái jì bù kě jì jié"
   },
   {
    "n": 48,
    "text": "为是罪苦六道众生，广设方便，尽令解脱，而我自身，方成佛道。",
-   "pinyin": "wèi shì zuì kǔ liù dào zhòng shēng guǎng shè fāng biàn jǐn lìng jiě tuō ér wǒ zì shēn fāng chéng fó dào"
+   "pinyin": "wèi shì zuì kǔ liù dào zhòng shēng guǎng shè fāng biàn jìn lìng jiě tuō ér wǒ zì shēn fāng chéng fó dào"
   },
   {
    "n": 49,
@@ -406,7 +406,7 @@ export default {
   {
    "n": 79,
    "text": "其水涌沸，多诸恶兽，尽复铁身，飞走海上，东西驰逐。",
-   "pinyin": "qí shuǐ yǒng fèi duō zhū è shòu jǐn fù tiě shēn fēi zǒu hǎi shàng dōng xī chí zhú"
+   "pinyin": "qí shuǐ yǒng fèi duō zhū è shòu jìn fù tiě shēn fēi zǒu hǎi shàng dōng xī chí zhú"
   },
   {
    "n": 80,
@@ -616,7 +616,7 @@ export default {
   {
    "n": 121,
    "text": "愿我尽未来劫，应有罪苦众生，广设方便，使令解脱。",
-   "pinyin": "yuàn wǒ jǐn wèi lái jié yīng yǒu zuì kǔ zhòng shēng guǎng shè fāng biàn shǐ lìng jiě tuō"
+   "pinyin": "yuàn wǒ jìn wèi lái jié yīng yǒu zuì kǔ zhòng shēng guǎng shè fāng biàn shǐ lìng jiě tuō"
   },
   {
    "n": 122,
@@ -1163,7 +1163,7 @@ export default {
   {
    "n": 230,
    "text": "除非业尽，方得受生。",
-   "pinyin": "chú fēi yè jǐn fāng dé shòu shēng"
+   "pinyin": "chú fēi yè jìn fāng dé shòu shēng"
   },
   {
    "n": 231,
@@ -1509,7 +1509,7 @@ export default {
   {
    "n": 299,
    "text": "如是罪报等人，尽成佛竟，我然后方成正觉。",
-   "pinyin": "rú shì zuì bào děng rén jǐn chéng fó jìng wǒ rán hòu fāng chéng zhèng jué"
+   "pinyin": "rú shì zuì bào děng rén jìn chéng fó jìng wǒ rán hòu fāng chéng zhèng jué"
   },
   {
    "n": 300,
@@ -1589,7 +1589,7 @@ export default {
   {
    "n": 315,
    "text": "若天福尽，下生人间，犹百千劫，常为帝王，能忆宿命因果本末。",
-   "pinyin": "ruò tiān fú jǐn xià shēng rén jiān yóu bǎi qiān jié cháng wèi dì wáng néng yì sù mìng yīn guǒ běn mò"
+   "pinyin": "ruò tiān fú jìn xià shēng rén jiān yóu bǎi qiān jié cháng wèi dì wáng néng yì sù mìng yīn guǒ běn mò"
   },
   {
    "n": 316,
@@ -2140,7 +2140,7 @@ export default {
   {
    "n": 425,
    "text": "或有地狱，尽驾铁骡。",
-   "pinyin": "huò yǒu dì yù jǐn jià tiě luó"
+   "pinyin": "huò yǒu dì yù jìn jià tiě luó"
   },
   {
    "n": 426,
@@ -2296,7 +2296,7 @@ export default {
   {
    "n": 456,
    "text": "假如天福尽故，下生人间，犹为国王，不失大利。",
-   "pinyin": "jiǎ rú tiān fú jǐn gù xià shēng rén jiān yóu wèi guó wáng bù shī dà lì"
+   "pinyin": "jiǎ rú tiān fú jìn gù xià shēng rén jiān yóu wèi guó wáng bù shī dà lì"
   },
   {
    "n": 457,
@@ -2311,7 +2311,7 @@ export default {
   {
    "n": 459,
    "text": "是善女人，尽此一报女身，百千万劫，更不生有女人世界，何况复受？",
-   "pinyin": "shì shàn nǚ rén jǐn cǐ yī bào nǚ shēn bǎi qiān wàn jié gèng bù shēng yǒu nǚ rén shì jiè hé kuàng fù shòu"
+   "pinyin": "shì shàn nǚ rén jìn cǐ yī bào nǚ shēn bǎi qiān wàn jié gèng bù shēng yǒu nǚ rén shì jiè hé kuàng fù shòu"
   },
   {
    "n": 460,
@@ -2346,7 +2346,7 @@ export default {
   {
    "n": 466,
    "text": "乃及王妃、宰辅大姓、大长者女，端正受生，诸相圆满。",
-   "pinyin": "nǎi jí wáng fēi zǎi fǔ dà xìng dà zhǎng zhě nǚ duān zhèng shòu shēng zhū xiāng yuán mǎn"
+   "pinyin": "nǎi jí wáng fēi zǎi fǔ dà xìng dà zhǎng zhě nǚ duān zhèng shòu shēng zhū xiàng yuán mǎn"
   },
   {
    "n": 467,
@@ -2501,7 +2501,7 @@ export default {
   {
    "n": 497,
    "text": "假令诸识分散，至气尽者，乃至一日、二日、三日、四日，",
-   "pinyin": "jiǎ lìng zhū shí fēn sàn zhì qì jǐn zhě nǎi zhì yī rì èr rì sān rì sì rì"
+   "pinyin": "jiǎ lìng zhū shí fēn sàn zhì qì jìn zhě nǎi zhì yī rì èr rì sān rì sì rì"
   },
   {
    "n": 498,
@@ -2621,7 +2621,7 @@ export default {
   {
    "n": 521,
    "text": "如是等人，尽此报后，千万生中，常生尊贵，更不经三恶道苦。",
-   "pinyin": "rú shì děng rén jǐn cǐ bào hòu qiān wàn shēng zhōng cháng shēng zūn guì gèng bù jīng sān è dào kǔ"
+   "pinyin": "rú shì děng rén jìn cǐ bào hòu qiān wàn shēng zhōng cháng shēng zūn guì gèng bù jīng sān è dào kǔ"
   },
   {
    "n": 522,
@@ -2631,7 +2631,7 @@ export default {
   {
    "n": 523,
    "text": "若未来世中，阎浮提内，刹利、婆罗门、长者、居士、一切人等，",
-   "pinyin": "ruò wèi lái shì zhōng yán fú tí nèi shā lì pó luó mén zhǎng zhě jū shì yī qiè rén děng"
+   "pinyin": "ruò wèi lái shì zhōng yán fú tí nèi chà lì pó luó mén zhǎng zhě jū shì yī qiè rén děng"
   },
   {
    "n": 524,
@@ -2912,7 +2912,7 @@ export default {
   {
    "n": 579,
    "text": "譬如有人，从远地来，绝粮三日，所负担物，彊过百斤。",
-   "pinyin": "pì rú yǒu rén cóng yuǎn dì lái jué liáng sān rì suǒ fù dān wù jiàng guò bǎi jīn"
+   "pinyin": "pì rú yǒu rén cóng yuǎn dì lái jué liáng sān rì suǒ fù dān wù qiáng guò bǎi jīn"
   },
   {
    "n": 580,
@@ -3103,7 +3103,7 @@ export default {
   {
    "n": 617,
    "text": "如是等大鬼王，各各与百千诸小鬼王，尽居阎浮提，",
-   "pinyin": "rú shì děng dà guǐ wáng gè gè yǔ bǎi qiān zhū xiǎo guǐ wáng jǐn jū yán fú tí"
+   "pinyin": "rú shì děng dà guǐ wáng gè gè yǔ bǎi qiān zhū xiǎo guǐ wáng jìn jū yán fú tí"
   },
   {
    "n": 618,
@@ -3383,7 +3383,7 @@ export default {
   {
    "n": 673,
    "text": "不令恶事横事、恶病横病，乃至不如意事，近于此舍等处，何况入门？",
-   "pinyin": "bù lìng è shì hèng shì è bìng héng bìng nǎi zhì bù rú yì shì jìn yú cǐ shè děng chù hé kuàng rù mén"
+   "pinyin": "bù lìng è shì hèng shì è bìng hèng bìng nǎi zhì bù rú yì shì jìn yú cǐ shè děng chù hé kuàng rù mén"
   },
   {
    "n": 674,
@@ -3583,7 +3583,7 @@ export default {
   {
    "n": 713,
    "text": "却后过一百七十劫，当得成佛，号曰无相如来。",
-   "pinyin": "què hòu guò yì bǎi qī shí jié dāng dé chéng fó hào yuē wú xiāng rú lái"
+   "pinyin": "què hòu guò yì bǎi qī shí jié dāng dé chéng fó hào yuē wú xiàng rú lái"
   },
   {
    "n": 714,
@@ -3739,7 +3739,7 @@ export default {
   {
    "n": 744,
    "text": "又于过去，有佛出世，号宝相如来。",
-   "pinyin": "yòu yú guò qù yǒu fó chū shì hào bǎo xiāng rú lái"
+   "pinyin": "yòu yú guò qù yǒu fó chū shì hào bǎo xiàng rú lái"
   },
   {
    "n": 745,
@@ -3885,7 +3885,7 @@ export default {
   {
    "n": 773,
    "text": "有诸国王、宰辅大臣、大长者、大刹利、大婆罗门等，",
-   "pinyin": "yǒu zhū guó wáng zǎi fǔ dà chén dà zhǎng zhě dà shā lì dà pó luó mén děng"
+   "pinyin": "yǒu zhū guó wáng zǎi fǔ dà chén dà zhǎng zhě dà chà lì dà pó luó mén děng"
   },
   {
    "n": 774,
@@ -3980,7 +3980,7 @@ export default {
   {
    "n": 792,
    "text": "更能于塔庙前，发回向心，如是国王，乃及诸人，尽成佛道，",
-   "pinyin": "gèng néng yú tǎ miào qián fā huí xiàng xīn rú shì guó wáng nǎi jí zhū rén jǐn chéng fó dào"
+   "pinyin": "gèng néng yú tǎ miào qián fā huí xiàng xīn rú shì guó wáng nǎi jí zhū rén jìn chéng fó dào"
   },
   {
    "n": 793,
@@ -4396,13 +4396,13 @@ export default {
   {
    "n": 875,
    "text": "尔时，世尊从顶门上，放百千万亿大毫相光——所谓白毫相光、大白毫相光、瑞毫相光、大瑞毫相光、玉毫相光、大玉毫相光、紫毫相光、大紫毫相光、青毫相光、大青毫相光、碧毫相光、大碧毫相光、红毫相光、大红毫相光、绿毫相光、大绿毫相光、金毫相光、大金毫相光、庆云毫相光、大庆云毫相光、千轮毫光、大千轮毫光、宝轮毫光、大宝轮毫光、日轮毫光、大日轮毫光、月轮毫光、大月轮毫光、宫殿毫光、大宫殿毫光、海云毫光、大海云毫光。",
-   "pinyin": "ěr shí shì zūn cóng dǐng mén shàng fàng bǎi qiān wàn yì dà háo xiāng guāng suǒ wèi bái háo xiāng guāng dà bái háo xiāng guāng ruì háo xiāng guāng dà ruì háo xiāng guāng yù háo xiāng guāng dà yù háo xiāng guāng zǐ háo xiāng guāng dà zǐ háo xiāng guāng qīng háo xiāng guāng dà qīng háo xiāng guāng bì háo xiāng guāng dà bì háo xiāng guāng hóng háo xiāng guāng dà hóng háo xiāng guāng lǜ háo xiāng guāng dà lǜ háo xiāng guāng jīn háo xiāng guāng dà jīn háo xiāng guāng qìng yún háo xiāng guāng dà qìng yún háo xiāng guāng qiān lún háo guāng dà qiān lún háo guāng bǎo lún háo guāng dà bǎo lún háo guāng rì lún háo guāng dà rì lún háo guāng yuè lún háo guāng dà yuè lún háo guāng gōng diàn háo guāng dà gōng diàn háo guāng hǎi yún háo guāng dà hǎi yún háo guāng",
+   "pinyin": "ěr shí shì zūn cóng dǐng mén shàng fàng bǎi qiān wàn yì dà háo xiàng guāng suǒ wèi bái háo xiàng guāng dà bái háo xiàng guāng ruì háo xiàng guāng dà ruì háo xiàng guāng yù háo xiàng guāng dà yù háo xiàng guāng zǐ háo xiàng guāng dà zǐ háo xiàng guāng qīng háo xiàng guāng dà qīng háo xiàng guāng bì háo xiàng guāng dà bì háo xiàng guāng hóng háo xiàng guāng dà hóng háo xiàng guāng lǜ háo xiàng guāng dà lǜ háo xiàng guāng jīn háo xiàng guāng dà jīn háo xiàng guāng qìng yún háo xiàng guāng dà qìng yún háo xiàng guāng qiān lún háo guāng dà qiān lún háo guāng bǎo lún háo guāng dà bǎo lún háo guāng rì lún háo guāng dà rì lún háo guāng yuè lún háo guāng dà yuè lún háo guāng gōng diàn háo guāng dà gōng diàn háo guāng hǎi yún háo guāng dà hǎi yún háo guāng",
    "heading": "见闻利益品第十二"
   },
   {
    "n": 876,
    "text": "于顶门上，放如是等毫相光已，出微妙音，",
-   "pinyin": "yú dǐng mén shàng fàng rú shì děng háo xiāng guāng yǐ chū wēi miào yīn"
+   "pinyin": "yú dǐng mén shàng fàng rú shì děng háo xiàng guāng yǐ chū wēi miào yīn"
   },
   {
    "n": 877,
@@ -4442,7 +4442,7 @@ export default {
   {
    "n": 884,
    "text": "正使过去现在未来诸佛，说其功德，犹不能尽。",
-   "pinyin": "zhèng shǐ guò qù xiàn zài wèi lái zhū fó shuō qí gōng dé yóu bù néng jǐn"
+   "pinyin": "zhèng shǐ guò qù xiàn zài wèi lái zhū fó shuō qí gōng dé yóu bù néng jìn"
   },
   {
    "n": 885,
@@ -4502,17 +4502,17 @@ export default {
   {
    "n": 896,
    "text": "佛告观世音菩萨：未来现在诸世界中，有天人受天福尽，",
-   "pinyin": "fó gào guān shì yīn pú sà wèi lái xiàn zài zhū shì jiè zhōng yǒu tiān rén shòu tiān fú jǐn"
+   "pinyin": "fó gào guān shì yīn pú sà wèi lái xiàn zài zhū shì jiè zhōng yǒu tiān rén shòu tiān fú jìn"
   },
   {
    "n": 897,
    "text": "有五衰相现，或有堕于恶道之者。",
-   "pinyin": "yǒu wǔ shuāi xiāng xiàn huò yǒu duò yú è dào zhī zhě"
+   "pinyin": "yǒu wǔ shuāi xiàng xiàn huò yǒu duò yú è dào zhī zhě"
   },
   {
    "n": 898,
    "text": "如是天人，若男若女，当现相时，或见地藏菩萨形像，",
-   "pinyin": "rú shì tiān rén ruò nán ruò nǚ dāng xiàn xiāng shí huò jiàn dì zàng pú sà xíng xiàng"
+   "pinyin": "rú shì tiān rén ruò nán ruò nǚ dāng xiàn xiàng shí huò jiàn dì zàng pú sà xíng xiàng"
   },
   {
    "n": 899,
@@ -4577,7 +4577,7 @@ export default {
   {
    "n": 911,
    "text": "是人若是业报命尽，应有一切罪障业障，合堕恶趣者，",
-   "pinyin": "shì rén ruò shì yè bào mìng jǐn yīng yǒu yī qiè zuì zhàng yè zhàng hé duò è qù zhě"
+   "pinyin": "shì rén ruò shì yè bào mìng jìn yīng yǒu yī qiè zuì zhàng yè zhàng hé duò è qù zhě"
   },
   {
    "n": 912,
@@ -4872,7 +4872,7 @@ export default {
   {
    "n": 970,
    "text": "若说于诸众生见闻利益等事，百千劫中，说不能尽。",
-   "pinyin": "ruò shuō yú zhū zhòng shēng jiàn wén lì yì děng shì bǎi qiān jié zhōng shuō bù néng jǐn"
+   "pinyin": "ruò shuō yú zhū zhòng shēng jiàn wén lì yì děng shì bǎi qiān jié zhōng shuō bù néng jìn"
   },
   {
    "n": 971,
@@ -4887,7 +4887,7 @@ export default {
   {
    "n": 973,
    "text": "尔时，世尊而说偈言：吾观地藏威神力，恒河沙劫说难尽，",
-   "pinyin": "ěr shí shì zūn ér shuō jì yán wú guān dì zàng wēi shén lì héng hé shā jié shuō nán jǐn"
+   "pinyin": "ěr shí shì zūn ér shuō jì yán wú guān dì zàng wēi shén lì héng hé shā jié shuō nán jìn"
   },
   {
    "n": 974,
@@ -4897,7 +4897,7 @@ export default {
   {
    "n": 975,
    "text": "若男若女若龙神，报尽应当堕恶道，至心归依大士身，寿命转增除罪障。",
-   "pinyin": "ruò nán ruò nǚ ruò lóng shén bào jǐn yīng dāng duò è dào zhì xīn guī yī dà shì shēn shòu mìng zhuǎn zēng chú zuì zhàng"
+   "pinyin": "ruò nán ruò nǚ ruò lóng shén bào jìn yīng dāng duò è dào zhì xīn guī yī dà shì shēn shòu mìng zhuǎn zēng chú zuì zhàng"
   },
   {
    "n": 976,
@@ -4977,7 +4977,7 @@ export default {
   {
    "n": 991,
    "text": "至心瞻礼地藏像，一切恶事皆消灭，至于梦中尽得安，衣食丰饶神鬼护。",
-   "pinyin": "zhì xīn zhān lǐ dì zàng xiàng yī qiè è shì jiē xiāo miè zhì yú mèng zhōng jǐn dé ān yī shí fēng ráo shén guǐ hù"
+   "pinyin": "zhì xīn zhān lǐ dì zàng xiàng yī qiè è shì jiē xiāo miè zhì yú mèng zhōng jìn dé ān yī shí fēng ráo shén guǐ hù"
   },
   {
    "n": 992,
@@ -5043,7 +5043,7 @@ export default {
   {
    "n": 1004,
    "text": "正使十方诸佛，赞叹宣说汝之不思议事，千万劫中，不能得尽。",
-   "pinyin": "zhèng shǐ shí fāng zhū fó zàn tàn xuān shuō rǔ zhī bù sī yì shì qiān wàn jié zhōng bù néng dé jǐn"
+   "pinyin": "zhèng shǐ shí fāng zhū fó zàn tàn xuān shuō rǔ zhī bù sī yì shì qiān wàn jié zhōng bù néng dé jìn"
   },
   {
    "n": 1005,
@@ -5263,7 +5263,7 @@ export default {
   {
    "n": 1048,
    "text": "十二者为王臣女，十三者端正相好，十四者多生天上，",
-   "pinyin": "shí èr zhě wèi wáng chén nǚ shí sān zhě duān zhèng xiāng hǎo shí sì zhě duō shēng tiān shàng"
+   "pinyin": "shí èr zhě wèi wáng chén nǚ shí sān zhě duān zhèng xiàng hǎo shí sì zhě duō shēng tiān shàng"
   },
   {
    "n": 1049,
@@ -5278,7 +5278,7 @@ export default {
   {
    "n": 1051,
    "text": "二十一者去处尽通，二十二者夜梦安乐，",
-   "pinyin": "èr shí yī zhě qù chù jǐn tōng èr shí èr zhě yè mèng ān lè"
+   "pinyin": "èr shí yī zhě qù chù jìn tōng èr shí èr zhě yè mèng ān lè"
   },
   {
    "n": 1052,

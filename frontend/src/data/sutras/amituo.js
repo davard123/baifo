@@ -350,7 +350,7 @@ export default {
   {
    "n": 68,
    "text": "东方亦有阿閦鞞佛、须弥相佛、大须弥佛、须弥光佛、妙音佛，",
-   "pinyin": "dōng fāng yì yǒu ā chù pí fó xū mí xiāng fó dà xū mí fó xū mí guāng fó miào yīn fó"
+   "pinyin": "dōng fāng yì yǒu ā chù pí fó xū mí xiàng fó dà xū mí fó xū mí guāng fó miào yīn fó"
   },
   {
    "n": 69,
@@ -390,7 +390,7 @@ export default {
   {
    "n": 76,
    "text": "舍利弗，西方世界有无量寿佛、无量相佛、无量幢佛、大光佛、大明佛、宝相佛、净光佛，",
-   "pinyin": "shè lì fú xī fāng shì jiè yǒu wú liàng shòu fó wú liàng xiāng fó wú liàng chuáng fó dà guāng fó dà míng fó bǎo xiāng fó jìng guāng fó"
+   "pinyin": "shè lì fú xī fāng shì jiè yǒu wú liàng shòu fó wú liàng xiàng fó wú liàng chuáng fó dà guāng fó dà míng fó bǎo xiàng fó jìng guāng fó"
   },
   {
    "n": 77,
