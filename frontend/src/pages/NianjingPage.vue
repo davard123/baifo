@@ -1,13 +1,14 @@
 <script setup>
 // 念经板块 /nianjing/：自己看着拼音出声念，页面听声音跟上（和 /jing/ 放录音跟读无关）。
 // 竖屏一屏一种视图（卡拉OK / 提词器），横屏左右两栏（左一句一句、右一页一页）。
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SutraLine from '../components/nianjing/SutraLine.vue'
+import SutraPage from '../components/nianjing/SutraPage.vue'
 import SutraSeg from '../components/nianjing/SutraSeg.vue'
 import SutraHeader from '../components/nianjing/SutraHeader.vue'
 import { labelTokens, sourceNote } from '../data/nianjing.js'
-import { paginate } from '../utils/nianjingLayout.js'
+import { groupSegments, paginate, paginateByHeights, pagesFromRanges } from '../utils/nianjingLayout.js'
 import { NIANJING, buddhaImages } from '../data/nianjing.js'
 import { useNianjing } from '../composables/useNianjing.js'
 import { useWakeLock } from '../composables/useWakeLock.js'
@@ -83,7 +84,8 @@ function headerRows(cpr) {
   }
   return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / 2.25 : 0) + 0.4
 }
-const pages = computed(() => {
+// 先用估算分页（立刻有页可看、偏保守），再用实测分页替换
+const pagesEst = computed(() => {
   const { w, h } = bookSize.value
   if (!w || !h || !segments.value.length) return []
   const charW = fontPx.value * 1.04
@@ -92,6 +94,107 @@ const pages = computed(() => {
   const rows = Math.max(3, Math.floor(h / rowH))
   return paginate(segments.value, { width: w, fontPx: fontPx.value, rows, topRows: headerRows(cpr) })
 })
+const measured = shallowRef(null)
+const pages = computed(() => measured.value || pagesEst.value)
+
+// ── 实测分页：隐藏容器里和书页同宽同字号整篇排一遍，读每个小段的位置，按页高切；再逐页复核 ──
+const measuring = ref(false)
+const verified = ref(false)
+const measureEl = ref(null)
+const probing = ref(null)
+const probeEl = ref(null)
+const allGroups = computed(() => (measuring.value ? groupSegments(segments.value) : []))
+let measureSeq = 0
+let measureTimer = null
+
+// 内联 span 的矩形只是字体框，不是行框：用「行高」和一个校准量 c 还原行框上下沿
+function readBoxes(root) {
+  let c = 0
+  let L = 0
+  const first = root.querySelector('.nj-sg')
+  if (first) {
+    L = parseFloat(getComputedStyle(first).lineHeight) || 0
+    c = first.getClientRects()[0].top - first.parentElement.getBoundingClientRect().top
+  }
+  const base = root.getBoundingClientRect().top
+  const boxes = new Map()
+  for (const n of root.querySelectorAll('[data-sg]')) {
+    const rs = n.getClientRects()
+    if (!rs.length) continue
+    if (n.classList.contains('nj-sg')) boxes.set(+n.dataset.sg, { top: rs[0].top - c - base, bottom: rs[rs.length - 1].top - c + L - base })
+    else boxes.set(+n.dataset.sg, { top: rs[0].top - base, bottom: rs[rs.length - 1].bottom - base })
+  }
+  const heads = new Map()
+  for (const n of root.querySelectorAll('[data-hd-for]')) {
+    heads.set(+n.dataset.hdFor, n.getBoundingClientRect().top - base - (parseFloat(getComputedStyle(n).marginTop) || 0))
+  }
+  return { boxes, heads }
+}
+
+async function verifyPages(id, ranges, H) {
+  const segs = segments.value
+  let p = 0
+  let changed = false
+  while (p < ranges.length) {
+    if (id !== measureSeq) return
+    const r = ranges[p]
+    for (;;) {
+      probing.value = { first: p === 0, groups: groupSegments(segs.slice(r.s, r.e)) }
+      await nextTick()
+      if (!probeEl.value || id !== measureSeq) return
+      const { boxes } = readBoxes(probeEl.value)
+      const bottom = boxes.get(segs[r.e - 1].idx)?.bottom ?? 0
+      if (bottom <= H + 0.5 || r.e - r.s <= 1) break
+      r.e -= 1
+      changed = true
+      if (ranges[p + 1]) ranges[p + 1].s = r.e
+      else ranges.push({ s: r.e, e: segs.length })
+    }
+    p += 1
+    if (p % 6 === 0) await new Promise((res) => setTimeout(res))
+  }
+  probing.value = null
+  if (changed && id === measureSeq) measured.value = pagesFromRanges(segs, ranges)
+  if (id === measureSeq) verified.value = true
+}
+
+async function runMeasure() {
+  const id = ++measureSeq
+  const { w, h } = bookSize.value
+  const segs = segments.value
+  if (!w || !h || !segs.length) return
+  try {
+    await document.fonts?.ready
+  } catch {
+    /* 没有 fonts API 就直接量 */
+  }
+  if (id !== measureSeq) return
+  measuring.value = true
+  await nextTick()
+  const el = measureEl.value
+  if (!el || id !== measureSeq) {
+    measuring.value = false
+    return
+  }
+  const { boxes, heads } = readBoxes(el)
+  const tops = segs.map((sg) => heads.get(sg.idx) ?? boxes.get(sg.idx)?.top ?? 0)
+  const bottoms = segs.map((sg) => boxes.get(sg.idx)?.bottom ?? 0)
+  tops[0] = 0
+  measuring.value = false
+  const ranges = paginateByHeights(tops, bottoms, h)
+  measured.value = pagesFromRanges(segs, ranges)
+  await verifyPages(id, ranges, h)
+}
+function invalidateMeasure() {
+  measureSeq += 1
+  measuring.value = false
+  verified.value = false
+  probing.value = null
+  measured.value = null
+  clearTimeout(measureTimer)
+  measureTimer = setTimeout(runMeasure, 150)
+}
+watch([bookSize, fontPx, segments, header, headerNote], invalidateMeasure)
 const cursorPage = computed(() => {
   const ps = pages.value
   let i = 0
@@ -181,7 +284,13 @@ onMounted(() => {
     { immediate: true },
   )
 })
-onBeforeUnmount(() => ro?.disconnect())
+onMounted(() => document.fonts?.addEventListener?.('loadingdone', invalidateMeasure))
+onBeforeUnmount(() => {
+  ro?.disconnect()
+  clearTimeout(measureTimer)
+  measureSeq += 1
+  document.fonts?.removeEventListener?.('loadingdone', invalidateMeasure)
+})
 </script>
 
 <template>
@@ -264,33 +373,30 @@ onBeforeUnmount(() => ro?.disconnect())
 
       <!-- 书页（横屏右栏） -->
       <div class="nj-pane nj-book" @touchstart.passive="onBookTouchStart" @touchend.passive="onBookTouchEnd">
-        <div ref="bookBox" class="nj-book__page">
-          <SutraHeader v-if="header && bookPage === 0" :header="header" :note="headerNote" />
-          <template v-if="pages[bookPage]">
-            <template v-for="g in pages[bookPage].groups" :key="g.segs[0].start">
-              <p v-if="g.heading" class="nj-hd">{{ g.heading }}</p>
-              <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span
-                v-for="pt in sg.parts"
-                :key="pt.line + '-' + pt.tokens[0].u"
-                :data-line="pt.line"
-                class="nj-ln"
-                :class="{ now: pt.line === lineIndex }"
-              ><SutraLine :tokens="pt.tokens" :cursor="cursorFor(sg)" @pick="pick" /></span></template></p>
-              <div v-else class="nj-verse">
-                <p v-for="sg in g.segs" :key="sg.start" class="nj-vrow" :class="{ gap: sg.gapBefore }"><template v-for="(pt, k) in sg.parts" :key="pt.line"><template v-if="k">　</template><span
-                  :data-line="pt.line"
-                  class="nj-ln"
-                  :class="{ now: pt.line === lineIndex }"
-                ><SutraLine :tokens="pt.tokens.filter((t) => !t.sep)" :cursor="cursorFor(sg)" @pick="pick" /></span></template></p>
-              </div>
-            </template>
-          </template>
+        <div ref="bookBox" class="nj-book__page" :data-verified="verified ? 1 : 0">
+          <SutraPage
+            v-if="pages[bookPage]"
+            :header="header"
+            :note="headerNote"
+            :show-header="bookPage === 0"
+            :groups="pages[bookPage].groups"
+            :line-index="lineIndex"
+            :cursor="cursor"
+            @pick="pick"
+          />
         </div>
         <div class="nj-book__nav">
           <button type="button" :disabled="bookPage <= 0" @click="flip(-1)">‹ 上一页</button>
           <span>第 {{ bookPage + 1 }} / {{ pages.length || 1 }} 页</span>
           <button type="button" :disabled="bookPage >= pages.length - 1" @click="flip(1)">下一页 ›</button>
         </div>
+      </div>
+      <!-- 量页高用的隐藏容器：和书页同宽同字号，整篇排一遍读每个小段的位置；再逐页复核 -->
+      <div v-if="measuring" ref="measureEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
+        <SutraPage :header="header" :note="headerNote" show-header :groups="allGroups" />
+      </div>
+      <div v-if="probing" ref="probeEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
+        <SutraPage :header="header" :note="headerNote" :show-header="probing.first" :groups="probing.groups" />
       </div>
     </section>
 
@@ -493,29 +599,16 @@ onBeforeUnmount(() => ro?.disconnect())
   font-size: var(--nj-font);
 }
 .nj-prompt__pad--end { height: 60%; }
-/* 连排的段落、行内高亮 */
-.nj-para { margin: 0 0 0.6em; line-height: 2.25; }
-.nj-ln {
-  border-radius: 6px;
-  padding: 0 2px;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  transition: background 0.3s;
-}
-.nj-ln.now { background: rgba(230, 184, 102, 0.34); }
-.nj-hd {
-  margin: 1.3em 0 0.4em;
-  text-align: center;
-  font-size: 0.8em;
-  font-weight: 700;
-  color: #7a2a1c;
-  line-height: 1.8;
-}
-.nj-verse { margin: 0 0 0.6em; }
-.nj-vrow { margin: 0; text-align: center; line-height: 2.25; }
-.nj-vrow.gap { margin-top: 0.7em; }
-.nj-vrow .nj-ln { display: inline-block; }
 .nj-pheader { padding-top: 0.6em; }
+.nj-measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  font-size: var(--nj-font);
+  z-index: -1;
+}
 
 /* 书页 */
 .nj-book { flex-direction: column; background: #fffaf2; }
@@ -541,6 +634,10 @@ onBeforeUnmount(() => ro?.disconnect())
 /* 横屏：左卡拉OK、右书页 */
 @media (orientation: landscape) and (min-width: 700px) {
   .nj-viewtoggle { display: none; }
+  /* 右边书页已有经题块，左栏不重复，佛像保持大小 */
+  .nj-kheader { display: none; }
+  .nj-pic { flex: 0 0 42%; max-height: none; }
+  .nj-kline { flex: 1 1 0; min-height: 0; }
   .nj-reader .nj-karaoke { display: flex; flex: 0 0 42%; border-right: 1px solid rgba(122, 86, 51, 0.2); }
   .nj-reader .nj-prompt { display: none; }
   .nj-reader .nj-book { display: flex; }

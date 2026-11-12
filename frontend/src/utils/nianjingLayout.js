@@ -146,7 +146,11 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
       break
     }
   })
-  return segs.filter((s) => s.end > s.start)
+  const out = segs.filter((s) => s.end > s.start)
+  out.forEach((s, i) => {
+    s.idx = i
+  })
+  return out
 }
 
 // 品名小标题占的行数、偈颂一偈之间的小间距、段落之间的间距（按「行」算）
@@ -208,4 +212,38 @@ export function paginate(segments, { width, fontPx, rows, topRows = 0 }) {
   }
   pages.push(page)
   return pages.map(({ start, groups }) => ({ start, groups }))
+}
+
+/** 一页的小段排成组：同一块（段落/偈颂）里连着的小段一组；块的第一段带品名时组上带 heading。 */
+export function groupSegments(segs) {
+  const groups = []
+  for (const sg of segs) {
+    const g = groups.at(-1)
+    if (g && g.block === sg.block && !sg.paraStart) g.segs.push(sg)
+    else groups.push({ block: sg.block, kind: sg.gapBefore !== undefined ? 'verse' : 'para', heading: sg.heading || '', segs: [sg] })
+  }
+  return groups
+}
+
+/**
+ * 实测分页：tops[i]/bottoms[i] 是第 i 个小段在「整篇连续排下来」里的上沿（含它前面的品名、第一个小段含经题块）和下沿。
+ * 一页从小段 s 起，尽量多放，直到 bottoms[e] - tops[s] 超过 pageH；至少放一个。
+ * 返回 [{ s, e }]（左闭右开），依次首尾相接盖满 0…n。
+ */
+export function paginateByHeights(tops, bottoms, pageH) {
+  const n = tops.length
+  const ranges = []
+  let s = 0
+  while (s < n) {
+    let e = s + 1
+    while (e < n && bottoms[e] - tops[s] <= pageH) e += 1
+    ranges.push({ s, e })
+    s = e
+  }
+  return ranges
+}
+
+/** 把 [{ s, e }] 变成书页：[{ start, groups }]。 */
+export function pagesFromRanges(segments, ranges) {
+  return ranges.map(({ s, e }) => ({ start: segments[s].start, groups: groupSegments(segments.slice(s, e)) }))
 }

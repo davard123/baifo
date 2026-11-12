@@ -1,7 +1,7 @@
 // 念经页排版检查：段落/偈颂分块、卡拉OK分段、书页分页都不能重字漏字。
 import assert from 'node:assert/strict'
 import { NIANJING, toUnits } from '../src/data/nianjing.js'
-import { buildBlocks, buildSegments, paginate, SEGMENT_MAX } from '../src/utils/nianjingLayout.js'
+import { buildBlocks, buildSegments, groupSegments, paginate, paginateByHeights, pagesFromRanges, SEGMENT_MAX } from '../src/utils/nianjingLayout.js'
 
 // 心经：相邻短句合并
 {
@@ -57,6 +57,39 @@ for (const s of NIANJING) {
     // 品名只在每块第一段之前出现一次
     const heads = pages.flatMap((p) => p.groups.filter((gr) => gr.heading))
     assert.equal(heads.length, blocks.filter((b) => b.headStart).length, `${s.slug} 品名数`)
+  }
+  // 实测分页（用造出来的高度数组）：不重不漏、每页不超高、已是「再多放一个就超」
+  segs.forEach((g, i) => assert.equal(g.idx, i))
+  for (const pageH of [120, 333, 604, 2000]) {
+    const hs = segs.map((_, i) => 30 + ((i * 37) % 55)) // 每段 30~84px
+    const tops = []
+    const bottoms = []
+    let y = 0
+    hs.forEach((h, i) => {
+      tops.push(y)
+      y += h
+      bottoms.push(y)
+      y += (i % 5 === 4) ? 10 : 0
+    })
+    const ranges = paginateByHeights(tops, bottoms, pageH)
+    let nx = 0
+    for (const r of ranges) {
+      assert.equal(r.s, nx)
+      assert.ok(r.e > r.s)
+      if (r.e - r.s > 1) assert.ok(bottoms[r.e - 1] - tops[r.s] <= pageH, `${s.slug} 超高`)
+      if (r.e < segs.length) assert.ok(bottoms[r.e] - tops[r.s] > pageH || r.e - r.s === 0, `${s.slug} 还能再放`)
+      nx = r.e
+    }
+    assert.equal(nx, segs.length)
+    const flat = pagesFromRanges(segs, ranges).flatMap((p) => p.groups.flatMap((gr) => gr.segs))
+    assert.equal(flat.length, segs.length)
+    flat.forEach((g, i) => assert.equal(g, segs[i]))
+  }
+  // groupSegments 和估算分页分出来的组一致
+  for (const pg of paginate(segs, SIZES[2])) {
+    const again = groupSegments(pg.groups.flatMap((gr) => gr.segs))
+    assert.equal(again.length, pg.groups.length)
+    again.forEach((gr, i) => assert.equal(gr.heading, pg.groups[i].heading))
   }
   console.log('ok', s.slug, blocks.length, '块', segs.length, '段')
 }
