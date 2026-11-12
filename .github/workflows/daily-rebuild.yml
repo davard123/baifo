@@ -11,6 +11,9 @@ name: Daily rebuild (今日财神方位)
 on:
   schedule:
     - cron: "5 16 * * *" # UTC 16:05 = 台湾 00:05
+    # 备用：GitHub 高峰期偶尔会丢掉定时任务；当天已更新过就直接退出，不会重复提交
+    - cron: "35 17 * * *" # UTC 17:35 = 台湾 01:35
+    - cron: "5 21 * * *" # UTC 21:05 = 台湾 05:05
   workflow_dispatch:
 
 permissions:
