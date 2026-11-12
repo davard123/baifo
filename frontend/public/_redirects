@@ -47,3 +47,8 @@ https://www.fopusha.com/* https://fopusha.com/:splat 301!
 /prayers/career/ /topic/career/ 301
 /texts/dedication-prayers /topic/dedication-prayers/ 301
 /texts/dedication-prayers/ /topic/dedication-prayers/ 301
+# 2026-11-12 回向三页重新分工：「功德回向是什么意思」并入「如何回向」
+/topic/merit-dedication /topic/how-to-dedicate-merit/ 301
+/topic/merit-dedication/ /topic/how-to-dedicate-merit/ 301
+/zh-hant/topic/merit-dedication /zh-hant/topic/how-to-dedicate-merit/ 301
+/zh-hant/topic/merit-dedication/ /zh-hant/topic/how-to-dedicate-merit/ 301

@@ -10,10 +10,10 @@ const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..')
 const baseOrigin = new URL(SITE.baseUrl).origin
 const HANT_PREFIX = '/zh-hant'
-// 简体页面总数（新增页面时同步改）：非财神方位/入宅吉日页共 101 个。
-// 2026-11-09 为 95，之后加了十小咒/楞严咒等念经页等，到 2026-11-11 加八大人觉经念经页后为 100，加仁王护国经念经页后为 101；
+// 简体页面总数（新增页面时同步改）：非财神方位/入宅吉日页共 103 个。
+// 2026-11-09 为 95，之后加了十小咒/楞严咒等念经页等，到 2026-11-11 加八大人觉经念经页后为 100，加仁王护国经念经页后为 101；2026-11-12 加 2027 初五迎财神、地藏经问答、2027 佛菩萨圣诞日期表三页，merit-dedication 301 到 how-to-dedicate-merit，为 103；
 // 财神方位、入宅吉日页按构建日期滚动生成，数量另算。
-const EXPECTED_PAGES = 101 + getFangweiPages().length
+const EXPECTED_PAGES = 103 + getFangweiPages().length
 const EXPECTED_HREFLANGS = ['zh-Hans', 'zh-Hant', 'x-default']
 const MAX_NAV_LINKS = 40
 

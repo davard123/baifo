@@ -54,6 +54,7 @@ const ANCESTOR_TOPIC_LINKS = [
 
 const QIUCAI_TOPIC_LINKS = [
   ['/caishen-fangwei', '今日财神方位'],
+  ['/topic/ying-caishen-2027', '2027 初五迎财神'],
   ['/topic/ying-caishen', '正月初五迎财神'],
   ['/topic/qiucai-bai-na-wei', '求财拜哪位财神'],
   ['/topic/bai-caishen-gongpin', '拜财神的供品与禁忌'],
@@ -196,6 +197,7 @@ export function getStaticNavigation(page, pages) {
       .map(([path, target]) => ({ path, label: target.title.split('：')[0] })))
     addGroup('拜财神', routeCandidates(pages, [
       ['/qiucai', '在线拜财神'],
+      ['/topic/ying-caishen-2027', '2027 初五迎财神'],
       ['/topic/ying-caishen', '正月初五迎财神'],
       ['/ruzhai-jiri', '入宅吉日'],
     ]))

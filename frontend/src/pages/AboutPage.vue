@@ -14,7 +14,9 @@ const guides = [
   { label: '清明祭祖指南', to: '/guide/qingming-2027/' },
 ]
 const topics = [
-  { label: '功德回向怎么做', to: '/topic/merit-dedication/' },
+  { label: '如何回向', to: '/topic/how-to-dedicate-merit/' },
+  { label: '回向文范文', to: '/topic/dedication-prayers/' },
+  { label: '2027 佛菩萨圣诞日期表', to: '/topic/fo-pusa-shengdan-2027/' },
   { label: '上香的意义', to: '/topic/offering-incense/' },
   { label: '点灯供佛', to: '/topic/offering-light/' },
   { label: '为家人祈求健康', to: '/topic/health/' },

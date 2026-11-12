@@ -175,6 +175,7 @@ function goWorship() {
     </section>
 
     <div class="sub-links">
+      <router-link to="/topic/ying-caishen-2027/">2027 初五迎财神（2 月 10 日）→</router-link>
       <router-link to="/topic/ying-caishen/">正月初五迎财神怎么做 →</router-link>
       <router-link to="/qiucai/">在线拜财神 →</router-link>
       <router-link to="/ruzhai-jiri/">入宅、搬家、开业吉日 →</router-link>

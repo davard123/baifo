@@ -1196,6 +1196,7 @@ useWakeLock()
       </section>
 <nav class="qc-reading" aria-label="求财延伸阅读">
         <router-link to="/topic/qiucai-bai-na-wei/">求财拜哪位财神</router-link>
+        <router-link to="/topic/ying-caishen-2027/">2027 初五迎财神</router-link>
         <router-link to="/topic/ying-caishen/">正月初五迎财神怎么拜</router-link>
         <router-link to="/topic/bai-caishen-gongpin/">拜财神的供品与禁忌</router-link>
       </nav>
@@ -1246,6 +1247,7 @@ useWakeLock()
 
       <nav class="qc-reading" aria-label="求财延伸阅读">
         <router-link to="/topic/qiucai-bai-na-wei/">求财拜哪位财神</router-link>
+        <router-link to="/topic/ying-caishen-2027/">2027 初五迎财神</router-link>
         <router-link to="/topic/ying-caishen/">正月初五迎财神怎么拜</router-link>
         <router-link to="/topic/bai-caishen-gongpin/">拜财神的供品与禁忌</router-link>
       </nav>
