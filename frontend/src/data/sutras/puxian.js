@@ -459,7 +459,7 @@ export default {
   {
    "n": 1075,
    "text": "十方三世一切声闻及辟支佛、有学、无学所有功德，我皆随喜。",
-   "pinyin": "shí fāng sān shì yí qiè shēng wén jí bì zhī fó yǒu xué wú xué suǒ yǒu gōng dé wǒ jiē suí xǐ",
+   "pinyin": "shí fāng sān shì yí qiè shēng wén jí pì zhī fó yǒu xué wú xué suǒ yǒu gōng dé wǒ jiē suí xǐ",
    "part": "长行"
   },
   {
@@ -627,7 +627,7 @@ export default {
   {
    "n": 1103,
    "text": "或处一切诸大菩萨众会道场，或处声闻及辟支佛众会道场，",
-   "pinyin": "huò chǔ yí qiè zhū dà pú sà zhòng huì dào chǎng huò chǔ shēng wén jí bì zhī fó zhòng huì dào chǎng",
+   "pinyin": "huò chǔ yí qiè zhū dà pú sà zhòng huì dào chǎng huò chǔ shēng wén jí pì zhī fó zhòng huì dào chǎng",
    "part": "长行"
   },
   {
@@ -2463,7 +2463,7 @@ export default {
    "n": 180,
    "stanza": 45,
    "text": "了达一切神通力。",
-   "pinyin": "le dá yí qiè shén tōng lì",
+   "pinyin": "liǎo dá yí qiè shén tōng lì",
    "part": "偈颂"
   },
   {

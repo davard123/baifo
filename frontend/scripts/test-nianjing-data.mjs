@@ -3,6 +3,14 @@ import assert from 'node:assert/strict'
 import { NIANJING, toUnits, hanCount, buddhaImages, labelTokens, sourceNote, UNVERIFIED_CHARS } from '../src/data/nianjing.js'
 
 assert.equal(NIANJING.length, 14)
+// 拼音里改正过的明显错误：[字, 错拼音, 只在含这个词时算错]；咒语不查
+const MANTRA = new Set(['dabeizhou', 'liuzi', 'wangsheng', 'yaoshi-zhenyan', 'shixiaozhou'])
+const WRONG_READINGS = [
+  ['佛', 'fú'], ['藏', 'cáng', '地藏'], ['子', 'zi'], ['得', 'de'], ['了', 'le'], ['生', 'sheng'], ['卜', 'bo'],
+  ['尽', 'jǐn', '尽形'], ['著', 'zhù', '著地'], ['彊', 'jiàng', '刚彊'], ['那', 'nuǒ', '兰那'], ['伽', 'gā'],
+  ['辟', 'bì', '辟支'], ['舍', 'shě', '舍卫'], ['舍', 'shě', '舍宅'],
+]
+
 for (const s of NIANJING) {
   const mod = await s.load()
   const d = mod.default
@@ -10,6 +18,18 @@ for (const s of NIANJING) {
   for (const l of d.lines) {
     const syl = String(l.pinyin).trim().split(/\s+/).filter(Boolean).length
     assert.equal(hanCount(l.text), syl, `${s.slug} 第 ${l.n} 行汉字 ${hanCount(l.text)} 个、拼音 ${syl} 个：${l.text}`)
+  }
+  // 2026-11-12 改正过的明显读音错误不能再出现（从念佛板块原始数据重新导入时会带回来）
+  if (!MANTRA.has(s.slug)) {
+    for (const l of d.lines) {
+      const pys = String(l.pinyin).trim().split(/\s+/).filter(Boolean)
+      const hs = [...l.text].filter((c) => /\p{Script=Han}/u.test(c))
+      hs.forEach((c, i) => {
+        const near = hs.slice(Math.max(0, i - 2), i + 2).join('')
+        const bad = WRONG_READINGS.find(([ch, py, w]) => ch === c && py === pys[i] && (!w || near.includes(w)))
+        assert.ok(!bad, `${s.slug} 第 ${l.n} 行「${c}」标成 ${pys[i]}：${l.text}`)
+      })
+    }
   }
   const u = toUnits(d.lines)
   const unverified = u.chars.filter((c) => UNVERIFIED_CHARS.has(c.ch)).length

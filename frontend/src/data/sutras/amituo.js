@@ -20,7 +20,7 @@ export default {
   {
    "n": 2,
    "text": "一时，佛在舍卫国，祇树给孤独园，",
-   "pinyin": "yī shí fú zài shě wèi guó qí shù gěi gū dú yuán"
+   "pinyin": "yī shí fó zài shè wèi guó qí shù gěi gū dú yuán"
   },
   {
    "n": 3,
@@ -65,7 +65,7 @@ export default {
   {
    "n": 11,
    "text": "文殊师利法王子、阿逸多菩萨、乾陀诃提菩萨、常精进菩萨，",
-   "pinyin": "wén shū shī lì fǎ wáng zi ā yì duō pú sà qián tuó hē tí pú sà cháng jīng jìn pú sà"
+   "pinyin": "wén shū shī lì fǎ wáng zǐ ā yì duō pú sà qián tuó hē tí pú sà cháng jīng jìn pú sà"
   },
   {
    "n": 12,
@@ -80,12 +80,12 @@ export default {
   {
    "n": 14,
    "text": "尔时，佛告长老舍利弗：",
-   "pinyin": "ěr shí fú gào zhǎng lǎo shè lì fú"
+   "pinyin": "ěr shí fó gào zhǎng lǎo shè lì fú"
   },
   {
    "n": 15,
    "text": "从是西方，过十万亿佛土，",
-   "pinyin": "cóng shì xī fāng guò shí wàn yì fú tǔ"
+   "pinyin": "cóng shì xī fāng guò shí wàn yì fó tǔ"
   },
   {
    "n": 16,
@@ -155,7 +155,7 @@ export default {
   {
    "n": 29,
    "text": "又舍利弗，彼佛国土，常作天乐，黄金为地。",
-   "pinyin": "yòu shè lì fú bǐ fú guó tǔ cháng zuò tiān yuè huáng jīn wèi dì"
+   "pinyin": "yòu shè lì fú bǐ fó guó tǔ cháng zuò tiān yuè huáng jīn wèi dì"
   },
   {
    "n": 30,
@@ -170,7 +170,7 @@ export default {
   {
    "n": 32,
    "text": "供养他方十万亿佛；",
-   "pinyin": "gòng yǎng tā fāng shí wàn yì fú"
+   "pinyin": "gòng yǎng tā fāng shí wàn yì fó"
   },
   {
    "n": 33,
@@ -190,7 +190,7 @@ export default {
   {
    "n": 36,
    "text": "白鹤、孔雀、鹦鹉、舍利、迦陵频伽、共命之鸟。",
-   "pinyin": "bái hè kǒng què yīng wǔ shě lì jiā líng pín qié gòng mìng zhī niǎo"
+   "pinyin": "bái hè kǒng què yīng wǔ shè lì jiā líng pín qié gòng mìng zhī niǎo"
   },
   {
    "n": 37,
@@ -215,12 +215,12 @@ export default {
   {
    "n": 41,
    "text": "所以者何？彼佛国土无三恶道。",
-   "pinyin": "suǒ yǐ zhě hé bǐ fú guó tǔ wú sān è dào"
+   "pinyin": "suǒ yǐ zhě hé bǐ fó guó tǔ wú sān è dào"
   },
   {
    "n": 42,
    "text": "舍利弗，其佛国土，尚无恶道之名，何况有实！",
-   "pinyin": "shè lì fú qí fú guó tǔ shàng wú è dào zhī míng hé kuàng yǒu shí"
+   "pinyin": "shè lì fú qí fó guó tǔ shàng wú è dào zhī míng hé kuàng yǒu shí"
   },
   {
    "n": 43,
@@ -230,7 +230,7 @@ export default {
   {
    "n": 44,
    "text": "舍利弗，彼佛国土，微风吹动诸宝行树及宝罗网，出微妙音，",
-   "pinyin": "shè lì fú bǐ fú guó tǔ wēi fēng chuī dòng zhū bǎo háng shù jí bǎo luó wǎng chū wēi miào yīn"
+   "pinyin": "shè lì fú bǐ fó guó tǔ wēi fēng chuī dòng zhū bǎo háng shù jí bǎo luó wǎng chū wēi miào yīn"
   },
   {
    "n": 45,
@@ -245,12 +245,12 @@ export default {
   {
    "n": 47,
    "text": "舍利弗，其佛国土，成就如是功德庄严。",
-   "pinyin": "shè lì fú qí fú guó tǔ chéng jiù rú shì gōng dé zhuāng yán"
+   "pinyin": "shè lì fú qí fó guó tǔ chéng jiù rú shì gōng dé zhuāng yán"
   },
   {
    "n": 48,
    "text": "舍利弗，于汝意云何，彼佛何故号阿弥陀？",
-   "pinyin": "shè lì fú yú rǔ yì yún hé bǐ fú hé gù hào ā mí tuó"
+   "pinyin": "shè lì fú yú rǔ yì yún hé bǐ fó hé gù hào ā mí tuó"
   },
   {
    "n": 49,
@@ -260,17 +260,17 @@ export default {
   {
    "n": 50,
    "text": "又舍利弗，彼佛寿命，及其人民，无量无边阿僧祇劫，故名阿弥陀。",
-   "pinyin": "yòu shè lì fú bǐ fú shòu mìng jí qí rén mín wú liàng wú biān ā sēng qí jié gù míng ā mí tuó"
+   "pinyin": "yòu shè lì fú bǐ fó shòu mìng jí qí rén mín wú liàng wú biān ā sēng qí jié gù míng ā mí tuó"
   },
   {
    "n": 51,
    "text": "舍利弗，阿弥陀佛成佛已来，于今十劫。",
-   "pinyin": "shè lì fú ā mí tuó fó chéng fú yǐ lái yú jīn shí jié"
+   "pinyin": "shè lì fú ā mí tuó fó chéng fó yǐ lái yú jīn shí jié"
   },
   {
    "n": 52,
    "text": "又舍利弗，彼佛有无量无边声闻弟子，皆阿罗汉，非是算数之所能知；",
-   "pinyin": "yòu shè lì fú bǐ fú yǒu wú liàng wú biān shēng wén dì zǐ jiē ā luó hàn fēi shì suàn shù zhī suǒ néng zhī"
+   "pinyin": "yòu shè lì fú bǐ fó yǒu wú liàng wú biān shēng wén dì zǐ jiē ā luó hàn fēi shì suàn shù zhī suǒ néng zhī"
   },
   {
    "n": 53,
@@ -315,7 +315,7 @@ export default {
   {
    "n": 61,
    "text": "舍利弗，若有善男子、善女人，闻说阿弥陀佛，执持名号，",
-   "pinyin": "shè lì fú ruò yǒu shàn nán zi shàn nǚ rén wén shuō ā mí tuó fó zhí chí míng hào"
+   "pinyin": "shè lì fú ruò yǒu shàn nán zǐ shàn nǚ rén wén shuō ā mí tuó fó zhí chí míng hào"
   },
   {
    "n": 62,
@@ -350,12 +350,12 @@ export default {
   {
    "n": 68,
    "text": "东方亦有阿閦鞞佛、须弥相佛、大须弥佛、须弥光佛、妙音佛，",
-   "pinyin": "dōng fāng yì yǒu ā chù pí fó xū mí xiāng fú dà xū mí fú xū mí guāng fú miào yīn fú"
+   "pinyin": "dōng fāng yì yǒu ā chù pí fó xū mí xiāng fó dà xū mí fó xū mí guāng fó miào yīn fó"
   },
   {
    "n": 69,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 70,
@@ -365,17 +365,17 @@ export default {
   {
    "n": 71,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 72,
    "text": "舍利弗，南方世界有日月灯佛、名闻光佛、大焰肩佛、须弥灯佛、无量精进佛，",
-   "pinyin": "shè lì fú nán fāng shì jiè yǒu rì yuè dēng fú míng wén guāng fú dà yàn jiān fú xū mí dēng fú wú liàng jīng jìn fú"
+   "pinyin": "shè lì fú nán fāng shì jiè yǒu rì yuè dēng fó míng wén guāng fó dà yàn jiān fó xū mí dēng fó wú liàng jīng jìn fó"
   },
   {
    "n": 73,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 74,
@@ -385,17 +385,17 @@ export default {
   {
    "n": 75,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 76,
    "text": "舍利弗，西方世界有无量寿佛、无量相佛、无量幢佛、大光佛、大明佛、宝相佛、净光佛，",
-   "pinyin": "shè lì fú xī fāng shì jiè yǒu wú liàng shòu fú wú liàng xiāng fú wú liàng chuáng fú dà guāng fú dà míng fú bǎo xiāng fú jìng guāng fú"
+   "pinyin": "shè lì fú xī fāng shì jiè yǒu wú liàng shòu fó wú liàng xiāng fó wú liàng chuáng fó dà guāng fó dà míng fó bǎo xiāng fó jìng guāng fó"
   },
   {
    "n": 77,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 78,
@@ -405,17 +405,17 @@ export default {
   {
    "n": 79,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 80,
    "text": "舍利弗，北方世界有焰肩佛、最胜音佛、难沮佛、日生佛、网明佛，",
-   "pinyin": "shè lì fú běi fāng shì jiè yǒu yàn jiān fú zuì shèng yīn fú nán jǔ fó rì shēng fú wǎng míng fú"
+   "pinyin": "shè lì fú běi fāng shì jiè yǒu yàn jiān fó zuì shèng yīn fó nán jǔ fó rì shēng fó wǎng míng fó"
   },
   {
    "n": 81,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 82,
@@ -425,17 +425,17 @@ export default {
   {
    "n": 83,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 84,
    "text": "舍利弗，下方世界有师子佛、名闻佛、名光佛、达摩佛、法幢佛、持法佛，",
-   "pinyin": "shè lì fú xià fāng shì jiè yǒu shī zi fú míng wén fú míng guāng fú dá mó fó fǎ chuáng fú chí fǎ fú"
+   "pinyin": "shè lì fú xià fāng shì jiè yǒu shī zǐ fó míng wén fó míng guāng fó dá mó fó fǎ chuáng fó chí fǎ fó"
   },
   {
    "n": 85,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 86,
@@ -445,22 +445,22 @@ export default {
   {
    "n": 87,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 88,
    "text": "舍利弗，上方世界有梵音佛、宿王佛、香上佛、香光佛、大焰肩佛、",
-   "pinyin": "shè lì fú shàng fāng shì jiè yǒu fàn yīn fú sù wáng fú xiāng shàng fú xiāng guāng fú dà yàn jiān fú"
+   "pinyin": "shè lì fú shàng fāng shì jiè yǒu fàn yīn fó sù wáng fó xiāng shàng fó xiāng guāng fó dà yàn jiān fó"
   },
   {
    "n": 89,
    "text": "杂色宝华严身佛、娑罗树王佛、宝华德佛、见一切义佛、如须弥山佛，",
-   "pinyin": "zá sè bǎo huá yán shēn fú suō luó shù wáng fú bǎo huá dé fú jiàn yī qiè yì fú rú xū mí shān fú"
+   "pinyin": "zá sè bǎo huá yán shēn fó suō luó shù wáng fó bǎo huá dé fó jiàn yī qiè yì fó rú xū mí shān fó"
   },
   {
    "n": 90,
    "text": "如是等恒河沙数诸佛，各于其国，出广长舌相，",
-   "pinyin": "rú shì děng héng hé shā shù zhū fú gè yú qí guó chū guǎng cháng shé xiàng"
+   "pinyin": "rú shì děng héng hé shā shù zhū fó gè yú qí guó chū guǎng cháng shé xiàng"
   },
   {
    "n": 91,
@@ -470,22 +470,22 @@ export default {
   {
    "n": 92,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 93,
    "text": "舍利弗，于汝意云何，何故名为《一切诸佛所护念经》？",
-   "pinyin": "shè lì fú yú rǔ yì yún hé hé gù míng wèi yī qiè zhū fú suǒ hù niàn jīng"
+   "pinyin": "shè lì fú yú rǔ yì yún hé hé gù míng wèi yī qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 94,
    "text": "舍利弗，若有善男子、善女人，闻是经受持者，及闻诸佛名者，",
-   "pinyin": "shè lì fú ruò yǒu shàn nán zi shàn nǚ rén wén shì jīng shòu chí zhě jí wén zhū fú míng zhě"
+   "pinyin": "shè lì fú ruò yǒu shàn nán zǐ shàn nǚ rén wén shì jīng shòu chí zhě jí wén zhū fó míng zhě"
   },
   {
    "n": 95,
    "text": "是诸善男子、善女人，皆为一切诸佛之所护念，",
-   "pinyin": "shì zhū shàn nán zi shàn nǚ rén jiē wèi yī qiè zhū fú zhī suǒ hù niàn"
+   "pinyin": "shì zhū shàn nán zǐ shàn nǚ rén jiē wèi yī qiè zhū fó zhī suǒ hù niàn"
   },
   {
    "n": 96,
@@ -495,7 +495,7 @@ export default {
   {
    "n": 97,
    "text": "是故舍利弗，汝等皆当信受我语，及诸佛所说。",
-   "pinyin": "shì gù shè lì fú rǔ děng jiē dāng xìn shòu wǒ yǔ jí zhū fú suǒ shuō"
+   "pinyin": "shì gù shè lì fú rǔ děng jiē dāng xìn shòu wǒ yǔ jí zhū fó suǒ shuō"
   },
   {
    "n": 98,
@@ -515,22 +515,22 @@ export default {
   {
    "n": 101,
    "text": "是故舍利弗，诸善男子、善女人，若有信者，应当发愿，生彼国土。",
-   "pinyin": "shì gù shè lì fú zhū shàn nán zi shàn nǚ rén ruò yǒu xìn zhě yīng dāng fā yuàn shēng bǐ guó tǔ"
+   "pinyin": "shì gù shè lì fú zhū shàn nán zǐ shàn nǚ rén ruò yǒu xìn zhě yīng dāng fā yuàn shēng bǐ guó tǔ"
   },
   {
    "n": 102,
    "text": "舍利弗，如我今者，称赞诸佛不可思议功德；",
-   "pinyin": "shè lì fú rú wǒ jīn zhě chēng zàn zhū fú bù kě sī yì gōng dé"
+   "pinyin": "shè lì fú rú wǒ jīn zhě chēng zàn zhū fó bù kě sī yì gōng dé"
   },
   {
    "n": 103,
    "text": "彼诸佛等，亦称赞我不可思议功德，而作是言：",
-   "pinyin": "bǐ zhū fú děng yì chēng zàn wǒ bù kě sī yì gōng dé ér zuò shì yán"
+   "pinyin": "bǐ zhū fó děng yì chēng zàn wǒ bù kě sī yì gōng dé ér zuò shì yán"
   },
   {
    "n": 104,
    "text": "释迦牟尼佛能为甚难希有之事，",
-   "pinyin": "shì jiā mù ní fú néng wèi shèn nán xī yǒu zhī shì"
+   "pinyin": "shì jiā mù ní fó néng wèi shèn nán xī yǒu zhī shì"
   },
   {
    "n": 105,
@@ -565,12 +565,12 @@ export default {
   {
    "n": 111,
    "text": "佛说此经已，长老舍利弗，及诸比丘，",
-   "pinyin": "fú shuō cǐ jīng yǐ zhǎng lǎo shè lì fú jí zhū bǐ qiū"
+   "pinyin": "fó shuō cǐ jīng yǐ zhǎng lǎo shè lì fú jí zhū bǐ qiū"
   },
   {
    "n": 112,
    "text": "一切世间天人阿修罗等，闻佛所说，欢喜信受，作礼而去。",
-   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó děng wén fú suǒ shuō huān xǐ xìn shòu zuò lǐ ér qù"
+   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó děng wén fó suǒ shuō huān xǐ xìn shòu zuò lǐ ér qù"
   }
  ]
 }

@@ -22,7 +22,7 @@ export default {
    "n": 2,
    "part": "长行",
    "text": "偏袒右肩，合掌向佛而作是言：",
-   "pinyin": "piān tǎn yòu jiān hé zhǎng xiàng fú ér zuò shì yán"
+   "pinyin": "piān tǎn yòu jiān hé zhǎng xiàng fó ér zuò shì yán"
   },
   {
    "n": 3,
@@ -34,13 +34,13 @@ export default {
    "n": 4,
    "part": "长行",
    "text": "佛告无尽意菩萨：",
-   "pinyin": "fú gào wú jìn yì pú sà"
+   "pinyin": "fó gào wú jìn yì pú sà"
   },
   {
    "n": 5,
    "part": "长行",
    "text": "善男子！若有无量百千万亿众生，受诸苦恼，",
-   "pinyin": "shàn nán zi ruò yǒu wú liàng bǎi qiān wàn yì zhòng shēng shòu zhū kǔ nǎo"
+   "pinyin": "shàn nán zǐ ruò yǒu wú liàng bǎi qiān wàn yì zhòng shēng shòu zhū kǔ nǎo"
   },
   {
    "n": 6,
@@ -142,13 +142,13 @@ export default {
    "n": 22,
    "part": "长行",
    "text": "有一商主，将诸商人，赍持重宝，经过险路。",
-   "pinyin": "yǒu yī shāng zhǔ jiàng zhū shāng rén jī chí zhòng bǎo jīng guò xiǎn lù"
+   "pinyin": "yǒu yī shāng zhǔ jiāng zhū shāng rén jī chí zhòng bǎo jīng guò xiǎn lù"
   },
   {
    "n": 23,
    "part": "长行",
    "text": "其中一人作是唱言：诸善男子！勿得恐怖！",
-   "pinyin": "qí zhōng yī rén zuò shì chàng yán zhū shàn nán zi wù dé kǒng bù"
+   "pinyin": "qí zhōng yī rén zuò shì chàng yán zhū shàn nán zǐ wù dé kǒng bù"
   },
   {
    "n": 24,
@@ -226,7 +226,7 @@ export default {
    "n": 36,
    "part": "长行",
    "text": "设欲求女，便生端正有相之女，宿植德本，众人爱敬。",
-   "pinyin": "shè yù qiú nǚ biàn shēng duān zhèng yǒu xiāng zhī nǚ sù zhí dé běn zhòng rén ài jìng"
+   "pinyin": "shè yù qiú nǚ biàn shēng duān zhèng yǒu xiàng zhī nǚ sù zhí dé běn zhòng rén ài jìng"
   },
   {
    "n": 37,
@@ -256,13 +256,13 @@ export default {
    "n": 41,
    "part": "长行",
    "text": "复尽形供养饮食、衣服、卧具、医药，于汝意云何？",
-   "pinyin": "fù jǐn xíng gòng yǎng yǐn shí yī fú wò jù yī yào yú rǔ yì yún hé"
+   "pinyin": "fù jìn xíng gòng yǎng yǐn shí yī fú wò jù yī yào yú rǔ yì yún hé"
   },
   {
    "n": 42,
    "part": "长行",
    "text": "是善男子、善女人，功德多不？",
-   "pinyin": "shì shàn nán zi shàn nǚ rén gōng dé duō bù"
+   "pinyin": "shì shàn nán zǐ shàn nǚ rén gōng dé duō bù"
   },
   {
    "n": 43,
@@ -274,7 +274,7 @@ export default {
    "n": 44,
    "part": "长行",
    "text": "佛言：若复有人受持观世音菩萨名号，乃至一时礼拜供养，",
-   "pinyin": "fú yán ruò fù yǒu rén shòu chí guān shì yīn pú sà míng hào nǎi zhì yī shí lǐ bài gòng yǎng"
+   "pinyin": "fó yán ruò fù yǒu rén shòu chí guān shì yīn pú sà míng hào nǎi zhì yī shí lǐ bài gòng yǎng"
   },
   {
    "n": 45,
@@ -292,7 +292,7 @@ export default {
    "n": 47,
    "part": "长行",
    "text": "无尽意菩萨白佛言：",
-   "pinyin": "wú jìn yì pú sà bái fú yán"
+   "pinyin": "wú jìn yì pú sà bái fó yán"
   },
   {
    "n": 48,
@@ -310,19 +310,19 @@ export default {
    "n": 50,
    "part": "长行",
    "text": "佛告无尽意菩萨：",
-   "pinyin": "fú gào wú jìn yì pú sà"
+   "pinyin": "fó gào wú jìn yì pú sà"
   },
   {
    "n": 51,
    "part": "长行",
    "text": "善男子！若有国土众生应以佛身得度者，观世音菩萨即现佛身而为说法；",
-   "pinyin": "shàn nán zi ruò yǒu guó tǔ zhòng shēng yīng yǐ fú shēn dé dù zhě guān shì yīn pú sà jí xiàn fú shēn ér wèi shuō fǎ"
+   "pinyin": "shàn nán zǐ ruò yǒu guó tǔ zhòng shēng yīng yǐ fó shēn dé dù zhě guān shì yīn pú sà jí xiàn fó shēn ér wèi shuō fǎ"
   },
   {
    "n": 52,
    "part": "长行",
    "text": "应以辟支佛身得度者，即现辟支佛身而为说法；",
-   "pinyin": "yīng yǐ bì zhī fó shēn dé dù zhě jí xiàn bì zhī fó shēn ér wèi shuō fǎ"
+   "pinyin": "yīng yǐ pì zhī fó shēn dé dù zhě jí xiàn pì zhī fó shēn ér wèi shuō fǎ"
   },
   {
    "n": 53,
@@ -460,7 +460,7 @@ export default {
    "n": 75,
    "part": "长行",
    "text": "无尽意菩萨白佛言：",
-   "pinyin": "wú jìn yì pú sà bái fú yán"
+   "pinyin": "wú jìn yì pú sà bái fó yán"
   },
   {
    "n": 76,
@@ -502,7 +502,7 @@ export default {
    "n": 82,
    "part": "长行",
    "text": "尔时，佛告观世音菩萨：",
-   "pinyin": "ěr shí fú gào guān shì yīn pú sà"
+   "pinyin": "ěr shí fó gào guān shì yīn pú sà"
   },
   {
    "n": 83,
@@ -538,7 +538,7 @@ export default {
    "n": 88,
    "part": "长行",
    "text": "一分奉释迦牟尼佛，一分奉多宝佛塔。",
-   "pinyin": "yī fēn fèng shì jiā mù ní fú yī fēn fèng duō bǎo fó tǎ"
+   "pinyin": "yī fēn fèng shì jiā mù ní fó yī fēn fèng duō bǎo fó tǎ"
   },
   {
    "n": 89,
@@ -556,19 +556,19 @@ export default {
    "n": 91,
    "part": "偈颂",
    "text": "世尊妙相具，我今重问彼，",
-   "pinyin": "shì zūn miào xiāng jù wǒ jīn zhòng wèn bǐ"
+   "pinyin": "shì zūn miào xiàng jù wǒ jīn zhòng wèn bǐ"
   },
   {
    "n": 92,
    "part": "偈颂",
    "text": "佛子何因缘，名为观世音？",
-   "pinyin": "fú zi hé yīn yuán míng wèi guān shì yīn"
+   "pinyin": "fó zǐ hé yīn yuán míng wèi guān shì yīn"
   },
   {
    "n": 93,
    "part": "偈颂",
    "text": "具足妙相尊，偈答无尽意：",
-   "pinyin": "jù zú miào xiāng zūn jì dá wú jìn yì"
+   "pinyin": "jù zú miào xiàng zūn jì dá wú jìn yì"
   },
   {
    "n": 94,
@@ -586,7 +586,7 @@ export default {
    "n": 96,
    "part": "偈颂",
    "text": "侍多千亿佛，发大清净愿。",
-   "pinyin": "shì duō qiān yì fú fā dà qīng jìng yuàn"
+   "pinyin": "shì duō qiān yì fó fā dà qīng jìng yuàn"
   },
   {
    "n": 97,
@@ -622,7 +622,7 @@ export default {
    "n": 102,
    "part": "偈颂",
    "text": "念彼观音力，波浪不能没。",
-   "pinyin": "niàn bǐ guān yīn lì bō làng bù néng méi"
+   "pinyin": "niàn bǐ guān yīn lì bō làng bù néng mò"
   },
   {
    "n": 103,
@@ -766,13 +766,13 @@ export default {
    "n": 126,
    "part": "偈颂",
    "text": "十方诸国土，无刹不现身。",
-   "pinyin": "shí fāng zhū guó tǔ wú shā bù xiàn shēn"
+   "pinyin": "shí fāng zhū guó tǔ wú chà bù xiàn shēn"
   },
   {
    "n": 127,
    "part": "偈颂",
    "text": "种种诸恶趣，地狱鬼畜生，",
-   "pinyin": "zhǒng zhǒng zhū è qù dì yù guǐ chù sheng"
+   "pinyin": "zhǒng zhǒng zhū è qù dì yù guǐ chù shēng"
   },
   {
    "n": 128,
@@ -868,7 +868,7 @@ export default {
    "n": 143,
    "part": "偈颂",
    "text": "尔时持地菩萨即从座起，前白佛言：",
-   "pinyin": "ěr shí chí dì pú sà jí cóng zuò qǐ qián bái fú yán"
+   "pinyin": "ěr shí chí dì pú sà jí cóng zuò qǐ qián bái fó yán"
   },
   {
    "n": 144,
@@ -886,7 +886,7 @@ export default {
    "n": 146,
    "part": "偈颂",
    "text": "佛说是普门品时，",
-   "pinyin": "fú shuō shì pǔ mén pǐn shí"
+   "pinyin": "fó shuō shì pǔ mén pǐn shí"
   },
   {
    "n": 147,

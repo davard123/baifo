@@ -27,7 +27,8 @@ assert.equal(z('不生不灭', 'bù shēng bú miè'), 'ㄅㄨˋ ㄕㄥ ㄅㄨˋ
 assert.equal(z('受想行识', 'shòu xiǎng xíng shí'), 'ㄕㄡˋ ㄒㄧㄤˇ ㄒㄧㄥˊ ㄕˋ')
 assert.equal(z('究竟涅槃', 'jiū jìng niè pán'), 'ㄐㄧㄡˋ ㄐㄧㄥˋ ㄋㄧㄝˋ ㄆㄢˊ')
 assert.equal(z('礼拜供养', 'lǐ bài gòng yǎng'), 'ㄌㄧˇ ㄅㄞˋ ㄍㄨㄥˋ ㄧㄤˋ')
-assert.equal(z('善男子', 'shàn nán zi'), 'ㄕㄢˋ ㄋㄢˊ ㄗˇ')
+assert.equal(z('善男子', 'shàn nán zǐ'), 'ㄕㄢˋ ㄋㄢˊ ㄗˇ')
+assert.equal(z('地藏菩萨', 'dì zàng pú sà'), 'ㄉㄧˋ ㄗㄤˋ ㄆㄨˊ ㄙㄚˋ')
 
 const cv = OpenCC.Converter({ from: 'cn', to: 'tw' })
 assert.equal(hantSutraText('于汝意云何？', cv), '於汝意云何？')

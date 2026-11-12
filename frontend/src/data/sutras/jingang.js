@@ -94,7 +94,7 @@ export default {
    "fen": 2,
    "fenName": "善现启请分第二",
    "text": "世尊！善男子、善女人，",
-   "pinyin": "shì zūn shàn nán zi shàn nǚ rén"
+   "pinyin": "shì zūn shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 13,
@@ -143,7 +143,7 @@ export default {
    "fen": 2,
    "fenName": "善现启请分第二",
    "text": "善男子、善女人，",
-   "pinyin": "shàn nán zi shàn nǚ rén"
+   "pinyin": "shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 20,
@@ -577,7 +577,7 @@ export default {
    "fen": 7,
    "fenName": "无得无说分第七",
    "text": "如来得阿耨多罗三藐三菩提耶？",
-   "pinyin": "rú lái de ā nòu duō luó sān miǎo sān pú tí yé"
+   "pinyin": "rú lái dé ā nòu duō luó sān miǎo sān pú tí yé"
   },
   {
    "n": 82,
@@ -654,7 +654,7 @@ export default {
    "fen": 8,
    "fenName": "依法出生分第八",
    "text": "七宝以用布施，是人所得福德，",
-   "pinyin": "qī bǎo yǐ yòng bù shī shì rén suǒ de fú dé"
+   "pinyin": "qī bǎo yǐ yòng bù shī shì rén suǒ dé fú dé"
   },
   {
    "n": 93,
@@ -934,7 +934,7 @@ export default {
    "fen": 9,
    "fenName": "一相无相分第九",
    "text": "是乐阿兰那行者。",
-   "pinyin": "shì yào ā lán nuǒ xíng zhě"
+   "pinyin": "shì yào ā lán nuó xíng zhě"
   },
   {
    "n": 133,
@@ -948,7 +948,7 @@ export default {
    "fen": 9,
    "fenName": "一相无相分第九",
    "text": "而名须菩提是乐阿兰那行。",
-   "pinyin": "ér míng xū pú tí shì yào ā lán nuǒ xíng"
+   "pinyin": "ér míng xū pú tí shì yào ā lán nuó xíng"
   },
   {
    "n": 135,
@@ -962,7 +962,7 @@ export default {
    "fen": 10,
    "fenName": "庄严净土分第十",
    "text": "如来昔在然灯佛所，于法有所得不？",
-   "pinyin": "rú lái xī zài rán dēng fó suǒ yú fǎ yǒu suǒ de fǒu"
+   "pinyin": "rú lái xī zài rán dēng fó suǒ yú fǎ yǒu suǒ dé fǒu"
   },
   {
    "n": 137,
@@ -976,7 +976,7 @@ export default {
    "fen": 10,
    "fenName": "庄严净土分第十",
    "text": "于法实无所得。",
-   "pinyin": "yú fǎ shí wú suǒ de"
+   "pinyin": "yú fǎ shí wú suǒ dé"
   },
   {
    "n": 139,
@@ -1116,7 +1116,7 @@ export default {
    "fen": 11,
    "fenName": "无为福胜分第十一",
    "text": "若有善男子、善女人，",
-   "pinyin": "ruò yǒu shàn nán zi shàn nǚ rén"
+   "pinyin": "ruò yǒu shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 159,
@@ -1151,7 +1151,7 @@ export default {
    "fen": 11,
    "fenName": "无为福胜分第十一",
    "text": "若善男子、善女人于此经中，",
-   "pinyin": "ruò shàn nán zi shàn nǚ rén yú cǐ jīng zhōng"
+   "pinyin": "ruò shàn nán zǐ shàn nǚ rén yú cǐ jīng zhōng"
   },
   {
    "n": 164,
@@ -1382,7 +1382,7 @@ export default {
    "fen": 13,
    "fenName": "如法受持分第十三",
    "text": "须菩提！若有善男子、善女人，",
-   "pinyin": "xū pú tí ruò yǒu shàn nán zi shàn nǚ rén"
+   "pinyin": "xū pú tí ruò yǒu shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 197,
@@ -1438,7 +1438,7 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "我从昔来所得慧眼，",
-   "pinyin": "wǒ cóng xī lái suǒ de huì yǎn"
+   "pinyin": "wǒ cóng xī lái suǒ dé huì yǎn"
   },
   {
    "n": 205,
@@ -1767,7 +1767,7 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "须菩提！如来所得法，此法无实无虚。",
-   "pinyin": "xū pú tí rú lái suǒ de fǎ cǐ fǎ wú shí wú xū"
+   "pinyin": "xū pú tí rú lái suǒ dé fǎ cǐ fǎ wú shí wú xū"
   },
   {
    "n": 252,
@@ -1809,7 +1809,7 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "若有善男子、善女人，",
-   "pinyin": "ruò yǒu shàn nán zi shàn nǚ rén"
+   "pinyin": "ruò yǒu shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 258,
@@ -1837,7 +1837,7 @@ export default {
    "fen": 15,
    "fenName": "持经功德分第十五",
    "text": "须菩提！若有善男子、善女人，",
-   "pinyin": "xū pú tí ruò yǒu shàn nán zi shàn nǚ rén"
+   "pinyin": "xū pú tí ruò yǒu shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 262,
@@ -2033,7 +2033,7 @@ export default {
    "fen": 16,
    "fenName": "能净业障分第十六",
    "text": "善男子、善女人受持、读诵此经，",
-   "pinyin": "shàn nán zi shàn nǚ rén shòu chí dú sòng cǐ jīng"
+   "pinyin": "shàn nán zǐ shàn nǚ rén shòu chí dú sòng cǐ jīng"
   },
   {
    "n": 290,
@@ -2110,7 +2110,7 @@ export default {
    "fen": 16,
    "fenName": "能净业障分第十六",
    "text": "能受持、读诵此经，所得功德，",
-   "pinyin": "néng shòu chí dú sòng cǐ jīng suǒ de gōng dé"
+   "pinyin": "néng shòu chí dú sòng cǐ jīng suǒ dé gōng dé"
   },
   {
    "n": 301,
@@ -2131,14 +2131,14 @@ export default {
    "fen": 16,
    "fenName": "能净业障分第十六",
    "text": "须菩提！若善男子、善女人于后末世，",
-   "pinyin": "xū pú tí ruò shàn nán zi shàn nǚ rén yú hòu mò shì"
+   "pinyin": "xū pú tí ruò shàn nán zǐ shàn nǚ rén yú hòu mò shì"
   },
   {
    "n": 304,
    "fen": 16,
    "fenName": "能净业障分第十六",
    "text": "有受持、读诵此经所得功德，",
-   "pinyin": "yǒu shòu chí dú sòng cǐ jīng suǒ de gōng dé"
+   "pinyin": "yǒu shòu chí dú sòng cǐ jīng suǒ dé gōng dé"
   },
   {
    "n": 305,
@@ -2180,7 +2180,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "善男子、善女人，",
-   "pinyin": "shàn nán zi shàn nǚ rén"
+   "pinyin": "shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 311,
@@ -2201,7 +2201,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "佛告须菩提：善男子、善女人，",
-   "pinyin": "fó gào xū pú tí shàn nán zi shàn nǚ rén"
+   "pinyin": "fó gào xū pú tí shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 314,
@@ -2327,7 +2327,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "如来得阿耨多罗三藐三菩提。",
-   "pinyin": "rú lái de ā nòu duō luó sān miǎo sān pú tí"
+   "pinyin": "rú lái dé ā nòu duō luó sān miǎo sān pú tí"
   },
   {
    "n": 332,
@@ -2341,7 +2341,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "如来得阿耨多罗三藐三菩提者，",
-   "pinyin": "rú lái de ā nòu duō luó sān miǎo sān pú tí zhě"
+   "pinyin": "rú lái dé ā nòu duō luó sān miǎo sān pú tí zhě"
   },
   {
    "n": 334,
@@ -2397,7 +2397,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "若有人言：如来得阿耨多罗，",
-   "pinyin": "ruò yǒu rén yán rú lái de ā nòu duō luó"
+   "pinyin": "ruò yǒu rén yán rú lái dé ā nòu duō luó"
   },
   {
    "n": 342,
@@ -2425,7 +2425,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "须菩提！如来所得阿耨多罗，",
-   "pinyin": "xū pú tí rú lái suǒ de ā nòu duō luó"
+   "pinyin": "xū pú tí rú lái suǒ dé ā nòu duō luó"
   },
   {
    "n": 346,
@@ -2999,7 +2999,7 @@ export default {
    "fen": 22,
    "fenName": "无法可得分第二十二",
    "text": "为无所得耶？",
-   "pinyin": "wèi wú suǒ de yé"
+   "pinyin": "wèi wú suǒ dé yé"
   },
   {
    "n": 428,
@@ -3384,7 +3384,7 @@ export default {
    "fen": 28,
    "fenName": "不受不贪分第二十八",
    "text": "此菩萨胜前菩萨所得功德。",
-   "pinyin": "cǐ pú sà shèng qián pú sà suǒ de gōng dé"
+   "pinyin": "cǐ pú sà shèng qián pú sà suǒ dé gōng dé"
   },
   {
    "n": 483,
@@ -3468,7 +3468,7 @@ export default {
    "fen": 30,
    "fenName": "一合理相分第三十",
    "text": "须菩提！若善男子、善女人，",
-   "pinyin": "xū pú tí ruò shàn nán zi shàn nǚ rén"
+   "pinyin": "xū pú tí ruò shàn nán zǐ shàn nǚ rén"
   },
   {
    "n": 495,
@@ -3692,7 +3692,7 @@ export default {
    "fen": 32,
    "fenName": "应化非真分第三十二",
    "text": "若有善男子、善女人发菩萨心者，",
-   "pinyin": "ruò yǒu shàn nán zi shàn nǚ rén fā pú sà xīn zhě"
+   "pinyin": "ruò yǒu shàn nán zǐ shàn nǚ rén fā pú sà xīn zhě"
   },
   {
    "n": 527,
