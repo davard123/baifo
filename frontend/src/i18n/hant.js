@@ -35,8 +35,18 @@ export function prefersTraditional(languages = []) {
   return !!first && /^zh-(tw|hk|mo|hant)/.test(first)
 }
 
+// 搜索引擎和 AI 爬虫、自动化浏览器：一律不自动换简繁，让它们看到网址本来的那一版
+const CRAWLER_UA = /bot\b|bot\/|crawl|spider|slurp|google-inspectiontool|googleother|bingpreview|gptbot|oai-searchbot|chatgpt-user|perplexity|claudebot|claude-user|claude-searchbot|anthropic|applebot|baiduspider|yandex|duckduckbot|sogou|360spider|bytespider|petalbot|facebookexternalhit|headlesschrome|lighthouse/i
+
+export function isCrawler(userAgent = '', webdriver = false) {
+  return !!webdriver || CRAWLER_UA.test(String(userAgent))
+}
+
 // 当前在简体网址上、又该看繁体的话，返回要跳去的繁体网址；否则返回空字符串
-export function autoHantTarget(location, languages, saved = savedScript()) {
+// 爬虫和没有语言信息的请求不跳（爬虫要看到每个网址自己的内容和 canonical）
+export function autoHantTarget(location, languages, saved = savedScript(), agent = {}) {
+  if (isCrawler(agent.userAgent, agent.webdriver)) return ''
+  if (!languages || !languages.filter(Boolean).length) return ''
   if (isHantPath(location.pathname)) return ''
   if (saved === 'hans') return ''
   if (saved !== 'hant' && !prefersTraditional(languages)) return ''

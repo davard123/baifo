@@ -14,17 +14,27 @@ import { SITE, buildArticleSchema, buildFaqSchema, buildWebPageSchema } from './
 const PAST_DAYS = 3
 const FUTURE_DAYS = 120
 
-function fangweiIndexPage() {
+// today：预渲染时是构建当天，浏览器里是访客手机上的日期（App.vue 换标题时会重新调用）。
+// 源码里的「今天」只在重新构建部署时更新。
+function fangweiIndexPage(today = dateKey()) {
   const path = FANGWEI_PATH
   const heading = '今日财神方位'
-  const description = `今天财神在哪个方位？按通行黄历的日干口诀推算，${CAI_RHYME}。打开即按你手机上的日期显示今天的财神方位、喜神方位和农历日期，也能查 2027 年除夕、大年初一、正月初五迎财神的方位。`
+  const day = getFangweiDay(today)
+  const todayLine = day
+    ? `今天（${day.solar}，${day.lunarShort}，${day.ganzhi}）财神在${day.cai}方，喜神在${day.xi}方。`
+    : ''
+  const description = `${todayLine}今天财神在哪个方位？按通行黄历的日干口诀推算，${CAI_RHYME}。打开即按你手机上的日期显示今天的财神方位、喜神方位和农历日期，也能查 2027 年除夕、大年初一、正月初五迎财神的方位。`
   const about = { '@type': 'Thing', name: '财神方位', description: '按日天干推算的每日财神所在方位，民间迎财神、上香时参考。' }
   return {
     path,
-    title: '今日财神方位查询｜今天财神在哪个方位、喜神方位，正月初五迎财神方位',
+    title: day
+      ? `今日财神方位查询｜今天（${day.solar}）财神在${day.cai}方、喜神在${day.xi}方，正月初五迎财神方位`
+      : '今日财神方位查询｜今天财神在哪个方位、喜神方位，正月初五迎财神方位',
     description,
     heading,
     summary: description,
+    // 预渲染时在第一段后面放一个指向当天日期页的链接
+    leadLink: day ? { path: `${path}/${day.key}`, label: `${day.solar}财神方位（${day.lunarShort}）→` } : null,
     image: '/qiucai/caishen-hero.webp',
     schema: [
       buildWebPageSchema({
@@ -181,7 +191,7 @@ function prerenderDayKeys(today) {
 export function getFangweiPages(today = dateKey()) {
   const month = currentMonthKey(new Date())
   return [
-    fangweiIndexPage(),
+    fangweiIndexPage(today),
     ...prerenderDayKeys(today).map(fangweiDayPage),
     ruzhaiIndexPage(),
     ...monthKeys().filter((key) => key >= month).map(ruzhaiMonthPage),

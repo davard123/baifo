@@ -94,6 +94,11 @@ function buildFallbackContent(page, staticPages) {
     `  <h1>${page.heading}</h1>`,
     `  <p>${page.summary}</p>`,
   ]
+  if (page.leadLink) {
+    const href = page.hant ? hantUrl(canonicalUrl(page.leadLink.path)) : canonicalUrl(page.leadLink.path)
+    const label = page.hant ? toHantText(page.leadLink.label) : page.leadLink.label
+    lines.push(`  <p><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></p>`)
+  }
 
   // Visible help content, without adding FAQ rich-result markup.
   const convert = page.hant ? toHantText : value => value
