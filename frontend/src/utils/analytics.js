@@ -22,10 +22,21 @@ export function initAnalytics() {
   window.gtag('js', new Date())
   window.gtag('config', GA_ID)
 
-  const script = document.createElement('script')
-  script.async = true
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
-  document.head.appendChild(script)
+  const loadScript = () => {
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
+    document.head.appendChild(script)
+  }
+  const scheduleScriptLoad = () => {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(loadScript, { timeout: 2000 })
+    } else {
+      window.setTimeout(loadScript, 0)
+    }
+  }
+  if (document.readyState === 'complete') scheduleScriptLoad()
+  else window.addEventListener('load', scheduleScriptLoad, { once: true })
 }
 
 export function track(name, params = {}) {

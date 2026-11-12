@@ -211,6 +211,10 @@ function renderPage(page, staticPages) {
   const fallbackContent = buildFallbackContent(page, staticPages)
 
   return template
+    // The homepage hero otherwise becomes discoverable only after the lazy Vue route loads.
+    .replace('</head>', page.path === '/'
+      ? '    <link rel="preload" as="image" href="/qiucai/caishen-hero.webp?v=2" fetchpriority="high" />\n  </head>'
+      : '</head>')
     .replace('<html lang="zh-CN">', page.hant ? '<html lang="zh-Hant">' : '<html lang="zh-CN">')
     .replace(/<meta name="robots" content="[^"]*" \/>/, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:300,max-video-preview:-1" />')
     .replace(/<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/, `<!-- SEO_META_START -->\n    ${head}\n    <!-- SEO_META_END -->`)

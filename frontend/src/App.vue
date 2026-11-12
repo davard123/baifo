@@ -1,10 +1,9 @@
 <script setup>
-import { computed, onMounted, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
 import RecoveryShell from './recovery/RecoveryShell.vue'
 import NianfoDrawer from './components/NianfoDrawer.vue'
-import { warmApi } from './api.js'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
 import { isHantPath, stripHant, toHant, startHant, loadConverter } from './i18n/hant.js'
 import { tidyHantCopy } from './i18n/hantSutra.js'
@@ -134,9 +133,6 @@ const hantHref = computed(() => toHant(route.path))
 const isNianjingReader = computed(() => /^\/nianjing\/[^/]+/.test(stripHant(route.path)))
 const showSwitch = computed(() => !isNianjingReader.value && !/^\/(buddha|ancestor|qiucai)(\/|$)/.test(stripHant(route.path)))
 
-onMounted(() => {
-  warmApi()
-})
 </script>
 
 <template>

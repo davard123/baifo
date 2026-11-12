@@ -7,9 +7,27 @@ import { warmApi } from './api.js'
 import { initAnalytics } from './utils/analytics.js'
 import { autoHantTarget, rememberScript } from './i18n/hant.js'
 
-// App 启动立即预热后端，避免首次提交冷启动卡顿
-warmApi()
+// 分析只在这里同步建立本地队列，真正的第三方脚本在 analytics.js 里延后加载；
+// 后端预热等页面资源完成后再放到空闲队列，同时保留用户首次悬停/触摸导航时
+// 由页面主动预热的路径。
+function scheduleNonCritical(task) {
+  const runWhenIdle = () => {
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(task, { timeout: 2000 })
+    } else {
+      window.setTimeout(task, 0)
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    runWhenIdle()
+  } else {
+    window.addEventListener('load', runWhenIdle, { once: true })
+  }
+}
+
 initAnalytics()
+scheduleNonCritical(warmApi)
 
 // 读繁体的访客（浏览器语言是台湾、香港、澳门，或之前选过繁體中文）打开简体网址时，直接换到繁体版
 const hantTarget = autoHantTarget(

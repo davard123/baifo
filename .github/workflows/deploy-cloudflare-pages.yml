@@ -38,6 +38,11 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Verify startup performance safeguards
+        run: |
+          node scripts/check-startup-performance.mjs
+          node scripts/check-home-preload.mjs
+
       - name: Verify blessing drafts and wealth ritual flow
         run: |
           node scripts/test-blessing-drafts.mjs

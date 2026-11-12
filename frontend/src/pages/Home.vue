@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import FestivalGreeting from '../components/FestivalGreeting.vue'
 import { useRouter } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
@@ -24,16 +24,37 @@ const SUTRA_TEASERS = [
   { n: 5, to: '/jing/xinjing/', label: '心经 · 诵读' },
   { n: 6, to: '/jing/jingang/', label: '金刚经 · 唱诵' },
 ]
-const sutraTeaserPick = ref(SUTRA_TEASERS[0])
+const sutraTeaserPick = ref(SUTRA_TEASERS[Math.floor(Math.random() * SUTRA_TEASERS.length)])
 const sutraTeaser = ref(null)
+let sutraTeaserObserver = null
+let sutraTeaserTimer = null
 async function startSutraTeaser() {
-  sutraTeaserPick.value = SUTRA_TEASERS[Math.floor(Math.random() * SUTRA_TEASERS.length)]
   await nextTick()
   const v = sutraTeaser.value
   if (!v) return
   v.muted = true
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
-  v.play().catch(() => {})
+
+  const playWhenVisible = () => {
+    if (!v.isConnected) return
+    if (!v.src) {
+      v.src = `/jing/teaser/t${sutraTeaserPick.value.n}.mp4`
+      v.load()
+    }
+    v.play().catch(() => {})
+    sutraTeaserObserver?.disconnect()
+    sutraTeaserObserver = null
+  }
+
+  if ('IntersectionObserver' in window) {
+    sutraTeaserObserver?.disconnect()
+    sutraTeaserObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) playWhenVisible()
+    }, { rootMargin: '200px 0px' })
+    sutraTeaserObserver.observe(v)
+  } else {
+    sutraTeaserTimer = window.setTimeout(playWhenVisible, 1000)
+  }
 }
 const router = useRouter()
 
@@ -148,6 +169,12 @@ onMounted(() => {
     )
   loadWishes()
 })
+
+onBeforeUnmount(() => {
+  window.clearTimeout(sutraTeaserTimer)
+  sutraTeaserObserver?.disconnect()
+  sutraTeaserObserver = null
+})
 </script>
 
 <template>
@@ -187,7 +214,7 @@ onMounted(() => {
       @mousedown="warmApi"
       @touchstart.passive="warmApi"
     >
-      <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" />
+      <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
       <div class="qiucai-banner__content">
         <h1 class="qiucai-banner__kicker">在线拜财神 · 求财祈福</h1>
         <h2>拜一拜，给自己添一份财气</h2>
@@ -209,13 +236,11 @@ onMounted(() => {
           ref="sutraTeaser"
           class="sutra-banner__img"
           :key="sutraTeaserPick.n"
-          :src="`/jing/teaser/t${sutraTeaserPick.n}.mp4`"
           :poster="`/jing/teaser/t${sutraTeaserPick.n}.jpg`"
           muted
-          autoplay
           loop
           playsinline
-          preload="metadata"
+          preload="none"
           aria-hidden="true"
         ></video>
         <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频</span>

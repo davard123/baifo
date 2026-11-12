@@ -66,9 +66,6 @@ summary:focus-visible {
   color: var(--text-muted);
   line-height: 1.9;
 }
-/* 能跑脚本的浏览器：页面加载出来之前不闪这段纯文字；4 秒还没加载好（网络很差）才显示出来兜底 */
-.pf-js .prerender-fallback { opacity: 0; animation: pf-show 0s linear 4s forwards; }
-@keyframes pf-show { to { opacity: 1; } }
 .prerender-fallback h1 {
   color: var(--gold-light);
   font-size: 1.6rem;
