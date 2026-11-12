@@ -1,0 +1,3 @@
+# frontend/public/build-date.txt：每日重建用的日期戳（台湾时间），由 .github/workflows/daily-rebuild.yml 每天更新，
+# 改它只是为了让 Cloudflare Pages 重新构建（「今日财神」总页换成当天方位）。会随站点发布，内容只是日期，无妨。
+frontend/public/build-date.txt text eol=lf

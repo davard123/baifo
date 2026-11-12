@@ -2,6 +2,9 @@ name: IndexNow
 
 on:
   push:
+    # 每日重建只改日期戳，页面网址没变，不用通知 IndexNow
+    paths-ignore:
+      - "frontend/public/build-date.txt"
 
 jobs:
   notify:

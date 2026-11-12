@@ -1,0 +1,64 @@
+name: Daily rebuild (今日财神方位)
+
+# 每天台湾时间 00:05 改一次 frontend/public/build-date.txt 并推到 master，
+# 让 Cloudflare Pages 的 Git 集成重新构建部署，「今日财神」总页源码换成当天方位
+# （日期按 Asia/Taipei 算，见 frontend/scripts/seo.fangwei.js 的 buildTodayKey）。
+# 只用仓库自带的 GITHUB_TOKEN，不需要任何新密钥。
+# 注意：GITHUB_TOKEN 推的提交不会再触发本仓库的其他 Actions workflow（GitHub 的规则），
+# 但 Cloudflare 收的是 GitHub App 的推送通知，照常构建。
+# 提交信息里不能出现 [skip ci] 之类字样，否则 Cloudflare 会跳过构建。
+
+on:
+  schedule:
+    - cron: "5 16 * * *" # UTC 16:05 = 台湾 00:05
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-rebuild
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Update build-date.txt and push
+        env:
+          TZ: Asia/Taipei
+        run: |
+          set -euo pipefail
+          FILE=frontend/public/build-date.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3; do
+            git fetch origin master
+            git reset --hard origin/master
+            TODAY="$(date +%F)"
+            echo "$TODAY" > "$FILE"
+            if git diff --quiet -- "$FILE"; then
+              echo "build-date.txt 已是 $TODAY，不用提交。"
+              exit 0
+            fi
+            git add "$FILE"
+            git commit -m "chore: daily rebuild $TODAY（今日财神方位）"
+            # 别的 agent 也在往 master 推：先 rebase 到最新再推，失败就重来
+            if git pull --rebase origin master && git push origin HEAD:master; then
+              echo "已推送 $TODAY。"
+              exit 0
+            fi
+            echo "第 $attempt 次推送失败，稍后重试。"
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 15))
+          done
+          echo "推送三次都失败。" >&2
+          exit 1

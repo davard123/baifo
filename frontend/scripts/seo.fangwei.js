@@ -14,7 +14,7 @@ import { SITE, buildArticleSchema, buildFaqSchema, buildWebPageSchema } from './
 const PAST_DAYS = 3
 const FUTURE_DAYS = 120
 
-// today：预渲染时是构建当天，浏览器里是访客手机上的日期（App.vue 换标题时会重新调用）。
+// today：预渲染时是构建当天（台湾时间，见 buildTodayKey），浏览器里是访客手机上的日期（App.vue 换标题时会重新调用）。
 // 源码里的「今天」只在重新构建部署时更新。
 function fangweiIndexPage(today = dateKey()) {
   const path = FANGWEI_PATH
@@ -187,8 +187,24 @@ function prerenderDayKeys(today) {
   return [...keys].sort()
 }
 
+// 构建时的「今天」按读者所在时区算（默认台湾时间），不用构建机器的本地日期（Cloudflare 构建机是 UTC，
+// 台湾凌晨 0～8 点构建会写成前一天）。环境变量 FANGWEI_TZ 可以覆盖时区。
+// 只给构建脚本用；浏览器里的「今天」仍是访客手机上的日期（fangweiIndexPage 的默认值）。
+export const BUILD_TIME_ZONE = 'Asia/Taipei'
+
+export function buildTodayKey(now = new Date(), timeZone) {
+  const zone = timeZone
+    || (typeof process !== 'undefined' && process.env && process.env.FANGWEI_TZ)
+    || BUILD_TIME_ZONE
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(now)
+  const get = (type) => parts.find((part) => part.type === type).value
+  return `${get('year')}-${get('month')}-${get('day')}`
+}
+
 // 构建脚本用：要预渲染、进 sitemap 的页面
-export function getFangweiPages(today = dateKey()) {
+export function getFangweiPages(today = buildTodayKey()) {
   const month = currentMonthKey(new Date())
   return [
     fangweiIndexPage(today),

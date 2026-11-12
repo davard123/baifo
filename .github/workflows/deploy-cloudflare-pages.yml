@@ -7,6 +7,8 @@ on:
     paths:
       - "frontend/**"
       - ".github/workflows/deploy-cloudflare-pages.yml"
+      # 每日重建只改这个日期戳（daily-rebuild.yml），不需要再跑一遍校验
+      - "!frontend/public/build-date.txt"
   workflow_dispatch:
 
 jobs:
