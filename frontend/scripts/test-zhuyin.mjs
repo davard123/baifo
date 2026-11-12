@@ -59,6 +59,10 @@ const zyOf = (slug, n) => { const l = mantraLines[slug].find((x) => x.n === n); 
 assert.equal(zyOf('dabeizhou', 1), 'ㄋㄚˊ ㄇㄛˊ ㄏㄜ ㄌㄚˋ ㄉㄚˊ ㄋㄨㄛˊ ㄉㄨㄛ ㄌㄚˋ ㄧㄝˋ ㄧㄝˊ')
 assert.equal(zyOf('wangsheng', 1), 'ㄋㄚ ㄇㄛ ㄨㄛ ㄇㄧˊ ㄉㄨㄛ ㄆㄛˊ ㄧㄝˋ')
 assert.ok(zyOf('yaoshi-zhenyan', 4).startsWith('ㄢ '), '药师灌顶真言的唵读 ㄢ')
+// 咒语以外：药师经、仁王经仍按台湾读音（伐 ㄈㄚ、儜 ㄋㄥˊ）
+assert.equal(z('伐折罗大将', 'fá zhé luó dà jiàng'), 'ㄈㄚ ㄓㄜˊ ㄌㄨㄛˊ ㄉㄚˋ ㄐㄧㄤˋ')
+assert.equal(z('薄伽伐帝', 'bó qié fá dì'), 'ㄅㄛˊ ㄑㄧㄝˊ ㄈㄚ ㄉㄧˋ')
+assert.equal(z('室啰嚩儜', 'shì là wā níng').split(' ')[3], 'ㄋㄥˊ')
 assert.equal(zyOf('liuzi', 1), 'ㄨㄥ ㄇㄚ ㄋㄧ ㄅㄚ ㄇㄧ ㄏㄨㄥˋ')
 
 const cv = OpenCC.Converter({ from: 'cn', to: 'tw' })

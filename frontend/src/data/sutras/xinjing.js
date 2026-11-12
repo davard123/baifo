@@ -135,7 +135,7 @@ export default {
   {
    "n": 25,
    "text": "菩提萨埵，",
-   "pinyin": "pú tí sà duǒ"
+   "pinyin": "pú tí sà duò"
   },
   {
    "n": 26,

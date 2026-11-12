@@ -51,6 +51,10 @@ const WORD_RULES = [
   // 经文拼音是 nā mó 的才改；咒语按《佛门必备课诵本》标过的（大悲咒 ná mó、十小咒 nā mō）照拼音走
   ['南无', ['ㄋㄚˊ', 'ㄇㄛˊ'], ['nā', 'mó']],
   ['南谟', ['ㄋㄚˊ', 'ㄇㄛˊ'], ['nā', 'mó']],
+  // 台湾读音：伐 ㄈㄚ、儜 ㄋㄥˊ，只管咒语以外的经文（药师经、仁王经）；楞严咒按课诵本读 ㄈㄚˊ、ㄋㄧㄥˊ，不在这些词里
+  ['伽伐帝', [null, 'ㄈㄚ', null], [null, 'fá', null]],
+  ['伐折罗', ['ㄈㄚ', null, null], ['fá', null, null]],
+  ['嚩儜', [null, 'ㄋㄥˊ'], [null, 'níng']],
   ['供养', [null, 'ㄧㄤˋ']],
   ['优婆塞', [null, null, 'ㄙㄜˋ']],
   ['大乘', [null, 'ㄕㄥˋ']],
@@ -79,7 +83,7 @@ export function zhuyinForChars(chars) {
   for (const [w, zs, need] of WORD_RULES) {
     let i = text.indexOf(w)
     while (i >= 0) {
-      if (need && !need.every((p, k) => chars[i + k]?.py === p)) {
+      if (need && !need.every((p, k) => p === null || chars[i + k]?.py === p)) {
         i = text.indexOf(w, i + 1)
         continue
       }
