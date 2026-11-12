@@ -45,7 +45,7 @@ function cursorFor(seg) {
 
 <style>
 /* 提词器和书页共用（不加 scoped） */
-.nj-para { margin: 0 0 0.6em; line-height: 2.25; }
+.nj-para { margin: 0 0 0.5em; line-height: 2.25; }
 .nj-ln {
   border-radius: 6px;
   padding: 0 2px;

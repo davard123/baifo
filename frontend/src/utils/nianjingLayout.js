@@ -4,8 +4,8 @@
 // 卡拉OK一屏显示的一段：按标点切，再拼成不超过这么多字
 export const SEGMENT_MAX = 16
 
-// 行尾是这些，下一行另起一段
-const PARA_END = /[。！？；」』]$/
+// 行尾是这些，下一行另起一段（分号不断段）
+const PARA_END = /[。！？」』]$/
 // 偈颂里，上一排以这些收尾，下一排前留小间距（一偈完了）
 const VERSE_END = /[。！？：]$/
 
@@ -27,7 +27,9 @@ export function buildBlocks(lines) {
     prevHeading = heading
     const verse = isVerseLine(l)
     const kind = verse ? 'verse' : 'para'
-    if (!cur || headStart || cur.kind !== kind || cur.closed) {
+    // 不超过 6 个汉字、以「：」结尾的短行（「第一觉悟：」「第二觉知：」）在它前面另起一段，它后面的句子接在同一段里
+    const colonHead = !verse && /：$/.test(l.text) && [...l.text].filter((c) => /\p{Script=Han}/u.test(c)).length <= 6
+    if (!cur || headStart || cur.kind !== kind || cur.closed || colonHead) {
       cur = { kind, heading, headStart, lines: [], rows: [], closed: false }
       blocks.push(cur)
     }
@@ -156,7 +158,7 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
 // 品名小标题占的行数、偈颂一偈之间的小间距、段落之间的间距（按「行」算）
 export const HEADING_ROWS = 1.7
 export const VERSE_GAP_ROWS = 0.35
-export const PARA_GAP_ROWS = 0.3
+export const PARA_GAP_ROWS = 0.25
 
 /**
  * 一个字单位在页面上占多宽（px）：汉字一个字号宽；拼音比字宽时 ruby 会被拼音撑开。
