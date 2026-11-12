@@ -2376,7 +2376,7 @@ export default {
   {
    "n": 472,
    "text": "不令恶事辄闻其耳，何况亲受诸横？",
-   "pinyin": "bù lìng è shì zhé wén qí ěr hé kuàng qīn shòu zhū héng"
+   "pinyin": "bù lìng è shì zhé wén qí ěr hé kuàng qīn shòu zhū hèng"
   },
   {
    "n": 473,
@@ -2701,7 +2701,7 @@ export default {
   {
    "n": 537,
    "text": "能于十斋日每转一遍，现世令此居家无诸横病，衣食丰溢。",
-   "pinyin": "néng yú shí zhāi rì měi zhuǎn yī biàn xiàn shì lìng cǐ jū jiā wú zhū héng bìng yī shí fēng yì"
+   "pinyin": "néng yú shí zhāi rì měi zhuǎn yī biàn xiàn shì lìng cǐ jū jiā wú zhū hèng bìng yī shí fēng yì"
   },
   {
    "n": 538,
@@ -4321,7 +4321,7 @@ export default {
   {
    "n": 860,
    "text": "我常日夜，以本神力，卫护是人，乃至水火盗贼，大横小横，",
-   "pinyin": "wǒ cháng rì yè yǐ běn shén lì wèi hù shì rén nǎi zhì shuǐ huǒ dào zéi dà héng xiǎo héng"
+   "pinyin": "wǒ cháng rì yè yǐ běn shén lì wèi hù shì rén nǎi zhì shuǐ huǒ dào zéi dà hèng xiǎo hèng"
   },
   {
    "n": 861,
@@ -5273,7 +5273,7 @@ export default {
   {
    "n": 1050,
    "text": "十八者眷属欢乐，十九者诸横销灭，二十者业道永除，",
-   "pinyin": "shí bā zhě juàn shǔ huān lè shí jiǔ zhě zhū héng xiāo miè èr shí zhě yè dào yǒng chú"
+   "pinyin": "shí bā zhě juàn shǔ huān lè shí jiǔ zhě zhū hèng xiāo miè èr shí zhě yè dào yǒng chú"
   },
   {
    "n": 1051,

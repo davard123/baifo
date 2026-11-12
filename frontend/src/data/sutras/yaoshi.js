@@ -1310,7 +1310,7 @@ export default {
   {
    "n": 260,
    "text": "可得过度危厄之难，不为诸横恶鬼所持。",
-   "pinyin": "kě dé guò dù wēi è zhī nán bù wèi zhū héng è guǐ suǒ chí"
+   "pinyin": "kě dé guò dù wēi è zhī nán bù wèi zhū hèng è guǐ suǒ chí"
   },
   {
    "n": 261,
@@ -1430,7 +1430,7 @@ export default {
   {
    "n": 284,
    "text": "”阿难问言：“九横云何？",
-   "pinyin": "ā nán wèn yán jiǔ héng yún hé"
+   "pinyin": "ā nán wèn yán jiǔ hèng yún hé"
   },
   {
    "n": 285,
@@ -1460,42 +1460,42 @@ export default {
   {
    "n": 290,
    "text": "愚痴迷惑，信邪倒见，遂令横死，入于地狱，无有出期，是名初横。",
-   "pinyin": "yú chī mí huò xìn xié dào jiàn suì lìng hèng sǐ rù yú dì yù wú yǒu chū qī shì míng chū héng"
+   "pinyin": "yú chī mí huò xìn xié dào jiàn suì lìng hèng sǐ rù yú dì yù wú yǒu chū qī shì míng chū hèng"
   },
   {
    "n": 291,
    "text": "二者，横被王法之所诛戮。",
-   "pinyin": "èr zhě héng bèi wáng fǎ zhī suǒ zhū lù"
+   "pinyin": "èr zhě hèng bèi wáng fǎ zhī suǒ zhū lù"
   },
   {
    "n": 292,
    "text": "三者，畋猎嬉戏，耽婬嗜酒，放逸无度，横为非人夺其精气。",
-   "pinyin": "sān zhě tián liè xī xì dān yín shì jiǔ fàng yì wú dù héng wèi fēi rén duó qí jīng qì"
+   "pinyin": "sān zhě tián liè xī xì dān yín shì jiǔ fàng yì wú dù hèng wèi fēi rén duó qí jīng qì"
   },
   {
    "n": 293,
    "text": "四者，横为火焚。",
-   "pinyin": "sì zhě héng wèi huǒ fén"
+   "pinyin": "sì zhě hèng wèi huǒ fén"
   },
   {
    "n": 294,
    "text": "五者，横为水溺。",
-   "pinyin": "wǔ zhě héng wèi shuǐ nì"
+   "pinyin": "wǔ zhě hèng wèi shuǐ nì"
   },
   {
    "n": 295,
    "text": "六者，横为种种恶兽所噉。",
-   "pinyin": "liù zhě héng wèi zhǒng zhǒng è shòu suǒ dàn"
+   "pinyin": "liù zhě hèng wèi zhǒng zhǒng è shòu suǒ dàn"
   },
   {
    "n": 296,
    "text": "七者，横堕山崖。",
-   "pinyin": "qī zhě héng duò shān yá"
+   "pinyin": "qī zhě hèng duò shān yá"
   },
   {
    "n": 297,
    "text": "八者，横为毒药、厌祷、呪诅、起尸鬼等之所中害。",
-   "pinyin": "bā zhě héng wèi dú yào yàn dǎo zhòu zǔ qǐ shī guǐ děng zhī suǒ zhōng hài"
+   "pinyin": "bā zhě hèng wèi dú yào yàn dǎo zhòu zǔ qǐ shī guǐ děng zhī suǒ zhōng hài"
   },
   {
    "n": 298,
@@ -1510,7 +1510,7 @@ export default {
   {
    "n": 300,
    "text": "其余复有无量诸横，难可具说。",
-   "pinyin": "qí yú fù yǒu wú liàng zhū héng nán kě jù shuō"
+   "pinyin": "qí yú fù yǒu wú liàng zhū hèng nán kě jù shuō"
   },
   {
    "n": 301,
