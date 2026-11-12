@@ -6,6 +6,7 @@ import SutraHeader from './SutraHeader.vue'
 const props = defineProps({
   header: { type: Object, default: null },
   note: { type: String, default: '' },
+  intro: { type: String, default: '' },
   showHeader: { type: Boolean, default: false },
   groups: { type: Array, required: true },
   lineIndex: { type: Number, default: -1 },
@@ -22,7 +23,7 @@ function cursorFor(seg) {
 
 <template>
   <div class="sp">
-    <SutraHeader v-if="showHeader && header" :header="header" :note="note" data-sp-header />
+    <SutraHeader v-if="showHeader && header" :header="header" :note="note" :intro="intro" data-sp-header />
     <template v-for="g in groups" :key="g.segs[0].start">
       <p v-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}</p>
       <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span class="nj-sg" :data-sg="sg.idx"><span

@@ -7,6 +7,7 @@ import NianfoDrawer from './components/NianfoDrawer.vue'
 import { warmApi } from './api.js'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
 import { isHantPath, stripHant, toHant, startHant, loadConverter } from './i18n/hant.js'
+import { tidyHantCopy } from './i18n/hantSutra.js'
 
 const route = useRoute()
 
@@ -61,8 +62,11 @@ async function applyRouteSeo(fullPath) {
   const normalizedPath = normalizePath(path)
   const convert = hant ? await loadConverter() : (text) => text
   if (run !== latestSeoRun) return
-  const title = convert(page?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`)
-  const description = convert(page?.description || '这个地址当前没有对应内容。')
+  // 繁体页有专用文案的（念经页：注音版）用专用文案
+  const copy = hant && page?.hantCopy ? { ...page, ...page.hantCopy } : page
+  const tidy = hant && page?.hantCopy ? tidyHantCopy : (text) => text
+  const title = tidy(convert(copy?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`))
+  const description = tidy(convert(copy?.description || '这个地址当前没有对应内容。'))
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
   const hansCanonical = isKnownPage ? canonicalUrl(page.path) : `${SITE.baseUrl}${normalizedPath}`
   const canonical = hant ? hantUrl(hansCanonical) : hansCanonical

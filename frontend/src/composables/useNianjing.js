@@ -1,7 +1,9 @@
 // 念经页的状态：念到哪个字、往下走的方式、背景声、字号、续读。
 // 「念到哪」统一用 cursor 表示：已经念完的字数（0…总字数）。
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
-import { NIANJING_BY_SLUG, UNVERIFIED_CHARS, toUnits } from '../data/nianjing.js'
+import { NIANJING_BY_SLUG, UNVERIFIED_CHARS, decorateUnits, toUnits } from '../data/nianjing.js'
+import { loadConverter } from '../i18n/hant.js'
+import { hantSutraText } from '../i18n/hantSutra.js'
 import { SutraAligner, fuzzy } from '../utils/sutraAligner.js'
 import { createVoiceEngine, hanToPys, loadPinyin, voiceSupported } from '../utils/voiceEngine.js'
 import { createWoodblock } from '../utils/nianfo.js'
@@ -20,7 +22,8 @@ function readPrefs() {
 
 export { buildSegments }
 
-export function useNianjing(slugRef) {
+// hant：繁体页。经文整行转繁体（按词转，比全站逐字转准），每个字配注音。
+export function useNianjing(slugRef, { hant = false } = {}) {
   const prefs = readPrefs()
   const meta = computed(() => NIANJING_BY_SLUG[slugRef.value] || null)
   const sutra = shallowRef(null)
@@ -276,10 +279,12 @@ export function useNianjing(slugRef) {
     if (!meta.value) return
     loading.value = true
     const slug = slugRef.value
-    const mod = await meta.value.load()
+    const [mod, convert] = await Promise.all([meta.value.load(), hant ? loadConverter().catch(() => null) : null])
     if (slug !== slugRef.value) return
     sutra.value = mod.default
-    units.value = toUnits(mod.default.lines)
+    const rawLines = mod.default.lines
+    const hantLines = convert ? rawLines.map((l) => hantSutraText(l.text, convert, l.pinyin)) : null
+    units.value = decorateUnits(toUnits(rawLines), hantLines)
     blocks.value = buildBlocks(units.value.lines)
     segments.value = buildSegments(units.value.lines, blocks.value)
     loading.value = false

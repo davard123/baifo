@@ -711,7 +711,9 @@ function qifuPage() {
   })
 }
 
-// 念经板块：自己看拼音出声念，页面听声音跟上。只放简介，经文全文在 /jing/ 和页面运行时加载。
+// 念经板块：自己看拼音（繁体页看注音）出声念，页面听声音跟上。
+// 预渲染时经文全文也写进 HTML（scripts/prerender.js 按 nianjingSlug 取经文）。
+// hantCopy：繁体页专用的标题和说明（写简体，预渲染和运行时再转繁体）；繁体页标注音，简体页标拼音。
 function nianjingListPage() {
   const path = '/nianjing'
   const description = '心经、大悲咒、往生咒、六字大明咒、金刚经、地藏经、药师经、普贤行愿品、八大人觉经、仁王护国经等十四部经咒，每个字都标拼音。自己出声念，手机听你的声音，念到哪一句就亮到哪一句；也能自动滚动、手动翻页，可配木鱼或佛乐。免费、不用注册，声音不上传。'
@@ -721,6 +723,11 @@ function nianjingListPage() {
     description,
     heading: '在线念经：经文带拼音，念到哪里走到哪里',
     summary: NIANJING.map((s) => `${s.title}（${s.note}）`).join('；') + '。',
+    hantCopy: {
+      title: '在线念经 | 经文全文附注音，念到哪里走到哪里（心经、大悲咒、普门品、地藏经）',
+      description: '心经、大悲咒、往生咒、六字大明咒、普门品、金刚经、地藏经、药师经、普贤行愿品、八大人觉经、仁王护国经等十四部经咒全文，每个字都标注音，也能换成拼音。自己出声念，手机听你的声音，念到哪一句就亮到哪一句；也能自动滚动、手动翻页，可配木鱼或佛乐。免费、不用注册，声音不上传。',
+      heading: '在线念经：经文全文附注音，念到哪里走到哪里',
+    },
     image: SITE.defaultImage,
     schema: [
       buildWebPageSchema({
@@ -738,20 +745,47 @@ function nianjingListPage() {
   }
 }
 
+// 经名全称：标题里放在常用名后面（「心经全文（注音版）｜般若波罗蜜多心经」）
+const NIANJING_FULL_NAME = {
+  xinjing: '般若波罗蜜多心经',
+  dabeizhou: '千手千眼无碍大悲心陀罗尼',
+  liuzi: '唵嘛呢叭咪吽',
+  wangsheng: '拔一切业障根本得生净土陀罗尼',
+  'yaoshi-zhenyan': '药师琉璃光如来灌顶真言',
+  shixiaozhou: '早课十小咒',
+  pumen: '妙法莲华经观世音菩萨普门品',
+  amituo: '佛说阿弥陀经',
+  badaren: '佛说八大人觉经',
+  puxian: '大方广佛华严经普贤行愿品',
+  jingang: '金刚般若波罗蜜经',
+  yaoshi: '药师琉璃光如来本愿功德经',
+  dizang: '地藏菩萨本愿经',
+  renwang: '仁王护国般若波罗蜜多经',
+}
+
 function nianjingPage(item) {
   const path = `/nianjing/${item.slug}`
-  const description = `${item.title}全文，每个字都标了拼音（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；手机竖屏卡拉OK或提词器、平板横屏左右两栏，可配木鱼或佛乐。声音只在手机上识别，不上传。`
+  const full = NIANJING_FULL_NAME[item.slug] || item.header?.title || item.title
+  const description = `${full}全文，每个字都标了拼音（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；手机竖屏卡拉OK或提词器、平板横屏左右两栏，可配木鱼或佛乐。声音只在手机上识别，不上传。`
+  const heading = `${item.title}全文（带拼音）`
   return {
     path,
-    title: `念${item.title} · 带拼音跟着念，念到哪里走到哪里 | 在线念经`,
+    nianjingSlug: item.slug,
+    title: `${item.title}全文（带拼音）｜${full}，跟着念`,
     description,
-    heading: `念${item.title}（带拼音）`,
-    summary: description,
+    heading,
+    summary: `${full}全文，每个字都标了拼音。按「开始」自己出声念，念到哪一句就亮到哪一句。`,
+    hantCopy: {
+      title: `${item.title}全文（注音版）｜${full} 附注音、拼音，跟着念`,
+      description: `${full}全文，每个字都标了注音，也能换成拼音或只看字（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；也能自动往下走或手动翻页，可配木鱼或佛乐。声音只在手机上识别，不上传。`,
+      heading: `${item.title}全文（注音版）`,
+      summary: `${full}全文，每个字都标了注音。按「开始」自己出声念，念到哪一句就亮到哪一句；也可以改成拼音或只看字。`,
+    },
     image: SITE.defaultImage,
     schema: [
       buildWebPageSchema({
         path,
-        name: `念${item.title}`,
+        name: heading,
         description,
         breadcrumbItems: [
           { name: '求财祈福拜佛网', path: '/' },

@@ -6,6 +6,8 @@ import { getStaticPages } from './seo.jing.js'
 import { getStaticNavigation } from './static-navigation.js'
 import { SOUND_HELP } from '../src/data/soundHelp.js'
 import { GUIDES } from '../src/data/guides.js'
+import { NIANJING, toUnits, decorateUnits } from '../src/data/nianjing.js'
+import { hantSutraText, tidyHantCopy } from '../src/i18n/hantSutra.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -26,15 +28,65 @@ function hantUrl(url) {
 }
 
 function toHantPage(page) {
+  // 繁体页有专用文案的（念经页：注音版）先换上，再整体转繁体
+  const tidy = page.hantCopy ? tidyHantCopy : (value) => value
+  if (page.hantCopy) page = { ...page, ...page.hantCopy }
   return {
     ...page,
     hant: true,
-    title: toHantText(page.title),
-    description: toHantText(page.description),
-    heading: toHantText(page.heading),
-    summary: toHantText(page.summary || ''),
-    schema: JSON.parse(toHantText(JSON.stringify(page.schema ?? []))),
+    title: tidy(toHantText(page.title)),
+    description: tidy(toHantText(page.description)),
+    heading: tidy(toHantText(page.heading)),
+    summary: tidy(toHantText(page.summary || '')),
+    schema: JSON.parse(tidy(toHantText(JSON.stringify(page.schema ?? [])))),
   }
+}
+
+// 念经页：经文全文写进 HTML（搜索引擎和没开 JS 的人能读到）。繁体每个字配注音、简体配拼音；
+// 太长的经（地藏经、仁王经）只放字，免得页面过大。
+const NIANJING_RUBY_MAX = 6000
+const nianjingTexts = new Map()
+for (const item of NIANJING) {
+  const data = (await item.load()).default
+  nianjingTexts.set(item.slug, { item, data })
+}
+
+function nianjingFullText(slug, hant) {
+  const entry = nianjingTexts.get(slug)
+  if (!entry) return ''
+  const { item, data } = entry
+  const rawLines = data.lines
+  const hantLines = hant ? rawLines.map((l) => hantSutraText(l.text, toHantText, l.pinyin)) : null
+  const units = decorateUnits(toUnits(rawLines), hantLines)
+  const withRuby = units.chars.length <= NIANJING_RUBY_MAX
+  const out = []
+  const name = hant ? toHantText(item.title) : item.title
+  out.push(`<section class="nj-fulltext" lang="${hant ? 'zh-Hant' : 'zh-Hans'}">`)
+  out.push(`  <h2>${escapeHtml(name)}${hant ? '全文（注音）' : '全文（拼音）'}</h2>`)
+  let heading = ''
+  let para = []
+  const flush = () => {
+    if (para.length) out.push(`  <p>${para.join('')}</p>`)
+    para = []
+  }
+  units.lines.forEach((ln) => {
+    if (ln.heading && ln.heading !== heading) {
+      flush()
+      heading = ln.heading
+      out.push(`  <h3>${escapeHtml(hant ? toHantText(heading) : heading)}</h3>`)
+    }
+    const html = ln.tokens.map((t) => {
+      const ch = escapeHtml(t.dch || t.ch)
+      if (t.u === undefined || !withRuby) return ch
+      const rt = hant ? t.zy : t.py
+      return rt ? `<ruby>${ch}<rt>${escapeHtml(rt)}</rt></ruby>` : ch
+    }).join('')
+    para.push(html)
+    if (/[。！？」』]$/.test(ln.text) || ln.stanza) flush()
+  })
+  flush()
+  out.push('</section>')
+  return out.join('\n')
 }
 
 const template = fs.readFileSync(indexPath, 'utf8').replace(/\r\n/g, '\n').replace(/^[ \t]+$/gm, '')
@@ -112,6 +164,7 @@ function buildFallbackContent(page, staticPages) {
     lines.push('<section id="memorial-writing"><h2>'+escapeHtml(convert('追思的话怎么写'))+'</h2></section>')
     for (const faq of GUIDES.ancestors.faqs) lines.push('<h3>'+escapeHtml(convert(faq.q))+'</h3>', '<p>'+escapeHtml(convert(faq.a))+'</p>')
   }
+  if (page.nianjingSlug) lines.push(nianjingFullText(page.nianjingSlug, page.hant))
   // Flatten schema array (some entries may themselves be arrays)
   const schemas = [page.schema].flat(2).filter(Boolean)
 

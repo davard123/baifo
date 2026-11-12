@@ -1,6 +1,7 @@
 // 念经板块：自己看拼音出声念，页面听声音跟上位置（和 /jing/ 的音频跟读无关）。
 // 经文只取已两源对照校订的数据；每部按需加载，不进主包。
 import { BUDDHAS } from './buddhas.js'
+import { zhuyinForChars, zhuyinForText } from './zhuyinReadings.js'
 
 export const NIANJING = [
   { slug: 'xinjing', title: '心经', buddha: 'guanyin', jingSlug: 'xinjing', note: '二百六十字，几分钟念完', header: { title: '般若波罗蜜多心经', titlePy: 'bō rě bō luó mì duō xīn jīng', translator: '唐 三藏法师玄奘 译', translatorPy: 'táng sān zàng fǎ shī xuán zàng yì' }, load: () => import('./sutras/xinjing.js') },
@@ -80,18 +81,47 @@ export function toUnits(rawLines) {
  * 经题块里一行文字（经题/译者）的显示片段：汉字配拼音，空格变成留白，其他符号原样。
  * py 为空时不标拼音。返回 [{ ch, py } | { gap: true } | { ch }]
  */
-export function labelTokens(text, py = '') {
+export function labelTokens(text, py = '', zys = null) {
   const pys = String(py || '').trim().split(/\s+/).filter(Boolean)
   const out = []
   let k = 0
   for (const ch of String(text || '')) {
     if (HAN.test(ch)) {
-      out.push({ ch, py: pys[k] || '' })
+      const t = { ch, py: pys[k] || '' }
+      if (zys) t.zy = t.py ? zys[k] || '' : ''
+      out.push(t)
       k += 1
     } else if (/\s/.test(ch)) out.push({ gap: true })
     else out.push({ ch })
   }
   return out
+}
+
+/** 经题块一行的注音（按简体原文和拼音算，繁体显示时字数不变，按位置对应）。 */
+export function labelZhuyin(text, py = '') {
+  return zhuyinForText(text, py)
+}
+
+/**
+ * 给 toUnits 的结果补上注音（每个字 zy），繁体页再补上显示用的繁体字（dch）。
+ * hantLines：和 rawLines 一一对应、字数相同的繁体经文；简体页不传。就地修改并返回 units。
+ */
+export function decorateUnits(units, hantLines = null) {
+  units.lines.forEach((ln, i) => {
+    const cs = units.chars.slice(ln.start, ln.end)
+    const zy = zhuyinForChars(cs)
+    cs.forEach((c, k) => {
+      c.zy = zy[k] || ''
+    })
+    let disp = hantLines ? [...String(hantLines[i] || '')].filter((ch) => !/\s/.test(ch)) : null
+    if (disp && disp.length !== ln.tokens.length) disp = null // 对不上就不换字
+    ln.tokens.forEach((t, k) => {
+      if (t.u !== undefined) t.zy = units.chars[t.u].zy
+      if (disp) t.dch = disp[k]
+    })
+    if (disp) ln.dtext = hantLines[i]
+  })
+  return units
 }
 
 /** 经题块最下面一行小字：校对来源。id 是多个出处（含「/」）时写成各咒原经。 */

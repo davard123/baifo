@@ -1,13 +1,15 @@
 <script setup>
 // 念经板块 /nianjing/：自己看着拼音出声念，页面听声音跟上（和 /jing/ 放录音跟读无关）。
 // 竖屏一屏一种视图（卡拉OK / 提词器），横屏左右两栏（左一句一句、右一页一页）。
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SutraLine from '../components/nianjing/SutraLine.vue'
 import SutraPage from '../components/nianjing/SutraPage.vue'
 import SutraSeg from '../components/nianjing/SutraSeg.vue'
 import SutraHeader from '../components/nianjing/SutraHeader.vue'
-import { labelTokens, sourceNote } from '../data/nianjing.js'
+import { labelTokens, labelZhuyin, sourceNote } from '../data/nianjing.js'
+import { isHantPath, loadConverter } from '../i18n/hant.js'
+import { hantSutraText } from '../i18n/hantSutra.js'
 import { groupSegments, paginate, paginateByHeights, pagesFromRanges } from '../utils/nianjingLayout.js'
 import { NIANJING, buddhaImages } from '../data/nianjing.js'
 import { useNianjing } from '../composables/useNianjing.js'
@@ -15,7 +17,9 @@ import { useWakeLock } from '../composables/useWakeLock.js'
 
 const route = useRoute()
 const slug = computed(() => (route.params.slug ? String(route.params.slug) : ''))
-const nj = useNianjing(slug)
+// 繁体页（/zh-hant/）：经文整行转繁体，默认标注音；简体页默认标拼音
+const isHant = isHantPath(route.path)
+const nj = useNianjing(slug, { hant: isHant })
 const {
   meta, sutra, units, segments, blocks, total, finished, cursor, lineIndex, segmentIndex,
   running, mode, view, speed, bgm, bpm, fontSize, resumeAt, voiceState, voiceProgress, voiceError, heard,
@@ -38,10 +42,60 @@ watch(
 )
 
 const showSettings = ref(false)
+
+// ── 标音：注音 / 拼音 / 只看字（繁体、简体各记各的）──
+const RUBY_KEY = isHant ? 'nianjing:ruby:hant' : 'nianjing:ruby:hans'
+const RUBIES = isHant
+  ? [{ key: 'zhuyin', label: '注音' }, { key: 'pinyin', label: '拼音' }, { key: 'none', label: '只看字' }]
+  : [{ key: 'pinyin', label: '拼音' }, { key: 'none', label: '只看字' }]
+function readRuby() {
+  try {
+    const v = localStorage.getItem(RUBY_KEY)
+    if (RUBIES.some((r) => r.key === v)) return v
+  } catch {
+    /* 存不了就用默认 */
+  }
+  return RUBIES[0].key
+}
+const ruby = ref(readRuby())
+watch(ruby, (v) => {
+  try {
+    localStorage.setItem(RUBY_KEY, v)
+  } catch {
+    /* 隐私模式 */
+  }
+})
+provide('njRuby', ruby)
+const hantConvert = shallowRef(null)
+if (isHant) loadConverter().then((c) => (hantConvert.value = c)).catch(() => {})
+const tw = (text, py = '') => (hantConvert.value ? hantSutraText(text, hantConvert.value, py) : text)
 const FONT_PX = { m: 25, l: 30, xl: 36 }
 const fontPx = computed(() => FONT_PX[fontSize.value] || 25)
-const header = computed(() => meta.value?.header || null)
-const headerNote = computed(() => sourceNote(sutra.value?.source?.id))
+// 经题块：每行配注音；繁体页把字先整行转好（header.hant），等转换器好了再显示
+const header = computed(() => {
+  const h = meta.value?.header
+  if (!h) return null
+  if (isHant && !hantConvert.value) return null
+  const out = {
+    ...h,
+    titleZy: labelZhuyin(h.title, h.titlePy),
+    subZy: h.sub ? labelZhuyin(h.sub, h.subPy) : null,
+    translatorZy: labelZhuyin(h.translator, h.translatorPy),
+  }
+  if (isHant) Object.assign(out, { hant: true, title: tw(h.title, h.titlePy), sub: h.sub ? tw(h.sub, h.subPy) : h.sub, translator: tw(h.translator, h.translatorPy) })
+  return out
+})
+const headerNote = computed(() => tw(sourceNote(sutra.value?.source?.id)))
+// 经题下面一两句话：这页有什么、怎么用
+const headerIntro = computed(() => {
+  if (!meta.value) return ''
+  return tw(
+    isHant
+      ? `${meta.value.title}全文，每个字都标了注音；在「设置」里可以改成拼音或只看字。按「开始」出声念，念到哪一句就亮到哪一句。`
+      : `${meta.value.title}全文，每个字都标了拼音。按「开始」出声念，念到哪一句就亮到哪一句。`,
+  )
+})
+const titleSub = isHant ? '全文・注音' : '全文・拼音'
 
 // ── 卡拉OK：当前一段 + 前后各一段 ──
 const curSeg = computed(() => segments.value[segmentIndex.value])
@@ -82,7 +136,7 @@ function headerRows(cpr) {
     const n = labelTokens(text).length
     return (Math.ceil((n * scale) / cpr) * scale * lh) / 2.25
   }
-  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / 2.25 : 0) + 0.4
+  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / 2.25 : 0) + (headerIntro.value ? (0.6 * 1.7 * Math.ceil((headerIntro.value.length * 0.6) / cpr)) / 2.25 : 0) + 0.4
 }
 // 先用估算分页（立刻有页可看、偏保守），再用实测分页替换
 const pagesEst = computed(() => {
@@ -194,7 +248,7 @@ function invalidateMeasure() {
   clearTimeout(measureTimer)
   measureTimer = setTimeout(runMeasure, 150)
 }
-watch([bookSize, fontPx, segments, header, headerNote], invalidateMeasure)
+watch([bookSize, fontPx, segments, header, headerNote, headerIntro, ruby], invalidateMeasure)
 const cursorPage = computed(() => {
   const ps = pages.value
   let i = 0
@@ -299,8 +353,8 @@ onBeforeUnmount(() => {
     <nav class="nj-crumb"><router-link to="/">← 返回首页</router-link><a href="/chant/" class="nj-en" lang="en" data-keep-script>English</a></nav>
     <header class="nj-list-head">
       <p class="nj-kicker">在线念经</p>
-      <h1>经文带拼音，念到哪里走到哪里</h1>
-      <p>选一部经，自己出声念。打开「听我念」，手机会听你的声音，念到哪一句就亮到哪一句；不方便出声时，也可以让它自动往下走，或者手动翻页。声音只在手机上识别，不会上传。</p>
+      <h1>{{ isHant ? '经文附注音，念到哪里走到哪里' : '经文带拼音，念到哪里走到哪里' }}</h1>
+      <p><template v-if="isHant">每部经都是全文，每个字标注音（也可以换成拼音）。</template>选一部经，自己出声念。打开「听我念」，手机会听你的声音，念到哪一句就亮到哪一句；不方便出声时，也可以让它自动往下走，或者手动翻页。声音只在手机上识别，不会上传。</p>
     </header>
     <div class="nj-grid">
       <router-link v-for="s in listCards" :key="s.slug" :to="`/nianjing/${s.slug}/`" class="nj-card">
@@ -315,7 +369,7 @@ onBeforeUnmount(() => {
   <main v-else class="nj-reader" :class="[`nj-view-${view}`]" :style="{ '--nj-font': fontPx + 'px' }">
     <header class="nj-bar">
       <router-link to="/nianjing/" class="nj-back" aria-label="返回经目">‹ 经目</router-link>
-      <h1 class="nj-title">{{ meta?.title || '念经' }}</h1>
+      <h1 class="nj-title">{{ meta?.title || '念经' }}<small v-if="meta" class="nj-title-sub">{{ titleSub }}</small></h1>
       <span class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
       <div class="nj-viewtoggle" role="group" aria-label="显示方式">
         <button type="button" :class="{ on: view === 'karaoke' }" @click="view = 'karaoke'">卡拉OK</button>
@@ -332,7 +386,7 @@ onBeforeUnmount(() => {
           <img v-if="image" :src="image" :alt="`${meta.title}对应的佛菩萨像`" />
         </div>
         <div class="nj-kline">
-          <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" class="nj-kheader" />
+          <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" :intro="headerIntro" class="nj-kheader" />
           <p v-if="curHeading" class="nj-heading">{{ curHeading }}</p>
           <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
           <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
@@ -342,7 +396,7 @@ onBeforeUnmount(() => {
 
       <!-- 提词器（竖屏可选） -->
       <div ref="promptBox" class="nj-pane nj-prompt" @scroll.passive="onPromptScroll" @touchstart.passive="onPromptTouch" @wheel.passive="onPromptTouch">
-        <SutraHeader v-if="header" :header="header" :note="headerNote" class="nj-pheader" />
+        <SutraHeader v-if="header" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
         <template v-for="(b, bi) in blocks" :key="bi">
           <p v-if="b.headStart" class="nj-hd">{{ b.heading }}</p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
@@ -378,6 +432,7 @@ onBeforeUnmount(() => {
             v-if="pages[bookPage]"
             :header="header"
             :note="headerNote"
+            :intro="headerIntro"
             :show-header="bookPage === 0"
             :groups="pages[bookPage].groups"
             :line-index="lineIndex"
@@ -393,15 +448,15 @@ onBeforeUnmount(() => {
       </div>
       <!-- 量页高用的隐藏容器：和书页同宽同字号，整篇排一遍读每个小段的位置；再逐页复核 -->
       <div v-if="measuring" ref="measureEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
-        <SutraPage :header="header" :note="headerNote" show-header :groups="allGroups" />
+        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" show-header :groups="allGroups" />
       </div>
       <div v-if="probing" ref="probeEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
-        <SutraPage :header="header" :note="headerNote" :show-header="probing.first" :groups="probing.groups" />
+        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" :show-header="probing.first" :groups="probing.groups" />
       </div>
     </section>
 
     <div v-if="resumeAt > 0" class="nj-resume" role="dialog" aria-label="续读">
-      <span>上次念到第 {{ units.lines[nj.lineOf(resumeAt)]?.text.slice(0, 8) }}…，接着念吗？</span>
+      <span>上次念到第 {{ (units.lines[nj.lineOf(resumeAt)]?.dtext || units.lines[nj.lineOf(resumeAt)]?.text || '').slice(0, 8) }}…，接着念吗？</span>
       <button type="button" class="primary" @click="nj.resume()">接着念</button>
       <button type="button" @click="resumeAt = 0">从头念</button>
     </div>
@@ -438,6 +493,12 @@ onBeforeUnmount(() => {
           <input v-model.number="speed" type="range" min="40" max="240" step="10" />
           <b>{{ speed }} 字/分</b>
         </label>
+        <div class="nj-row">
+          <span>标音</span>
+          <div class="nj-chips">
+            <button v-for="r in RUBIES" :key="r.key" type="button" :class="{ on: ruby === r.key }" @click="ruby = r.key">{{ r.label }}</button>
+          </div>
+        </div>
         <div class="nj-row">
           <span>字号</span>
           <div class="nj-chips">
@@ -512,6 +573,7 @@ onBeforeUnmount(() => {
 }
 .nj-back { color: #756558; text-decoration: none; white-space: nowrap; }
 .nj-title { font-size: 1.1rem; margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5a2a1a; }
+.nj-title-sub { margin-left: 0.4em; font-size: 0.72rem; font-weight: 500; color: #9a8a7a; }
 .nj-pct { font-size: 0.85rem; color: #9a8a7a; }
 .nj-viewtoggle { display: flex; gap: 4px; }
 .nj-viewtoggle button,
@@ -585,7 +647,7 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 .nj-heading { margin: 0; font-size: calc(var(--nj-font) * 0.72); font-weight: 600; color: #7a2a1c; }
-.nj-kheader { font-size: calc(var(--nj-font) * 0.82); margin-bottom: 0.2em; }
+.nj-kheader { font-size: calc(var(--nj-font) * 0.82); margin-bottom: 0.2em; align-self: stretch; min-width: 0; }
 .nj-k { margin: 0; line-height: 2.2; }
 .nj-k--prev { font-size: calc(var(--nj-font) * 0.85); opacity: 0.55; }
 .nj-k--cur { font-size: calc(var(--nj-font) * 1.35); }
