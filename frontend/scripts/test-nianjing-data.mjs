@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { NIANJING, toUnits, hanCount, buddhaImages, labelTokens, sourceNote, UNVERIFIED_CHARS } from '../src/data/nianjing.js'
 
-assert.equal(NIANJING.length, 13)
+assert.equal(NIANJING.length, 14)
 for (const s of NIANJING) {
   const mod = await s.load()
   const d = mod.default

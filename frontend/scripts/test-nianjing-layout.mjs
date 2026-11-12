@@ -42,7 +42,7 @@ for (const s of NIANJING) {
   assert.equal(next, u.chars.length, `${s.slug} 小段没盖满全部字`)
   // 偈颂块只出现在 puxian / pumen
   const hasVerse = blocks.some((b) => b.kind === 'verse')
-  assert.equal(hasVerse, s.slug === 'puxian' || s.slug === 'pumen', `${s.slug} 偈颂判断`)
+  assert.equal(hasVerse, s.slug === 'puxian' || s.slug === 'pumen' || s.slug === 'renwang', `${s.slug} 偈颂判断`)
   // 分页：各页小段依次拼起来 = 全部小段
   for (const opt of SIZES) {
     const pages = paginate(segs, opt)

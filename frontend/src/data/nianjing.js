@@ -16,6 +16,7 @@ export const NIANJING = [
   { slug: 'jingang', title: '金刚经', buddha: 'shakyamuni', jingSlug: 'jingang', note: '三十二分全文', header: { title: '金刚般若波罗蜜经', titlePy: 'jīn gāng bō rě bō luó mì jīng', translator: '姚秦 三藏法师鸠摩罗什 译', translatorPy: 'yáo qín sān zàng fǎ shī jiū mó luó shí yì' }, load: () => import('./sutras/jingang.js') },
   { slug: 'yaoshi', title: '药师经', buddha: 'medicine', note: '药师琉璃光如来本愿功德经', header: { title: '药师琉璃光如来本愿功德经', titlePy: 'yào shī liú lí guāng rú lái běn yuàn gōng dé jīng', translator: '唐 三藏法师玄奘 奉诏译', translatorPy: 'táng sān zàng fǎ shī xuán zàng fèng zhào yì' }, load: () => import('./sutras/yaoshi.js') },
   { slug: 'dizang', title: '地藏经', buddha: 'ksitigarbha', jingSlug: 'dizang', note: '十三品全文', header: { title: '地藏菩萨本愿经', titlePy: 'dì zàng pú sà běn yuàn jīng', translator: '唐 于阗国三藏沙门实叉难陀 译', translatorPy: 'táng yú tián guó sān zàng shā mén shí chā nán tuó yì' }, load: () => import('./sutras/dizang.js') },
+  { slug: 'renwang', title: '仁王护国经', buddha: 'shakyamuni', note: '护国般若，八品全文', header: { title: '仁王护国般若波罗蜜多经', titlePy: 'rén wáng hù guó bō rě bō luó mì duō jīng', translator: '唐 大广智不空 奉诏译', translatorPy: 'táng dà guǎng zhì bù kōng fèng zhào yì' }, load: () => import('./sutras/renwang.js') },
 ]
 
 export const NIANJING_BY_SLUG = Object.fromEntries(NIANJING.map((s) => [s.slug, s]))

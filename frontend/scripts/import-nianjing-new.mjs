@@ -1,4 +1,4 @@
-// 2026-11 新增：普贤行愿品补全文（长行 + 偈颂 + 流通分）、八大人觉经。
+// 2026-11 新增：普贤行愿品补全文（长行 + 偈颂 + 流通分）、八大人觉经、仁王护国般若波罗蜜多经。
 // 数据来自 D:/document/念佛板块/text/{puxian-changhang,badaren}/lines.noquote.json（逐处核对过的拼音，站内一律不带引号）。
 // 用法：node scripts/import-nianjing-new.mjs
 //  - puxian.js：偈颂 248 行原样保留（文字、拼音、n、stanza 一个字不动，只补 part:'偈颂'）；
@@ -46,3 +46,17 @@ write('badaren', 'D:/document/念佛板块/text/badaren/lines.noquote.json', {
   lines: b,
 })
 console.log('badaren', b.length, han(b))
+
+// ── 仁王护国般若波罗蜜多经（唐 不空译 T08n0246，上下两卷八品；heading 是品名，咒语 36 句 heading 为「陀罗尼」）──
+const r = read(`${SRC}/renwang/lines.noquote.json`).map((l) => ({ n: l.n, text: l.text, pinyin: l.pinyin, part: l.part, heading: l.heading }))
+write('renwang', 'D:/document/念佛板块/text/renwang/lines.noquote.json', {
+  slug: 'renwang',
+  title: '仁王护国经',
+  fullTitle: '仁王护国般若波罗蜜多经',
+  translator: '唐 大广智不空 奉诏译',
+  source: { name: 'CBETA 线上阅读', id: 'T08n0246', url: 'https://cbetaonline.dila.edu.tw/zh/T08n0246_p0834a' },
+  license: 'CBETA 电子佛典，CC BY-NC-SA 3.0 TW',
+  charCount: han(r),
+  lines: r,
+})
+console.log('renwang', r.length, han(r))
