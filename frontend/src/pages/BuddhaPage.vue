@@ -13,6 +13,7 @@ import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
+import { FAMILY_BAR_MS, familyBarShown, markFamilyBarShown } from '../utils/familyBar.js'
 import { track } from '../utils/analytics.js'
 
 const route = useRoute()
@@ -73,7 +74,15 @@ const familyBarDismissed = ref(false)
 let familyBarTimer = null
 watch(() => ritual.state.done.bow, (bowed) => {
   clearTimeout(familyBarTimer)
-  if (bowed && !familyBarDismissed.value) familyBarTimer = setTimeout(() => { showFamilyBar.value = true }, 3500)
+  if (bowed && !familyBarDismissed.value && !familyBarShown()) {
+    familyBarTimer = setTimeout(() => {
+      if (familyBarShown()) return
+      markFamilyBarShown()
+      familyBarDismissed.value = true // 本页也只弹这一次
+      showFamilyBar.value = true
+      familyBarTimer = setTimeout(() => { showFamilyBar.value = false }, FAMILY_BAR_MS)
+    }, 3500)
+  }
 })
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
@@ -99,7 +108,6 @@ watch(
     ritual.reset()
     drawerOpen.value = false
     showFamilyBar.value = false
-    familyBarDismissed.value = false
     submitted.value = null
     updatePageMeta()
   },
@@ -217,6 +225,8 @@ useWakeLock()
         </template>
 
         <FamilyCare kind="buddha" :slug="buddha.slug" :subject="buddha.name" />
+
+        <p v-if="!submitted" class="local-note">自己看的心愿只存在这台手机或电脑上，换一台设备就看不到了。</p>
 
         <!-- 说明放在抽屉最底部，默认收起 -->
         <details class="about-fold">
@@ -464,8 +474,17 @@ useWakeLock()
   opacity: 0.8;
 }
 
+.local-note {
+  margin: 12px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  opacity: 0.7;
+  text-align: center;
+}
+
 .about-fold {
-  margin-top: 18px;
+  margin-top: 12px;
   border-top: 1px solid rgba(212, 168, 67, 0.2);
   padding-top: 10px;
 }

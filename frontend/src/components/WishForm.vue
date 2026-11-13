@@ -110,7 +110,6 @@ async function handleSubmit() {
         <button type="button" role="radio" :aria-checked="storageChoice === 'public'" :class="{ on: storageChoice === 'public' }" :disabled="loading" @click="storageChoice = 'public'">公开到心愿墙</button>
       </div>
       <p v-if="storageChoice === 'public'" class="vis-note public-note">确认后，这条内容将公开给所有访客查看。名字只显示第一个字（例如“王**”），不显示年龄和邮箱。请不要写电话、地址等隐私。</p>
-      <p v-else class="vis-note">只存在这台手机或电脑上，换一台设备就看不到了。</p>
       <p v-if="error" class="error-msg">{{ error }}</p>
 
       <Teleport :to="submitSlot" :disabled="!submitSlot" defer>

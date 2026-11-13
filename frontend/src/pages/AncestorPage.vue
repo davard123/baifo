@@ -23,6 +23,7 @@ import {
   relationshipLabel,
 } from '../utils/memorialInscription.js'
 import NotFoundPage from './NotFoundPage.vue'
+import { FAMILY_BAR_MS, familyBarShown, markFamilyBarShown } from '../utils/familyBar.js'
 import { track } from '../utils/analytics.js'
 
 const route = useRoute()
@@ -245,7 +246,15 @@ const familyBarDismissed = ref(false)
 let familyBarTimer = null
 watch(() => ritual.state.done.bow, (bowed) => {
   clearTimeout(familyBarTimer)
-  if (bowed && !familyBarDismissed.value) familyBarTimer = setTimeout(() => { showFamilyBar.value = true }, 3500)
+  if (bowed && !familyBarDismissed.value && !familyBarShown()) {
+    familyBarTimer = setTimeout(() => {
+      if (familyBarShown()) return
+      markFamilyBarShown()
+      familyBarDismissed.value = true // 本页也只弹这一次
+      showFamilyBar.value = true
+      familyBarTimer = setTimeout(() => { showFamilyBar.value = false }, FAMILY_BAR_MS)
+    }, 3500)
+  }
 })
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
@@ -255,7 +264,6 @@ const panelTab = ref('do')
 function resetStageState() {
   ritual.reset()
   showFamilyBar.value = false
-  familyBarDismissed.value = false
 }
 
 function applyPageMeta() {
