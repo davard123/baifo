@@ -1,12 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import RecordSaveChoice from './RecordSaveChoice.vue'
-const storageChoice = ref('')
+// 默认「只有我自己能看」，公开要自己点
+const storageChoice = ref('local')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
 const props = defineProps({
   defaultWish: { type: String, default: '' },
-  onSubmit: { type: Function, default: null }
+  onSubmit: { type: Function, default: null },
+  // 回向按钮放到页面里的这个位置（CSS 选择器），这样它能做成抽屉底部固定的按钮条；不传就留在表单末尾
+  submitSlot: { type: String, default: '' },
 })
 const emit = defineEmits(['submit'])
 
@@ -45,7 +47,7 @@ async function handleSubmit() {
 
     if (props.onSubmit) {
       await props.onSubmit(payload)
-      storageChoice.value = ''
+      storageChoice.value = 'local'
     } else {
       emit('submit', payload)
     }
@@ -60,7 +62,7 @@ async function handleSubmit() {
 <template>
   <div class="wish-form">
     <p class="form-hint">发愿回向</p>
-    <form @submit.prevent="handleSubmit">
+    <form id="wish-form" @submit.prevent="handleSubmit">
       <div class="row-two">
         <div class="field-block">
           <label class="field-label" for="wish-name">您的法名 / 姓名</label>
@@ -103,13 +105,20 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
-      <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
+      <div class="vis-switch" role="radiogroup" aria-label="这份祈愿给谁看">
+        <button type="button" role="radio" :aria-checked="storageChoice === 'local'" :class="{ on: storageChoice === 'local' }" :disabled="loading" @click="storageChoice = 'local'">只有我自己看</button>
+        <button type="button" role="radio" :aria-checked="storageChoice === 'public'" :class="{ on: storageChoice === 'public' }" :disabled="loading" @click="storageChoice = 'public'">公开到心愿墙</button>
+      </div>
+      <p v-if="storageChoice === 'public'" class="vis-note public-note">确认后，这条内容将公开给所有访客查看。名字只显示第一个字（例如“王**”），不显示年龄和邮箱。请不要写电话、地址等隐私。</p>
+      <p v-else class="vis-note">只存在这台手机或电脑上，换一台设备就看不到了。</p>
       <p v-if="error" class="error-msg">{{ error }}</p>
 
-      <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
-        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '回向（只有自己能看）' }}</span>
-      </button>
+      <Teleport :to="submitSlot" :disabled="!submitSlot" defer>
+        <button type="submit" form="wish-form" class="submit-btn" :disabled="loading">
+          <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
+          <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向' : '回向（只有自己能看）' }}</span>
+        </button>
+      </Teleport>
     </form>
   </div>
 </template>
@@ -170,11 +179,40 @@ async function handleSubmit() {
 .age-field { text-align: center; }
 
 .wish-field {
-  height: 110px;
+  height: 78px;
   resize: vertical;
   line-height: 1.7;
   margin-bottom: 10px;
 }
+
+.vis-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+.vis-switch button {
+  min-height: 40px;
+  border: 1px solid rgba(242, 200, 121, 0.3);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--accent, #f3dcae);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.vis-switch button.on {
+  background: rgba(224, 183, 110, 0.2);
+  border-color: var(--gold, #d4a843);
+  font-weight: 700;
+}
+.vis-switch button:disabled { opacity: 0.6; cursor: not-allowed; }
+.vis-note {
+  font-size: 0.74rem;
+  line-height: 1.6;
+  margin: 0 0 8px;
+  color: var(--text-muted);
+}
+.public-note { color: var(--accent, #c8a96e); }
 
 .email-field {
   margin-bottom: 14px;

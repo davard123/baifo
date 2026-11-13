@@ -11,7 +11,6 @@ import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
 import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
-import PanelTabs from '../components/PanelTabs.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import NotFoundPage from './NotFoundPage.vue'
 import { track } from '../utils/analytics.js'
@@ -64,6 +63,9 @@ const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== rou
 
 const ritual = useRitual('buddha')
 const drawerOpen = ref(false)
+// 抽屉开着时给 <html> 打个记号，让悬浮的音乐按钮在手机上避开底部的回向按钮条
+watch(drawerOpen, (open) => document.documentElement.classList.toggle('drawer-open', open))
+onBeforeUnmount(() => document.documentElement.classList.remove('drawer-open'))
 
 // 叩拜后浮出「叫家人一起来」；家人从邀请链接进来时顶部给一句说明
 const showFamilyBar = ref(false)
@@ -76,7 +78,6 @@ watch(() => ritual.state.done.bow, (bowed) => {
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
 const inviteDismissed = ref(false)
-const panelTab = ref('do')
 
 function updatePageMeta() {
   if (!buddha.value) return
@@ -97,7 +98,6 @@ watch(
 
     ritual.reset()
     drawerOpen.value = false
-    panelTab.value = 'do'
     showFamilyBar.value = false
     familyBarDismissed.value = false
     submitted.value = null
@@ -199,9 +199,6 @@ useWakeLock()
         <RitualNav v-if="!submitted" :actions="doneActions" label="礼佛页面导航" inline />
         <h1 class="namo-title">{{ buddha.namo }}</h1>
 
-        <PanelTabs v-model="panelTab" :read-label="`${buddha.name}说明`" />
-
-        <div v-show="panelTab === 'do'">
         <DedicationDone
           v-if="submitted && blessingPhase === 'idle'"
           kind="buddha"
@@ -216,53 +213,57 @@ useWakeLock()
         <template v-else-if="!submitted">
           <RitualPanel :ritual="ritual" homage-title="礼敬" />
           <hr class="divider" />
-          <WishForm :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" />
+          <WishForm :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" submit-slot="#wish-submit-slot" />
         </template>
 
         <FamilyCare kind="buddha" :slug="buddha.slug" :subject="buddha.name" />
-        </div>
 
-        <div v-show="panelTab === 'read'">
-        <p class="buddha-desc">{{ buddha.desc }}</p>
+        <!-- 说明放在抽屉最底部，默认收起 -->
+        <details class="about-fold">
+          <summary>关于{{ buddha.name }}</summary>
+          <p class="buddha-desc">{{ buddha.desc }}</p>
 
-        <div class="page-tags">
-          <span>{{ buddha.subtitle }}</span>
-          <span>在线礼佛</span>
-          <span>祈愿回向</span>
-        </div>
-
-        <section class="meaning-section">
-          <h2>礼佛说明</h2>
-          <p>
-            {{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。
-            你可以先完成供花、点灯、上香与礼拜，再填写祈愿内容，按顺序完成这一页的礼佛过程。
-          </p>
-          <p>
-            <router-link :to="`/topic/${buddha.slug}`">了解{{ buddha.name }}：纪念日、圣号与礼敬方法 →</router-link>
-          </p>
-        </section>
-
-        <section class="faq-mini">
-          <h2>常见问题</h2>
-          <article>
-            <h3>{{ buddha.name }}适合什么人礼敬？</h3>
-            <p>凡希望以恭敬心修福、积德、回向众生的人，都可以来此礼敬 {{ buddha.name }} 并发愿修行。</p>
-          </article>
-          <article>
-            <h3>在这个页面上怎么完成祈愿？</h3>
-            <p>先完成供养动作，再填写姓名、年龄和愿望内容，最后提交回向即可。</p>
-          </article>
-        </section>
-
-        <section class="related-links">
-          <h2>相关礼佛页面</h2>
-          <div class="related-list">
-            <router-link v-for="item in relatedBuddhas" :key="item.slug" :to="`/buddha/${item.slug}`">
-              {{ item.name }} · {{ item.subtitle }}
-            </router-link>
+          <div class="page-tags">
+            <span>{{ buddha.subtitle }}</span>
+            <span>在线礼佛</span>
+            <span>祈愿回向</span>
           </div>
-        </section>
-        </div>
+
+          <section class="meaning-section">
+            <h2>礼佛说明</h2>
+            <p>
+              {{ buddha.name }}适合围绕{{ buddha.subtitle }}所代表的修行方向来发愿。
+              你可以先完成供花、点灯、上香与礼拜，再填写祈愿内容，按顺序完成这一页的礼佛过程。
+            </p>
+            <p>
+              <router-link :to="`/topic/${buddha.slug}`">了解{{ buddha.name }}：纪念日、圣号与礼敬方法 →</router-link>
+            </p>
+          </section>
+
+          <section class="faq-mini">
+            <h2>常见问题</h2>
+            <article>
+              <h3>{{ buddha.name }}适合什么人礼敬？</h3>
+              <p>凡希望以恭敬心修福、积德、回向众生的人，都可以来此礼敬 {{ buddha.name }} 并发愿修行。</p>
+            </article>
+            <article>
+              <h3>在这个页面上怎么完成祈愿？</h3>
+              <p>先完成供养动作，再填写姓名、年龄和愿望内容，最后提交回向即可。</p>
+            </article>
+          </section>
+
+          <section class="related-links">
+            <h2>相关礼佛页面</h2>
+            <div class="related-list">
+              <router-link v-for="item in relatedBuddhas" :key="item.slug" :to="`/buddha/${item.slug}`">
+                {{ item.name }} · {{ item.subtitle }}
+              </router-link>
+            </div>
+          </section>
+        </details>
+
+        <!-- 回向按钮条：WishForm 把按钮放到这里，始终贴在抽屉可视区底部 -->
+        <div id="wish-submit-slot" class="wish-submit-slot"></div>
       </section>
     </div>
     </div>
@@ -463,6 +464,51 @@ useWakeLock()
   opacity: 0.8;
 }
 
+.about-fold {
+  margin-top: 18px;
+  border-top: 1px solid rgba(212, 168, 67, 0.2);
+  padding-top: 10px;
+}
+
+.about-fold > summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--accent);
+  font-size: 0.88rem;
+  opacity: 0.9;
+  padding: 6px 0;
+}
+
+.about-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.about-fold > summary::after {
+  content: ' ▸';
+}
+
+.about-fold[open] > summary::after {
+  content: ' ▾';
+}
+
+.about-fold[open] > summary {
+  margin-bottom: 8px;
+}
+
+/* 回向按钮条：放在抽屉内容最后，sticky 贴住可视区底部；内容到底时按钮在自然位置，不会挡住上面的东西 */
+.wish-submit-slot {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  margin: 12px -20px -32px;
+  padding: 10px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to bottom, rgba(24, 17, 12, 0), rgba(24, 17, 12, 0.96) 22%);
+}
+
+.wish-submit-slot:empty {
+  display: none;
+}
+
 .divider {
   border: none;
   border-top: 1px solid rgba(212, 168, 67, 0.2);
@@ -480,6 +526,11 @@ useWakeLock()
   .panel-section {
     width: min(420px, 100vw);
     padding: 14px 16px 18px;
+  }
+
+  .wish-submit-slot {
+    margin: 12px -16px -18px;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   }
 
   .panel-toggle {

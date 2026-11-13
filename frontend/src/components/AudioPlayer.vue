@@ -20,5 +20,7 @@ const { muted, toggle } = useBackgroundMusic()
 </style>
 <style>
 html.ritual-route .audio-btn { top: auto; bottom: 16px; left: 16px; right: auto; }
+/* 礼佛页手机上供养抽屉铺满全宽，底部有固定的回向按钮条和说明折叠项：抽屉开着时先把悬浮的音乐按钮藏起来，收起抽屉就回来 */
+@media(max-width:768px){ html.ritual-route.drawer-open .audio-btn { visibility: hidden; } }
 body:has([aria-modal="true"]) #app > .audio-btn { visibility: hidden; }
 </style>
