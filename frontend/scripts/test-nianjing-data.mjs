@@ -2,9 +2,9 @@
 import assert from 'node:assert/strict'
 import { NIANJING, toUnits, hanCount, buddhaImages, labelTokens, sourceNote, UNVERIFIED_CHARS } from '../src/data/nianjing.js'
 
-assert.equal(NIANJING.length, 14)
+assert.equal(NIANJING.length, 15)
 // 拼音里改正过的明显错误：[字, 错拼音, 只在含这个词时算错]；咒语不查
-const MANTRA = new Set(['dabeizhou', 'liuzi', 'wangsheng', 'yaoshi-zhenyan', 'shixiaozhou'])
+const MANTRA = new Set(['dabeizhou', 'liuzi', 'wangsheng', 'yaoshi-zhenyan', 'shixiaozhou', 'lengyan'])
 const WRONG_READINGS = [
   ['佛', 'fú'], ['藏', 'cáng', '地藏'], ['子', 'zi'], ['得', 'de'], ['了', 'le'], ['生', 'sheng'], ['卜', 'bo'],
   ['尽', 'jǐn', '尽形'], ['著', 'zhù', '著地'], ['彊', 'jiàng', '刚彊'], ['那', 'nuǒ', '兰那'], ['伽', 'gā'],

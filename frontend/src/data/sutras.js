@@ -256,7 +256,6 @@ export function sutraPlainText(sutra) {
 // /jing/<slug>/：主打「听女声读诵、看唱诵视频，跟着声音念」，经文附在下面；
 // /nianjing/<slug>/：主打「全文 + 拼音（繁体页注音）+ 自己出声念、页面听你念到哪里」。
 // 两页内容不同（一边是录音和视频，一边是逐字注音和语音跟读），各自 canonical，互相链接。
-// 楞严咒只有诵经页，没有念经页，标题仍然以「全文」开头。
 const JING_PARTS = { jingang: '三十二分', dizang: '十三品', lengyan: '五会' }
 // 常用名和经名一样的，标题里换成全称
 const JING_NAME = { wangsheng: '拔一切业障根本得生净土陀罗尼', shixiaozhou: '早课十小咒' }
