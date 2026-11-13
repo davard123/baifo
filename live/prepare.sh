@@ -8,14 +8,14 @@
 # 环境变量（一般不用改）：
 #   LIVE_HOME    默认 /opt/fopusha-live
 #   SOURCE_BASE  素材来源，默认 https://fopusha.com；也可以是本地目录（例如仓库里的 frontend/public）
-#   FONT         字体（fontconfig 名称），默认 Noto Sans CJK SC:bold
+#   FONT         字体（fontconfig 名称），默认 Noto Sans CJK TC:bold（画面文字都是繁体）
 #   PRESET       x264 预设，默认 veryfast（单核 VPS 上大约 1～2 倍实时）
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 LIVE_HOME="${LIVE_HOME:-/opt/fopusha-live}"
 SOURCE_BASE="${SOURCE_BASE:-https://fopusha.com}"
-FONT="${FONT:-Noto Sans CJK SC:bold}"
+FONT="${FONT:-Noto Sans CJK TC:bold}"
 PRESET="${PRESET:-veryfast}"
 CONF="${CONF:-$HERE/streams.conf}"
 
@@ -51,16 +51,24 @@ build_one() {
   local font; font="$(esc "$FONT")"
   local t1 t2 t3 t4
   t1="$(esc "$title")"; t2="$(esc "$sub")"
-  t3="$(esc "经文全文带拼音 · 免费在线诵经")"; t4="$(esc "$site")"
+  t3="$(esc "經文全文帶拼音・免費線上誦經")"; t4="$(esc "$site")"
+  # 顶部大字是一整句邀请语（如「一起念大悲咒・跟著字念」），按字数定字号：
+  # 最大 60（约画面高 4.7%），最长 13 个字时 52（约 4.1%），左右各留约 20 像素不出界
+  local n tsize
+  n="$(printf '%s' "$title" | LC_ALL=C.UTF-8 wc -m 2>/dev/null || echo 13)"
+  n="${n//[[:space:]]/}"
+  [[ "$n" =~ ^[0-9]+$ && "$n" -gt 0 ]] || n=13
+  (( n > 20 )) && n=$(( n / 3 ))   # 没有 C.UTF-8 时 wc 数的是字节，中文一字 3 字节
+  tsize=$(( 680 / n )); (( tsize > 60 )) && tsize=60
 
   local vf="[0:v]fps=$FPS,split[a][b];"
   # 背景先缩到 1/4 再模糊再放大，效果一样，转码快很多
   vf+="[a]scale=$((W / 4)):$((H / 4)):force_original_aspect_ratio=increase,crop=$((W / 4)):$((H / 4)),boxblur=6:2,scale=$W:$H,eq=brightness=-0.30:saturation=0.8[bg];"
   vf+="[b]scale=$W:-2[fg];[bg][fg]overlay=0:(H-h)/2,"
-  vf+="drawtext=font='$font':expansion=none:text='$t1':fontsize=64:fontcolor=0xF5D27A:x=(w-text_w)/2:y=160:shadowcolor=black@0.7:shadowx=3:shadowy=3,"
-  vf+="drawtext=font='$font':expansion=none:text='$t2':fontsize=30:fontcolor=white@0.92:x=(w-text_w)/2:y=262,"
+  vf+="drawtext=font='$font':expansion=none:text='$t1':fontsize=$tsize:fontcolor=0xF5D27A:x=(w-text_w)/2:y=190:shadowcolor=black@0.7:shadowx=3:shadowy=3,"
+  vf+="drawtext=font='$font':expansion=none:text='$t2':fontsize=34:fontcolor=white@0.92:x=(w-text_w)/2:y=284:shadowcolor=black@0.6:shadowx=2:shadowy=2,"
   vf+="drawtext=font='$font':expansion=none:text='$t3':fontsize=30:fontcolor=white@0.92:x=(w-text_w)/2:y=$((H - 330)),"
-  vf+="drawtext=font='$font':expansion=none:text='$t4':fontsize=38:fontcolor=0xF5D27A:x=(w-text_w)/2:y=$((H - 270)):shadowcolor=black@0.7:shadowx=2:shadowy=2,"
+  vf+="drawtext=font='$font':expansion=none:text='$t4':fontsize=32:fontcolor=0xF5D27A:x=(w-text_w)/2:y=$((H - 270)):shadowcolor=black@0.7:shadowx=2:shadowy=2,"
   vf+="format=yuv420p[v]"
 
   local list="$work/list.txt" i=0
