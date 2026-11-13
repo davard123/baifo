@@ -96,6 +96,13 @@ const headerIntro = computed(() => {
   )
 })
 const titleSub = isHant ? '全文・注音' : '全文・拼音'
+// 同一部经在 /jing/ 有女声读诵、唱诵视频：念经页主打全文注音/拼音和自己念，诵经页主打听录音、看视频（两页互相链接）
+const jingLink = computed(() => {
+  const j = meta.value?.jingSlug
+  if (!j) return null
+  const name = meta.value.slug === 'puxian' ? '普贤行愿品偈颂' : meta.value.title
+  return { to: `/jing/${j}/`, label: `想听女声读诵、看诵经${isHant ? '影片' : '视频'}：${name}读诵页 →` }
+})
 
 // ── 卡拉OK：当前一段 + 前后各一段 ──
 const curSeg = computed(() => segments.value[segmentIndex.value])
@@ -355,6 +362,7 @@ onBeforeUnmount(() => {
       <p class="nj-kicker">在线念经</p>
       <h1>{{ isHant ? '经文附注音，念到哪里走到哪里' : '经文带拼音，念到哪里走到哪里' }}</h1>
       <p><template v-if="isHant">每部经都是全文，每个字标注音（也可以换成拼音）。</template>选一部经，自己出声念。打开「听我念」，手机会听你的声音，念到哪一句就亮到哪一句；不方便出声时，也可以让它自动往下走，或者手动翻页。声音只在手机上识别，不会上传。</p>
+      <p>想听女声读诵、看唱诵{{ isHant ? '影片' : '视频' }}跟着念：<router-link to="/jing/">在线诵经 →</router-link></p>
     </header>
     <div class="nj-grid">
       <router-link v-for="s in listCards" :key="s.slug" :to="`/nianjing/${s.slug}/`" class="nj-card">
@@ -397,6 +405,7 @@ onBeforeUnmount(() => {
       <!-- 提词器（竖屏可选） -->
       <div ref="promptBox" class="nj-pane nj-prompt" @scroll.passive="onPromptScroll" @touchstart.passive="onPromptTouch" @wheel.passive="onPromptTouch">
         <SutraHeader v-if="header" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
+        <p v-if="jingLink" class="nj-xlink"><router-link :to="jingLink.to">{{ jingLink.label }}</router-link></p>
         <template v-for="(b, bi) in blocks" :key="bi">
           <p v-if="b.headStart" class="nj-hd">{{ b.heading }}</p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
@@ -506,6 +515,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <p class="nj-note">点经文里任意一个字，就从那个字接着念。「听我念」的声音只在手机上识别，不会上传。</p>
+        <p v-if="jingLink" class="nj-note"><router-link :to="jingLink.to">{{ jingLink.label }}</router-link></p>
       </div>
     </footer>
   </main>
@@ -662,6 +672,8 @@ onBeforeUnmount(() => {
 }
 .nj-prompt__pad--end { height: 60%; }
 .nj-pheader { padding-top: 0.6em; }
+.nj-xlink { margin: 0.2em 0 0.8em; text-align: center; font-size: 0.6em; }
+.nj-xlink a, .nj-note a { color: #8a4a1c; }
 .nj-measure {
   position: absolute;
   left: 0;

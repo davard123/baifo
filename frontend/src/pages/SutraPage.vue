@@ -3,12 +3,15 @@
 // 先放「跟着念」的播放器和全文（操作），介绍和常见问题放在后面，不让操作被说明埋住。
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { SUTRAS, SUTRA_BY_SLUG } from '../data/sutras.js'
+import { SUTRAS, SUTRA_BY_SLUG, jingCopy } from '../data/sutras.js'
+import { isHantPath } from '../i18n/hant.js'
 import NotFoundPage from './NotFoundPage.vue'
 
 const route = useRoute()
 const sutra = computed(() => (route.params.slug ? SUTRA_BY_SLUG[route.params.slug] : null))
 const isList = computed(() => !route.params.slug)
+// 标题、第一句、到念经页（注音/拼音版）的链接：和预渲染共用 jingCopy
+const copy = computed(() => (sutra.value ? jingCopy(sutra.value, { hant: isHantPath(route.path) }) : null))
 
 const versionKey = ref('')
 const version = computed(() => sutra.value?.audio.find((a) => a.key === versionKey.value) || sutra.value?.audio[0] || null)
@@ -138,7 +141,8 @@ onBeforeUnmount(() => player.value?.pause())
     <header class="jing-head">
       <p class="section-kicker">每日诵经</p>
       <h1>诵经</h1>
-      <p class="lead">常诵经咒的完整经文，带拼音，可以跟着女声读诵一句一句跟读，也可以默读。免费，不用注册。</p>
+      <p class="lead">常诵经咒的女声读诵和唱诵视频，跟着声音一句一句念，也可以默读；经文附在下面，带拼音。免费，不用注册。</p>
+      <p class="lead jing-xlink">想看每个字的{{ isHantPath(route.path) ? '注音' : '拼音' }}、自己出声念（页面听你念到哪里）：<router-link to="/nianjing/">在线念经 →</router-link></p>
     </header>
     <section v-if="wallVideos.length" ref="wall" class="jing-wall" aria-label="诵经视频">
       <h2 class="jing-wall__title">诵经视频</h2>
@@ -181,9 +185,10 @@ onBeforeUnmount(() => player.value?.pause())
     </nav>
 
     <header class="jing-head">
-      <p class="section-kicker">{{ sutra.translator }}</p>
-      <h1>{{ sutra.name }}</h1>
-      <p class="lead">{{ sutra.title }}全文 · {{ sutra.lines.length }} 句 · {{ sutra.charCount }} 字 · 带拼音</p>
+      <p class="section-kicker">{{ sutra.name }} · {{ sutra.translator }}</p>
+      <h1>{{ copy.heading }}</h1>
+      <p class="lead">{{ copy.lead }}</p>
+      <p v-if="copy.nianjingLink" class="lead jing-xlink"><router-link :to="`${copy.nianjingLink.path}/`">{{ copy.nianjingLink.label }}</router-link></p>
     </header>
 
     <section v-if="sutra.videos?.length" class="jing-video card" aria-label="诵经视频">
@@ -332,6 +337,8 @@ onBeforeUnmount(() => player.value?.pause())
 .section-kicker { color: var(--accent); font-size: 0.8rem; letter-spacing: 0.18em; margin-bottom: 8px; }
 .jing-head h1 { font-size: clamp(1.7rem, 5vw, 2.4rem); color: var(--gold-light); letter-spacing: 0.12em; margin-bottom: 10px; }
 .lead { color: var(--text-muted); font-size: 0.92rem; line-height: 1.85; max-width: 32em; margin: 0 auto; }
+.jing-xlink { margin-top: 6px; }
+.jing-xlink a { color: var(--gold-light); }
 
 .jing-list { display: grid; gap: 14px; }
 .jing-wall__title { font-size: 1.05rem; color: var(--gold-light); letter-spacing: 0.12em; margin: 4px 0 -6px; }

@@ -1,6 +1,6 @@
 // 诵经页的 SEO。经文全文和逐句时间轴都从这里进来，所以不能被主包静态引用：
 // 构建脚本（预渲染、sitemap、检查）静态 import；浏览器只在访问 /jing 时由 getSeoByPath 动态加载。
-import { SUTRAS, sutraPlainText } from '../src/data/sutras.js'
+import { SUTRAS, sutraPlainText, jingCopy } from '../src/data/sutras.js'
 import { getFangweiPages } from './seo.fangwei.js'
 import {
   SITE,
@@ -14,8 +14,12 @@ function jingListPage() {
   const path = '/jing'
   return {
     path,
-    title: '在线诵经 | 楞严咒、大悲咒、十小咒、心经、阿弥陀经全文带拼音，女声读诵可跟读',
-    description: '常诵经咒全文：楞严咒、大悲咒、十小咒、心经、阿弥陀经、往生咒、金刚经、地藏经、普门品、普贤行愿品，有女声读诵和唱诵视频，带拼音，可跟读、可默读。经文按汉传通行课诵本校订，免费、不用注册。',
+    title: '在线诵经 | 心经、大悲咒、楞严咒、金刚经、地藏经女声读诵、唱诵视频，跟着念',
+    description: '常诵经咒的女声读诵和唱诵视频：楞严咒、大悲咒、十小咒、心经、阿弥陀经、往生咒、金刚经、地藏经、普门品、普贤行愿品，跟着声音念，经文附在下面、带拼音，可跟读、可默读。经文按汉传通行课诵本校订，免费、不用注册。',
+    hantCopy: {
+      title: '在线诵经 | 心经、大悲咒、楞严咒、金刚经、地藏经女声读诵、唱诵影片，跟着念',
+      description: '常诵经咒的女声读诵和唱诵影片：楞严咒、大悲咒、十小咒、心经、阿弥陀经、往生咒、金刚经、地藏经、普门品、普贤行愿品，跟着声音念，经文附在下面、带拼音，可跟读、可默读。想看注音版全文、自己出声念，请到「在线念经」。经文按汉传通行课诵本校订，免费、不用注册。',
+    },
     heading: '在线诵经',
     summary: SUTRAS.map((s) => `${s.name}（${s.title}，${s.lines.length}句）`).join('；') + '。',
     image: SITE.defaultImage,
@@ -38,13 +42,23 @@ function jingListPage() {
 function sutraPage(item) {
   const path = `/jing/${item.slug}`
   const fullText = sutraPlainText(item)
-  const hasSing = item.videos.some((v) => /唱诵|音乐/.test(v.label))
+  // 和 /nianjing/ 同一部经的分工见 src/data/sutras.js jingCopy：这里主打读诵、唱诵录音和视频
+  const copy = jingCopy(item)
+  const hant = jingCopy(item, { hant: true })
   return {
     path,
-    title: `${item.title}全文带拼音｜${item.name}读诵${hasSing ? '、唱诵视频' : ''}`,
-    description: `${item.name}全文（${item.translator}），${item.lines.length}句、${item.charCount}字，带拼音，有女声读诵，可跟读、可默读。${item.intro}`.slice(0, 160),
-    heading: item.name,
-    summary: item.intro,
+    title: copy.title,
+    description: copy.description,
+    heading: copy.heading,
+    summary: copy.lead,
+    leadLink: copy.nianjingLink,
+    hantCopy: {
+      title: hant.title,
+      description: hant.description,
+      heading: hant.heading,
+      summary: hant.lead,
+      leadLink: hant.nianjingLink,
+    },
     image: item.image,
     schema: [
       buildWebPageSchema({

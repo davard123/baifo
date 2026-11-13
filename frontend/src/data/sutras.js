@@ -14,6 +14,7 @@ import amituo from './sutras/amituo.js'
 import wangsheng from './sutras/wangsheng.js'
 import dizang from './sutras/dizang.js'
 import { RECITE } from './sutras-recite.js'
+import { NIANJING } from './nianjing.js'
 
 export const SUTRAS = [
   {
@@ -249,4 +250,56 @@ export const SUTRA_BY_SLUG = Object.fromEntries(SUTRAS.map((s) => [s.slug, s]))
 // 去掉标点的纯经文，用于结构化数据和预渲染
 export function sutraPlainText(sutra) {
   return sutra.lines.map((l) => l.text).join('')
+}
+
+// ── 诵经页和念经页的分工（同一部经两个地址，标题和第一句要明显不同，免得两页抢同一批搜索词）──
+// /jing/<slug>/：主打「听女声读诵、看唱诵视频，跟着声音念」，经文附在下面；
+// /nianjing/<slug>/：主打「全文 + 拼音（繁体页注音）+ 自己出声念、页面听你念到哪里」。
+// 两页内容不同（一边是录音和视频，一边是逐字注音和语音跟读），各自 canonical，互相链接。
+// 楞严咒只有诵经页，没有念经页，标题仍然以「全文」开头。
+const JING_PARTS = { jingang: '三十二分', dizang: '十三品', lengyan: '五会' }
+// 常用名和经名一样的，标题里换成全称
+const JING_NAME = { wangsheng: '拔一切业障根本得生净土陀罗尼', shixiaozhou: '早课十小咒' }
+
+/** 这一页有没有唱诵（唱诵视频、唱诵录音、心经音乐版） */
+export function sutraHasSing(s) {
+  return [...(s.videos || []), ...(s.audio || [])].some((v) => /唱诵|音乐/.test(v.label))
+}
+
+/** 同一部经的念经页 slug（没有就是 ''） */
+export function nianjingSlugFor(s) {
+  return nianjingFor(s)?.slug || ''
+}
+function nianjingFor(s) {
+  return NIANJING.find((n) => n.jingSlug === s.slug) || null
+}
+
+/**
+ * 诵经页文案：title、description、H1、H1 下第一句、到念经页的链接。都写简体，繁体页显示/预渲染时再转。
+ * hant：繁体页用的版本（「视频」写成「影片」，链接说注音版）。
+ */
+export function jingCopy(s, { hant = false } = {}) {
+  const sing = sutraHasSing(s)
+  const njItem = nianjingFor(s)
+  const nj = njItem?.slug || ''
+  const parts = JING_PARTS[s.slug] ? ` ${JING_PARTS[s.slug]}` : ''
+  const name = JING_NAME[s.slug] || s.name
+  const vid = hant ? '影片' : '视频'
+  const media = sing ? '读诵、唱诵' : '读诵'
+  const title = nj
+    ? `${s.title}${media}${vid}｜${name}${parts} 女声读诵${sing ? '、唱诵版' : ''}，跟着念`
+    : `${s.title}全文（${hant ? '附拼音' : '带拼音'}）｜${name}${parts}，女声读诵${vid}`
+  const heading = nj ? `${s.title}${sing ? '读诵与唱诵' : '读诵'}` : `${s.title}全文与读诵`
+  const audioNote = s.audio?.length ? '；读诵录音播放时，当前一句会亮起，点哪一句就从哪一句听' : ''
+  const lead = `${name}的女声读诵${vid}${sing ? '，还有唱诵版' : ''}${audioNote}。可以跟着声音念出声，也可以默读。下面附全文 ${s.lines.length} 句、${s.charCount} 字，可以打开拼音。`
+  const description = `${name}${parts}：女声读诵${vid}${sing ? `、唱诵${vid}` : ''}${s.audio?.length ? '和读诵录音，播放时经文逐句亮起' : ''}，可跟读、可默读；附全文 ${s.lines.length} 句、${s.charCount} 字，可显示拼音。${s.intro}`.slice(0, 160)
+  const nianjingLink = nj
+    ? {
+        path: `/nianjing/${nj}`,
+        label: hant
+          ? `想看每个字的注音、自己出声念（页面听你念到哪里）：${njItem.title}全文（注音版）→`
+          : `想看每个字的拼音、自己出声念（页面听你念到哪里）：${njItem.title}全文（带拼音）→`,
+      }
+    : null
+  return { title, heading, lead, description, nianjingLink }
 }

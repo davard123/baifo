@@ -763,23 +763,56 @@ const NIANJING_FULL_NAME = {
   renwang: '仁王护国般若波罗蜜多经',
 }
 
+// 分品、分段的长经：标题里说清楚这一页是整部（「地藏经全文（注音版）｜地藏菩萨本愿经 十三品」）
+const NIANJING_PARTS = {
+  jingang: '三十二分',
+  dizang: '十三品',
+  renwang: '八品',
+  puxian: '长行与偈颂',
+}
+
+// H1 下面第一句里的篇幅说明（只写经文里真有的）
+const NIANJING_SIZE = {
+  xinjing: '二百六十字，几分钟就能念完',
+  dabeizhou: '八十四句',
+  wangsheng: '五十九字的短咒',
+  shixiaozhou: '如意宝轮王陀罗尼、消灾吉祥神咒、功德宝山神咒、准提神咒、圣无量寿决定光明王陀罗尼、药师灌顶真言、观音灵感真言、七佛灭罪真言、往生净土神咒、大吉祥天女咒，共十部',
+  pumen: '长行和「念彼观音力」偈颂都在',
+  badaren: '三百多字',
+  puxian: '十大愿王，长行与偈颂',
+  jingang: '三十二分，从「法会因由分第一」到「应化非真分第三十二」',
+  yaoshi: '五千多字',
+  dizang: '十三品，从「忉利天宫神通品第一」到「嘱累人天品第十三」',
+  renwang: '八品，从「序品第一」到「嘱累品第八」',
+}
+
 function nianjingPage(item) {
   const path = `/nianjing/${item.slug}`
   const full = NIANJING_FULL_NAME[item.slug] || item.header?.title || item.title
-  const description = `${full}全文，每个字都标了拼音（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；手机竖屏卡拉OK或提词器、平板横屏左右两栏，可配木鱼或佛乐。声音只在手机上识别，不上传。`
+  const parts = NIANJING_PARTS[item.slug] ? ` ${NIANJING_PARTS[item.slug]}` : ''
+  const size = NIANJING_SIZE[item.slug] ? `（${NIANJING_SIZE[item.slug]}）` : ''
+  const description = `${full}全文${size}，每个字都标了拼音。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；手机竖屏卡拉OK或提词器、平板横屏左右两栏，可配木鱼或佛乐。声音只在手机上识别，不上传。`
   const heading = `${item.title}全文（带拼音）`
+  // 同一部经在 /jing/ 还有女声读诵、唱诵视频。分工：念经页主打「全文 + 拼音/注音 + 自己出声念」，
+  // 诵经页主打「听录音、看视频跟着念」；两页各自 canonical，互相链接。
+  const jingTitle = item.slug === 'puxian' ? '普贤行愿品偈颂' : item.title // 诵经页只有偈颂
+  const leadLink = item.jingSlug
+    ? { path: `/jing/${item.jingSlug}`, label: `想听女声读诵、看诵经视频：${jingTitle}读诵页 →` }
+    : null
   return {
     path,
     nianjingSlug: item.slug,
-    title: `${item.title}全文（带拼音）｜${full}，跟着念`,
+    title: `${item.title}全文（带拼音）｜${full}${parts}，跟着念`,
     description,
     heading,
-    summary: `${full}全文，每个字都标了拼音。按「开始」自己出声念，念到哪一句就亮到哪一句。`,
+    summary: `${full}全文${size}，每个字都标了拼音。按「开始」自己出声念，念到哪一句就亮到哪一句；不方便出声时可以让它自动往下走，或手动翻页。`,
+    leadLink,
     hantCopy: {
-      title: `${item.title}全文（注音版）｜${full} 附注音、拼音，跟着念`,
-      description: `${full}全文，每个字都标了注音，也能换成拼音或只看字（${item.note}）。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；也能自动往下走或手动翻页，可配木鱼或佛乐。声音只在手机上识别，不上传。`,
+      title: `${item.title}全文（注音版）｜${full}${parts} 附注音、拼音，跟着念`,
+      description: `${full}全文${size}，每个字都标了注音，也能换成拼音或只看字。打开「听我念」自己出声念，念到哪一句、页面就走到哪一句；也能自动往下走或手动翻页，可配木鱼或佛乐。声音只在手机上识别，不上传。`,
       heading: `${item.title}全文（注音版）`,
-      summary: `${full}全文，每个字都标了注音。按「开始」自己出声念，念到哪一句就亮到哪一句；也可以改成拼音或只看字。`,
+      summary: `${full}全文${size}，每个字都标了注音，也可以改成拼音或只看字。按「开始」自己出声念，念到哪一句就亮到哪一句；不方便出声时可以让它自动往下走，或手动翻页。`,
+      leadLink: leadLink && { ...leadLink, label: `想听女声读诵、看诵经影片：${jingTitle}读诵页 →` },
     },
     image: SITE.defaultImage,
     schema: [
