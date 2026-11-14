@@ -32,10 +32,10 @@ export function inviteUrl() {
 // kind: 'ancestor' | 'buddha' | 'qiucai'；subject 是佛菩萨或财神的名字（祭祖用 slug 换成口语称呼）
 export function inviteText(kind, slug, subject = '') {
   const url = inviteUrl()
-  if (kind === 'buddha') return `我刚在网上给${subject}上了香，为家里人祈福。你也点开拜一拜吧，免费，不用注册：${url}`
-  if (kind === 'qiucai') return `我刚在网上拜了${subject || '财神'}，求个好财运。你也来拜一拜，沾沾财气，免费，不用注册：${url}`
+  if (kind === 'buddha') return `我刚在网上给${subject}上了香，为家里人祈福。你也点开拜一拜吧：${url}`
+  if (kind === 'qiucai') return `我刚在网上拜了${subject || '财神'}，求个好财运。你也来拜一拜，沾沾财气：${url}`
   const who = spokenName(slug)
-  return `我刚在网上给${who}上了香、敬了酒。你要是也想${who}了，点开就能一起拜一拜，免费，不用注册：${url}`
+  return `我刚在网上给${who}上了香、敬了酒。你要是也想${who}了，点开就能一起拜一拜：${url}`
 }
 
 // 邀请图：标题 + 二维码，微信里长按图片就能保存、转发，家人长按二维码直接打开
@@ -79,7 +79,7 @@ export async function inviteCard(kind, slug, subject = '') {
   ctx.fillText('长按识别二维码，一起来拜', W / 2, 800)
   ctx.fillStyle = '#b9a07a'
   ctx.font = `24px ${serif}`
-  ctx.fillText('fopusha.com · 免费 · 不用注册', W / 2, 870)
+  ctx.fillText('fopusha.com', W / 2, 870)
   return canvas.toDataURL('image/png')
 }
 
