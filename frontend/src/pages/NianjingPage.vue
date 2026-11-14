@@ -95,7 +95,21 @@ const headerIntro = computed(() => {
       : `${meta.value.title}全文，每个字都标了拼音。按「开始」出声念，念到哪一句就亮到哪一句。`,
   )
 })
-const titleSub = isHant ? '全文・注音' : '全文・拼音'
+// 页面打开默认是「全文」：整篇经文连着往下排，不用点任何东西就能读完；
+// 按「开始」或切到卡拉OK、提词器（横屏是左右两栏）才进入跟读。每次打开都从全文开始，不记。
+const reading = ref(false)
+function enterReading(v) {
+  if (v) view.value = v
+  reading.value = true
+  nextTick(() => scrollPromptToCurrent(false))
+}
+// 标题和预渲染的 HTML 一致：繁体「心經全文（注音版）」，简体「心经全文（带拼音）」
+const fullSuffix = isHant ? '全文（注音版）' : '全文（带拼音）'
+const heading = computed(() => (meta.value ? `${meta.value.title}${fullSuffix}` : '念经'))
+// 全文下面列其他经咒和相关页面（和预渲染 HTML 里的链接一样）
+const otherSutras = computed(() =>
+  NIANJING.filter((s) => s.slug !== slug.value).map((s) => ({ to: `/nianjing/${s.slug}/`, label: `${s.title}${fullSuffix}` })),
+)
 // 同一部经在 /jing/ 有女声读诵、唱诵视频：念经页主打全文注音/拼音和自己念，诵经页主打听录音、看视频（两页互相链接）
 const jingLink = computed(() => {
   const j = meta.value?.jingSlug
@@ -296,7 +310,10 @@ function pick(u) {
 
 function toggleRun() {
   if (running.value) nj.stop()
-  else nj.start()
+  else {
+    if (!reading.value) enterReading()
+    nj.start()
+  }
 }
 
 const MODES = [
@@ -374,14 +391,16 @@ onBeforeUnmount(() => {
   </main>
 
   <!-- 念经 -->
-  <main v-else class="nj-reader" :class="[`nj-view-${view}`]" :style="{ '--nj-font': fontPx + 'px' }">
+  <main v-else class="nj-reader" :class="[`nj-view-${view}`, { 'nj-full': !reading }]" :style="{ '--nj-font': fontPx + 'px' }">
     <header class="nj-bar">
       <router-link to="/nianjing/" class="nj-back" aria-label="返回经目">‹ 经目</router-link>
-      <h1 class="nj-title">{{ meta?.title || '念经' }}<small v-if="meta" class="nj-title-sub">{{ titleSub }}</small></h1>
-      <span class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
+      <h1 class="nj-title">{{ heading }}</h1>
+      <span v-if="reading" class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
       <div class="nj-viewtoggle" role="group" aria-label="显示方式">
-        <button type="button" :class="{ on: view === 'karaoke' }" @click="view = 'karaoke'">卡拉OK</button>
-        <button type="button" :class="{ on: view === 'prompt' }" @click="view = 'prompt'; nextTick(() => scrollPromptToCurrent(false))">提词器</button>
+        <button type="button" :class="{ on: !reading }" @click="reading = false">全文</button>
+        <button type="button" class="nj-vt-port" :class="{ on: reading && view === 'karaoke' }" @click="enterReading('karaoke')">卡拉OK</button>
+        <button type="button" class="nj-vt-port" :class="{ on: reading && view === 'prompt' }" @click="enterReading('prompt')">提词器</button>
+        <button type="button" class="nj-vt-land" :class="{ on: reading }" @click="enterReading()">跟读</button>
       </div>
     </header>
 
@@ -464,9 +483,21 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <nav v-if="meta && !reading" class="nj-more" aria-label="其他经咒">
+      <h2>其他经咒</h2>
+      <ul>
+        <li v-for="s in otherSutras" :key="s.to"><router-link :to="s.to">{{ s.label }}</router-link></li>
+      </ul>
+      <p>
+        <router-link to="/nianjing/">在线念经首页</router-link>
+        <router-link to="/jing/">在线诵经（读诵、唱诵视频）</router-link>
+        <router-link to="/nianfo/">念佛计数器</router-link>
+      </p>
+    </nav>
+
     <div v-if="resumeAt > 0" class="nj-resume" role="dialog" aria-label="续读">
       <span>上次念到第 {{ (units.lines[nj.lineOf(resumeAt)]?.dtext || units.lines[nj.lineOf(resumeAt)]?.text || '').slice(0, 8) }}…，接着念吗？</span>
-      <button type="button" class="primary" @click="nj.resume()">接着念</button>
+      <button type="button" class="primary" @click="nj.resume(); enterReading()">接着念</button>
       <button type="button" @click="resumeAt = 0">从头念</button>
     </div>
 
@@ -479,7 +510,7 @@ onBeforeUnmount(() => {
       <div class="nj-chips" role="group" aria-label="往下走的方式">
         <button v-for="m in MODES" :key="m.key" type="button" :class="{ on: mode === m.key }" @click="mode = m.key">{{ m.label }}</button>
       </div>
-      <div class="nj-step">
+      <div v-if="reading" class="nj-step">
         <button type="button" aria-label="上一句" @click="nj.prevSegment()">‹</button>
         <button type="button" aria-label="下一句" @click="nj.nextSegment()">›</button>
       </div>
@@ -583,7 +614,6 @@ onBeforeUnmount(() => {
 }
 .nj-back { color: #756558; text-decoration: none; white-space: nowrap; }
 .nj-title { font-size: 1.1rem; margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5a2a1a; }
-.nj-title-sub { margin-left: 0.4em; font-size: 0.72rem; font-weight: 500; color: #9a8a7a; }
 .nj-pct { font-size: 0.85rem; color: #9a8a7a; }
 .nj-viewtoggle { display: flex; gap: 4px; }
 .nj-viewtoggle button,
@@ -706,8 +736,10 @@ onBeforeUnmount(() => {
 .nj-book__nav button:disabled { opacity: 0.4; cursor: default; }
 
 /* 横屏：左卡拉OK、右书页 */
+.nj-vt-land { display: none; }
 @media (orientation: landscape) and (min-width: 700px) {
-  .nj-viewtoggle { display: none; }
+  .nj-viewtoggle .nj-vt-port { display: none; }
+  .nj-viewtoggle .nj-vt-land { display: inline-block; }
   /* 右边书页已有经题块，左栏不重复，佛像保持大小 */
   .nj-kheader { display: none; }
   .nj-pic { flex: 0 0 42%; max-height: none; }
@@ -716,6 +748,34 @@ onBeforeUnmount(() => {
   .nj-reader .nj-prompt { display: none; }
   .nj-reader .nj-book { display: flex; }
 }
+
+/* 全文（默认）：整页往下滚，只显示提词器那一栏的整篇经文，不高亮念到哪里 */
+.nj-reader.nj-full { height: auto; min-height: 100vh; min-height: 100dvh; overflow: visible; }
+.nj-reader.nj-full .nj-bar { flex-wrap: wrap; }
+.nj-reader.nj-full .nj-title { order: 5; flex: 1 1 100%; white-space: normal; font-size: 1.35rem; padding: 2px 0; }
+.nj-reader.nj-full .nj-viewtoggle { margin-left: auto; }
+.nj-reader.nj-full .nj-stage { display: block; }
+.nj-reader.nj-full .nj-karaoke,
+.nj-reader.nj-full .nj-book { display: none; }
+.nj-reader.nj-full .nj-prompt { display: block; overflow: visible; max-width: 46em; margin: 0 auto; }
+.nj-reader.nj-full .nj-prompt__pad--end { display: none; }
+.nj-reader.nj-full .nj-ln.now { background: none; }
+.nj-reader.nj-full :deep(.sl-ch.done),
+.nj-reader.nj-full :deep(.sl-ch.cur) { color: inherit; }
+.nj-reader.nj-full :deep(.sl-ch.done rt) { color: var(--nj-py, #9a8a7a); }
+.nj-reader.nj-full .nj-controls { position: sticky; bottom: 0; z-index: 4; }
+.nj-reader.nj-full .nj-resume { position: fixed; }
+.nj-more {
+  max-width: 46em;
+  margin: 8px auto 0;
+  padding: 18px 16px 28px;
+  border-top: 1px solid rgba(122, 86, 51, 0.18);
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+}
+.nj-more h2 { margin: 0 0 10px; font-size: 1.05rem; color: #5a2a1a; }
+.nj-more ul { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 14px; padding: 0; list-style: none; }
+.nj-more a { color: #8a4a1c; }
+.nj-more p { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0; font-size: 0.92rem; }
 
 .nj-status {
   margin: 0;

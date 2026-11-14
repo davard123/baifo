@@ -7,6 +7,7 @@ import NianfoDrawer from './components/NianfoDrawer.vue'
 import { canonicalUrl, getSeoByPath, SITE } from '../scripts/seo.config.js'
 import { isHantPath, stripHant, toHant, startHant, loadConverter } from './i18n/hant.js'
 import { tidyHantCopy } from './i18n/hantSutra.js'
+import { hantTerms } from './i18n/hantTerms.js'
 
 const route = useRoute()
 
@@ -63,7 +64,9 @@ async function applyRouteSeo(fullPath) {
   if (run !== latestSeoRun) return
   // 繁体页有专用文案的（念经页：注音版）用专用文案
   const copy = hant && page?.hantCopy ? { ...page, ...page.hantCopy } : page
-  const tidy = hant && page?.hantCopy ? tidyHantCopy : (text) => text
+  const tidyCopy = hant && page?.hantCopy ? tidyHantCopy : (text) => text
+  // 繁体页标题和说明：「在線／網上」写成台湾惯用的「線上」
+  const tidy = hant ? (text) => hantTerms(tidyCopy(text)) : tidyCopy
   const title = tidy(convert(copy?.title || `页面未找到 | ${SITE.baseUrl.replace(/^https?:\/\//, '')}`))
   const description = tidy(convert(copy?.description || '这个地址当前没有对应内容。'))
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
@@ -77,6 +80,10 @@ async function applyRouteSeo(fullPath) {
     upsertLink('link[rel="alternate"][hreflang="zh-Hant"]', { rel: 'alternate', hreflang: 'zh-Hant', href: hantUrl(hansCanonical) })
     upsertLink('link[rel="alternate"][hreflang="x-default"]', { rel: 'alternate', hreflang: 'x-default', href: hansCanonical })
   }
+  // 念经目录的英文版是 /chant/（预渲染的 HTML 里也有这一条）
+  const enAlternate = document.head.querySelector('link[rel="alternate"][hreflang="en"]')
+  if (isKnownPage && page.path === '/nianjing') upsertLink('link[rel="alternate"][hreflang="en"]', { rel: 'alternate', hreflang: 'en', href: `${SITE.baseUrl}/chant/` })
+  else enAlternate?.remove()
 
   document.title = title
 

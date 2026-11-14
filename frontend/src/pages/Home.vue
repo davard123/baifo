@@ -8,6 +8,8 @@ import WishList from '../components/WishList.vue'
 import PublicWishWall from '../components/PublicWishWall.vue'
 import { readLocalRecords } from '../utils/localRecords.js'
 import { warmApi } from '../api.js'
+import { isHantPath } from '../i18n/hant.js'
+import { HOME_NIANJING_SLUGS, nianjingLinkLabel } from '../data/nianjingLinks.js'
 const recordsError = ref('')
 
 const localWishes = ref([])
@@ -57,6 +59,11 @@ async function startSutraTeaser() {
   }
 }
 const router = useRouter()
+// 经咒全文页：首页直接列出（繁体写「注音版」，简体写「带拼音」）
+const sutraFullLinks = HOME_NIANJING_SLUGS.map((slug) => ({
+  to: `/nianjing/${slug}/`,
+  label: nianjingLinkLabel(slug, isHantPath(router.currentRoute.value.path)),
+}))
 
 
 
@@ -283,6 +290,9 @@ onBeforeUnmount(() => {
         <router-link to="/jing/">在线诵经 · 心经、金刚经、普贤行愿品全文与唱诵视频 →</router-link>
         <router-link to="/nianfo/">念佛计数 · 开始今日功课 →</router-link>
         <router-link to="/guide/overview/">第一次来？看使用说明 →</router-link>
+      </div>
+      <div class="catalog-links catalog-links--sutras" aria-label="经咒全文">
+        <router-link v-for="item in sutraFullLinks" :key="item.to" :to="item.to">{{ item.label }}</router-link>
       </div>
     </section>
 
@@ -887,6 +897,15 @@ onBeforeUnmount(() => {
 .catalog-links a {
   color: var(--accent-light);
   font-size: 15px;
+}
+
+.catalog-links--sutras {
+  margin-top: 10px;
+  gap: 8px 16px;
+}
+
+.catalog-links--sutras a {
+  font-size: 14px;
 }
 
 .hero-action--featured {

@@ -8,6 +8,7 @@ import { SOUND_HELP } from '../src/data/soundHelp.js'
 import { GUIDES } from '../src/data/guides.js'
 import { NIANJING, toUnits, decorateUnits } from '../src/data/nianjing.js'
 import { hantSutraText, tidyHantCopy } from '../src/i18n/hantSutra.js'
+import { hantTerms, hantLinkText } from '../src/i18n/hantTerms.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -34,9 +35,9 @@ function toHantPage(page) {
   return {
     ...page,
     hant: true,
-    title: tidy(toHantText(page.title)),
-    description: tidy(toHantText(page.description)),
-    heading: tidy(toHantText(page.heading)),
+    title: hantTerms(tidy(toHantText(page.title))),
+    description: hantTerms(tidy(toHantText(page.description))),
+    heading: hantTerms(tidy(toHantText(page.heading))),
     summary: tidy(toHantText(page.summary || '')),
     schema: JSON.parse(tidy(toHantText(JSON.stringify(page.schema ?? [])))),
   }
@@ -121,6 +122,8 @@ function buildMetaTags(page) {
     `<link rel="alternate" hreflang="zh-Hans" href="${hansCanonical}" />`,
     `<link rel="alternate" hreflang="zh-Hant" href="${hantUrl(hansCanonical)}" />`,
     `<link rel="alternate" hreflang="x-default" href="${hansCanonical}" />`,
+    // 念经目录和英文念经页 /chant/ 互为语言版本（/chant/ 那边也标了回来）
+    ...(page.path === '/nianjing' ? [`<link rel="alternate" hreflang="en" href="${SITE.baseUrl}/chant/" />`] : []),
   ].join('\n    ')
 }
 
@@ -148,7 +151,7 @@ function buildFallbackContent(page, staticPages) {
   ]
   if (page.leadLink) {
     const href = page.hant ? hantUrl(canonicalUrl(page.leadLink.path)) : canonicalUrl(page.leadLink.path)
-    const label = page.hant ? toHantText(page.leadLink.label) : page.leadLink.label
+    const label = page.hant ? hantLinkText(toHantText(page.leadLink.label), href) : page.leadLink.label
     lines.push(`  <p><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></p>`)
   }
 
@@ -165,6 +168,7 @@ function buildFallbackContent(page, staticPages) {
     for (const faq of GUIDES.ancestors.faqs) lines.push('<h3>'+escapeHtml(convert(faq.q))+'</h3>', '<p>'+escapeHtml(convert(faq.a))+'</p>')
   }
   if (page.nianjingSlug) lines.push(nianjingFullText(page.nianjingSlug, page.hant))
+  if (page.path === '/nianjing') lines.push('  <p><a href="/chant/" lang="en" hreflang="en">English: chant the Heart Sutra and other texts in Mandarin, with pinyin</a></p>')
   // Flatten schema array (some entries may themselves be arrays)
   const schemas = [page.schema].flat(2).filter(Boolean)
 
@@ -190,11 +194,11 @@ function buildFallbackContent(page, staticPages) {
   if (navigation.length) {
     lines.push(`  <nav aria-label="${page.hant ? '相關內容' : '相关内容'}">`)
     for (const group of navigation) {
-      const groupLabel = page.hant ? toHantText(group.label) : group.label
+      const groupLabel = page.hant ? hantLinkText(toHantText(group.label), group.links[0]?.path) : group.label
       lines.push(`    <section><h2>${escapeHtml(groupLabel)}</h2><ul>`)
       for (const link of group.links) {
         const href = page.hant ? hantUrl(canonicalUrl(link.path)) : canonicalUrl(link.path)
-        const label = page.hant ? toHantText(link.label) : link.label
+        const label = page.hant ? hantLinkText(toHantText(link.label), link.path) : link.label
         lines.push(`      <li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
       }
       lines.push('    </ul></section>')

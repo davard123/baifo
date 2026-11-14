@@ -1,5 +1,6 @@
 // 繁体版：/zh-hant/ 前缀下的页面，内容和简体版共用一份，显示时用 OpenCC 转成台湾正体。
 // 转换器只在繁体页面按需加载，简体页面不会下载字典。
+import { hantLinkText, hantTerms } from './hantTerms.js'
 
 export const HANT_PREFIX = '/zh-hant'
 
@@ -76,7 +77,10 @@ function convertTextNode(node) {
   if (!value || !HAN.test(value)) return
   const parent = node.parentElement
   if (!parent || SKIP_TAGS.has(parent.tagName) || parent.closest('[data-keep-script]')) return
-  const next = convert(value)
+  let next = convert(value)
+  // 标题、链接和导航文字：「在線／網上」写成台湾惯用的「線上」；指向念经全文页的「帶拼音」写成「注音版」
+  const term = parent.closest('a, h1, nav')
+  if (term) next = hantLinkText(next, term.tagName === 'A' ? term.getAttribute('href') : '')
   if (next !== value) node.nodeValue = next
 }
 
@@ -123,8 +127,16 @@ export function convertString(text) {
 export async function startHant() {
   convert = await loadConverter()
   convertTree(document.body)
-  if (document.title) document.title = convert(document.title)
+  if (document.title) document.title = hantTerms(convert(document.title))
   if (observer) return
+  // 各页面自己设的 document.title 是简体：跟着转
+  const titleEl = document.querySelector('title')
+  if (titleEl) {
+    new MutationObserver(() => {
+      const next = hantTerms(convert(document.title))
+      if (next !== document.title) document.title = next
+    }).observe(titleEl, { childList: true, characterData: true, subtree: true })
+  }
   observer = new MutationObserver((mutations) => {
     for (const m of mutations) {
       if (m.type === 'characterData') convertTextNode(m.target)

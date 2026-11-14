@@ -2,6 +2,7 @@ import { ANCESTORS } from '../src/data/ancestors.js'
 import { BUDDHAS } from '../src/data/buddhas.js'
 import { GUIDES } from '../src/data/guides.js'
 import { TOPICS } from '../src/data/topics.js'
+import { HOME_NIANJING_SLUGS, BUDDHA_NIANJING } from '../src/data/nianjingLinks.js'
 
 export const MAX_STATIC_NAV_LINKS = 40
 
@@ -153,6 +154,8 @@ export function getStaticNavigation(page, pages) {
 
   if (currentPath === '/') {
     addGroup('礼佛与念佛', [...BUDDHA_LINKS, NIANFO_LINK])
+    // 经咒全文页直接从首页链过去（2026-11-13 体检：全文页几乎只有同栏目的页面链接）
+    addGroup('经咒全文', HOME_NIANJING_SLUGS.map((slug) => ({ path: `/nianjing/${slug}` })))
     addGroup('祭祖、求财与使用说明', routeCandidates(pages, [
       ['/guide/overview', '使用说明'],
       ['/guide/worship', '在线礼佛指南'],
@@ -301,6 +304,7 @@ export function getStaticNavigation(page, pages) {
       addGroup('对应主题', routeCandidates(pages, [
         [`/topic/${buddha.slug}`, TOPICS[buddha.slug]?.heading || `${buddha.name}礼佛主题`],
       ]))
+      addGroup('常念经咒', (BUDDHA_NIANJING[buddha.slug] || []).map((slug) => ({ path: `/nianjing/${slug}` })))
     }
   }
 

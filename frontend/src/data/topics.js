@@ -229,6 +229,14 @@ export const TOPICS = {
     ],
     "related": [
       {
+        "label": "大悲咒全文（带拼音）",
+        "to": "/nianjing/dabeizhou"
+      },
+      {
+        "label": "普门品全文（带拼音）",
+        "to": "/nianjing/pumen"
+      },
+      {
         "label": "2027 佛菩萨圣诞日期表",
         "to": "/topic/fo-pusa-shengdan-2027"
       },
@@ -300,6 +308,14 @@ export const TOPICS = {
     ],
     "related": [
       {
+        "label": "药师经全文（带拼音）",
+        "to": "/nianjing/yaoshi"
+      },
+      {
+        "label": "药师灌顶真言全文（带拼音）",
+        "to": "/nianjing/yaoshi-zhenyan"
+      },
+      {
         "label": "2027 佛菩萨圣诞日期表",
         "to": "/topic/fo-pusa-shengdan-2027"
       },
@@ -369,6 +385,10 @@ export const TOPICS = {
       }
     ],
     "related": [
+      {
+        "label": "地藏经全文（带拼音）",
+        "to": "/nianjing/dizang"
+      },
       {
         "label": "地藏经不能乱念？在家、晚上能不能念",
         "to": "/topic/dizangjing-jinji"
@@ -445,6 +465,10 @@ export const TOPICS = {
       }
     ],
     "related": [
+      {
+        "label": "阿弥陀经全文（带拼音）",
+        "to": "/nianjing/amituo"
+      },
       {
         "label": "2027 佛菩萨圣诞日期表",
         "to": "/topic/fo-pusa-shengdan-2027"
@@ -589,6 +613,10 @@ export const TOPICS = {
       }
     ],
     "related": [
+      {
+        "label": "金刚经全文（带拼音）",
+        "to": "/nianjing/jingang"
+      },
       {
         "label": "2027 佛菩萨圣诞日期表",
         "to": "/topic/fo-pusa-shengdan-2027"
@@ -739,6 +767,10 @@ export const TOPICS = {
       }
     ],
     "related": [
+      {
+        "label": "普贤行愿品全文（带拼音）",
+        "to": "/nianjing/puxian"
+      },
       {
         "label": "普贤菩萨页面",
         "to": "/buddha/samantabhadra"
@@ -1816,11 +1848,11 @@ export const TOPICS = {
       },
       {
         "label": "普贤行愿品全文",
-        "to": "/jing/puxian"
+        "to": "/nianjing/puxian"
       },
       {
         "label": "往生咒全文",
-        "to": "/jing/wangsheng"
+        "to": "/nianjing/wangsheng"
       },
       {
         "label": "在线祭祖指南",

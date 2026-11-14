@@ -166,6 +166,9 @@ function findHtmlFile(distRoot, url) {
   return htmlCandidates(distRoot, url).find((candidate) => fs.existsSync(candidate)) ?? null
 }
 
+// 不是预渲染生成、而是 public/ 里手写的独立页面（英文念经页），允许链接过去
+const STATIC_PUBLIC_PATHS = new Set(['/chant/'])
+
 function resolveInternalHref(href, pageUrl, expected) {
   const value = href.trim()
   if (!value || value.startsWith('#') || value.startsWith('?')) return { kind: 'skip' }
@@ -178,6 +181,7 @@ function resolveInternalHref(href, pageUrl, expected) {
     return { kind: 'invalid', value }
   }
   if (parsed.origin !== baseOrigin) return { kind: 'external' }
+  if (STATIC_PUBLIC_PATHS.has(parsed.pathname)) return { kind: 'skip' }
 
   const canonical = routeUrl(parsed.pathname)
   return {
@@ -281,11 +285,17 @@ function checkMeta(record, html) {
       fail(`${routeLabel(record.url)}: hreflang ${hreflang} must be ${expectedAlternates[hreflang]}, found ${alternates.get(hreflang) ?? '(missing)'}`)
     }
   }
-  for (const hreflang of alternates.keys()) {
-    if (!EXPECTED_HREFLANGS.includes(hreflang)) fail(`${routeLabel(record.url)}: unexpected hreflang ${hreflang}`)
+  // 念经目录另外标英文版 /chant/（手写的静态页，那边也标回来）
+  const extraAlternates = new URL(hans).pathname === '/nianjing/' ? { en: `${baseOrigin}/chant/` } : {}
+  for (const [hreflang, href] of Object.entries(extraAlternates)) {
+    if (alternates.get(hreflang) !== href) fail(`${routeLabel(record.url)}: hreflang ${hreflang} must be ${href}, found ${alternates.get(hreflang) ?? '(missing)'}`)
   }
-  if (alternateTags.length !== EXPECTED_HREFLANGS.length) {
-    fail(`${routeLabel(record.url)}: expected exactly ${EXPECTED_HREFLANGS.length} alternate hreflang links, found ${alternateTags.length}`)
+  for (const hreflang of alternates.keys()) {
+    if (!EXPECTED_HREFLANGS.includes(hreflang) && !(hreflang in extraAlternates)) fail(`${routeLabel(record.url)}: unexpected hreflang ${hreflang}`)
+  }
+  const expectedCount = EXPECTED_HREFLANGS.length + Object.keys(extraAlternates).length
+  if (alternateTags.length !== expectedCount) {
+    fail(`${routeLabel(record.url)}: expected exactly ${expectedCount} alternate hreflang links, found ${alternateTags.length}`)
   }
 
   const h1s = contentMatches(content, 'h1')

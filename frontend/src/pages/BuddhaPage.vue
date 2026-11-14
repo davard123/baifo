@@ -3,6 +3,8 @@ import { useWakeLock } from '../composables/useWakeLock.js'
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { BUDDHAS } from '../data/buddhas.js'
+import { isHantPath } from '../i18n/hant.js'
+import { BUDDHA_NIANJING, nianjingLinkLabel } from '../data/nianjingLinks.js'
 import PrayerStage from '../components/PrayerStage.vue'
 import RitualPanel from '../components/ritual/RitualPanel.vue'
 import { useRitual } from '../composables/useRitual.js'
@@ -60,6 +62,11 @@ const nextBuddha = computed(() => {
   const index = BUDDHAS.findIndex((item) => item.slug === route.params.slug)
   return BUDDHAS[(index + 1) % BUDDHAS.length]
 })
+// 礼敬这位佛菩萨时常念的经咒：链到全文页（繁体写「注音版」，简体写「带拼音」）
+const sutraLinks = computed(() => (BUDDHA_NIANJING[route.params.slug] || []).map((slug) => ({
+  to: `/nianjing/${slug}/`,
+  label: nianjingLinkLabel(slug, isHantPath(route.path)),
+})))
 const relatedBuddhas = computed(() => BUDDHAS.filter((item) => item.slug !== route.params.slug).slice(0, 3))
 
 const ritual = useRitual('buddha')
@@ -247,6 +254,9 @@ useWakeLock()
             </p>
             <p>
               <router-link :to="`/topic/${buddha.slug}`">了解{{ buddha.name }}：纪念日、圣号与礼敬方法 →</router-link>
+            </p>
+            <p v-if="sutraLinks.length">
+              礼敬{{ buddha.name }}时常念：<template v-for="(item, i) in sutraLinks" :key="item.to"><template v-if="i">、</template><router-link :to="item.to">{{ item.label }}</router-link></template>
             </p>
           </section>
 
