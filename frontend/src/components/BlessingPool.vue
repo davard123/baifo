@@ -11,8 +11,9 @@ import RitualPanel from './ritual/RitualPanel.vue'
 import SanctuaryBackdrop from './ritual/SanctuaryBackdrop.vue'
 import { useRitual } from '../composables/useRitual.js'
 
-import RecordSaveChoice from './RecordSaveChoice.vue'
-const storageChoice = ref('')
+import VisibilitySwitch from './VisibilitySwitch.vue'
+// 默认「只有我自己看」，公开要自己点
+const storageChoice = ref('local')
 const resultPublished = ref(false)
 
 const emit = defineEmits(['wish-submitted'])
@@ -110,7 +111,7 @@ function resetTransientState() {
 }
 
 function open(blessing) {
-  storageChoice.value = ''
+  storageChoice.value = 'local'
   cancelSubmission()
   if (!active.value) modalOrigin.value = document.activeElement
   active.value = blessing
@@ -192,7 +193,7 @@ async function submit() {
     resultWish.value = wish
     resultEmail.value = email
     stage.value = 'done'
-    storageChoice.value = ''
+    storageChoice.value = 'local'
     closeDrawer()
     toast.value = data.published ? '祈愿已公开到心愿墙。回向完成。' : '祈愿已保存，只有你自己能看。回向完成。'
     resultPublished.value = !!data.published
@@ -434,9 +435,10 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
-              <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
+              <VisibilitySwitch v-model="storageChoice" :disabled="loading" />
             </form>
             <p class="form-wish-hint">{{ stage === 'form' ? active.wish : resultWish }}</p>
+            <p v-if="stage === 'form'" class="bm-local-note">自己看的祈愿只存在这台手机或电脑上，换一台设备就看不到了。</p>
             </div>
             <div v-if="stage === 'form'" class="bm-completion">
               <button class="submit-btn" type="submit" form="blessing-form" :disabled="loading">
@@ -779,6 +781,15 @@ onBeforeUnmount(() => {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.bm-local-note {
+  margin: 10px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  opacity: 0.7;
+  text-align: center;
 }
 
 .bm-completion {

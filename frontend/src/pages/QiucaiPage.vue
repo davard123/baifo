@@ -17,10 +17,9 @@ import {
   pickWish,
 } from '../data/qiucai.js'
 import { saveLocalRequest as apiFetch, readLocalRecords } from '../utils/localRecords.js'
-import VisibilitySwitch from '../components/VisibilitySwitch.vue'
+import RecordSaveChoice from '../components/RecordSaveChoice.vue'
 import PublicWishWall from '../components/PublicWishWall.vue'
-// 默认「只有我自己看」，公开要自己点
-const storageChoice = ref('local')
+const storageChoice = ref('')
 const recordsError = ref('')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 import { wealthRitualProgress, nextWealthDeity } from '../utils/wealthRitual.js'
@@ -370,9 +369,6 @@ let drawerCloseTimer = null
 // guidance and the wish form live in a separate side drawer, just like the
 // Buddha ritual, so opening them never turns the scene into a scrolling page.
 const infoDrawerOpen = ref(false)
-// 抽屉开着时给 <html> 打个记号，让悬浮的音乐按钮在手机上先藏起来，免得盖住底部的提交按钮条
-watch(infoDrawerOpen, (open) => document.documentElement.classList.toggle('drawer-open', open))
-onBeforeUnmount(() => document.documentElement.classList.remove('drawer-open'))
 const infoDrawerToggleRef = ref(null)
 const infoDrawerCloseRef = ref(null)
 const infoDrawerPanelRef = ref(null)
@@ -560,7 +556,7 @@ function onDrawerKeydown(event) {
 
 // 换一位神仙就重新开始：供养、财气、叩拜、赐福状态和已提交的心愿全部清掉，连拜天数保留
 function resetRitual() {
-  storageChoice.value = 'local'
+  storageChoice.value = ''
   clearRitualToasts()
   done.value = {}
   qi.value = 0
@@ -641,7 +637,7 @@ async function submit() {
     } catch {
       // 本地存储不可用时不影响提交
     }
-    storageChoice.value = 'local'
+    storageChoice.value = ''
     try { markToday() } catch { /* Record already saved; optional stats must not fail it. */ }
     result.value = {
       name,
@@ -1098,12 +1094,16 @@ useWakeLock()
           </div>
           <FamilyCare kind="qiucai" :slug="slugOf(deity)" :subject="deity.name" />
         </section>
+        <div class="qc-tabs" role="tablist" aria-label="面板内容">
+          <button type="button" role="tab" :aria-selected="infoTab === 'do'" :class="{ on: infoTab === 'do' }" @click="infoTab = 'do'">写心愿 · 领祝福卡</button>
+          <button type="button" role="tab" :aria-selected="infoTab === 'read'" :class="{ on: infoTab === 'read' }" @click="infoTab = 'read'">财神说明</button>
+        </div>
         <nav class="qc-language-switch" aria-label="语言切换">
           <span>语言：</span>
           <a v-if="languageLinks.traditionalCurrent" :href="languageLinks.simplified" data-keep-script>简体中文</a>
           <a v-else :href="languageLinks.traditional" data-keep-script>繁體中文</a>
         </nav>
-    <section class="qc-altar card">
+    <section v-show="infoTab === 'do'" class="qc-altar card">
       <div class="qc-panel">
         <div class="qc-bowl" :aria-label="`聚宝盆财气 ${bowlPercent}%`">
           <div class="qc-bowl__head">
@@ -1119,7 +1119,7 @@ useWakeLock()
         </p>
 
         <hr class="qc-divider" />
-        <form v-if="!result" id="qc-wish-form" class="qc-form" @submit.prevent="submit">
+        <form v-if="!result" class="qc-form" @submit.prevent="submit">
           <h2>写下求财心愿</h2>
           <label class="field-label" for="qc-name">你的名字或称呼</label>
           <input id="qc-name" ref="wishNameRef" v-model="form.name" class="field" maxlength="20" autocomplete="nickname" placeholder="例如：王先生" />
@@ -1139,13 +1139,11 @@ useWakeLock()
           <label class="field-label" for="qc-wish">想说的话（选填）</label>
           <textarea id="qc-wish" v-model="form.wish" class="field" rows="3" maxlength="200" placeholder="不填也可以，会为你配一段吉祥祝福"></textarea>
 
-          <VisibilitySwitch v-model="storageChoice" :disabled="submitting" />
+          <RecordSaveChoice v-model="storageChoice" :disabled="submitting" />
           <p v-if="submitError" class="error-msg">{{ submitError }}</p>
-          <Teleport to="#qc-submit-slot" defer>
-            <button type="submit" form="qc-wish-form" class="submit-btn" :disabled="submitting">
-              {{ submitting ? '祈福中……' : (storageChoice === 'public' ? '公开到心愿墙，领取祝福卡' : '领取祝福卡（只有自己能看）') }}
-            </button>
-          </Teleport>
+          <button type="submit" class="submit-btn" :disabled="submitting">
+            {{ submitting ? '祈福中……' : (storageChoice === 'public' ? '公开到心愿墙，领取祝福卡' : '领取祝福卡（只有自己能看）') }}
+          </button>
         </form>
 
         <div v-else class="qc-result">
@@ -1165,7 +1163,7 @@ useWakeLock()
       </div>
     </section>
 
-    <div>
+    <div v-show="infoTab === 'do'">
     <VisionMaker
       :unlocked="visionPreview || completedDeities.length >= CAISHEN.length"
       :done-count="completedDeities.length"
@@ -1174,28 +1172,7 @@ useWakeLock()
     />
     </div>
 
-    <div>
-    <PublicWishWall kind="caishen" title="求财心愿墙" sub="大家公开的求财心愿，名字只显示第一个字。" :refresh-key="wallKey" />
-    </div>
-
-    <p v-if="recordsError" role="alert">{{ recordsError }}</p>
-    <section class="card qc-wall" aria-labelledby="qc-wall-title">
-      <h2 id="qc-wall-title">我的求财记录</h2>
-      <p v-if="!wall.length">还没有求财记录。</p>
-      <ul>
-        <li v-for="item in wall" :key="item.id">
-          <strong>{{ maskName(item.username) }}</strong>
-          <span>{{ item.target || '求财' }}</span>
-          <p>{{ item.wish }}</p>
-        </li>
-      </ul>
-    </section>
-
-    <p class="qc-local-note">自己看的祈愿只存在这台手机或电脑上，换一台设备就看不到了。</p>
-
-    <details class="qc-about-fold">
-    <summary>关于{{ deity.name }}与求财说明</summary>
-    <section class="card qc-info">
+    <section v-show="infoTab === 'read'" class="card qc-info">
       <p class="hero-text">
           不用跑庙，网上求财、网上祈福几分钟就能完成：选一位财神，上香、点灯、供果、献元宝，再投金币、摇钱树，写下你的求财心愿，领一张专属求财祝福卡。
       </p>
@@ -1204,7 +1181,7 @@ useWakeLock()
       <p v-if="deity.day" class="qc-day">{{ deity.day }}</p>
     </section>
 
-    <section v-if="detail" class="card qc-article qc-detail">
+    <section v-if="detail" v-show="infoTab === 'read'" class="card qc-article qc-detail">
       <p class="hero-text">{{ detail.intro }}</p>
       <section v-for="block in detail.sections" :key="block.title" class="copy-section">
         <h2>{{ block.title }}</h2>
@@ -1226,7 +1203,25 @@ useWakeLock()
       <p class="qc-detail__more"><router-link to="/qiucai/">← 看全部八位财神</router-link></p>
     </section>
 
-    <section class="card qc-article">
+    <div v-show="infoTab === 'do'">
+    <PublicWishWall kind="caishen" title="求财心愿墙" sub="大家公开的求财心愿，名字只显示第一个字。" :refresh-key="wallKey" />
+    </div>
+
+    <p v-if="recordsError" role="alert">{{ recordsError }}</p>
+    <section v-show="infoTab === 'do'" class="card qc-wall" aria-labelledby="qc-wall-title">
+      <h2 id="qc-wall-title">我的求财记录</h2>
+      <p>只保存在你这台手机或电脑上，换一台设备就看不到了。</p>
+      <p v-if="!wall.length">还没有求财记录。</p>
+      <ul>
+        <li v-for="item in wall" :key="item.id">
+          <strong>{{ maskName(item.username) }}</strong>
+          <span>{{ item.target || '求财' }}</span>
+          <p>{{ item.wish }}</p>
+        </li>
+      </ul>
+    </section>
+
+    <section v-show="infoTab === 'read'" class="card qc-article">
       <section v-for="block in QIUCAI_ARTICLE" :key="block.title" class="copy-section">
         <h2>{{ block.title }}</h2>
         <p v-for="paragraph in block.paragraphs" :key="paragraph">{{ paragraph }}</p>
@@ -1259,10 +1254,6 @@ useWakeLock()
 
       <p class="qc-note">求财祈福是表达心愿的方式，不能保证结果；理财投资请量力而行，必要时咨询专业人士。</p>
     </section>
-    </details>
-
-    <!-- 提交按钮条：表单把按钮放到这里，始终贴在抽屉可视区底部 -->
-    <div id="qc-submit-slot" class="qc-submit-slot"></div>
       </div>
     </aside>
     </div>
@@ -1667,18 +1658,6 @@ useWakeLock()
 .qc-deity__name { font-size: 11px; white-space: nowrap; }
 .qc-deity.active .qc-deity__name { color: #f5d592; font-weight: 700; }
 
-.qc-local-note { margin: 12px 0 0; font-size: 12px; line-height: 1.6; color: rgba(245, 227, 191, 0.6); text-align: center; }
-.qc-about-fold { margin-top: 12px; border-top: 1px solid rgba(255, 216, 107, 0.2); padding-top: 8px; }
-.qc-about-fold > summary { cursor: pointer; list-style: none; color: #f2c879; font-size: 15px; padding: 8px 0; }
-.qc-about-fold > summary::-webkit-details-marker { display: none; }
-.qc-about-fold > summary::after { content: ' ▸'; }
-.qc-about-fold[open] > summary::after { content: ' ▾'; }
-.qc-about-fold[open] > summary { margin-bottom: 8px; }
-/* 提交按钮条：放在抽屉内容最后，sticky 贴住可视区底部 */
-.qc-submit-slot { position: sticky; bottom: calc(-1 * max(24px, env(safe-area-inset-bottom))); z-index: 3; margin: 12px -14px 0; padding: 10px 14px calc(12px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(to bottom, rgba(27, 12, 6, 0), rgba(27, 12, 6, 0.97) 22%); }
-.qc-submit-slot:empty { display: none; }
-.qc-submit-slot .submit-btn { display: block; width: 100%; }
-.qc-form textarea.field { height: 78px; min-height: 0; resize: vertical; line-height: 1.6; }
 .qc-tabs { position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; border-radius: 14px; background: rgba(30, 14, 8, 0.92); }
 .qc-tabs button { min-height: 44px; border: 1px solid rgba(255, 216, 107, 0.25); border-radius: 10px; background: transparent; color: #f3dcae; font-size: 15px; cursor: pointer; }
 .qc-tabs button.on { background: linear-gradient(135deg, #e0b76e, #f0d091); color: #2a1c0c; font-weight: 700; border-color: transparent; }
@@ -1919,7 +1898,6 @@ useWakeLock()
   .qc-info-drawer { width: min(440px, 100vw); }
   .qc-info-drawer__header { min-height: 58px; padding-inline: 14px; }
   .qc-info-drawer__body { padding-inline: 10px; }
-  .qc-submit-slot { margin-inline: -10px; padding-inline: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
