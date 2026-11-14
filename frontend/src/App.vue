@@ -72,7 +72,7 @@ async function applyRouteSeo(fullPath) {
   const image = page?.image ? `${SITE.baseUrl}${page.image}` : `${SITE.baseUrl}${SITE.defaultImage}`
   const hansCanonical = isKnownPage ? canonicalUrl(page.path) : `${SITE.baseUrl}${normalizedPath}`
   const canonical = hant ? hantUrl(hansCanonical) : hansCanonical
-  const schema = Array.isArray(page?.schema) ? JSON.parse(convert(JSON.stringify(page.schema))) : []
+  const schema = Array.isArray(page?.schema) ? JSON.parse((hant ? hantTerms : (t) => t)(convert(JSON.stringify(page.schema)))) : []
 
   document.documentElement.lang = hant ? 'zh-Hant' : 'zh-CN'
   if (isKnownPage) {

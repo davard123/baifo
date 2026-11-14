@@ -77,10 +77,10 @@ function convertTextNode(node) {
   if (!value || !HAN.test(value)) return
   const parent = node.parentElement
   if (!parent || SKIP_TAGS.has(parent.tagName) || parent.closest('[data-keep-script]')) return
-  let next = convert(value)
-  // 标题、链接和导航文字：「在線／網上」写成台湾惯用的「線上」；指向念经全文页的「帶拼音」写成「注音版」
-  const term = parent.closest('a, h1, nav')
-  if (term) next = hantLinkText(next, term.tagName === 'A' ? term.getAttribute('href') : '')
+  // 繁体用词：「在線／網上」写成台湾惯用的「線上」、「視頻」写成「影片」（标题、导航、链接、按钮和说明文字都换）；
+  // 指向念经全文页的链接里「帶拼音」写成「注音版」
+  const link = parent.closest('a')
+  const next = hantLinkText(convert(value), link ? link.getAttribute('href') : '')
   if (next !== value) node.nodeValue = next
 }
 
@@ -90,7 +90,7 @@ function convertElement(el) {
   for (const attr of TEXT_ATTRS) {
     const value = el.getAttribute(attr)
     if (value && HAN.test(value)) {
-      const next = convert(value)
+      const next = hantTerms(convert(value))
       if (next !== value) el.setAttribute(attr, next)
     }
   }

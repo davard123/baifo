@@ -38,8 +38,8 @@ function toHantPage(page) {
     title: hantTerms(tidy(toHantText(page.title))),
     description: hantTerms(tidy(toHantText(page.description))),
     heading: hantTerms(tidy(toHantText(page.heading))),
-    summary: tidy(toHantText(page.summary || '')),
-    schema: JSON.parse(tidy(toHantText(JSON.stringify(page.schema ?? [])))),
+    summary: hantTerms(tidy(toHantText(page.summary || ''))),
+    schema: JSON.parse(hantTerms(tidy(toHantText(JSON.stringify(page.schema ?? []))))),
   }
 }
 
@@ -156,7 +156,8 @@ function buildFallbackContent(page, staticPages) {
   }
 
   // Visible help content, without adding FAQ rich-result markup.
-  const convert = page.hant ? toHantText : value => value
+  // 繁体说明文字也换成台湾用词（「線上」「影片」）；经文全文（nianjingFullText）不经过这里
+  const convert = page.hant ? value => hantTerms(toHantText(value)) : value => value
   if (page.path === '/nianfo') {
     lines.push('<section id="sound-help">', '<h2>'+escapeHtml(convert(SOUND_HELP.title))+'</h2>',
       '<p>'+escapeHtml(convert(SOUND_HELP.intro))+'</p>')
