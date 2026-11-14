@@ -73,8 +73,8 @@ const sutraFullLinks = HOME_NIANJING_SLUGS.map((slug) => ({
 
 // 首页顶部固定导航（2026-11-09 David：固定在顶上一直跟着滑；点了直接进具体页面，不在首页上下滚）
 const homeNavMain = [
-  { label: '求财祈福', to: '/qiucai/' },
   { label: '礼佛', to: '/lifo/' },
+  { label: '求财祈福', to: '/qiucai/' },
   { label: '祭祖', to: '/ancestors/' },
   { label: '诵经', to: '/jing/' },
 ]
@@ -212,58 +212,10 @@ onBeforeUnmount(() => {
 
     <FestivalGreeting />
 
-    <a
-      href="/qiucai/"
-      class="qiucai-banner"
-      aria-label="进入求财专区，在线拜财神"
-      @click.prevent="navigateTo('/qiucai')"
-      @mouseenter="warmApi"
-      @mousedown="warmApi"
-      @touchstart.passive="warmApi"
-    >
-      <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
-      <div class="qiucai-banner__content">
-        <h1 class="qiucai-banner__kicker">在线拜财神 · 求财祈福</h1>
-        <h2>拜一拜，给自己添一份财气</h2>
-        <ul class="qiucai-banner__gains">
-          <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
-          <li><strong>神仙会回应你</strong>上香、献元宝、投金币，叩拜三下，财神显灵撒金币、赐福放金光。</li>
-          <li><strong>带走一张祝福卡</strong>写下心愿，领一张印着你名字和财神像的祝福卡，可以保存分享。</li>
-          <li><strong>天天来添财气</strong>记录你的连拜天数和财气值，坚持越久，祝福越满。</li>
-        </ul>
-        <span class="qiucai-banner__cta">现在去拜财神 →</span>
-        <span class="qiucai-banner__note">免费 · 不用注册 · 不收任何费用 · 几分钟拜完</span>
-      </div>
-    </a>
-
-    <!-- 2026-10-25 诵经板块入口；10-27 用户嫌太靠后，挪到求财横幅正下方 -->
-    <router-link :to="sutraTeaserPick.to" class="sutra-banner" aria-label="进入每日诵经：心经、金刚经、普贤行愿品唱诵视频">
-      <div class="sutra-banner__media">
-        <video
-          ref="sutraTeaser"
-          class="sutra-banner__img"
-          :key="sutraTeaserPick.n"
-          :poster="`/jing/teaser/t${sutraTeaserPick.n}.jpg`"
-          muted
-          loop
-          playsinline
-          preload="none"
-          aria-hidden="true"
-        ></video>
-        <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频</span>
-      </div>
-      <div class="sutra-banner__content">
-        <p class="sutra-banner__kicker">每日诵经</p>
-        <h2>看唱诵视频，跟着念经</h2>
-        <p>心经、金刚经、普贤行愿品，唱诵视频点开就能看；全文带拼音，念到哪一句、哪一句就亮起来。</p>
-        <span class="sutra-banner__cta">看诵经视频 →</span>
-      </div>
-    </router-link>
-
     <section id="buddha-catalog-title" class="catalog-section card">
       <div class="section-head">
         <p class="section-kicker">在线礼佛 · 诸佛菩萨</p>
-        <h2 class="section-title">礼佛祈愿</h2>
+        <h1 class="section-title">礼佛祈愿</h1>
         <p class="section-sub">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。</p>
       </div>
       <div class="catalog-grid">
@@ -295,6 +247,54 @@ onBeforeUnmount(() => {
         <router-link v-for="item in sutraFullLinks" :key="item.to" :to="item.to">{{ item.label }}</router-link>
       </div>
     </section>
+
+    <!-- 2026-10-25 诵经板块入口；10-27 用户嫌太靠后，挪到求财横幅正下方 -->
+    <router-link :to="sutraTeaserPick.to" class="sutra-banner" aria-label="进入每日诵经：心经、金刚经、普贤行愿品唱诵视频">
+      <div class="sutra-banner__media">
+        <video
+          ref="sutraTeaser"
+          class="sutra-banner__img"
+          :key="sutraTeaserPick.n"
+          :poster="`/jing/teaser/t${sutraTeaserPick.n}.jpg`"
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+        ></video>
+        <span class="sutra-banner__badge">▶ {{ sutraTeaserPick.label }} · 点开看完整视频</span>
+      </div>
+      <div class="sutra-banner__content">
+        <p class="sutra-banner__kicker">每日诵经</p>
+        <h2>看唱诵视频，跟着念经</h2>
+        <p>心经、金刚经、普贤行愿品，唱诵视频点开就能看；全文带拼音，念到哪一句、哪一句就亮起来。</p>
+        <span class="sutra-banner__cta">看诵经视频 →</span>
+      </div>
+    </router-link>
+
+    <a
+      href="/qiucai/"
+      class="qiucai-banner"
+      aria-label="进入求财专区，在线拜财神"
+      @click.prevent="navigateTo('/qiucai')"
+      @mouseenter="warmApi"
+      @mousedown="warmApi"
+      @touchstart.passive="warmApi"
+    >
+      <img class="qiucai-banner__media" src="/qiucai/caishen-hero.webp?v=2" alt="财神与福禄寿三星" width="1600" height="900" loading="lazy" decoding="async" />
+      <div class="qiucai-banner__content">
+        <p class="qiucai-banner__kicker">在线拜财神 · 求财祈福</p>
+        <h2>拜一拜，给自己添一份财气</h2>
+        <ul class="qiucai-banner__gains">
+          <li><strong>求什么拜什么</strong>做生意求客似云来，上班求升职加薪，考试求金榜题名，为父母求健康长寿。</li>
+          <li><strong>神仙会回应你</strong>上香、献元宝、投金币，叩拜三下，财神显灵撒金币、赐福放金光。</li>
+          <li><strong>带走一张祝福卡</strong>写下心愿，领一张印着你名字和财神像的祝福卡，可以保存分享。</li>
+          <li><strong>天天来添财气</strong>记录你的连拜天数和财气值，坚持越久，祝福越满。</li>
+        </ul>
+        <span class="qiucai-banner__cta">现在去拜财神 →</span>
+        <span class="qiucai-banner__note">几分钟拜完</span>
+      </div>
+    </a>
 
     <BlessingPool @wish-submitted="loadWishes" />
 
@@ -381,7 +381,7 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <p class="home-promise">免费 · 不用注册 · 不收任何费用。牌位照片和你写的祈愿默认只存在你自己的手机上。</p>
+    <p class="home-promise">牌位照片和你写的祈愿默认只存在你自己的手机上。</p>
 
     <footer class="site-footer">
       <p class="footer-brand">求财祈福拜佛网 · fopusha.com</p>

@@ -10,7 +10,7 @@ import { warmApi } from '../api.js'
     <header class="sub-head">
       <p class="sub-kicker">在线礼佛 · 诸佛菩萨</p>
       <h1>礼佛祈愿</h1>
-      <p class="sub-lead">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。免费，不用注册。</p>
+      <p class="sub-lead">八位佛菩萨，各具大愿。选一位与你此刻心意相应的，供花、点灯、上香，再写下祈愿与回向。</p>
     </header>
     <div class="lifo-grid">
       <router-link

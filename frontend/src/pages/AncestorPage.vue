@@ -497,7 +497,7 @@ useWakeLock()
               <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
             </section>
             <section class="privacy-note">
-              <p>免费，不用注册，不收任何费用。先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
+              <p>先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
             </section>
           </details>
 

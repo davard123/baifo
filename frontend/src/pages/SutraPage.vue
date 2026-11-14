@@ -141,7 +141,7 @@ onBeforeUnmount(() => player.value?.pause())
     <header class="jing-head">
       <p class="section-kicker">每日诵经</p>
       <h1>诵经</h1>
-      <p class="lead">常诵经咒的女声读诵和唱诵视频，跟着声音一句一句念，也可以默读；经文附在下面，带拼音。免费，不用注册。</p>
+      <p class="lead">常诵经咒的女声读诵和唱诵视频，跟着声音一句一句念，也可以默读；经文附在下面，带拼音。</p>
       <p class="lead jing-xlink">想看每个字的{{ isHantPath(route.path) ? '注音' : '拼音' }}、自己出声念（页面听你念到哪里）：<router-link to="/nianjing/">在线念经 →</router-link></p>
     </header>
     <section v-if="wallVideos.length" ref="wall" class="jing-wall" aria-label="诵经视频">
