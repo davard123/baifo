@@ -21,6 +21,8 @@ function currentFullscreenElement() {
 
 function syncFullscreen() {
   isFullscreen.value = Boolean(currentFullscreenElement())
+  // 给 <html> 打个记号，礼佛页据此让舞台铺满整个屏幕（平时舞台是 16:9，周围是黑底）
+  document.documentElement.classList.toggle('is-fullscreen', isFullscreen.value)
 }
 
 function toggleFullscreen() {
@@ -39,6 +41,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  document.documentElement.classList.remove('is-fullscreen')
   document.removeEventListener('fullscreenchange', syncFullscreen)
   document.removeEventListener('webkitfullscreenchange', syncFullscreen)
 })

@@ -11,7 +11,6 @@ import DedicationDone from '../components/DedicationDone.vue'
 import RitualNav from '../components/RitualNav.vue'
 import FamilyCare from '../components/FamilyCare.vue'
 import InviteBanner from '../components/InviteBanner.vue'
-import PanelTabs from '../components/PanelTabs.vue'
 import { saveLocalRequest as apiFetch } from '../utils/localRecords.js'
 import { getPhoto, getName, getField, saveField, saveName } from '../utils/localPhoto.js'
 import {
@@ -38,6 +37,9 @@ const nextAncestor = computed(() => {
 const submitted = ref(null)
 // 2026-10-15 改成和礼佛页一样：牌位全屏，供养/导航收进右侧抽屉
 const drawerOpen = ref(false)
+// 抽屉开着时给 <html> 打个记号，让悬浮的音乐按钮在手机上先藏起来，免得盖住底部的提交按钮条
+watch(drawerOpen, (open) => document.documentElement.classList.toggle('drawer-open', open))
+onBeforeUnmount(() => document.documentElement.classList.remove('drawer-open'))
 const drawerId = 'ancestor-offering-panel'
 const nameInputId = 'ancestor-person-name'
 const panelToggle = ref(null)
@@ -72,7 +74,6 @@ function toggleDrawer() {
 
 function openNameEditor() {
   drawerOpen.value = true
-  panelTab.value = 'do'
   saveState.value = 'idle'
   saveError.value = ''
   nextTick(() => nameInput.value?.focus())
@@ -259,7 +260,6 @@ watch(() => ritual.state.done.bow, (bowed) => {
 onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
 const inviteDismissed = ref(false)
-const panelTab = ref('do')
 
 function resetStageState() {
   ritual.reset()
@@ -283,7 +283,6 @@ watch(
     resetStageState()
     submitted.value = null
     drawerOpen.value = false
-    panelTab.value = 'do'
     applyPageMeta()
   },
   { immediate: true }
@@ -381,8 +380,6 @@ useWakeLock()
         </div>
         <div class="panel-scroll">
           <h1 class="namo-title">{{ displayAncestorName }}</h1>
-          <PanelTabs v-model="panelTab" read-label="祭祀说明" />
-          <div v-show="panelTab === 'do'">
           <p class="ritual-focus-note">
             <span aria-hidden="true">🍶</span>
             <strong>祭祀动作</strong>
@@ -410,6 +407,7 @@ useWakeLock()
               :default-ancestor-name="displayAncestorName"
               :default-relationship="defaultRelationship"
               :on-submit="onSubmit"
+              submit-slot="#ancestor-submit-slot"
             />
           </template>
           <FamilyCare kind="ancestor" :slug="ancestor.slug" />
@@ -477,27 +475,34 @@ useWakeLock()
           </div>
           </section>
           <RitualNav v-if="!submitted" :actions="doneActions" label="拜祭页面导航" inline />
-          </div>
-          <div v-show="panelTab === 'read'">
-          <p class="ancestor-desc">{{ ancestor.desc }}</p>
-          <div class="page-tags">
-            <span>{{ ancestor.subtitle }}</span>
-            <span>祭祖追思</span>
-            <span>功德回向</span>
-          </div>
-          <section class="entry-summary">
-            <h2>本次祭拜对象</h2>
-            <div class="summary-chips">
-              <span>{{ displayAncestorName }}</span>
-              <span>{{ defaultRelationship }}</span>
+
+          <p v-if="!submitted" class="local-note">自己看的祈愿只存在这台手机或电脑上，换一台设备就看不到了。</p>
+
+          <!-- 说明放在抽屉最底部，默认收起 -->
+          <details class="about-fold">
+            <summary>关于{{ displayAncestorName }}的祭祀说明</summary>
+            <p class="ancestor-desc">{{ ancestor.desc }}</p>
+            <div class="page-tags">
+              <span>{{ ancestor.subtitle }}</span>
+              <span>祭祖追思</span>
+              <span>功德回向</span>
             </div>
-            <p>牌位文字可在「供养 · 祈愿」页里编辑；下面的表单“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
-            <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
-          </section>
-          <section class="privacy-note">
-            <p>免费，不用注册，不收任何费用。先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
-          </section>
-          </div>
+            <section class="entry-summary">
+              <h2>本次祭拜对象</h2>
+              <div class="summary-chips">
+                <span>{{ displayAncestorName }}</span>
+                <span>{{ defaultRelationship }}</span>
+              </div>
+              <p>牌位文字可在上面「填写或修改先人姓名」里编辑；表单里“您的姓名”是本次祈愿人的姓名，与先人姓名分开填写。</p>
+              <router-link to="/ancestors" class="reselect-link">更换祭拜对象</router-link>
+            </section>
+            <section class="privacy-note">
+              <p>免费，不用注册，不收任何费用。先人姓名、照片和你写的追思默认只保存在你自己的手机里；只有你选了「公开到心愿墙」，追思才会显示在网站上（名字只显示第一个字）。</p>
+            </section>
+          </details>
+
+          <!-- 提交按钮条：AncestorWishForm 把按钮放到这里，始终贴在抽屉可视区底部 -->
+          <div id="ancestor-submit-slot" class="ancestor-submit-slot"></div>
         </div>
       </section>
     </div>
@@ -642,6 +647,61 @@ useWakeLock()
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   padding: 12px 20px calc(32px + env(safe-area-inset-bottom));
+  --pad-x: 20px;
+}
+
+.local-note {
+  margin: 12px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  opacity: 0.7;
+  text-align: center;
+}
+
+.about-fold {
+  margin-top: 12px;
+  border-top: 1px solid rgba(212, 168, 67, 0.2);
+  padding-top: 10px;
+}
+
+.about-fold > summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--accent);
+  font-size: 0.88rem;
+  opacity: 0.9;
+  padding: 6px 0;
+}
+
+.about-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.about-fold > summary::after {
+  content: ' ▸';
+}
+
+.about-fold[open] > summary::after {
+  content: ' ▾';
+}
+
+.about-fold[open] > summary {
+  margin-bottom: 8px;
+}
+
+/* 提交按钮条：放在抽屉内容最后，sticky 贴住可视区底部；内容到底时在自然位置，不会挡住上面的东西 */
+.ancestor-submit-slot {
+  position: sticky;
+  bottom: calc(-1 * (32px + env(safe-area-inset-bottom))); /* 抵掉抽屉底部内边距，才能贴到最底 */
+  z-index: 3;
+  margin: 12px calc(-1 * var(--pad-x)) 0;
+  padding: 10px var(--pad-x) calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to bottom, rgba(43, 26, 16, 0), rgba(43, 26, 16, 0.97) 22%);
+}
+
+.ancestor-submit-slot:empty {
+  display: none;
 }
 
 .panel-kicker {
@@ -932,6 +992,7 @@ useWakeLock()
   .panel-scroll {
     padding-right: max(16px, env(safe-area-inset-right));
     padding-left: max(16px, env(safe-area-inset-left));
+    --pad-x: 16px;
   }
 
   .panel-toggle {
@@ -1051,5 +1112,13 @@ useWakeLock()
   border: none;
   border-top: 1px solid rgba(242, 200, 121, 0.16);
   margin: 16px 0;
+}
+</style>
+
+<style>
+/* 全屏时舞台铺满整个屏幕（祭祖页舞台本来就是满框，这里只是保证一致） */
+html.is-fullscreen .prayer-frame .stage {
+  width: 100%;
+  height: 100%;
 }
 </style>

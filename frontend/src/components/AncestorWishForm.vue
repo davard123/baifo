@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import RecordSaveChoice from './RecordSaveChoice.vue'
-const storageChoice = ref('')
+import VisibilitySwitch from './VisibilitySwitch.vue'
+// 默认「只有我自己看」，公开要自己点
+const storageChoice = ref('local')
 import { saveField, getField, saveGlobal, getGlobal } from '../utils/localPhoto.js'
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
@@ -10,7 +11,9 @@ const props = defineProps({
   defaultWish:          { type: String, default: '' },
   defaultAncestorName:  { type: String, default: '' },
   defaultRelationship:  { type: String, default: '' },
-  onSubmit:             { type: Function, default: null }
+  onSubmit:             { type: Function, default: null },
+  // 提交按钮放到页面里的这个位置（CSS 选择器），做成抽屉底部固定的按钮条；不传就留在表单末尾
+  submitSlot:           { type: String, default: '' },
 })
 const emit = defineEmits(['submit'])
 
@@ -82,7 +85,7 @@ async function handleSubmit() {
 
     if (props.onSubmit) {
       await props.onSubmit(payload)
-      storageChoice.value = ''
+      storageChoice.value = 'local'
     } else {
       emit('submit', payload)
     }
@@ -97,7 +100,7 @@ async function handleSubmit() {
 <template>
   <div class="wish-form">
     <p class="form-hint">祈祷回向</p>
-    <form @submit.prevent="handleSubmit">
+    <form id="ancestor-wish-form" @submit.prevent="handleSubmit">
       <div class="selection-summary">
         <div class="summary-item">
           <span class="summary-label">已选牌位</span>
@@ -188,13 +191,15 @@ async function handleSubmit() {
         </div>
       </div>
 
-      <RecordSaveChoice v-model="storageChoice" :disabled="loading" />
+      <VisibilitySwitch v-model="storageChoice" :disabled="loading" />
       <p v-if="error" class="error-msg">{{ error }}</p>
 
-      <button type="submit" class="submit-btn" :disabled="loading">
-        <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
-        <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向先人' : '回向先人（只有自己能看）' }}</span>
-      </button>
+      <Teleport :to="submitSlot" :disabled="!submitSlot" defer>
+        <button type="submit" form="ancestor-wish-form" class="submit-btn" :disabled="loading">
+          <span v-if="loading">{{ storageChoice === 'public' ? '正在公开…' : '正在保存…' }}</span>
+          <span v-else>{{ storageChoice === 'public' ? '公开到心愿墙 · 回向先人' : '回向先人（只有自己能看）' }}</span>
+        </button>
+      </Teleport>
     </form>
   </div>
 </template>
@@ -324,7 +329,7 @@ async function handleSubmit() {
 .age-field { text-align: center; }
 
 .wish-field {
-  height: 100px;
+  height: 78px;
   resize: vertical;
   line-height: 1.7;
   margin-bottom: 10px;

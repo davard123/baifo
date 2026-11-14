@@ -527,9 +527,9 @@ useWakeLock()
 /* 回向按钮条：放在抽屉内容最后，sticky 贴住可视区底部；内容到底时按钮在自然位置，不会挡住上面的东西 */
 .wish-submit-slot {
   position: sticky;
-  bottom: 0;
+  bottom: -32px; /* 抽屉底部有 32px 内边距，sticky 默认贴在内边距之内，这里抵掉才能贴到抽屉最底 */
   z-index: 3;
-  margin: 12px -20px -32px;
+  margin: 12px -20px 0;
   padding: 10px 20px calc(12px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(to bottom, rgba(24, 17, 12, 0), rgba(24, 17, 12, 0.96) 22%);
 }
@@ -558,7 +558,8 @@ useWakeLock()
   }
 
   .wish-submit-slot {
-    margin: 12px -16px -18px;
+    bottom: -18px;
+    margin: 12px -16px 0;
     padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
   }
 
@@ -581,5 +582,16 @@ useWakeLock()
     font-size: 0.82rem;
     line-height: 1.65;
   }
+}
+</style>
+
+<style>
+/* 全屏时舞台铺满整个屏幕：平时舞台是最宽 1180px 的 16:9，放在黑底里，全屏后四周会露出一圈黑边 */
+html.is-fullscreen .prayer-frame .stage {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
 }
 </style>
