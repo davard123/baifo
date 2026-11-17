@@ -38,10 +38,13 @@ onMounted(() => {
   canFullscreen.value = Boolean(document.fullscreenEnabled || document.webkitFullscreenEnabled)
   document.addEventListener('fullscreenchange', syncFullscreen)
   document.addEventListener('webkitfullscreenchange', syncFullscreen)
+  // 全屏状态下切到下一页：新页面一挂上就按当前全屏状态补上 is-fullscreen，不用再点一次
+  syncFullscreen()
 })
 
 onBeforeUnmount(() => {
-  document.documentElement.classList.remove('is-fullscreen')
+  // 还在全屏就留着这个类（下一页接着用）；已退出全屏才去掉
+  if (!currentFullscreenElement()) document.documentElement.classList.remove('is-fullscreen')
   document.removeEventListener('fullscreenchange', syncFullscreen)
   document.removeEventListener('webkitfullscreenchange', syncFullscreen)
 })
