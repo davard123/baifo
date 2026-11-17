@@ -75,6 +75,36 @@ const drawerOpen = ref(false)
 watch(drawerOpen, (open) => document.documentElement.classList.toggle('drawer-open', open))
 onBeforeUnmount(() => document.documentElement.classList.remove('drawer-open'))
 
+// 2026-11-17 David：叩拜、绕佛都点过后，抽屉自己收起来，屏幕左下角单独出一个「回向」按钮，
+// 不用再拉开抽屉；名字/年龄/愿文没填好时才把抽屉打开让他补
+const wishFormRef = ref(null)
+const homageDone = computed(() => Boolean(ritual.state.done.bow && ritual.state.done.circle))
+let autoClosed = false
+let autoCloseTimer = null
+watch(homageDone, (done) => {
+  if (!done || autoClosed || submitted.value) return
+  autoClosed = true
+  clearTimeout(autoCloseTimer)
+  // 稍等一下，让刚点的按钮亮一下再收
+  autoCloseTimer = setTimeout(() => { if (!drawerLocked.value) drawerOpen.value = false }, 700)
+})
+onBeforeUnmount(() => clearTimeout(autoCloseTimer))
+const showQuickDedicate = computed(() => homageDone.value && !drawerOpen.value && !submitted.value && blessingPhase.value === 'idle')
+const quickChoice = computed(() => wishFormRef.value?.storageChoice || 'local')
+const quickLoading = computed(() => Boolean(wishFormRef.value?.loading))
+async function quickDedicate() {
+  const form = wishFormRef.value
+  if (!form || quickLoading.value) return
+  if (!form.ready()) {
+    drawerOpen.value = true
+    form.submit() // 让表单把「请填写用户名」之类的提示显示出来
+    return
+  }
+  await form.submit()
+  // 没成功（比如公开太频繁被拒）就打开抽屉，让他看到表单里的提示
+  if (!submitted.value) drawerOpen.value = true
+}
+
 // 叩拜后浮出「叫家人一起来」；家人从邀请链接进来时顶部给一句说明
 const showFamilyBar = ref(false)
 const familyBarDismissed = ref(false)
@@ -113,6 +143,8 @@ watch(
     if (!current) return
 
     ritual.reset()
+    autoClosed = false
+    clearTimeout(autoCloseTimer)
     drawerOpen.value = false
     showFamilyBar.value = false
     submitted.value = null
@@ -192,6 +224,18 @@ useWakeLock()
       </section>
 
       <button
+        v-if="showQuickDedicate"
+        type="button"
+        class="quick-dedicate"
+        :class="{ 'family-bar-up': showFamilyBar }"
+        :disabled="quickLoading"
+        @click="quickDedicate"
+      >
+        <span class="quick-dedicate__main">{{ quickLoading ? '正在回向…' : '🙏 回向' }}</span>
+        <span class="quick-dedicate__sub">{{ quickChoice === 'public' ? '公开到心愿墙' : '只有自己看' }}</span>
+      </button>
+
+      <button
         type="button"
         class="panel-toggle"
         :class="{ open: drawerOpen }"
@@ -228,7 +272,7 @@ useWakeLock()
         <template v-else-if="!submitted">
           <RitualPanel :ritual="ritual" homage-title="礼敬" />
           <hr class="divider" />
-          <WishForm :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" submit-slot="#wish-submit-slot" />
+          <WishForm ref="wishFormRef" :key="buddha.slug" :default-wish="buddha.wish" :on-submit="onSubmit" submit-slot="#wish-submit-slot" />
         </template>
 
         <FamilyCare kind="buddha" :slug="buddha.slug" :subject="buddha.name" />
@@ -482,6 +526,36 @@ useWakeLock()
   text-decoration: none;
   font-size: 0.79rem;
   opacity: 0.8;
+}
+
+/* 左下角的回向按钮：叠在背景音乐按钮上面（音乐按钮在 left 16px / bottom 16px，高 44px） */
+.quick-dedicate {
+  position: fixed;
+  left: 16px;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  z-index: 997;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 132px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #e0b76e, #f0d091);
+  color: #2a1c0c;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  animation: quickIn 0.35s ease both;
+}
+.quick-dedicate__main { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; }
+.quick-dedicate__sub { font-size: 0.72rem; opacity: 0.75; }
+.quick-dedicate:disabled { opacity: 0.7; cursor: wait; }
+.quick-dedicate:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@keyframes quickIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* 手机上「叫家人一起来」浮条在底部中间、几乎占满宽度，出现的那几秒把回向按钮往上让一让 */
+@media (max-width: 640px) {
+  .quick-dedicate.family-bar-up { bottom: calc(190px + env(safe-area-inset-bottom, 0px)); }
 }
 
 .local-note {

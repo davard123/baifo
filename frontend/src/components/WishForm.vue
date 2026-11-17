@@ -1,6 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-// 默认「只有我自己能看」，公开要自己点
+// 2026-11-17 David：默认用你上一次回向时选的（公开 / 只有自己看）；从没选过就是「只有我自己看」
+const LAST_CHOICE_KEY = 'wishVisibility:last'
+function lastChoice() {
+  try { return localStorage.getItem(LAST_CHOICE_KEY) === 'public' ? 'public' : 'local' } catch { return 'local' }
+}
+function rememberChoice(choice) {
+  try { localStorage.setItem(LAST_CHOICE_KEY, choice) } catch { /* 无痕模式等存不了就算了 */ }
+}
 const storageChoice = ref('local')
 import { getViewerProfile, saveViewerProfile } from '../utils/viewerProfile.js'
 
@@ -23,7 +30,14 @@ onMounted(() => {
   const viewer = getViewerProfile()
   username.value = viewer.username
   if (viewer.age) age.value = viewer.age
+  storageChoice.value = lastChoice()
 })
+
+// 名字、年龄、愿文都填好了，可以直接回向（页面左下角的「回向」按钮用）
+function ready() {
+  return Boolean(username.value.trim() && age.value > 0 && wish.value.trim())
+}
+defineExpose({ submit: handleSubmit, ready, storageChoice, loading })
 
 async function handleSubmit() {
   if (loading.value) return
@@ -47,7 +61,7 @@ async function handleSubmit() {
 
     if (props.onSubmit) {
       await props.onSubmit(payload)
-      storageChoice.value = 'local'
+      rememberChoice(payload.storageChoice)
     } else {
       emit('submit', payload)
     }
