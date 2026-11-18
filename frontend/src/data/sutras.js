@@ -218,6 +218,8 @@ export const SUTRAS = [
       { id: 'dizang-03-sing-film', label: '唱诵 · 第三品', title: '地藏经第三品 唱诵《观众生业缘》：佛的母亲问造了恶业的人去哪里，地藏菩萨讲无间地狱为什么叫无间。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-03-sing-film.mp4', poster: '/jing/recite/dizang-03-sing-film-poster.jpg', yt: 'SIoHeEWbfiE', ytFrom: '2026-11-11' },
       { id: 'dizang-04-sing-film', label: '唱诵 · 第四品故事片', title: '地藏经第四品 唱诵《光目》：母亲生前爱吃鱼鳖，死后堕入恶道，女儿为救母亲发下「地狱不空，誓不成佛」的大愿。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-04-sing-film.mp4', poster: '/jing/recite/dizang-04-sing-film-poster.jpg', yt: 'npkw2JVcAHI', ytFrom: '2026-11-13' },
       { id: 'dizang-05-sing-film', label: '唱诵 · 第五品', title: '地藏经第五品 唱诵《地狱名号》：普贤菩萨请地藏菩萨说出地狱的名字——莫轻小恶，以为无罪，死后有报，纤毫受之。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-05-sing-film.mp4', poster: '/jing/recite/dizang-05-sing-film-poster.jpg', yt: 'Z9BkspObqdU', ytFrom: '2026-11-15' },
+      { id: 'dizang-06-sing-film', label: '唱诵 · 第六品', title: '地藏经第六品 唱诵《如来赞叹》：佛陀当众称扬赞叹地藏菩萨，一件一件说供养、读经、为家人回向的利益。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-06-sing-film.mp4', poster: '/jing/recite/dizang-06-sing-film-poster.jpg', yt: 'ocweRD9n45k', ytFrom: '2026-11-17' },
+      { id: 'dizang-07-sing-film', label: '唱诵 · 第七品', title: '地藏经第七品 唱诵《利益存亡》：临终和身后，家人能为亡者做什么——七分功德，亡者得一。字幕逐字变色，可跟唱。画面和唱诵由 AI 制作', src: '/jing/recite/dizang-07-sing-film.mp4', poster: '/jing/recite/dizang-07-sing-film-poster.jpg', yt: '9kbeFWY0FFI', ytFrom: '2026-11-20' },
       ...RECITE.dizang.videos,
     ],
     shorts: [
@@ -236,6 +238,12 @@ export const SUTRAS = [
       { title: '普贤菩萨问地藏：造恶的人会去哪里', src: '/jing/shorts/dizang05-1.mp4', poster: '/jing/shorts/dizang05-1.jpg', yt: 'VPu5fmEL37Y', ytFrom: '2026-11-15' },
       { title: '莫轻小恶，以为无罪；死后有报，纤毫受之', src: '/jing/shorts/dizang05-2.mp4', poster: '/jing/shorts/dizang05-2.jpg', yt: 'ebI0iT0l0Uk', ytFrom: '2026-11-16' },
       { title: '取舌耕田、铜柱抱身——地藏菩萨亲口说的地狱', src: '/jing/shorts/dizang05-3.mp4', poster: '/jing/shorts/dizang05-3.jpg', yt: 'OH-jLGqP5AY', ytFrom: '2026-11-16' },
+      { title: '菩萨像前歌咏赞叹，百千鬼神日夜卫护', src: '/jing/shorts/dizang06-1.mp4', poster: '/jing/shorts/dizang06-1.jpg', yt: 'LweYLiaOhFc', ytFrom: '2026-11-17' },
+      { title: '身不由己的人，佛教他这样忏悔', src: '/jing/shorts/dizang06-2.mp4', poster: '/jing/shorts/dizang06-2.jpg', yt: '1cmmUN6dbkw', ytFrom: '2026-11-18' },
+      { title: '孩子出生七日之内，地藏经教家人做的事', src: '/jing/shorts/dizang06-3.mp4', poster: '/jing/shorts/dizang06-3.jpg', yt: 'BTagG29L5Hs', ytFrom: '2026-11-18' },
+      { title: '临终那天杀生拜鬼神，地藏菩萨说帮不上忙', src: '/jing/shorts/dizang07-1.mp4', poster: '/jing/shorts/dizang07-1.jpg', yt: 'xr8GrYXNoSQ', ytFrom: '2026-11-20' },
+      { title: '亲人为亡者做功德，亡者只得七分之一', src: '/jing/shorts/dizang07-2.mp4', poster: '/jing/shorts/dizang07-2.jpg', yt: 'ZJ7wecCyv3U', ytFrom: '2026-11-21' },
+      { title: '为亡人设斋供养，地藏经交代的规矩', src: '/jing/shorts/dizang07-3.mp4', poster: '/jing/shorts/dizang07-3.jpg', yt: 'NOtVd1kTAqM', ytFrom: '2026-11-22' },
     ],
     faqs: [
       { q: '地藏经有几品、多少字？', a: `全经十三品，本页经文按 CBETA 与汉传通行本两源对照校订，共 ${dizang.charCount} 字（不算标点）。` },
