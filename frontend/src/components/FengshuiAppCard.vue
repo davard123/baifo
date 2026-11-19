@@ -28,11 +28,12 @@ function onClick() {
     :href="FENGSHUI_APP.url"
     target="_blank"
     rel="noopener"
-    aria-label="九宫风水 App，到 App Store 下载"
+    aria-label="九宫风水 App，到 App Store 免费下载"
     @click="onClick"
   >
     <img class="app-bar-icon" :src="FENGSHUI_APP.icon" width="44" height="44" :alt="FENGSHUI_APP.iconAlt" />
+    <span class="app-bar-head"><span class="app-bar-tag">{{ FENGSHUI_APP.tag }}</span><span class="app-bar-name">{{ FENGSHUI_APP.name }}</span></span>
     <span class="app-bar-text">{{ text }}</span>
-    <span class="app-bar-btn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" :d="APPLE_LOGO_PATH" /></svg>{{ FENGSHUI_APP.button }}</span>
+    <span class="app-bar-btn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" :d="APPLE_LOGO_PATH" /></svg><span class="app-bar-btn-store">{{ FENGSHUI_APP.buttonStore }}</span>{{ FENGSHUI_APP.button }}</span>
   </a>
 </template>

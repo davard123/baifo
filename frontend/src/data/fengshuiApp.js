@@ -7,7 +7,9 @@ export const FENGSHUI_APP = {
   url: 'https://apps.apple.com/us/app/id6779891043',
   icon: '/app-icon-fengshui.jpg',
   iconAlt: '九宫风水 App 图标',
-  button: '下载',
+  tag: '免费下载 App',
+  buttonStore: 'App Store ',
+  button: '免费下载',
 }
 
 // 按钮左边的白色苹果图形（内联 SVG，不外链图片）
@@ -29,10 +31,11 @@ const escapeHtml = (value) => String(value ?? '')
 // 预渲染用的 HTML，结构和 FengshuiAppCard.vue 的模板一致
 export function fengshuiAppBarHtml(kind, direction = '') {
   return [
-    `<a class="app-bar" href="${FENGSHUI_APP.url}" target="_blank" rel="noopener" aria-label="九宫风水 App，到 App Store 下载">`,
+    `<a class="app-bar" href="${FENGSHUI_APP.url}" target="_blank" rel="noopener" aria-label="九宫风水 App，到 App Store 免费下载">`,
     `  <img class="app-bar-icon" src="${FENGSHUI_APP.icon}" width="44" height="44" alt="${escapeHtml(FENGSHUI_APP.iconAlt)}" />`,
+    `  <span class="app-bar-head"><span class="app-bar-tag">${escapeHtml(FENGSHUI_APP.tag)}</span><span class="app-bar-name">${escapeHtml(FENGSHUI_APP.name)}</span></span>`,
     `  <span class="app-bar-text">${escapeHtml(fengshuiAppText(kind, direction))}</span>`,
-    `  <span class="app-bar-btn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="${APPLE_LOGO_PATH}"/></svg>${escapeHtml(FENGSHUI_APP.button)}</span>`,
+    `  <span class="app-bar-btn"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="${APPLE_LOGO_PATH}"/></svg><span class="app-bar-btn-store">${escapeHtml(FENGSHUI_APP.buttonStore)}</span>${escapeHtml(FENGSHUI_APP.button)}</span>`,
     '</a>',
   ].join('\n')
 }
