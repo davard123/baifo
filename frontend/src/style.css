@@ -82,6 +82,30 @@ summary:focus-visible {
   margin: 4px 0 0;
 }
 
+/* 「九宫风水」App 下载卡片（财神方位页、入宅吉日页；组件 FengshuiAppCard.vue 和预渲染 HTML 共用） */
+.app-card {
+  margin: 18px 0 0;
+  padding: 16px clamp(14px, 4vw, 22px);
+  border-radius: 14px;
+  background: #fffaf2;
+  border: 1px solid #e6d6c0;
+  color: #4d3d33;
+  text-align: left;
+}
+.app-card .app-card-title { margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; color: #7a2a1c; line-height: 1.5; }
+.app-card .app-card-text { margin: 0 0 12px; font-size: 0.95rem; line-height: 1.8; color: #4d3d33; }
+.app-card .app-card-btn {
+  display: inline-block;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: #7a2a1c;
+  color: #fff1d8;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.app-card .app-card-btn:hover { background: #8f3423; }
+
 .card {
   background: var(--surface);
   backdrop-filter: blur(20px);

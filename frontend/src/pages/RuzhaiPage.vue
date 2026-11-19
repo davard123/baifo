@@ -8,6 +8,7 @@ import {
   currentMonthKey, isMonthKey, monthDays, monthKeys, monthLabel, monthSummary,
 } from '../data/ruzhai.js'
 import { track } from '../utils/analytics.js'
+import FengshuiAppCard from '../components/FengshuiAppCard.vue'
 
 const ZILLOW_REVIEW_URL = 'https://www.zillow.com/profile/wuxishanecnc'
 
@@ -143,6 +144,8 @@ function printCard() { window.print() }
         <p>{{ f.a }}</p>
       </article>
     </section>
+
+    <FengshuiAppCard kind="ruzhai" />
 
     <section class="rz-block rz-cross">
       <h2>正在南加州买房、搬家？</h2>

@@ -9,6 +9,7 @@ import { GUIDES } from '../src/data/guides.js'
 import { NIANJING, toUnits, decorateUnits } from '../src/data/nianjing.js'
 import { hantSutraText, tidyHantCopy } from '../src/i18n/hantSutra.js'
 import { hantTerms, hantLinkText } from '../src/i18n/hantTerms.js'
+import { fengshuiAppCardHtml } from '../src/data/fengshuiApp.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -154,6 +155,9 @@ function buildFallbackContent(page, staticPages) {
     const label = page.hant ? hantLinkText(toHantText(page.leadLink.label), href) : page.leadLink.label
     lines.push(`  <p><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></p>`)
   }
+  // 「九宫风水」App 卡片：App 只有简体界面，繁体页不放。财神方位页紧跟在方位后面，入宅吉日页放在靠后的位置
+  const appCard = page.appCard && !page.hant ? fengshuiAppCardHtml(page.appCard.kind, page.appCard.direction) : ''
+  if (appCard && page.appCard.place === 'lead') lines.push(appCard)
 
   // Visible help content, without adding FAQ rich-result markup.
   // 繁体说明文字也换成台湾用词（「線上」「影片」）；经文全文（nianjingFullText）不经过这里
@@ -189,6 +193,7 @@ function buildFallbackContent(page, staticPages) {
     }
     lines.push('  </dl>')
   }
+  if (appCard && page.appCard.place !== 'lead') lines.push(appCard)
 
   // Keep bounded, relevant navigation available before JavaScript loads.
   const navigation = getStaticNavigation(page, staticPages)

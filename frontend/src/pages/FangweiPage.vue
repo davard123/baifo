@@ -8,6 +8,7 @@ import {
   CAI_RHYME, dateKey, dayLabel, getFangweiDay, inAlmanacRange, keyDays, shiftDateKey,
 } from '../data/fangwei.js'
 import { track } from '../utils/analytics.js'
+import FengshuiAppCard from '../components/FengshuiAppCard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -132,6 +133,8 @@ function goWorship() {
       <p class="fw-answer">正在按你手机上的日期计算……</p>
       <p class="fw-sub">{{ CAI_RHYME }}。</p>
     </section>
+
+    <FengshuiAppCard v-if="day && !outOfRange" kind="fangwei" :direction="day.cai" />
 
     <section v-if="nextTen.length" class="fw-block">
       <h2>接下来十天</h2>
