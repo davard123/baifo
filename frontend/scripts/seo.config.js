@@ -364,8 +364,8 @@ function buddhaPage(item) {
 
   return {
     path: `/buddha/${item.slug}`,
-    title: `${item.namo} | 在线礼佛祈愿`,
-    description: `虔诚礼敬${item.name}，${item.subtitle}。${item.desc}在线发愿祈福，功德回向一切众生。`,
+    title: item.seoTitle || `${item.namo} | 在线礼佛祈愿`,
+    description: item.seoDescription || `虔诚礼敬${item.name}，${item.subtitle}。${item.desc}在线发愿祈福，功德回向一切众生。`,
     heading: item.namo,
     summary: `${item.title}，${item.subtitle}。`,
     image: item.image,
@@ -493,7 +493,8 @@ function ancestorPage(item) {
 function guidePage({ slug, title, description, heading }) {
   const pagePath = `/guide/${slug}`
   const content = GUIDES[slug]
-  title = content.title
+  // seoTitle：<title> 用的完整标题；title 是页面顶部路径条里的短名
+  title = content.seoTitle || content.title
   heading = content.heading
   description = content.description
   const faqs = content.faqs
@@ -839,9 +840,9 @@ function nianfoPage() {
   const path = '/nianfo'
   return {
     path,
-    title: '念佛计数器 | 在线木鱼与每日功课',
+    title: '念佛计数器在线版｜电子木鱼佛号计数，记录每日念佛功课',
     description:
-      '在线念佛计数器与电子木鱼，记录今日次数和每日目标，计数仅保存在本机。了解木鱼声音设置、开启试听与安静使用方法，避免因没有听到声音而重复计数。',
+      '在线念佛计数器：轻触电子木鱼记一声佛号，可选南无阿弥陀佛、观世音菩萨、本师释迦牟尼佛、地藏王菩萨、药师琉璃光如来，每日目标可设 108、300、1080 或 3000 声，看今日、累计、连续天数和最近十四天。计数只存在本机，木鱼声可开可关。',
     heading: '念佛计数器与在线木鱼',
     summary:
       '每日念佛计数工具，轻触木鱼记一声佛号，可选佛号与每日目标，记录今日数量、累计数量与连续天数。',

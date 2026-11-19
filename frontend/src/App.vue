@@ -85,7 +85,8 @@ async function applyRouteSeo(fullPath) {
   if (isKnownPage && page.path === '/nianjing') upsertLink('link[rel="alternate"][hreflang="en"]', { rel: 'alternate', hreflang: 'en', href: `${SITE.baseUrl}/chant/` })
   else enAlternate?.remove()
 
-  document.title = title
+  // 和预渲染的 <title> 一样带站名后缀（og:title / twitter:title 不带）
+  document.title = isKnownPage ? `${title} - ${SITE.baseUrl.replace(/^https?:\/\//, '')}` : title
 
   upsertMeta('meta[name="description"]', { name: 'description', content: description })
   upsertMeta('meta[name="robots"]', {

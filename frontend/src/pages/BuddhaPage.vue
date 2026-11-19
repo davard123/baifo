@@ -125,17 +125,6 @@ onBeforeUnmount(() => clearTimeout(familyBarTimer))
 const invited = computed(() => route.query.invite === '1')
 const inviteDismissed = ref(false)
 
-function updatePageMeta() {
-  if (!buddha.value) return
-
-  const current = buddha.value
-  document.title = `${current.namo} | 在线礼佛祈愿 - fopusha.com`
-  document.querySelector('meta[name="description"]')?.setAttribute(
-    'content',
-    `礼敬${current.name}，围绕${current.subtitle}发愿修行。页面支持献花、点灯、上香、礼拜与回向，帮助按顺序完成在线礼佛。`
-  )
-}
-
 watch(
   buddha,
   (current) => {
@@ -147,8 +136,8 @@ watch(
     clearTimeout(autoCloseTimer)
     drawerOpen.value = false
     showFamilyBar.value = false
+    // 标题和 description 由 App.vue 按 seo.config.js 统一写（和预渲染的 HTML 一致）
     submitted.value = null
-    updatePageMeta()
   },
   { immediate: true }
 )
