@@ -1,31 +1,63 @@
 name: IndexNow
 
+# 只把「上线后内容真的变了」的网址报给 IndexNow（做法见 .github/scripts/indexnow.mjs）。
+# 哈希表存在 actions/cache 里，不往仓库提交文件。
 on:
   push:
-    # 每日重建只改日期戳，页面网址没变，不用通知 IndexNow
+    branches:
+      - master
+    # 每日重建只改日期戳，不用通知 IndexNow（财神方位等每天变的页面，会在下一次正常推送时按内容比对一并提交）
     paths-ignore:
       - "frontend/public/build-date.txt"
+  schedule:
+    # 每 5 天跑一次：缓存 7 天不用会被 GitHub 清掉，定期跑一次让哈希表一直有效
+    - cron: "17 3 */5 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: read # 查这次提交的「Cloudflare Pages」部署是否完成
+
+# 同一时间只跑一个，保证哈希表按顺序更新；排队中的旧运行会被新的替掉（新的会比对全部内容，不会漏）
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          sparse-checkout: |
+            /.github/
+            /frontend/public/sitemap.xml
+            /frontend/public/sitemap-en.xml
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Notify IndexNow of changed pages
+      - name: Restore last page hashes
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow-cache
+          key: indexnow-hashes-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            indexnow-hashes-
+      - name: Notify IndexNow of pages whose content changed
         env:
           INDEXNOW_HOST: fopusha.com
           INDEXNOW_KEY: d56425bce9c4add9f8ac01e5364db508
-          INDEXNOW_ALL: "1"
-          SITEMAP_FILE: frontend/public/sitemap.xml
-          BEFORE: ${{ github.event.before }}
-        run: |
-          if git cat-file -e "$BEFORE" 2>/dev/null; then
-            export CHANGED_FILES="$(git diff --name-only "$BEFORE" "$GITHUB_SHA")"
-          fi
-          node .github/scripts/indexnow.mjs
+          HASH_FILE: .indexnow-cache/hashes.json
+          SITEMAP_FALLBACK: frontend/public/sitemap.xml,frontend/public/sitemap-en.xml
+          CONCURRENCY: "5"
+          DEPLOY_SHA: ${{ github.event_name == 'push' && github.sha || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/indexnow.mjs
+      - name: Save page hashes
+        if: success() && hashFiles('.indexnow-cache/hashes.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow-cache
+          key: indexnow-hashes-${{ github.run_id }}-${{ github.run_attempt }}
