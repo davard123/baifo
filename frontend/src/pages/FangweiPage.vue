@@ -72,6 +72,8 @@ function goWorship() {
       <h1>{{ heading }}</h1>
     </header>
 
+    <FengshuiAppCard v-if="!outOfRange" kind="fangwei" :direction="day ? day.cai : ''" />
+
     <section v-if="outOfRange" class="fw-card">
       <p class="fw-answer">这个日期暂时查不到。目前可以查 {{ ALMANAC_START }} 到 {{ ALMANAC_END }}。</p>
       <router-link class="fw-btn" :to="FANGWEI_PATH + '/'">看今天的财神方位 →</router-link>
@@ -133,8 +135,6 @@ function goWorship() {
       <p class="fw-answer">正在按你手机上的日期计算……</p>
       <p class="fw-sub">{{ CAI_RHYME }}。</p>
     </section>
-
-    <FengshuiAppCard v-if="day && !outOfRange" kind="fangwei" :direction="day.cai" />
 
     <section v-if="nextTen.length" class="fw-block">
       <h2>接下来十天</h2>

@@ -89,6 +89,8 @@ function printCard() { window.print() }
       <p class="rz-lead">新房入宅、搬家、开业挑日子：按黄历列出每个月宜入宅、宜搬家、宜开业的日子，标出星期几和当天冲的生肖。</p>
     </header>
 
+    <FengshuiAppCard kind="ruzhai" />
+
     <section v-if="paramMonth && !valid" class="rz-panel">
       <p>这个月份暂时查不到。目前可以查 {{ months[0] }} 到 {{ months.at(-1) }}。</p>
       <router-link :to="RUZHAI_PATH + '/'">看本月 →</router-link>
@@ -144,8 +146,6 @@ function printCard() { window.print() }
         <p>{{ f.a }}</p>
       </article>
     </section>
-
-    <FengshuiAppCard kind="ruzhai" />
 
     <section class="rz-block rz-cross">
       <h2>正在南加州买房、搬家？</h2>

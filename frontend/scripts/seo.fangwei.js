@@ -35,8 +35,8 @@ function fangweiIndexPage(today = dateKey()) {
     summary: description,
     // 预渲染时在第一段后面放一个指向当天日期页的链接
     leadLink: day ? { path: `${path}/${day.key}`, label: `${day.solar}财神方位（${day.lunarShort}）→` } : null,
-    // 预渲染时放「九宫风水」App 卡片（只放简体页，见 prerender.js）
-    appCard: { kind: 'fangwei', direction: day ? day.cai : '', place: 'lead' },
+    // 预渲染时在标题下面放「九宫风水」App 横条（只放简体页，见 prerender.js）
+    appCard: { kind: 'fangwei', direction: day ? day.cai : '' },
     image: '/qiucai/caishen-hero.webp',
     schema: [
       buildWebPageSchema({
@@ -83,7 +83,7 @@ export function fangweiDayPage(key) {
     description,
     heading,
     summary: description,
-    appCard: { kind: 'fangwei', direction: day.cai, place: 'lead' },
+    appCard: { kind: 'fangwei', direction: day.cai },
     image: '/qiucai/caishen-hero.webp',
     schema: [
       buildWebPageSchema({
@@ -117,7 +117,7 @@ function ruzhaiIndexPage() {
     description,
     heading,
     summary: description,
-    appCard: { kind: 'ruzhai', place: 'end' },
+    appCard: { kind: 'ruzhai' },
     image: SITE.defaultImage,
     schema: [
       buildWebPageSchema({
@@ -159,7 +159,7 @@ export function ruzhaiMonthPage(month) {
     description,
     heading,
     summary: description,
-    appCard: { kind: 'ruzhai', place: 'end' },
+    appCard: { kind: 'ruzhai' },
     image: SITE.defaultImage,
     schema: [
       buildWebPageSchema({
