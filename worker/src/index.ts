@@ -315,7 +315,7 @@ app.post('/wall', async (c) => {
   const recent = await c.env.WALL.prepare(
     "SELECT COUNT(*) AS n FROM public_wishes WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 hour')",
   ).bind(ipHash).first<{ n: number }>()
-  if (!isAdmin(c) && (recent?.n ?? 0) >= 6) return c.json({ detail: '公开得太频繁了，请稍后再试' }, 429)
+  if (!isAdmin(c) && (recent?.n ?? 0) >= 30) return c.json({ detail: '公开得太频繁了，请稍后再试' }, 429)
 
   // 管理员（带 x-admin-key）发布时可署名"本站"等，原样显示；普通访客一律打码。
   const displayName = isAdmin(c) && name ? name : maskName(name)
