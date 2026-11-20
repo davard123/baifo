@@ -11,6 +11,16 @@ import { buildBlocks, buildSegments } from '../utils/nianjingLayout.js'
 
 const PREFS_KEY = 'nianjing:prefs'
 const posKey = (slug) => `nianjing:pos:${slug}`
+// 2026-11-20 David：自动速度每部经各存各的（跟念到哪一样）；没调过的经沿用最近一次调的速度
+const speedKey = (slug) => `nianjing:speed:${slug}`
+function readSpeed(slug, fallback) {
+  try {
+    const v = Number(localStorage.getItem(speedKey(slug)))
+    return v >= 20 && v <= 400 ? v : fallback
+  } catch {
+    return fallback
+  }
+}
 
 function readPrefs() {
   try {
@@ -36,7 +46,8 @@ export function useNianjing(slugRef, { hant = false } = {}) {
   const running = ref(false)
   const mode = ref(prefs.mode || 'voice') // voice | auto | manual
   const view = ref(prefs.view || 'karaoke') // karaoke | prompt（竖屏）
-  const speed = ref(prefs.speed || 90) // 自动模式每分钟字数
+  const speed = ref(readSpeed(slugRef.value, prefs.speed || 90)) // 自动模式每分钟字数（按经单独保存）
+  let speedSlug = slugRef.value
   const bgm = ref(prefs.bgm || 'off') // muyu | music | off
   const bpm = ref(prefs.bpm || 60) // 木鱼每分钟下数
   const fontSize = ref(prefs.fontSize || 'm') // m | l | xl
@@ -87,6 +98,12 @@ export function useNianjing(slugRef, { hant = false } = {}) {
     } catch {
       /* 隐私模式 */
     }
+  })
+
+  // 用户调了速度才存到这部经名下；切经时换成那部经自己的速度，不算调过
+  watch(speed, (v) => {
+    if (speedSlug !== slugRef.value) return
+    try { localStorage.setItem(speedKey(speedSlug), String(v)) } catch { /* 隐私模式 */ }
   })
 
   let saveTimer = null
@@ -279,6 +296,11 @@ export function useNianjing(slugRef, { hant = false } = {}) {
     if (!meta.value) return
     loading.value = true
     const slug = slugRef.value
+    if (speedSlug !== slug) {
+      speedSlug = null // 下面换速度时不触发保存
+      speed.value = readSpeed(slug, speed.value)
+      Promise.resolve().then(() => { speedSlug = slug })
+    }
     const [mod, convert] = await Promise.all([meta.value.load(), hant ? loadConverter().catch(() => null) : null])
     if (slug !== slugRef.value) return
     sutra.value = mod.default
