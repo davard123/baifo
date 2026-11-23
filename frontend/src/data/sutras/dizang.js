@@ -1,4 +1,5 @@
 // 由 D:/document/念佛板块/text/dizangjing-01~13.json 定稿数据生成（页面显示去掉引号），不要手改
+// 卷首/卷尾仪文与卷末赞由 scripts/import-dizang-yiwen.mjs 合并（n 10001+/20001+/30001+，都带 part；/jing/dizang 只用不带 part 的正文）
 export default {
  "title": "地藏经",
  "fullTitle": "地藏菩萨本愿经",
@@ -12,6 +13,340 @@ export default {
  "charCount": 16930,
  "slug": "dizang",
  "lines": [
+  {
+   "n": 10001,
+   "text": "炉香乍爇，法界蒙薰，诸佛海会悉遥闻。",
+   "pinyin": "lú xiāng zhà ruò fǎ jiè méng xūn zhū fó hǎi huì xī yáo wén",
+   "part": "卷首",
+   "heading": "香赞",
+   "times": "一遍"
+  },
+  {
+   "n": 10002,
+   "text": "随处结祥云，诚意方殷，诸佛现全身。",
+   "pinyin": "suí chù jié xiáng yún chéng yì fāng yīn zhū fó xiàn quán shēn",
+   "part": "卷首"
+  },
+  {
+   "n": 10003,
+   "text": "南无香云盖菩萨摩诃萨。",
+   "pinyin": "nā mó xiāng yún gài pú sà mó hē sà",
+   "part": "卷首",
+   "times": "合掌三称"
+  },
+  {
+   "n": 10004,
+   "text": "唵，修多唎，修多唎，修摩唎，修摩唎，娑婆诃。",
+   "pinyin": "ōng xiū duō lì xiū duō lì xiū mó lì xiū mó lì suō pó hē",
+   "part": "卷首",
+   "heading": "净身业真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10005,
+   "text": "唵，修唎修唎，摩诃修唎，修修唎，萨婆诃。",
+   "pinyin": "ōng xiū lì xiū lì mó hē xiū lì xiū xiū lì sà pó hē",
+   "part": "卷首",
+   "heading": "净口业真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10006,
+   "text": "唵，嚩日啰怛诃贺斛。",
+   "pinyin": "ōng wá zǐ là dá hē hè hòng",
+   "part": "卷首",
+   "heading": "净意业真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10007,
+   "text": "唵，娑嚩，婆嚩秫驮，娑嚩达摩娑嚩，婆嚩秫度憾。",
+   "pinyin": "ōng suō wá pó wá shú tuó suō wá dá mó suō wá pó wá shú dù hàn",
+   "part": "卷首",
+   "heading": "净三业真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10008,
+   "text": "南无三满多，母驮喃，唵，度噜度噜，地尾，娑婆诃。",
+   "pinyin": "nā mó sān mǎn duō mǔ tuó nán ōng dù lū dù lū dì wěi suō pó hē",
+   "part": "卷首",
+   "heading": "安土地真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10009,
+   "text": "唵，誐誐曩，三婆嚩，韈日啰斛。",
+   "pinyin": "ōng yé yé nǎng sān pó wá fá zǐ là hòng",
+   "part": "卷首",
+   "heading": "普供养真言",
+   "times": "三遍"
+  },
+  {
+   "n": 10010,
+   "text": "华严第四会，夜摩天宫，无量菩萨来集，说偈赞佛。",
+   "pinyin": "huá yán dì sì huì yè mó tiān gōng wú liàng pú sà lái jí shuō jì zàn fó",
+   "part": "卷首",
+   "heading": "觉林菩萨偈",
+   "times": "一遍"
+  },
+  {
+   "n": 10011,
+   "text": "尔时，觉林菩萨承佛威力，遍观十方，而说颂言：",
+   "pinyin": "ěr shí jué lín pú sà chéng fó wēi lì biàn guān shí fāng ér shuō sòng yán",
+   "part": "卷首"
+  },
+  {
+   "n": 10012,
+   "text": "譬如工画师，分布诸彩色。",
+   "pinyin": "pì rú gōng huà shī fēn bù zhū cǎi sè",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10013,
+   "text": "虚妄取异相，大种无差别。",
+   "pinyin": "xū wàng qǔ yì xiàng dà zhǒng wú chā bié",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10014,
+   "text": "大种中无色，色中无大种。",
+   "pinyin": "dà zhǒng zhōng wú sè sè zhōng wú dà zhǒng",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10015,
+   "text": "亦不离大种，而有色可得。",
+   "pinyin": "yì bù lí dà zhǒng ér yǒu sè kě dé",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10016,
+   "text": "心中无彩画，彩画中无心。",
+   "pinyin": "xīn zhōng wú cǎi huà cǎi huà zhōng wú xīn",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10017,
+   "text": "然不离于心，有彩画可得。",
+   "pinyin": "rán bù lí yú xīn yǒu cǎi huà kě dé",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10018,
+   "text": "彼心恒不住，无量难思议。",
+   "pinyin": "bǐ xīn héng bù zhù wú liàng nán sī yì",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10019,
+   "text": "示现一切色，各各不相知。",
+   "pinyin": "shì xiàn yí qiè sè gè gè bù xiāng zhī",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10020,
+   "text": "譬如工画师，不能知自心。",
+   "pinyin": "pì rú gōng huà shī bù néng zhī zì xīn",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10021,
+   "text": "而由心故画，诸法性如是。",
+   "pinyin": "ér yóu xīn gù huà zhū fǎ xìng rú shì",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10022,
+   "text": "心如工画师，能画诸世间。",
+   "pinyin": "xīn rú gōng huà shī néng huà zhū shì jiān",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10023,
+   "text": "五蕴悉从生，无法而不造。",
+   "pinyin": "wǔ yùn xī cóng shēng wú fǎ ér bù zào",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10024,
+   "text": "如心佛亦尔，如佛众生然。",
+   "pinyin": "rú xīn fó yì ěr rú fó zhòng shēng rán",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10025,
+   "text": "应知佛与心，体性皆无尽。",
+   "pinyin": "yīng zhī fó yǔ xīn tǐ xìng jiē wú jìn",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10026,
+   "text": "若人知心行，普造诸世间。",
+   "pinyin": "ruò rén zhī xīn xíng pǔ zào zhū shì jiān",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10027,
+   "text": "是人则见佛，了佛真实性。",
+   "pinyin": "shì rén zé jiàn fó liǎo fó zhēn shí xìng",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10028,
+   "text": "心不住于身，身亦不住心。",
+   "pinyin": "xīn bù zhù yú shēn shēn yì bù zhù xīn",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10029,
+   "text": "而能作佛事，自在未曾有。",
+   "pinyin": "ér néng zuò fó shì zì zài wèi céng yǒu",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10030,
+   "text": "若人欲了知，三世一切佛。",
+   "pinyin": "ruò rén yù liǎo zhī sān shì yí qiè fó",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10031,
+   "text": "应观法界性，一切唯心造。",
+   "pinyin": "yīng guān fǎ jiè xìng yí qiè wéi xīn zào",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10032,
+   "text": "稽首本然净心地，无尽佛藏大慈尊。",
+   "pinyin": "qǐ shǒu běn rán jìng xīn dì wú jìn fó zàng dà cí zūn",
+   "part": "卷首",
+   "heading": "地藏菩萨偈",
+   "times": "一遍",
+   "verse": true
+  },
+  {
+   "n": 10033,
+   "text": "南方世界涌香云，香雨花云及花雨。",
+   "pinyin": "nán fāng shì jiè yǒng xiāng yún xiāng yǔ huā yún jí huā yǔ",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10034,
+   "text": "宝雨宝云无数种，为祥为瑞遍庄严。",
+   "pinyin": "bǎo yǔ bǎo yún wú shù zhǒng wéi xiáng wéi ruì biàn zhuāng yán",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10035,
+   "text": "天人问佛是何因，佛言地藏菩萨至。",
+   "pinyin": "tiān rén wèn fó shì hé yīn fó yán dì zàng pú sà zhì",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10036,
+   "text": "三世如来同赞叹，十方菩萨共皈依。",
+   "pinyin": "sān shì rú lái tóng zàn tàn shí fāng pú sà gòng guī yī",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10037,
+   "text": "我今宿植善因缘，称扬地藏真功德。",
+   "pinyin": "wǒ jīn sù zhí shàn yīn yuán chēng yáng dì zàng zhēn gōng dé",
+   "part": "卷首",
+   "verse": true
+  },
+  {
+   "n": 10038,
+   "text": "慈因积善，誓救众生，",
+   "pinyin": "cí yīn jī shàn shì jiù zhòng shēng",
+   "part": "卷首"
+  },
+  {
+   "n": 10039,
+   "text": "手中金锡，振开地狱之门；",
+   "pinyin": "shǒu zhōng jīn xī zhèn kāi dì yù zhī mén",
+   "part": "卷首"
+  },
+  {
+   "n": 10040,
+   "text": "掌上明珠，光摄大千世界。",
+   "pinyin": "zhǎng shàng míng zhū guāng shè dà qiān shì jiè",
+   "part": "卷首"
+  },
+  {
+   "n": 10041,
+   "text": "智慧音里，吉祥云中，",
+   "pinyin": "zhì huì yīn lǐ jí xiáng yún zhōng",
+   "part": "卷首"
+  },
+  {
+   "n": 10042,
+   "text": "为阎浮提苦众生，作大证明功德主。",
+   "pinyin": "wèi yán fú tí kǔ zhòng shēng zuò dà zhèng míng gōng dé zhǔ",
+   "part": "卷首"
+  },
+  {
+   "n": 10043,
+   "text": "大悲大愿，大圣大慈，本尊地藏菩萨摩诃萨。",
+   "pinyin": "dà bēi dà yuàn dà shèng dà cí běn zūn dì zàng pú sà mó hē sà",
+   "part": "卷首"
+  },
+  {
+   "n": 10044,
+   "text": "南无大愿地藏王菩萨。",
+   "pinyin": "nā mó dà yuàn dì zàng wáng pú sà",
+   "part": "卷首",
+   "times": "合掌三称"
+  },
+  {
+   "n": 10045,
+   "text": "南无本师释迦牟尼佛。",
+   "pinyin": "nā mó běn shī shì jiā móu ní fó",
+   "part": "卷首",
+   "heading": "南无本师释迦牟尼佛",
+   "times": "合掌三称"
+  },
+  {
+   "n": 10046,
+   "text": "无上甚深微妙法，百千万劫难遭遇。",
+   "pinyin": "wú shàng shèn shēn wēi miào fǎ bǎi qiān wàn jié nán zāo yù",
+   "part": "卷首",
+   "heading": "开经偈",
+   "times": "一遍",
+   "verse": true
+  },
+  {
+   "n": 10047,
+   "text": "我今见闻得受持，愿解如来真实义。",
+   "pinyin": "wǒ jīn jiàn wén dé shòu chí yuàn jiě rú lái zhēn shí yì",
+   "part": "卷首",
+   "verse": true
+  },
   {
    "n": 1,
    "text": "如是我闻：一时，佛在忉利天，为母说法。",
@@ -66,7 +401,7 @@ export default {
   {
    "n": 11,
    "text": "所谓四天王天、忉利天、须焰摩天、兜率陀天、化乐天、他化自在天、梵众天、梵辅天、大梵天、少光天、无量光天、光音天、少净天、无量净天、遍净天、福生天、福爱天、广果天、无想天、无烦天、无热天、善见天、善现天、色究竟天、摩醯首罗天，",
-   "pinyin": "suǒ wèi sì tiān wáng tiān dāo lì tiān xū yàn mó tiān dōu lǜ tuó tiān huà lè tiān tā huà zì zài tiān fàn zhòng tiān fàn fǔ tiān dà fàn tiān shǎo guāng tiān wú liàng guāng tiān guāng yīn tiān shǎo jìng tiān wú liàng jìng tiān biàn jìng tiān fú shēng tiān fú ài tiān guǎng guǒ tiān wú xiǎng tiān wú fán tiān wú rè tiān shàn jiàn tiān shàn xiàn tiān sè jiū jìng tiān mó xī shǒu luó tiān"
+   "pinyin": "suǒ wèi sì tiān wáng tiān dāo lì tiān xū yàn mó tiān dōu shuài tuó tiān huà lè tiān tā huà zì zài tiān fàn zhòng tiān fàn fǔ tiān dà fàn tiān shǎo guāng tiān wú liàng guāng tiān guāng yīn tiān shǎo jìng tiān wú liàng jìng tiān biàn jìng tiān fú shēng tiān fú ài tiān guǎng guǒ tiān wú xiǎng tiān wú fán tiān wú rè tiān shàn jiàn tiān shàn xiàn tiān sè jiū jìng tiān mó xī shǒu luó tiān"
   },
   {
    "n": 12,
@@ -1835,6 +2170,26 @@ export default {
    "n": 364,
    "text": "四天王闻已，涕泪悲叹，合掌而退。",
    "pinyin": "sì tiān wáng wén yǐ tì lèi bēi tàn hé zhǎng ér tuì"
+  },
+  {
+   "n": 30001,
+   "text": "如来慈愍，转大法轮，婆罗门女救慈亲。",
+   "pinyin": "rú lái cí mǐn zhuǎn dà fǎ lún pó luó mén nǚ jiù cí qīn",
+   "part": "卷上末",
+   "heading": "赞"
+  },
+  {
+   "n": 30002,
+   "text": "觉华度迷津，摩耶夫人，请问地藏因。",
+   "pinyin": "jué huā dù mí jīn mó yé fū rén qǐng wèn dì zàng yīn",
+   "part": "卷上末"
+  },
+  {
+   "n": 30003,
+   "text": "南无地藏菩萨摩诃萨。",
+   "pinyin": "nā mó dì zàng pú sà mó hē sà",
+   "part": "卷上末",
+   "times": "合掌三称"
   },
   {
    "n": 365,
@@ -3827,6 +4182,26 @@ export default {
    "pinyin": "hé kuàng zhòng shēng zì chēng zì niàn huò fú wú liàng miè wú liàng zuì"
   },
   {
+   "n": 30004,
+   "text": "普贤启问，地藏宏开，三途六道绝尘埃。",
+   "pinyin": "pǔ xián qǐ wèn dì zàng hóng kāi sān tú liù dào jué chén āi",
+   "part": "卷中末",
+   "heading": "赞"
+  },
+  {
+   "n": 30005,
+   "text": "普广问如来，授记十斋，接引上莲台。",
+   "pinyin": "pǔ guǎng wèn rú lái shòu jì shí zhāi jiē yǐn shàng lián tái",
+   "part": "卷中末"
+  },
+  {
+   "n": 30006,
+   "text": "南无地藏菩萨摩诃萨。",
+   "pinyin": "nā mó dì zàng pú sà mó hē sà",
+   "part": "卷中末",
+   "times": "合掌三称"
+  },
+  {
    "n": 762,
    "text": "尔时，地藏菩萨摩诃萨承佛威神，从座而起，胡跪合掌，",
    "pinyin": "ěr shí dì zàng pú sà mó hē sà chéng fó wēi shén cóng zuò ér qǐ hú guì hé zhǎng",
@@ -5344,6 +5719,208 @@ export default {
    "n": 1064,
    "text": "一切众会，俱复瞻礼，合掌而退。",
    "pinyin": "yī qiè zhòng huì jù fù zhān lǐ hé zhǎng ér tuì"
+  },
+  {
+   "n": 20001,
+   "text": "地藏本誓，校量经因，癃残瘖痖是前生。",
+   "pinyin": "dì zàng běn shì jiào liàng jīng yīn lóng cán yīn yǎ shì qián shēng",
+   "part": "卷尾",
+   "heading": "赞"
+  },
+  {
+   "n": 20002,
+   "text": "今世讽大乘，福利无穷，决定宝莲生。",
+   "pinyin": "jīn shì fěng dà shèng fú lì wú qióng jué dìng bǎo lián shēng",
+   "part": "卷尾"
+  },
+  {
+   "n": 20003,
+   "text": "南无地藏菩萨摩诃萨。",
+   "pinyin": "nā mó dì zàng pú sà mó hē sà",
+   "part": "卷尾",
+   "times": "合掌三称"
+  },
+  {
+   "n": 20004,
+   "text": "南无喝啰怛那，哆啰夜耶，佉啰佉啰，俱住俱住，",
+   "pinyin": "nā mó hē là dá nuó duō là yè yé qié là qié là jù zhù jù zhù",
+   "part": "卷尾",
+   "heading": "补阙真言",
+   "times": "三遍"
+  },
+  {
+   "n": 20005,
+   "text": "摩啰摩啰，虎啰，吽，贺贺，苏怛拏，吽，泼抹拏，娑婆诃。",
+   "pinyin": "mó là mó là hǔ là hòng hè hè sū dá ná hòng pō mò ná suō pó hē",
+   "part": "卷尾"
+  },
+  {
+   "n": 20006,
+   "text": "唵，呼嚧呼嚧，社曳穆契，娑诃。",
+   "pinyin": "ōng hū lú hū lú shè yì mù qiè suō hē",
+   "part": "卷尾",
+   "heading": "补阙圆满真言",
+   "times": "三遍"
+  },
+  {
+   "n": 20007,
+   "text": "唵，娑么啰，娑么啰，弭么曩，萨嚩诃，摩诃斫迦啰嚩吽。",
+   "pinyin": "ōng suō mó là suō mó là mǐ mó nǎng sà pó hē mó hē zhuó jiā là wá hòng",
+   "part": "卷尾",
+   "heading": "普回向真言",
+   "times": "三遍"
+  },
+  {
+   "n": 20008,
+   "text": "离婆离婆帝，求诃求诃帝，陀罗尼帝，尼诃啰帝，",
+   "pinyin": "lí pó lí pó dì qiú hē qiú hē dì tuó luó ní dì ní hē là dì",
+   "part": "卷尾",
+   "heading": "七佛灭罪真言",
+   "times": "三遍"
+  },
+  {
+   "n": 20009,
+   "text": "毗黎你帝，摩诃伽帝，真陵乾帝，莎婆诃。",
+   "pinyin": "pí lí nǐ dì mó hē qié dì zhēn líng qián dì suō pó hē",
+   "part": "卷尾"
+  },
+  {
+   "n": 20010,
+   "text": "唵，钵啰末邻陀宁，娑婆诃。",
+   "pinyin": "ōng bō là mò lín tuó níng suō pó hē",
+   "part": "卷尾",
+   "heading": "灭定业真言",
+   "times": "三遍"
+  },
+  {
+   "n": 20011,
+   "text": "地藏大慈悲，誓愿永无尽期，所化成佛数难思。",
+   "pinyin": "dì zàng dà cí bēi shì yuàn yǒng wú jìn qī suǒ huà chéng fó shù nán sī",
+   "part": "卷尾",
+   "heading": "赞偈",
+   "times": "一遍"
+  },
+  {
+   "n": 20012,
+   "text": "犹秉声闻仪，直待狱空生度尽，方肯示证菩提。",
+   "pinyin": "yóu bǐng shēng wén yí zhí dài yù kōng shēng dù jìn fāng kěn shì zhèng pú tí",
+   "part": "卷尾"
+  },
+  {
+   "n": 20013,
+   "text": "恳祈冥显施恩资，海会预莲池。",
+   "pinyin": "kěn qí míng xiǎn shī ēn zī hǎi huì yù lián chí",
+   "part": "卷尾"
+  },
+  {
+   "n": 20014,
+   "text": "恳祈冥显施恩资，海会预莲池。",
+   "pinyin": "kěn qí míng xiǎn shī ēn zī hǎi huì yù lián chí",
+   "part": "卷尾"
+  },
+  {
+   "n": 20015,
+   "text": "大士誓愿不可测，运悲周遍尘刹国。",
+   "pinyin": "dà shì shì yuàn bù kě cè yùn bēi zhōu biàn chén chà guó",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20016,
+   "text": "众生尽后誓方休，地狱空时愿始息。",
+   "pinyin": "zhòng shēng jìn hòu shì fāng xiū dì yù kōng shí yuàn shǐ xī",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20017,
+   "text": "受化多成无上道，自身犹示声闻迹。",
+   "pinyin": "shòu huà duō chéng wú shàng dào zì shēn yóu shì shēng wén jì",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20018,
+   "text": "只缘生佛性唯一，欲令同获究竟即。",
+   "pinyin": "zhī yuán shēng fó xìng wéi yī yù lìng tóng huò jiū jìng jí",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20019,
+   "text": "南无九华山幽冥世界大慈大悲十轮拔苦本尊地藏王菩萨。",
+   "pinyin": "nā mó jiǔ huá shān yōu míng shì jiè dà cí dà bēi shí lún bá kǔ běn zūn dì zàng wáng pú sà",
+   "part": "卷尾",
+   "times": "一称"
+  },
+  {
+   "n": 20020,
+   "text": "南无地藏菩萨摩诃萨。",
+   "pinyin": "nā mó dì zàng pú sà mó hē sà",
+   "part": "卷尾",
+   "times": "数百千声"
+  },
+  {
+   "n": 20021,
+   "text": "愿以此功德，庄严佛净土。",
+   "pinyin": "yuàn yǐ cǐ gōng dé zhuāng yán fó jìng tǔ",
+   "part": "卷尾",
+   "heading": "回向偈",
+   "times": "一遍",
+   "verse": true
+  },
+  {
+   "n": 20022,
+   "text": "上报四重恩，下济三途苦。",
+   "pinyin": "shàng bào sì chóng ēn xià jì sān tú kǔ",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20023,
+   "text": "若有见闻者，悉发菩提心。",
+   "pinyin": "ruò yǒu jiàn wén zhě xī fā pú tí xīn",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20024,
+   "text": "尽此一报身，同生极乐国。",
+   "pinyin": "jìn cǐ yī bào shēn tóng shēng jí lè guó",
+   "part": "卷尾",
+   "verse": true
+  },
+  {
+   "n": 20025,
+   "text": "十方三世一切佛，一切菩萨摩诃萨，摩诃般若波罗蜜。",
+   "pinyin": "shí fāng sān shì yí qiè fó yí qiè pú sà mó hē sà mó hē bō rě bō luó mì",
+   "part": "卷尾"
+  },
+  {
+   "n": 20026,
+   "text": "自皈依佛，当愿众生，体解大道，发无上心。",
+   "pinyin": "zì guī yī fó dāng yuàn zhòng shēng tǐ jiě dà dào fā wú shàng xīn",
+   "part": "卷尾",
+   "heading": "三皈依",
+   "times": "一遍"
+  },
+  {
+   "n": 20027,
+   "text": "自皈依法，当愿众生，深入经藏，智慧如海。",
+   "pinyin": "zì guī yī fǎ dāng yuàn zhòng shēng shēn rù jīng zàng zhì huì rú hǎi",
+   "part": "卷尾"
+  },
+  {
+   "n": 20028,
+   "text": "自皈依僧，当愿众生，统理大众，一切无碍。",
+   "pinyin": "zì guī yī sēng dāng yuàn zhòng shēng tǒng lǐ dà zhòng yí qiè wú ài",
+   "part": "卷尾"
+  },
+  {
+   "n": 20029,
+   "text": "和南圣众。",
+   "pinyin": "hé nán shèng zhòng",
+   "part": "卷尾"
   }
  ]
 }

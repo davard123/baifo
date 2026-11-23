@@ -40,9 +40,9 @@ for (const s of NIANJING) {
     next = g.end
   }
   assert.equal(next, u.chars.length, `${s.slug} 小段没盖满全部字`)
-  // 偈颂块只出现在 puxian / pumen
+  // 偈颂块只出现在 puxian / pumen / renwang / dizang（卷首卷尾的偈）
   const hasVerse = blocks.some((b) => b.kind === 'verse')
-  assert.equal(hasVerse, s.slug === 'puxian' || s.slug === 'pumen' || s.slug === 'renwang', `${s.slug} 偈颂判断`)
+  assert.equal(hasVerse, s.slug === 'puxian' || s.slug === 'pumen' || s.slug === 'renwang' || s.slug === 'dizang', `${s.slug} 偈颂判断`)
   // 分页：各页小段依次拼起来 = 全部小段
   for (const opt of SIZES) {
     const pages = paginate(segs, opt)

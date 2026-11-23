@@ -18,7 +18,7 @@ export const NIANJING = [
   { slug: 'jingang', title: '金刚经', buddha: 'shakyamuni', jingSlug: 'jingang', note: '三十二分全文', header: { title: '金刚般若波罗蜜经', titlePy: 'jīn gāng bō rě bō luó mì jīng', translator: '姚秦 三藏法师鸠摩罗什 译', translatorPy: 'yáo qín sān zàng fǎ shī jiū mó luó shí yì' }, load: () => import('./sutras/jingang.js') },
   { slug: 'yaoshi', title: '药师经', buddha: 'medicine', note: '药师琉璃光如来本愿功德经', header: { title: '药师琉璃光如来本愿功德经', titlePy: 'yào shī liú lí guāng rú lái běn yuàn gōng dé jīng', translator: '唐 三藏法师玄奘 奉诏译', translatorPy: 'táng sān zàng fǎ shī xuán zàng fèng zhào yì' }, load: () => import('./sutras/yaoshi.js') },
   { slug: 'dizang', title: '地藏经', buddha: 'ksitigarbha', jingSlug: 'dizang', note: '十三品全文', header: { title: '地藏菩萨本愿经', titlePy: 'dì zàng pú sà běn yuàn jīng', translator: '唐 于阗国三藏沙门实叉难陀 译', translatorPy: 'táng yú tián guó sān zàng shā mén shí chā nán tuó yì' }, load: () => import('./sutras/dizang.js') },
-  { slug: 'renwang', title: '仁王护国经', buddha: 'shakyamuni', note: '护国般若，八品全文', header: { title: '仁王护国般若波罗蜜多经', titlePy: 'rén wáng hù guó bō rě bō luó mì duō jīng', translator: '唐 大广智不空 奉诏译', translatorPy: 'táng dà guǎng zhì bù kōng fèng zhào yì' }, load: () => import('./sutras/renwang.js') },
+  { slug: 'renwang', title: '仁王护国经', buddha: 'shakyamuni', note: '护国般若，八品全文', header: { title: '佛说仁王般若波罗蜜经', titlePy: 'fó shuō rén wáng bō rě bō luó mì jīng', translator: '姚秦 三藏鸠摩罗什 译', translatorPy: 'yáo qín sān zàng jiū mó luó shí yì' }, load: () => import('./sutras/renwang.js') },
 ]
 
 export const NIANJING_BY_SLUG = Object.fromEntries(NIANJING.map((s) => [s.slug, s]))
@@ -45,6 +45,7 @@ export function toUnits(rawLines) {
   const chars = []
   const lines = []
   let carried = '' // 品名/分名/咒名只标在第一行的经（地藏经）也要一路带下去
+  let carriedTimes = '' // 仪文篇名后的「（三遍）」之类：标在篇第一行，跟着篇名带下去
   rawLines.forEach((l, line) => {
     const pys = String(l.pinyin || '').trim().split(/\s+/).filter(Boolean)
     const start = chars.length
@@ -64,11 +65,16 @@ export function toUnits(rawLines) {
         tokens.push({ ch })
       }
     }
+    // 不是篇第一行的 times（「南无……（合掌三称）」）是这一行的提示：挂在行末，不是字单位，不参与跟读
+    if (l.times && !l.heading) tokens.push({ ch: `（${l.times}）`, note: true })
+    if (l.heading || l.fenName || l.section) carriedTimes = l.heading ? l.times || '' : ''
     carried = l.heading || l.fenName || l.section || carried
     lines.push({
       text: l.text,
       heading: carried,
+      times: carriedTimes,
       stanza: l.stanza,
+      verse: l.verse,
       part: l.part,
       start,
       end: chars.length,
@@ -115,10 +121,14 @@ export function decorateUnits(units, hantLines = null) {
       c.zy = zy[k] || ''
     })
     let disp = hantLines ? [...String(hantLines[i] || '')].filter((ch) => !/\s/.test(ch)) : null
-    if (disp && disp.length !== ln.tokens.length) disp = null // 对不上就不换字
-    ln.tokens.forEach((t, k) => {
+    const toks = ln.tokens.filter((t) => !t.note) // 行末提示（合掌三称）不在经文里
+    if (disp && disp.length !== toks.length) disp = null // 对不上就不换字
+    toks.forEach((t, k) => {
       if (t.u !== undefined) t.zy = units.chars[t.u].zy
       if (disp) t.dch = disp[k]
+    })
+    if (disp) ln.tokens.forEach((t) => {
+      if (t.note) t.dch = t.ch.replace(/称/g, '稱').replace(/数/g, '數').replace(/声/g, '聲')
     })
     if (disp) ln.dtext = hantLines[i]
   })

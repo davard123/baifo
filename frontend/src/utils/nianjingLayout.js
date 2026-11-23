@@ -9,7 +9,7 @@ const PARA_END = /[。！？」』]$/
 // 偈颂里，上一排以这些收尾，下一排前留小间距（一偈完了）
 const VERSE_END = /[。！？：]$/
 
-const isVerseLine = (l) => l.stanza !== undefined || l.part === '偈颂'
+const isVerseLine = (l) => l.stanza !== undefined || l.part === '偈颂' || !!l.verse
 
 /**
  * 把经文行排成块：
@@ -30,7 +30,7 @@ export function buildBlocks(lines) {
     // 不超过 6 个汉字、以「：」结尾的短行（「第一觉悟：」「第二觉知：」）在它前面另起一段，它后面的句子接在同一段里
     const colonHead = !verse && /：$/.test(l.text) && [...l.text].filter((c) => /\p{Script=Han}/u.test(c)).length <= 6
     if (!cur || headStart || cur.kind !== kind || cur.closed || colonHead) {
-      cur = { kind, heading, headStart, lines: [], rows: [], closed: false }
+      cur = { kind, heading, times: l.times || '', headStart, lines: [], rows: [], closed: false }
       blocks.push(cur)
     }
     cur.lines.push(i)
@@ -144,7 +144,10 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
     for (let k = begin; k < segs.length; k += 1) {
       if (segs[k].end <= segs[k].start) continue
       segs[begin].paraStart = true
-      if (b.headStart) segs[begin].heading = b.heading
+      if (b.headStart) {
+        segs[begin].heading = b.heading
+        segs[begin].headTimes = b.times || ''
+      }
       break
     }
   })
@@ -165,6 +168,7 @@ export const PARA_GAP_ROWS = 0.25
  * 拼音字号 0.45em，拉丁字母平均约 0.55em 宽，粗估宁大勿小。
  */
 export function tokenWidth(t, fontPx) {
+  if (t.note) return [...t.ch].length * fontPx * 0.6 // 行末小字提示（合掌三称）
   if (t.u === undefined) return fontPx
   return Math.max(fontPx, (t.py || '').length * fontPx * 0.45 * 0.62)
 }
@@ -202,14 +206,14 @@ export function paginate(segments, { width, fontPx, rows, topRows = 0 }) {
     if (page.groups.length && page.used + cost > rows) {
       pages.push(page)
       page = startPage()
-      page.groups.push({ block: sg.block, kind, heading: sg.heading || '', segs: [sg] })
+      page.groups.push({ block: sg.block, kind, heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
       page.start = sg.start
       page.used += (sg.heading ? HEADING_ROWS : 0) + groupRows({ kind, segs: [sg] })
       continue
     }
     if (!page.groups.length) page.start = sg.start
     if (sameGroup) g.segs.push(sg)
-    else page.groups.push({ block: sg.block, kind, heading: sg.heading || '', segs: [sg] })
+    else page.groups.push({ block: sg.block, kind, heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
     page.used += cost
   }
   pages.push(page)
@@ -222,7 +226,7 @@ export function groupSegments(segs) {
   for (const sg of segs) {
     const g = groups.at(-1)
     if (g && g.block === sg.block && !sg.paraStart) g.segs.push(sg)
-    else groups.push({ block: sg.block, kind: sg.gapBefore !== undefined ? 'verse' : 'para', heading: sg.heading || '', segs: [sg] })
+    else groups.push({ block: sg.block, kind: sg.gapBefore !== undefined ? 'verse' : 'para', heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
   }
   return groups
 }

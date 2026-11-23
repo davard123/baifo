@@ -123,6 +123,7 @@ const curSeg = computed(() => segments.value[segmentIndex.value])
 const prevSeg = computed(() => segments.value[segmentIndex.value - 1])
 const nextSeg = computed(() => segments.value[segmentIndex.value + 1])
 const curHeading = computed(() => units.value.lines[lineIndex.value]?.heading || '')
+const curTimes = computed(() => units.value.lines[lineIndex.value]?.times || '')
 // 念到第一段之前（cursor 在第一段内）卡拉OK上方显示经题块
 const showKHeader = computed(() => !!header.value && segmentIndex.value === 0)
 
@@ -414,7 +415,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="nj-kline">
           <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" :intro="headerIntro" class="nj-kheader" />
-          <p v-if="curHeading" class="nj-heading">{{ curHeading }}</p>
+          <p v-if="curHeading" class="nj-heading">{{ curHeading }}<span v-if="curTimes" class="nj-times">（{{ curTimes }}）</span></p>
           <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
           <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
           <p class="nj-k nj-k--next"><SutraSeg v-if="nextSeg" :seg="nextSeg" :cursor="-1" @pick="pick" /></p>
@@ -426,7 +427,7 @@ onBeforeUnmount(() => {
         <SutraHeader v-if="header" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
         <p v-if="jingLink" class="nj-xlink"><router-link :to="jingLink.to">{{ jingLink.label }}</router-link></p>
         <template v-for="(b, bi) in blocks" :key="bi">
-          <p v-if="b.headStart" class="nj-hd">{{ b.heading }}</p>
+          <p v-if="b.headStart" class="nj-hd">{{ b.heading }}<span v-if="b.times" class="nj-times">（{{ b.times }}）</span></p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
             v-for="li in b.lines"
             :key="li"

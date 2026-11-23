@@ -28,7 +28,8 @@ for (const s of NIANJING) {
       const hs = [...l.text].filter((c) => /\p{Script=Han}/u.test(c))
       hs.forEach((c, i) => {
         const near = hs.slice(Math.max(0, i - 2), i + 2).join('')
-        const bad = WRONG_READINGS.find(([ch, py, w]) => ch === c && py === pys[i] && (!w || near.includes(w)))
+        // 词要在原文里连着（「纵横，死入地狱」的横不是「横死」）
+        const bad = WRONG_READINGS.find(([ch, py, w]) => ch === c && py === pys[i] && (!w || (near.includes(w) && l.text.includes(w))))
         assert.ok(!bad, `${s.slug} 第 ${l.n} 行「${c}」标成 ${pys[i]}：${l.text}`)
       })
     }

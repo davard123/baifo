@@ -25,10 +25,17 @@ const keep = computed(() => props.tokens.some((t) => t.dch))
         class="sl-ch"
         :class="{ done: t.u < cursor, cur: t.u === cursor }"
         @click="$emit('pick', t.u)"
-      >{{ t.dch || t.ch }}<rt v-if="ruby === 'zhuyin'" class="sl-zy">{{ t.zy }}</rt><rt v-else-if="ruby === 'pinyin'">{{ t.py }}</rt></ruby><span v-else class="sl-p">{{ t.dch || t.ch }}</span></template></span>
+      >{{ t.dch || t.ch }}<rt v-if="ruby === 'zhuyin'" class="sl-zy">{{ t.zy }}</rt><rt v-else-if="ruby === 'pinyin'">{{ t.py }}</rt></ruby><span v-else class="sl-p" :class="{ 'sl-note': t.note }">{{ t.dch || t.ch }}</span></template></span>
 </template>
 
 <style scoped>
+/* 行末提示「（合掌三称）」：小号灰字，不是经文，不跟读 */
+.sl-note {
+  font-size: 0.55em;
+  color: #9a8f84;
+  margin-left: 0.2em;
+  white-space: nowrap;
+}
 .sl-ch {
   ruby-position: over;
   cursor: pointer;

@@ -25,7 +25,7 @@ function cursorFor(seg) {
   <div class="sp">
     <SutraHeader v-if="showHeader && header" :header="header" :note="note" :intro="intro" data-sp-header />
     <template v-for="g in groups" :key="g.segs[0].start">
-      <p v-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}</p>
+      <p v-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}<span v-if="g.times" class="nj-times">（{{ g.times }}）</span></p>
       <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span class="nj-sg" :data-sg="sg.idx"><span
         v-for="pt in sg.parts"
         :key="pt.line + '-' + pt.tokens[0].u"
@@ -63,6 +63,8 @@ function cursorFor(seg) {
   color: #7a2a1c;
   line-height: 1.8;
 }
+/* 篇名后的「（三遍）」：小号灰字，只是提示 */
+.nj-times { margin-left: 0.2em; font-size: 0.62em; font-weight: 400; color: #9a8f84; }
 .nj-verse { margin: 0 0 0.6em; }
 .nj-vrow { margin: 0; text-align: center; line-height: 2.25; }
 .nj-vrow.gap { margin-top: 0.7em; }

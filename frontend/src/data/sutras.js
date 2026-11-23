@@ -207,6 +207,8 @@ export const SUTRAS = [
   },
   {
     ...dizang,
+    // 数据文件里还有卷首/卷尾仪文和卷末赞（带 part，给念经页用）；/jing/ 这页只放正文和对应录音
+    lines: dizang.lines.filter((l) => !l.part),
     name: '地藏菩萨本愿经',
     image: '/buddha-variants/a8-five-crown-20261024.webp',
     intro: '《地藏菩萨本愿经》，唐代实叉难陀译，全经十三品。佛在忉利天为母说法，讲地藏菩萨的大愿、众生业缘与孝亲度亡的法门，汉传佛教常在超度、祭祖、回向先人时诵读。',
