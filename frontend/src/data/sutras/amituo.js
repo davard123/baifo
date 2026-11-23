@@ -365,7 +365,7 @@ export default {
   {
    "n": 71,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 72,
@@ -385,7 +385,7 @@ export default {
   {
    "n": 75,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 76,
@@ -405,7 +405,7 @@ export default {
   {
    "n": 79,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 80,
@@ -425,7 +425,7 @@ export default {
   {
    "n": 83,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 84,
@@ -445,7 +445,7 @@ export default {
   {
    "n": 87,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 88,
@@ -455,7 +455,7 @@ export default {
   {
    "n": 89,
    "text": "杂色宝华严身佛、娑罗树王佛、宝华德佛、见一切义佛、如须弥山佛，",
-   "pinyin": "zá sè bǎo huá yán shēn fó suō luó shù wáng fó bǎo huá dé fó jiàn yī qiè yì fó rú xū mí shān fó"
+   "pinyin": "zá sè bǎo huá yán shēn fó suō luó shù wáng fó bǎo huá dé fó jiàn yí qiè yì fó rú xū mí shān fó"
   },
   {
    "n": 90,
@@ -470,12 +470,12 @@ export default {
   {
    "n": 92,
    "text": "汝等众生，当信是《称赞不可思议功德一切诸佛所护念经》。",
-   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "rǔ děng zhòng shēng dāng xìn shì chēng zàn bù kě sī yì gōng dé yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 93,
    "text": "舍利弗，于汝意云何，何故名为《一切诸佛所护念经》？",
-   "pinyin": "shè lì fú yú rǔ yì yún hé hé gù míng wèi yī qiè zhū fó suǒ hù niàn jīng"
+   "pinyin": "shè lì fú yú rǔ yì yún hé hé gù míng wèi yí qiè zhū fó suǒ hù niàn jīng"
   },
   {
    "n": 94,
@@ -485,7 +485,7 @@ export default {
   {
    "n": 95,
    "text": "是诸善男子、善女人，皆为一切诸佛之所护念，",
-   "pinyin": "shì zhū shàn nán zǐ shàn nǚ rén jiē wèi yī qiè zhū fó zhī suǒ hù niàn"
+   "pinyin": "shì zhū shàn nán zǐ shàn nǚ rén jiē wèi yí qiè zhū fó zhī suǒ hù niàn"
   },
   {
    "n": 96,
@@ -550,7 +550,7 @@ export default {
   {
    "n": 108,
    "text": "为诸众生，说是一切世间难信之法。",
-   "pinyin": "wèi zhū zhòng shēng shuō shì yī qiè shì jiān nán xìn zhī fǎ"
+   "pinyin": "wèi zhū zhòng shēng shuō shì yí qiè shì jiān nán xìn zhī fǎ"
   },
   {
    "n": 109,
@@ -560,7 +560,7 @@ export default {
   {
    "n": 110,
    "text": "得阿耨多罗三藐三菩提，为一切世间说此难信之法，是为甚难！",
-   "pinyin": "dé ā nòu duō luó sān miǎo sān pú tí wèi yī qiè shì jiān shuō cǐ nán xìn zhī fǎ shì wèi shèn nán"
+   "pinyin": "dé ā nòu duō luó sān miǎo sān pú tí wèi yí qiè shì jiān shuō cǐ nán xìn zhī fǎ shì wèi shèn nán"
   },
   {
    "n": 111,
@@ -570,7 +570,7 @@ export default {
   {
    "n": 112,
    "text": "一切世间天人阿修罗等，闻佛所说，欢喜信受，作礼而去。",
-   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó děng wén fó suǒ shuō huān xǐ xìn shòu zuò lǐ ér qù"
+   "pinyin": "yí qiè shì jiān tiān rén ā xiū luó děng wén fó suǒ shuō huān xǐ xìn shòu zuò lǐ ér qù"
   }
  ]
 }

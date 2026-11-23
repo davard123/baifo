@@ -135,7 +135,7 @@ export default {
   {
    "n": 25,
    "text": "令一切有情，如我无异。",
-   "pinyin": "lìng yī qiè yǒu qíng rú wǒ wú yì"
+   "pinyin": "lìng yí qiè yǒu qíng rú wǒ wú yì"
   },
   {
    "n": 26,
@@ -180,7 +180,7 @@ export default {
   {
    "n": 34,
    "text": "于我法中修行梵行，一切皆令得不缺戒，具三聚戒。",
-   "pinyin": "yú wǒ fǎ zhōng xiū xíng fàn xíng yī qiè jiē lìng dé bù quē jiè jù sān jù jiè"
+   "pinyin": "yú wǒ fǎ zhōng xiū xíng fàn xíng yí qiè jiē lìng dé bù quē jiè jù sān jù jiè"
   },
   {
    "n": 35,
@@ -200,7 +200,7 @@ export default {
   {
    "n": 38,
    "text": "闻我名已，一切皆得端正黠慧。",
-   "pinyin": "wén wǒ míng yǐ yī qiè jiē dé duān zhèng xiá huì"
+   "pinyin": "wén wǒ míng yǐ yí qiè jiē dé duān zhèng xiá huì"
   },
   {
    "n": 39,
@@ -235,12 +235,12 @@ export default {
   {
    "n": 45,
    "text": "闻我名已，一切皆得转女成男，具丈夫相，乃至证得无上菩提。",
-   "pinyin": "wén wǒ míng yǐ yī qiè jiē dé zhuǎn nǚ chéng nán jù zhàng fū xiàng nǎi zhì zhèng dé wú shàng pú tí"
+   "pinyin": "wén wǒ míng yǐ yí qiè jiē dé zhuǎn nǚ chéng nán jù zhàng fū xiàng nǎi zhì zhèng dé wú shàng pú tí"
   },
   {
    "n": 46,
    "text": "“第九大愿：愿我来世得菩提时，令诸有情，出魔羂网，解脱一切外道缠缚；",
-   "pinyin": "dì jiǔ dà yuàn yuàn wǒ lái shì dé pú tí shí lìng zhū yǒu qíng chū mó juàn wǎng jiě tuō yī qiè wài dào chán fù"
+   "pinyin": "dì jiǔ dà yuàn yuàn wǒ lái shì dé pú tí shí lìng zhū yǒu qíng chū mó juàn wǎng jiě tuō yí qiè wài dào chán fù"
   },
   {
    "n": 47,
@@ -270,7 +270,7 @@ export default {
   {
    "n": 52,
    "text": "若闻我名，以我福德威神力故，皆得解脱一切忧苦。",
-   "pinyin": "ruò wén wǒ míng yǐ wǒ fú dé wēi shén lì gù jiē dé jiě tuō yī qiè yōu kǔ"
+   "pinyin": "ruò wén wǒ míng yǐ wǒ fú dé wēi shén lì gù jiē dé jiě tuō yí qiè yōu kǔ"
   },
   {
    "n": 53,
@@ -305,7 +305,7 @@ export default {
   {
    "n": 59,
    "text": "亦得一切宝庄严具，华鬘涂香，鼓乐众伎，随心所玩，皆令满足。",
-   "pinyin": "yì dé yī qiè bǎo zhuāng yán jù huá mán tú xiāng gǔ yuè zhòng jì suí xīn suǒ wán jiē lìng mǎn zú"
+   "pinyin": "yì dé yí qiè bǎo zhuāng yán jù huá mán tú xiāng gǔ yuè zhòng jì suí xīn suǒ wán jiē lìng mǎn zú"
   },
   {
    "n": 60,
@@ -420,7 +420,7 @@ export default {
   {
    "n": 82,
    "text": "一切所有悉无贪惜，渐次尚能以头目手足，血肉身分，",
-   "pinyin": "yī qiè suǒ yǒu xī wú tān xī jiàn cì shàng néng yǐ tóu mù shǒu zú xuè ròu shēn fèn"
+   "pinyin": "yí qiè suǒ yǒu xī wú tān xī jiàn cì shàng néng yǐ tóu mù shǒu zú xuè ròu shēn fèn"
   },
   {
    "n": 83,
@@ -550,7 +550,7 @@ export default {
   {
    "n": 108,
    "text": "解脱一切生、老、病、死，忧悲、苦恼。",
-   "pinyin": "jiě tuō yī qiè shēng lǎo bìng sǐ yōu bēi kǔ nǎo"
+   "pinyin": "jiě tuō yí qiè shēng lǎo bìng sǐ yōu bēi kǔ nǎo"
   },
   {
    "n": 109,
@@ -595,7 +595,7 @@ export default {
   {
    "n": 117,
    "text": "一切展转皆起慈心，利益安乐，无损恼意及嫌恨心；",
-   "pinyin": "yī qiè zhǎn zhuǎn jiē qǐ cí xīn lì yì ān lè wú sǔn nǎo yì jí xián hèn xīn"
+   "pinyin": "yí qiè zhǎn zhuǎn jiē qǐ cí xīn lì yì ān lè wú sǔn nǎo yì jí xián hèn xīn"
   },
   {
    "n": 118,
@@ -690,7 +690,7 @@ export default {
   {
    "n": 136,
    "text": "时彼世尊入三摩地，名曰除灭一切众生苦恼。",
-   "pinyin": "shí bǐ shì zūn rù sān mó dì míng yuē chú miè yī qiè zhòng shēng kǔ nǎo"
+   "pinyin": "shí bǐ shì zūn rù sān mó dì míng yuē chú miè yí qiè zhòng shēng kǔ nǎo"
   },
   {
    "n": 137,
@@ -720,7 +720,7 @@ export default {
   {
    "n": 142,
    "text": "一切众生病苦皆除，受安隐乐。",
-   "pinyin": "yī qiè zhòng shēng bìng kǔ jiē chú shòu ān yǐn lè"
+   "pinyin": "yí qiè zhòng shēng bìng kǔ jiē chú shòu ān yǐn lè"
   },
   {
    "n": 143,
@@ -895,7 +895,7 @@ export default {
   {
    "n": 177,
    "text": "应生无垢浊心，无怒害心，于一切有情，起利益安乐，",
-   "pinyin": "yīng shēng wú gòu zhuó xīn wú nù hài xīn yú yī qiè yǒu qíng qǐ lì yì ān lè"
+   "pinyin": "yīng shēng wú gòu zhuó xīn wú nù hài xīn yú yí qiè yǒu qíng qǐ lì yì ān lè"
   },
   {
    "n": 178,
@@ -910,7 +910,7 @@ export default {
   {
    "n": 180,
    "text": "随所乐愿，一切皆遂：求长寿得长寿，求富饶得富饶，",
-   "pinyin": "suí suǒ lè yuàn yī qiè jiē suì qiú cháng shòu dé cháng shòu qiú fù ráo dé fù ráo"
+   "pinyin": "suí suǒ lè yuàn yí qiè jiē suì qiú cháng shòu dé cháng shòu qiú fù ráo dé fù ráo"
   },
   {
    "n": 181,
@@ -945,7 +945,7 @@ export default {
   {
    "n": 187,
    "text": "若能至心忆念彼佛，恭敬供养，一切怖畏皆得解脱。",
-   "pinyin": "ruò néng zhì xīn yì niàn bǐ fó gōng jìng gòng yǎng yī qiè bù wèi jiē dé jiě tuō"
+   "pinyin": "ruò néng zhì xīn yì niàn bǐ fó gōng jìng gòng yǎng yí qiè bù wèi jiē dé jiě tuō"
   },
   {
    "n": 188,
@@ -1040,7 +1040,7 @@ export default {
   {
    "n": 206,
    "text": "一切如来身语意业，无不清净。",
-   "pinyin": "yī qiè rú lái shēn yǔ yì yè wú bù qīng jìng"
+   "pinyin": "yí qiè rú lái shēn yǔ yì yè wú bù qīng jìng"
   },
   {
    "n": 207,
@@ -1115,7 +1115,7 @@ export default {
   {
    "n": 221,
    "text": "一切声闻、独觉，及未登地诸菩萨等，皆悉不能如实信解；",
-   "pinyin": "yī qiè shēng wén dú jué jí wèi dēng dì zhū pú sà děng jiē xī bù néng rú shí xìn jiě"
+   "pinyin": "yí qiè shēng wén dú jué jí wèi dēng dì zhū pú sà děng jiē xī bù néng rú shí xìn jiě"
   },
   {
    "n": 222,
@@ -1335,7 +1335,7 @@ export default {
   {
    "n": 265,
    "text": "彼刹帝利灌顶王等，尔时应于一切有情起慈悲心，赦诸系闭；",
-   "pinyin": "bǐ chà dì lì guàn dǐng wáng děng ěr shí yīng yú yī qiè yǒu qíng qǐ cí bēi xīn shè zhū xì bì"
+   "pinyin": "bǐ chà dì lì guàn dǐng wáng děng ěr shí yīng yú yí qiè yǒu qíng qǐ cí bēi xīn shè zhū xì bì"
   },
   {
    "n": 266,
@@ -1355,7 +1355,7 @@ export default {
   {
    "n": 269,
    "text": "一切有情无病欢乐；",
-   "pinyin": "yī qiè yǒu qíng wú bìng huān lè"
+   "pinyin": "yí qiè yǒu qíng wú bìng huān lè"
   },
   {
    "n": 270,
@@ -1365,7 +1365,7 @@ export default {
   {
    "n": 271,
    "text": "一切恶相，皆即隐没；",
-   "pinyin": "yī qiè è xiàng jiē jí yǐn mò"
+   "pinyin": "yí qiè è xiàng jiē jí yǐn mò"
   },
   {
    "n": 272,
@@ -1580,7 +1580,7 @@ export default {
   {
    "n": 314,
    "text": "誓当荷负一切有情，为作义利饶益安乐。",
-   "pinyin": "shì dāng hé fù yī qiè yǒu qíng wèi zuò yì lì ráo yì ān lè"
+   "pinyin": "shì dāng hé fù yí qiè yǒu qíng wèi zuò yì lì ráo yì ān lè"
   },
   {
    "n": 315,
@@ -1595,7 +1595,7 @@ export default {
   {
    "n": 317,
    "text": "我等眷属卫护是人，皆使解脱一切苦难；",
-   "pinyin": "wǒ děng juàn shǔ wèi hù shì rén jiē shǐ jiě tuō yī qiè kǔ nàn"
+   "pinyin": "wǒ děng juàn shǔ wèi hù shì rén jiē shǐ jiě tuō yí qiè kǔ nàn"
   },
   {
    "n": 318,
@@ -1630,7 +1630,7 @@ export default {
   {
    "n": 324,
    "text": "汝等念报世尊药师琉璃光如来恩德者，常应如是利益安乐一切有情。",
-   "pinyin": "rǔ děng niàn bào shì zūn yào shī liú lí guāng rú lái ēn dé zhě cháng yīng rú shì lì yì ān lè yī qiè yǒu qíng"
+   "pinyin": "rǔ děng niàn bào shì zūn yào shī liú lí guāng rú lái ēn dé zhě cháng yīng rú shì lì yì ān lè yí qiè yǒu qíng"
   },
   {
    "n": 325,
@@ -1660,7 +1660,7 @@ export default {
   {
    "n": 330,
    "text": "亦名拔除一切业障；",
-   "pinyin": "yì míng bá chú yī qiè yè zhàng"
+   "pinyin": "yì míng bá chú yí qiè yè zhàng"
   },
   {
    "n": 331,
@@ -1685,7 +1685,7 @@ export default {
   {
    "n": 335,
    "text": "人、非人等，一切大众，闻佛所说，皆大欢喜，信受奉行。",
-   "pinyin": "rén fēi rén děng yī qiè dà zhòng wén fó suǒ shuō jiē dà huān xǐ xìn shòu fèng xíng"
+   "pinyin": "rén fēi rén děng yí qiè dà zhòng wén fó suǒ shuō jiē dà huān xǐ xìn shòu fèng xíng"
   }
  ]
 }

@@ -1,6 +1,8 @@
 // 把念佛板块里已校对的经文（/jing/ 还没有的）导入成 src/data/sutras/*.js，给诵经板块用。
-// 用法：node scripts/import-nianjing-texts.mjs
+// 用法：node scripts/import-nianjing-texts.mjs（重跑时保留网站数据里手改过的读音；要用原始数据的新读音加 --take-source）
 import { readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { keepReadings } from './lib/keep-readings.mjs'
 import { clearCustomDict, customPinyin, pinyin } from 'pinyin-pro'
 
 const SRC = 'D:/document/念佛板块/text'
@@ -31,7 +33,7 @@ for (const [slug, file] of Object.entries(FILES)) {
     source: d.source,
     license: d.license,
     charCount: d.charCount,
-    lines,
+    lines: await keepReadings(resolve(`src/data/sutras/${slug}.js`), lines),
   }
   writeFileSync(
     `src/data/sutras/${slug}.js`,

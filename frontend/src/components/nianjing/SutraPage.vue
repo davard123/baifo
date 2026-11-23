@@ -8,6 +8,8 @@ const props = defineProps({
   note: { type: String, default: '' },
   intro: { type: String, default: '' },
   showHeader: { type: Boolean, default: false },
+  // 经题块不在最前时（地藏经卷首仪文之后），放在这个小段（idx）所在组的前面；0 = 照常放在第 1 页顶上
+  headerSeg: { type: Number, default: 0 },
   groups: { type: Array, required: true },
   lineIndex: { type: Number, default: -1 },
   cursor: { type: Number, default: -1 },
@@ -23,8 +25,9 @@ function cursorFor(seg) {
 
 <template>
   <div class="sp">
-    <SutraHeader v-if="showHeader && header" :header="header" :note="note" :intro="intro" data-sp-header />
+    <SutraHeader v-if="showHeader && header && !headerSeg" :header="header" :note="note" :intro="intro" data-sp-header />
     <template v-for="g in groups" :key="g.segs[0].start">
+      <SutraHeader v-if="header && headerSeg && g.segs[0].idx === headerSeg" :header="header" :note="note" :intro="intro" :data-hd-for="headerSeg" data-sp-header />
       <p v-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}<span v-if="g.times" class="nj-times">（{{ g.times }}）</span></p>
       <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span class="nj-sg" :data-sg="sg.idx"><span
         v-for="pt in sg.parts"

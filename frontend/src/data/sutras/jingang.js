@@ -185,7 +185,7 @@ export default {
    "fen": 3,
    "fenName": "大乘正宗分第三",
    "text": "所有一切众生之类，",
-   "pinyin": "suǒ yǒu yī qiè zhòng shēng zhī lèi"
+   "pinyin": "suǒ yǒu yí qiè zhòng shēng zhī lèi"
   },
   {
    "n": 26,
@@ -626,7 +626,7 @@ export default {
    "fen": 7,
    "fenName": "无得无说分第七",
    "text": "所以者何？一切贤圣，",
-   "pinyin": "suǒ yǐ zhě hé yī qiè xián shèng"
+   "pinyin": "suǒ yǐ zhě hé yí qiè xián shèng"
   },
   {
    "n": 89,
@@ -717,7 +717,7 @@ export default {
    "fen": 8,
    "fenName": "依法出生分第八",
    "text": "一切诸佛，",
-   "pinyin": "yī qiè zhū fó"
+   "pinyin": "yí qiè zhū fó"
   },
   {
    "n": 102,
@@ -1186,7 +1186,7 @@ export default {
    "fen": 12,
    "fenName": "尊重正教分第十二",
    "text": "一切世间天、人、阿修罗皆应供养，",
-   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó jiē yīng gòng yǎng"
+   "pinyin": "yí qiè shì jiān tiān rén ā xiū luó jiē yīng gòng yǎng"
   },
   {
    "n": 169,
@@ -1550,7 +1550,7 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "何以故？离一切诸相，则名诸佛。",
-   "pinyin": "hé yǐ gù lí yī qiè zhū xiàng zé míng zhū fó"
+   "pinyin": "hé yǐ gù lí yí qiè zhū xiàng zé míng zhū fó"
   },
   {
    "n": 221,
@@ -1683,7 +1683,7 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "是故，须菩提！菩萨应离一切相，",
-   "pinyin": "shì gù xū pú tí pú sà yīng lí yī qiè xiàng"
+   "pinyin": "shì gù xū pú tí pú sà yīng lí yí qiè xiàng"
   },
   {
    "n": 240,
@@ -1732,21 +1732,21 @@ export default {
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "须菩提！菩萨为利益一切众生，",
-   "pinyin": "xū pú tí pú sà wèi lì yì yī qiè zhòng shēng"
+   "pinyin": "xū pú tí pú sà wèi lì yì yí qiè zhòng shēng"
   },
   {
    "n": 247,
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "应如是布施。如来说：一切诸相，",
-   "pinyin": "yīng rú shì bù shī rú lái shuō yī qiè zhū xiàng"
+   "pinyin": "yīng rú shì bù shī rú lái shuō yí qiè zhū xiàng"
   },
   {
    "n": 248,
    "fen": 14,
    "fenName": "离相寂灭分第十四",
    "text": "即是非相。又说：一切众生，则非众生。",
-   "pinyin": "jí shì fēi xiàng yòu shuō yī qiè zhòng shēng zé fēi zhòng shēng"
+   "pinyin": "jí shì fēi xiàng yòu shuō yí qiè zhòng shēng zé fēi zhòng shēng"
   },
   {
    "n": 249,
@@ -1998,7 +1998,7 @@ export default {
    "fen": 15,
    "fenName": "持经功德分第十五",
    "text": "一切世间天、人、阿修罗所应供养；",
-   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó suǒ yīng gòng yǎng"
+   "pinyin": "yí qiè shì jiān tiān rén ā xiū luó suǒ yīng gòng yǎng"
   },
   {
    "n": 285,
@@ -2215,14 +2215,14 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "当生如是心：我应灭度一切众生。",
-   "pinyin": "dāng shēng rú shì xīn wǒ yīng miè dù yī qiè zhòng shēng"
+   "pinyin": "dāng shēng rú shì xīn wǒ yīng miè dù yí qiè zhòng shēng"
   },
   {
    "n": 316,
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "灭度一切众生已，",
-   "pinyin": "miè dù yī qiè zhòng shēng yǐ"
+   "pinyin": "miè dù yí qiè zhòng shēng yǐ"
   },
   {
    "n": 317,
@@ -2439,21 +2439,21 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "是故如来说：一切法皆是佛法。",
-   "pinyin": "shì gù rú lái shuō yī qiè fǎ jiē shì fó fǎ"
+   "pinyin": "shì gù rú lái shuō yí qiè fǎ jiē shì fó fǎ"
   },
   {
    "n": 348,
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "须菩提！所言一切法者，即非一切法，",
-   "pinyin": "xū pú tí suǒ yán yī qiè fǎ zhě jí fēi yī qiè fǎ"
+   "pinyin": "xū pú tí suǒ yán yí qiè fǎ zhě jí fēi yí qiè fǎ"
   },
   {
    "n": 349,
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "是故名一切法。",
-   "pinyin": "shì gù míng yī qiè fǎ"
+   "pinyin": "shì gù míng yí qiè fǎ"
   },
   {
    "n": 350,
@@ -2523,7 +2523,7 @@ export default {
    "fen": 17,
    "fenName": "究竟无我分第十七",
    "text": "一切法无我、无人、无众生、无寿者。",
-   "pinyin": "yī qiè fǎ wú wǒ wú rén wú zhòng shēng wú shòu zhě"
+   "pinyin": "yí qiè fǎ wú wǒ wú rén wú zhòng shēng wú shòu zhě"
   },
   {
    "n": 360,
@@ -3055,7 +3055,7 @@ export default {
    "fen": 23,
    "fenName": "净心行善分第二十三",
    "text": "修一切善法，",
-   "pinyin": "xiū yī qiè shàn fǎ"
+   "pinyin": "xiū yí qiè shàn fǎ"
   },
   {
    "n": 436,
@@ -3377,7 +3377,7 @@ export default {
    "fen": 28,
    "fenName": "不受不贪分第二十八",
    "text": "若复有人知一切法无我，得成于忍，",
-   "pinyin": "ruò fù yǒu rén zhī yī qiè fǎ wú wǒ dé chéng yú rěn"
+   "pinyin": "ruò fù yǒu rén zhī yí qiè fǎ wú wǒ dé chéng yú rěn"
   },
   {
    "n": 482,
@@ -3636,7 +3636,7 @@ export default {
    "fen": 31,
    "fenName": "知见不生分第三十一",
    "text": "三藐三菩提心者，于一切法，",
-   "pinyin": "sān miǎo sān pú tí xīn zhě yú yī qiè fǎ"
+   "pinyin": "sān miǎo sān pú tí xīn zhě yú yí qiè fǎ"
   },
   {
    "n": 519,
@@ -3727,7 +3727,7 @@ export default {
    "fen": 32,
    "fenName": "应化非真分第三十二",
    "text": "一切有为法，如梦幻泡影，",
-   "pinyin": "yī qiè yǒu wéi fǎ rú mèng huàn pào yǐng"
+   "pinyin": "yí qiè yǒu wéi fǎ rú mèng huàn pào yǐng"
   },
   {
    "n": 532,
@@ -3755,7 +3755,7 @@ export default {
    "fen": 32,
    "fenName": "应化非真分第三十二",
    "text": "一切世间天、人、阿修罗，闻佛所说，",
-   "pinyin": "yī qiè shì jiān tiān rén ā xiū luó wén fó suǒ shuō"
+   "pinyin": "yí qiè shì jiān tiān rén ā xiū luó wén fó suǒ shuō"
   },
   {
    "n": 536,

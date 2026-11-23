@@ -124,8 +124,16 @@ const prevSeg = computed(() => segments.value[segmentIndex.value - 1])
 const nextSeg = computed(() => segments.value[segmentIndex.value + 1])
 const curHeading = computed(() => units.value.lines[lineIndex.value]?.heading || '')
 const curTimes = computed(() => units.value.lines[lineIndex.value]?.times || '')
-// 念到第一段之前（cursor 在第一段内）卡拉OK上方显示经题块
-const showKHeader = computed(() => !!header.value && segmentIndex.value === 0)
+// 经题块放在哪：一般在最前；有「卷首」仪文的经（地藏经）照流通本放在卷首之后、正文第一行之前
+const headerLine = computed(() => {
+  const ls = units.value.lines
+  if (ls[0]?.part !== '卷首') return 0
+  const i = ls.findIndex((l) => l.part !== '卷首')
+  return i > 0 ? i : 0
+})
+const headerSeg = computed(() => (headerLine.value ? Math.max(0, segments.value.findIndex((s) => s.line >= headerLine.value)) : 0))
+// 念到正文第一段时（一般就是第一段）卡拉OK上方显示经题块
+const showKHeader = computed(() => !!header.value && segmentIndex.value === headerSeg.value)
 
 // ── 提词器：整篇，当前行固定在屏幕上方约三分之一处 ──
 const promptBox = ref(null)
@@ -168,7 +176,9 @@ const pagesEst = computed(() => {
   const rowH = fontPx.value * 2.25
   const cpr = Math.max(4, Math.floor(w / charW))
   const rows = Math.max(3, Math.floor(h / rowH))
-  return paginate(segments.value, { width: w, fontPx: fontPx.value, rows, topRows: headerRows(cpr) })
+  return headerSeg.value
+    ? paginate(segments.value, { width: w, fontPx: fontPx.value, rows, headerAt: headerSeg.value, headerRows: headerRows(cpr) })
+    : paginate(segments.value, { width: w, fontPx: fontPx.value, rows, topRows: headerRows(cpr) })
 })
 const measured = shallowRef(null)
 const pages = computed(() => measured.value || pagesEst.value)
@@ -202,7 +212,8 @@ function readBoxes(root) {
   }
   const heads = new Map()
   for (const n of root.querySelectorAll('[data-hd-for]')) {
-    heads.set(+n.dataset.hdFor, n.getBoundingClientRect().top - base - (parseFloat(getComputedStyle(n).marginTop) || 0))
+    // 同一段前面既有经题块又有品名时，取在上面的经题块
+    if (!heads.has(+n.dataset.hdFor)) heads.set(+n.dataset.hdFor, n.getBoundingClientRect().top - base - (parseFloat(getComputedStyle(n).marginTop) || 0))
   }
   return { boxes, heads }
 }
@@ -424,9 +435,10 @@ onBeforeUnmount(() => {
 
       <!-- 提词器（竖屏可选） -->
       <div ref="promptBox" class="nj-pane nj-prompt" @scroll.passive="onPromptScroll" @touchstart.passive="onPromptTouch" @wheel.passive="onPromptTouch">
-        <SutraHeader v-if="header" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
+        <SutraHeader v-if="header && !headerLine" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
         <p v-if="jingLink" class="nj-xlink"><router-link :to="jingLink.to">{{ jingLink.label }}</router-link></p>
         <template v-for="(b, bi) in blocks" :key="bi">
+          <SutraHeader v-if="header && headerLine && b.lines[0] === headerLine" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
           <p v-if="b.headStart" class="nj-hd">{{ b.heading }}<span v-if="b.times" class="nj-times">（{{ b.times }}）</span></p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
             v-for="li in b.lines"
@@ -463,6 +475,7 @@ onBeforeUnmount(() => {
             :note="headerNote"
             :intro="headerIntro"
             :show-header="bookPage === 0"
+            :header-seg="headerSeg"
             :groups="pages[bookPage].groups"
             :line-index="lineIndex"
             :cursor="cursor"
@@ -477,10 +490,10 @@ onBeforeUnmount(() => {
       </div>
       <!-- 量页高用的隐藏容器：和书页同宽同字号，整篇排一遍读每个小段的位置；再逐页复核 -->
       <div v-if="measuring" ref="measureEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
-        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" show-header :groups="allGroups" />
+        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" show-header :header-seg="headerSeg" :groups="allGroups" />
       </div>
       <div v-if="probing" ref="probeEl" class="nj-measure" aria-hidden="true" :style="{ width: bookSize.w + 'px' }">
-        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" :show-header="probing.first" :groups="probing.groups" />
+        <SutraPage :header="header" :note="headerNote" :intro="headerIntro" :show-header="probing.first" :header-seg="headerSeg" :groups="probing.groups" />
       </div>
     </section>
 

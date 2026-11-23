@@ -177,11 +177,11 @@ const segWidth = (s, fontPx) => s.tokens.reduce((a, t) => a + (t.sep ? fontPx : 
 
 /**
  * 把小段排进书页。width 一行可用宽度（px）、fontPx 字号、rows 一页行数（行高 2.25 倍字号）、
- * topRows 第一页顶上经题块占的行数。
+ * topRows 第一页顶上经题块占的行数；经题块不在最前时（地藏经卷首仪文之后）改传 headerAt（小段 idx）和 headerRows。
  * 返回 [{ start, groups: [{ block, kind, heading, segs }] }]，各页 segs 依次拼起来 = 全部 segs。
  * 一个段落可以跨页，只在小段边界断开。
  */
-export function paginate(segments, { width, fontPx, rows, topRows = 0 }) {
+export function paginate(segments, { width, fontPx, rows, topRows = 0, headerAt = -1, headerRows = 0 }) {
   const pages = []
   if (!segments.length) return pages
   const avail = Math.max(fontPx * 4, width - fontPx * 0.8) // 换行总会浪费半个字左右
@@ -202,13 +202,13 @@ export function paginate(segments, { width, fontPx, rows, topRows = 0 }) {
     const sameGroup = g && g.block === sg.block && !sg.paraStart
     const cost = sameGroup
       ? groupRows({ kind: g.kind, segs: g.segs.concat(sg) }) - groupRows(g)
-      : (sg.heading ? HEADING_ROWS : 0) + groupRows({ kind, segs: [sg] })
+      : (sg.heading ? HEADING_ROWS : 0) + (sg.idx === headerAt ? headerRows : 0) + groupRows({ kind, segs: [sg] })
     if (page.groups.length && page.used + cost > rows) {
       pages.push(page)
       page = startPage()
       page.groups.push({ block: sg.block, kind, heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
       page.start = sg.start
-      page.used += (sg.heading ? HEADING_ROWS : 0) + groupRows({ kind, segs: [sg] })
+      page.used += (sg.heading ? HEADING_ROWS : 0) + (sg.idx === headerAt ? headerRows : 0) + groupRows({ kind, segs: [sg] })
       continue
     }
     if (!page.groups.length) page.start = sg.start

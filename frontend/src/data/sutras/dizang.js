@@ -356,7 +356,7 @@ export default {
   {
    "n": 2,
    "text": "尔时，十方无量世界，不可说不可说一切诸佛，",
-   "pinyin": "ěr shí shí fāng wú liàng shì jiè bù kě shuō bù kě shuō yī qiè zhū fó"
+   "pinyin": "ěr shí shí fāng wú liàng shì jiè bù kě shuō bù kě shuō yí qiè zhū fó"
   },
   {
    "n": 3,
@@ -406,7 +406,7 @@ export default {
   {
    "n": 12,
    "text": "乃至非想非非想处天，一切天众、龙众、鬼神等众，悉来集会。",
-   "pinyin": "nǎi zhì fēi xiǎng fēi fēi xiǎng chù tiān yī qiè tiān zhòng lóng zhòng guǐ shén děng zhòng xī lái jí huì"
+   "pinyin": "nǎi zhì fēi xiǎng fēi fēi xiǎng chù tiān yí qiè tiān zhòng lóng zhòng guǐ shén děng zhòng xī lái jí huì"
   },
   {
    "n": 13,
@@ -446,7 +446,7 @@ export default {
   {
    "n": 20,
    "text": "汝观是一切诸佛菩萨，及天龙鬼神，此世界，他世界，",
-   "pinyin": "rǔ guān shì yī qiè zhū fó pú sà jí tiān lóng guǐ shén cǐ shì jiè tā shì jiè"
+   "pinyin": "rǔ guān shì yí qiè zhū fó pú sà jí tiān lóng guǐ shén cǐ shì jiè tā shì jiè"
   },
   {
    "n": 21,
@@ -571,7 +571,7 @@ export default {
   {
    "n": 45,
    "text": "时师子奋迅具足万行如来告长者子：欲证此身，当须久远度脱一切受苦众生。",
-   "pinyin": "shí shī zǐ fèn xùn jù zú wàn xíng rú lái gào zhǎng zhě zǐ yù zhèng cǐ shēn dāng xū jiǔ yuǎn dù tuō yī qiè shòu kǔ zhòng shēng"
+   "pinyin": "shí shī zǐ fèn xùn jù zú wàn xíng rú lái gào zhǎng zhě zǐ yù zhèng cǐ shēn dāng xū jiǔ yuǎn dù tuō yí qiè shòu kǔ zhòng shēng"
   },
   {
    "n": 46,
@@ -656,7 +656,7 @@ export default {
   {
    "n": 62,
    "text": "私自念言：佛名大觉，具一切智，若在世时，我母死后，",
-   "pinyin": "sī zì niàn yán fó míng dà jué jù yī qiè zhì ruò zài shì shí wǒ mǔ sǐ hòu"
+   "pinyin": "sī zì niàn yán fó míng dà jué jù yí qiè zhì ruò zài shì shí wǒ mǔ sǐ hòu"
   },
   {
    "n": 63,
@@ -1529,7 +1529,7 @@ export default {
   {
    "n": 236,
    "text": "我承佛如来威神力故，遍百千万亿世界，分是身形，救拔一切业报众生。",
-   "pinyin": "wǒ chéng fó rú lái wēi shén lì gù biàn bǎi qiān wàn yì shì jiè fēn shì shēn xíng jiù bá yī qiè yè bào zhòng shēng"
+   "pinyin": "wǒ chéng fó rú lái wēi shén lì gù biàn bǎi qiān wàn yì shì jiè fēn shì shēn xíng jiù bá yí qiè yè bào zhòng shēng"
   },
   {
    "n": 237,
@@ -1549,7 +1549,7 @@ export default {
   {
    "n": 240,
    "text": "尔时，佛告地藏菩萨：一切众生，未解脱者，性识无定。",
-   "pinyin": "ěr shí fó gào dì zàng pú sà yī qiè zhòng shēng wèi jiě tuō zhě xìng shí wú dìng"
+   "pinyin": "ěr shí fó gào dì zàng pú sà yí qiè zhòng shēng wèi jiě tuō zhě xìng shí wú dìng"
   },
   {
    "n": 241,
@@ -1619,7 +1619,7 @@ export default {
   {
    "n": 254,
    "text": "号一切智成就如来——应供、正遍知、明行足、善逝、世间解、无上士、调御丈夫、天人师、佛、世尊，其佛寿命六万劫。",
-   "pinyin": "hào yī qiè zhì chéng jiù rú lái yīng gōng zhèng biàn zhī míng xíng zú shàn shì shì jiān jiě wú shàng shì diào yù zhàng fū tiān rén shī fó shì zūn qí fó shòu mìng liù wàn jié"
+   "pinyin": "hào yí qiè zhì chéng jiù rú lái yīng gōng zhèng biàn zhī míng xíng zú shàn shì shì jiān jiě wú shàng shì diào yù zhàng fū tiān rén shī fó shì zūn qí fó shòu mìng liù wàn jié"
   },
   {
    "n": 255,
@@ -1649,7 +1649,7 @@ export default {
   {
    "n": 260,
    "text": "佛告定自在王菩萨：一王发愿早成佛者，即一切智成就如来是。",
-   "pinyin": "fó gào dìng zì zài wáng pú sà yī wáng fā yuàn zǎo chéng fó zhě jí yī qiè zhì chéng jiù rú lái shì"
+   "pinyin": "fó gào dìng zì zài wáng pú sà yī wáng fā yuàn zǎo chéng fó zhě jí yí qiè zhì chéng jiù rú lái shì"
   },
   {
    "n": 261,
@@ -1994,7 +1994,7 @@ export default {
   {
    "n": 329,
    "text": "说地藏菩萨于娑婆世界，阎浮提内，生死道中，慈哀救拔，度脱一切罪苦众生方便之事。",
-   "pinyin": "shuō dì zàng pú sà yú suō pó shì jiè yán fú tí nèi shēng sǐ dào zhōng cí āi jiù bá dù tuō yī qiè zuì kǔ zhòng shēng fāng biàn zhī shì"
+   "pinyin": "shuō dì zàng pú sà yú suō pó shì jiè yán fú tí nèi shēng sǐ dào zhōng cí āi jiù bá dù tuō yí qiè zuì kǔ zhòng shēng fāng biàn zhī shì"
   },
   {
    "n": 330,
@@ -2200,7 +2200,7 @@ export default {
   {
    "n": 366,
    "text": "愿为天龙四众，及未来现在一切众生，",
-   "pinyin": "yuàn wèi tiān lóng sì zhòng jí wèi lái xiàn zài yī qiè zhòng shēng"
+   "pinyin": "yuàn wèi tiān lóng sì zhòng jí wèi lái xiàn zài yí qiè zhòng shēng"
   },
   {
    "n": 367,
@@ -2420,7 +2420,7 @@ export default {
   {
    "n": 410,
    "text": "令后世末法一切恶行众生，闻仁者说，使令归佛。",
-   "pinyin": "lìng hòu shì mò fǎ yī qiè è xíng zhòng shēng wén rén zhě shuō shǐ lìng guī fó"
+   "pinyin": "lìng hòu shì mò fǎ yí qiè è xíng zhòng shēng wén rén zhě shuō shǐ lìng guī fó"
   },
   {
    "n": 411,
@@ -2541,7 +2541,7 @@ export default {
   {
    "n": 434,
    "text": "普告诸佛世界一切诸菩萨摩诃萨，",
-   "pinyin": "pǔ gào zhū fó shì jiè yī qiè zhū pú sà mó hē sà"
+   "pinyin": "pǔ gào zhū fó shì jiè yí qiè zhū pú sà mó hē sà"
   },
   {
    "n": 435,
@@ -2556,7 +2556,7 @@ export default {
   {
    "n": 437,
    "text": "现大不可思议威神慈悲之力，救护一切罪苦之事。",
-   "pinyin": "xiàn dà bù kě sī yì wēi shén cí bēi zhī lì jiù hù yī qiè zuì kǔ zhī shì"
+   "pinyin": "xiàn dà bù kě sī yì wēi shén cí bēi zhī lì jiù hù yí qiè zuì kǔ zhī shì"
   },
   {
    "n": 438,
@@ -2566,7 +2566,7 @@ export default {
   {
    "n": 439,
    "text": "卫护是经，令一切众生，证涅槃乐。",
-   "pinyin": "wèi hù shì jīng lìng yī qiè zhòng shēng zhèng niè pán lè"
+   "pinyin": "wèi hù shì jīng lìng yí qiè zhòng shēng zhèng niè pán lè"
   },
   {
    "n": 440,
@@ -2986,7 +2986,7 @@ export default {
   {
    "n": 523,
    "text": "若未来世中，阎浮提内，刹利、婆罗门、长者、居士、一切人等，",
-   "pinyin": "ruò wèi lái shì zhōng yán fú tí nèi chà lì pó luó mén zhǎng zhě jū shì yī qiè rén děng"
+   "pinyin": "ruò wèi lái shì zhōng yán fú tí nèi chà lì pó luó mén zhǎng zhě jū shì yí qiè rén děng"
   },
   {
    "n": 524,
@@ -3322,7 +3322,7 @@ export default {
   {
    "n": 590,
    "text": "我今为未来现在一切众生，承佛威力，略说是事。",
-   "pinyin": "wǒ jīn wèi wèi lái xiàn zài yī qiè zhòng shēng chéng fó wēi lì lüè shuō shì shì"
+   "pinyin": "wǒ jīn wèi wèi lái xiàn zài yí qiè zhòng shēng chéng fó wēi lì lüè shuō shì shì"
   },
   {
    "n": 591,
@@ -3342,7 +3342,7 @@ export default {
   {
    "n": 594,
    "text": "眷属小大为造福利一切圣事，七分之中，而乃获一，",
-   "pinyin": "juàn shǔ xiǎo dà wèi zào fú lì yī qiè shèng shì qī fēn zhī zhōng ér nǎi huò yī"
+   "pinyin": "juàn shǔ xiǎo dà wèi zào fú lì yí qiè shèng shì qī fēn zhī zhōng ér nǎi huò yī"
   },
   {
    "n": 595,
@@ -3878,7 +3878,7 @@ export default {
   {
    "n": 701,
    "text": "一切众生临命终时，若得闻一佛名、一菩萨名，",
-   "pinyin": "yī qiè zhòng shēng lín mìng zhōng shí ruò dé wén yī fó míng yī pú sà míng"
+   "pinyin": "yí qiè zhòng shēng lín mìng zhōng shí ruò dé wén yī fó míng yī pú sà míng"
   },
   {
    "n": 702,
@@ -3979,7 +3979,7 @@ export default {
   {
    "n": 721,
    "text": "佛告地藏菩萨：汝今欲兴慈悲，救拔一切罪苦六道众生，",
-   "pinyin": "fó gào dì zàng pú sà rǔ jīn yù xīng cí bēi jiù bá yī qiè zuì kǔ liù dào zhòng shēng"
+   "pinyin": "fó gào dì zàng pú sà rǔ jīn yù xīng cí bēi jiù bá yí qiè zuì kǔ liù dào zhòng shēng"
   },
   {
    "n": 722,
@@ -3989,7 +3989,7 @@ export default {
   {
    "n": 723,
    "text": "吾即涅槃，使汝早毕是愿，吾亦无忧现在未来一切众生。",
-   "pinyin": "wú jí niè pán shǐ rǔ zǎo bì shì yuàn wú yì wú yōu xiàn zài wèi lái yī qiè zhòng shēng"
+   "pinyin": "wú jí niè pán shǐ rǔ zǎo bì shì yuàn wú yì wú yōu xiàn zài wèi lái yí qiè zhòng shēng"
   },
   {
    "n": 724,
@@ -4144,7 +4144,7 @@ export default {
   {
    "n": 754,
    "text": "现在未来一切众生，若天若人，若男若女，",
-   "pinyin": "xiàn zài wèi lái yī qiè zhòng shēng ruò tiān ruò rén ruò nán ruò nǚ"
+   "pinyin": "xiàn zài wèi lái yí qiè zhòng shēng ruò tiān ruò rén ruò nán ruò nǚ"
   },
   {
    "n": 755,
@@ -4235,7 +4235,7 @@ export default {
   {
    "n": 768,
    "text": "尔时，佛告地藏菩萨：吾今于忉利天宫，一切众会，",
-   "pinyin": "ěr shí fó gào dì zàng pú sà wú jīn yú dāo lì tiān gōng yī qiè zhòng huì"
+   "pinyin": "ěr shí fó gào dì zàng pú sà wú jīn yú dāo lì tiān gōng yí qiè zhòng huì"
   },
   {
    "n": 769,
@@ -4586,7 +4586,7 @@ export default {
   {
    "n": 838,
    "text": "是地藏菩萨，教化六道一切众生，所发誓愿劫数，如千百亿恒河沙。",
-   "pinyin": "shì dì zàng pú sà jiào huà liù dào yī qiè zhòng shēng suǒ fā shì yuàn jié shù rú qiān bǎi yì héng hé shā"
+   "pinyin": "shì dì zàng pú sà jiào huà liù dào yí qiè zhòng shēng suǒ fā shì yuàn jié shù rú qiān bǎi yì héng hé shā"
   },
   {
    "n": 839,
@@ -4701,7 +4701,7 @@ export default {
   {
    "n": 861,
    "text": "一切恶事，悉皆销灭。",
-   "pinyin": "yī qiè è shì xī jiē xiāo miè"
+   "pinyin": "yí qiè è shì xī jiē xiāo miè"
   },
   {
    "n": 862,
@@ -4741,7 +4741,7 @@ export default {
   {
    "n": 869,
    "text": "勿令一切灾害，及不如意事，辄闻于耳，何况令受？",
-   "pinyin": "wù lìng yī qiè zāi hài jí bù rú yì shì zhé wén yú ěr hé kuàng lìng shòu"
+   "pinyin": "wù lìng yí qiè zāi hài jí bù rú yì shì zhé wén yú ěr hé kuàng lìng shòu"
   },
   {
    "n": 870,
@@ -4827,7 +4827,7 @@ export default {
   {
    "n": 886,
    "text": "唯愿世尊，为现在未来一切众生，称扬地藏不思议事，",
-   "pinyin": "wéi yuàn shì zūn wèi xiàn zài wèi lái yī qiè zhòng shēng chēng yáng dì zàng bù sī yì shì"
+   "pinyin": "wéi yuàn shì zūn wèi xiàn zài wèi lái yí qiè zhòng shēng chēng yáng dì zàng bù sī yì shì"
   },
   {
    "n": 887,
@@ -4952,12 +4952,12 @@ export default {
   {
    "n": 911,
    "text": "是人若是业报命尽，应有一切罪障业障，合堕恶趣者，",
-   "pinyin": "shì rén ruò shì yè bào mìng jìn yīng yǒu yī qiè zuì zhàng yè zhàng hé duò è qù zhě"
+   "pinyin": "shì rén ruò shì yè bào mìng jìn yīng yǒu yí qiè zuì zhàng yè zhàng hé duò è qù zhě"
   },
   {
    "n": 912,
    "text": "承斯功德，命终之后，即生人天，受胜妙乐，一切罪障，悉皆销灭。",
-   "pinyin": "chéng sī gōng dé mìng zhōng zhī hòu jí shēng rén tiān shòu shèng miào lè yī qiè zuì zhàng xī jiē xiāo miè"
+   "pinyin": "chéng sī gōng dé mìng zhōng zhī hòu jí shēng rén tiān shòu shèng miào lè yí qiè zuì zhàng xī jiē xiāo miè"
   },
   {
    "n": 913,
@@ -5062,7 +5062,7 @@ export default {
   {
    "n": 933,
    "text": "救度一切众生者，欲修无上菩提者，欲出离三界者。",
-   "pinyin": "jiù dù yī qiè zhòng shēng zhě yù xiū wú shàng pú tí zhě yù chū lí sān jiè zhě"
+   "pinyin": "jiù dù yí qiè zhòng shēng zhě yù xiū wú shàng pú tí zhě yù chū lí sān jiè zhě"
   },
   {
    "n": 934,
@@ -5137,7 +5137,7 @@ export default {
   {
    "n": 948,
    "text": "具以本心恭敬陈白，更以香、华、衣服、饮食、一切玩具，供养菩萨。",
-   "pinyin": "jù yǐ běn xīn gōng jìng chén bái gèng yǐ xiāng huá yī fú yǐn shí yī qiè wán jù gòng yǎng pú sà"
+   "pinyin": "jù yǐ běn xīn gōng jìng chén bái gèng yǐ xiāng huá yī fú yǐn shí yí qiè wán jù gòng yǎng pú sà"
   },
   {
    "n": 949,
@@ -5237,7 +5237,7 @@ export default {
   {
    "n": 968,
    "text": "乃至逢于虎狼师子、一切毒害，不能损之。",
-   "pinyin": "nǎi zhì féng yú hǔ láng shī zǐ yī qiè dú hài bù néng sǔn zhī"
+   "pinyin": "nǎi zhì féng yú hǔ láng shī zǐ yí qiè dú hài bù néng sǔn zhī"
   },
   {
    "n": 969,
@@ -5307,7 +5307,7 @@ export default {
   {
    "n": 982,
    "text": "先当瞻礼大士像，一切诸愿速成就，永无业障能遮止。",
-   "pinyin": "xiān dāng zhān lǐ dà shì xiàng yī qiè zhū yuàn sù chéng jiù yǒng wú yè zhàng néng zhē zhǐ"
+   "pinyin": "xiān dāng zhān lǐ dà shì xiàng yí qiè zhū yuàn sù chéng jiù yǒng wú yè zhàng néng zhē zhǐ"
   },
   {
    "n": 983,
@@ -5352,12 +5352,12 @@ export default {
   {
    "n": 991,
    "text": "至心瞻礼地藏像，一切恶事皆消灭，至于梦中尽得安，衣食丰饶神鬼护。",
-   "pinyin": "zhì xīn zhān lǐ dì zàng xiàng yī qiè è shì jiē xiāo miè zhì yú mèng zhōng jìn dé ān yī shí fēng ráo shén guǐ hù"
+   "pinyin": "zhì xīn zhān lǐ dì zàng xiàng yí qiè è shì jiē xiāo miè zhì yú mèng zhōng jìn dé ān yī shí fēng ráo shén guǐ hù"
   },
   {
    "n": 992,
    "text": "欲入山林及渡海，毒恶禽兽及恶人，恶神恶鬼并恶风，一切诸难诸苦恼。",
-   "pinyin": "yù rù shān lín jí dù hǎi dú è qín shòu jí è rén è shén è guǐ bìng è fēng yī qiè zhū nán zhū kǔ nǎo"
+   "pinyin": "yù rù shān lín jí dù hǎi dú è qín shòu jí è rén è shén è guǐ bìng è fēng yí qiè zhū nán zhū kǔ nǎo"
   },
   {
    "n": 993,
@@ -5438,7 +5438,7 @@ export default {
   {
    "n": 1008,
    "text": "于百千万亿不可说不可说一切诸佛菩萨、天龙八部大会之中，",
-   "pinyin": "yú bǎi qiān wàn yì bù kě shuō bù kě shuō yī qiè zhū fó pú sà tiān lóng bā bù dà huì zhī zhōng"
+   "pinyin": "yú bǎi qiān wàn yì bù kě shuō bù kě shuō yí qiè zhū fó pú sà tiān lóng bā bù dà huì zhī zhōng"
   },
   {
    "n": 1009,
@@ -5578,7 +5578,7 @@ export default {
   {
    "n": 1036,
    "text": "未来世中，若有善男子、善女人，乃及一切天龙，闻此经典，",
-   "pinyin": "wèi lái shì zhōng ruò yǒu shàn nán zǐ shàn nǚ rén nǎi jí yī qiè tiān lóng wén cǐ jīng diǎn"
+   "pinyin": "wèi lái shì zhōng ruò yǒu shàn nán zǐ shàn nǚ rén nǎi jí yí qiè tiān lóng wén cǐ jīng diǎn"
   },
   {
    "n": 1037,
@@ -5588,7 +5588,7 @@ export default {
   {
    "n": 1038,
    "text": "唯愿世尊，为未来现在一切众等，略而说之。",
-   "pinyin": "wéi yuàn shì zūn wèi wèi lái xiàn zài yī qiè zhòng děng lüè ér shuō zhī"
+   "pinyin": "wéi yuàn shì zūn wèi wèi lái xiàn zài yí qiè zhòng děng lüè ér shuō zhī"
   },
   {
    "n": 1039,
@@ -5698,7 +5698,7 @@ export default {
   {
    "n": 1060,
    "text": "尔时，十方一切诸来不可说不可说诸佛如来，",
-   "pinyin": "ěr shí shí fāng yī qiè zhū lái bù kě shuō bù kě shuō zhū fó rú lái"
+   "pinyin": "ěr shí shí fāng yí qiè zhū lái bù kě shuō bù kě shuō zhū fó rú lái"
   },
   {
    "n": 1061,
@@ -5718,7 +5718,7 @@ export default {
   {
    "n": 1064,
    "text": "一切众会，俱复瞻礼，合掌而退。",
-   "pinyin": "yī qiè zhòng huì jù fù zhān lǐ hé zhǎng ér tuì"
+   "pinyin": "yí qiè zhòng huì jù fù zhān lǐ hé zhǎng ér tuì"
   },
   {
    "n": 20001,

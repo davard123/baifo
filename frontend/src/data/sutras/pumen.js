@@ -856,7 +856,7 @@ export default {
    "n": 141,
    "part": "偈颂",
    "text": "具一切功德，慈眼视众生，",
-   "pinyin": "jù yī qiè gōng dé cí yǎn shì zhòng shēng"
+   "pinyin": "jù yí qiè gōng dé cí yǎn shì zhòng shēng"
   },
   {
    "n": 142,

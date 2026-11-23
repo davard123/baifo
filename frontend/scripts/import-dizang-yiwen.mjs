@@ -8,6 +8,8 @@
 //  - times（三遍、合掌三称……）只是提示，不是念诵文字：篇第一行的 times 显示在篇名后，其余行的 times 显示在该行末尾；
 //  - 偈（每行两句）带 verse:true，念经页按偈颂一排一排排。
 import { readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { keepReadings } from './lib/keep-readings.mjs'
 
 const FILE = 'src/data/sutras/dizang.js'
 const SRC = 'D:/document/念佛板块/text/dizang-yiwen/lines.json'
@@ -39,8 +41,9 @@ const at = (heading) => body.findIndex((l) => l.heading === heading)
 const i5 = at('地狱名号品第五')
 const i10 = at('校量布施功德缘品第十')
 if (i5 < 0 || i10 < 0) throw new Error('找不到品第五/品第十')
-const lines = [...head, ...body.slice(0, i5), ...zan1, ...body.slice(i5, i10), ...zan2, ...body.slice(i10), ...tail]
+const lines0 = [...head, ...body.slice(0, i5), ...zan1, ...body.slice(i5, i10), ...zan2, ...body.slice(i10), ...tail]
 
+const lines = await keepReadings(resolve(FILE), lines0) // 仪文行手改过的读音也保留
 const { lines: _old, ...meta } = cur
 writeFileSync(
   FILE,
