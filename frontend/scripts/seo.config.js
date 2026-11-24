@@ -266,10 +266,10 @@ export function buildArticleSchema({
 function homePage() {
   return {
     path: '/',
-    title: '求财祈福拜佛网｜网上求财 · 在线拜财神、礼佛祈愿与网上祭祖',
-    description: '免费网上求财祈福、在线拜财神：五路财神、关公、文财神、赵公明、福禄寿三星、黄财神八位财神，上香、点财神灯、供五果、献元宝、投金币、摇钱树，写下心愿领求财祝福卡，不用注册。也可以在线礼佛、网上祭祖。适合海外华人。',
-    heading: '网上求财祈福 · 在线拜财神',
-    summary: '在线拜财神：选五路财神、关公、文财神、赵公明、福星、禄星、寿星或黄财神，上香、点灯、供果、献元宝，写下求财心愿，领一张带你名字的祝福卡。也可以礼敬八位佛菩萨，或为思念的亲人设立牌位网上祭祖。',
+    title: '求财祈福拜佛网｜在线拜佛礼佛、诵经念经，网上拜财神与祭祖',
+    description: '在线拜佛礼佛：释迦牟尼佛、阿弥陀佛、药师佛、弥勒佛、文殊菩萨、普贤菩萨、观音菩萨、地藏菩萨八位佛菩萨，上香、点灯、献花、供果，写下祈愿与回向。也可以跟着拼音诵经念经、网上拜八位财神、为亲人设牌位网上祭祖。适合海外华人。',
+    heading: '礼佛祈愿',
+    summary: '在线礼佛：选一位佛菩萨，上香、点灯、献花、供果，叩拜、绕佛，写下祈愿与回向。也可以跟着拼音诵经念经，网上拜财神领一张求财祝福卡，或为思念的亲人设立牌位网上祭祖。',
     image: SITE.defaultImage,
     schema: [
       {
@@ -291,7 +291,7 @@ function homePage() {
         applicationCategory: 'LifestyleApplication',
         operatingSystem: 'Web',
         inLanguage: 'zh-CN',
-        description: '求财祈福拜佛网（fopusha.com）是一个免费、不用注册的中文网上求财祈福网站：可以在线拜财神，也可以在线礼佛、诵经、念经和网上祭祖。在线礼佛、供花、点灯、上香、祭祖和功德回向也都有，并整理礼佛步骤与佛教主题说明。',
+        description: '求财祈福拜佛网（fopusha.com）是一个中文在线礼佛网站：可以在线拜佛，供花、点灯、上香，跟着拼音诵经念经，也可以网上拜财神、为亲人祭祖追思。并整理礼佛步骤与佛教主题说明。',
       },
       {
         '@context': 'https://schema.org',
@@ -299,7 +299,7 @@ function homePage() {
         '@id': `${absoluteUrl('/')}#collection`,
         name: SITE.name,
         url: absoluteUrl('/'),
-        description: '求财祈福拜佛网（fopusha.com）是一个免费、不用注册的中文网上求财祈福网站：可以在线拜财神，也可以在线礼佛、诵经、念经和网上祭祖。',
+        description: '求财祈福拜佛网（fopusha.com）是一个中文在线礼佛网站：可以在线拜佛，供花、点灯、上香，跟着拼音诵经念经，也可以网上拜财神、为亲人祭祖追思。',
         inLanguage: 'zh-CN',
         speakable: buildSpeakable(['h1', '.hero-text', '.copy-section p:first-child']),
         mainEntity: {

@@ -167,12 +167,12 @@ function loadWishes() {
 
 onMounted(() => {
   startSutraTeaser()
-  document.title = '求财祈福拜佛网｜网上求财 · 在线拜财神、礼佛祈愿与网上祭祖 - fopusha.com'
+  document.title = '求财祈福拜佛网｜在线拜佛礼佛、诵经念经，网上拜财神与祭祖 - fopusha.com'
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute(
       'content',
-      '网上求财、网上祈福：在线拜财神、福禄寿，上香、献元宝、投金币，领一张写着你名字的祝福卡。也可以在线礼佛、网上祭祖，适合海外华人。'
+      '在线拜佛礼佛：释迦牟尼佛、阿弥陀佛、药师佛、弥勒佛、文殊菩萨、普贤菩萨、观音菩萨、地藏菩萨八位佛菩萨，上香、点灯、献花、供果，写下祈愿与回向。也可以跟着拼音诵经念经、网上拜八位财神、为亲人设牌位网上祭祖。适合海外华人。'
     )
   loadWishes()
 })
