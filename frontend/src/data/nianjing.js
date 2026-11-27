@@ -43,8 +43,9 @@ export function buddhaImages(buddhaSlug) {
  * tokens 是这一行的显示片段：汉字 { ch, py, u（字单位序号）}，标点 { ch }。
  */
 /**
- * 念经页：品名/分名/篇名/咒名也要念出来、跟着高亮。在每个标题第一次出现的那行前面插一行标题本身
+ * 念经页：品名/分名/篇名也要念出来、跟着高亮。在每个标题第一次出现的那行前面插一行标题本身
  * （带拼音，isHeading:true），之后排版把它当标题显示。HEADING_PINYIN 里没有的标题照旧只显示。
+ * 只看 heading（品名、篇名）和 fenName（金刚经分名）；section（十小咒咒名、楞严咒「第一会」）是分段标记，持诵时不念。
  * 标题和下一行文字一样时（「南无本师释迦牟尼佛」这种只有一句的篇）不插，免得念两遍。
  */
 export function withHeadingLines(rawLines) {
@@ -53,7 +54,7 @@ export function withHeadingLines(rawLines) {
   for (const l of rawLines) {
     const h = l.heading || l.fenName || l.section || ''
     if (h && h !== prev) {
-      const py = HEADING_PINYIN[h]
+      const py = l.heading || l.fenName ? HEADING_PINYIN[h] : ''
       const same = String(l.text).replace(/[^\p{Script=Han}]/gu, '') === h.replace(/[^\p{Script=Han}]/gu, '')
       if (py && !same) {
         const head = { text: h, pinyin: py, isHeading: true, part: l.part }

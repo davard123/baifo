@@ -1,19 +1,10 @@
-// 念经页里要跟着念的品名/分名/篇名/咒名的拼音（念经时这些名也念出来，也要高亮跟读）。
+// 念经页里要跟着念的品名/分名/篇名的拼音（念经时这些名也念出来，也要高亮跟读）。
+// 只对 heading/fenName 生效；十小咒咒名、楞严咒「第一会」这类 section 不跟读（见 withHeadingLines）。
 // pinyin-pro 初稿 + 人工改：相 xiàng（一相无相、离相、法身非相、一合理相）、大乘 shèng、地藏 zàng、
 // 校量 jiào liàng（地藏经同词）、散华 huá（仁王经同词）、嘱累 zhǔ lèi；「一」「不」不变调（站内约定）。
 // 没有收在这里的标题照旧只显示、不跟读。
 export const HEADING_PINYIN = {
-  // 十小咒
-  如意宝轮王陀罗尼: 'rú yì bǎo lún wáng tuó luó ní',
-  消灾吉祥神咒: 'xiāo zāi jí xiáng shén zhòu',
-  功德宝山神咒: 'gōng dé bǎo shān shén zhòu',
-  准提神咒: 'zhǔn tí shén zhòu',
-  圣无量寿决定光明王陀罗尼: 'shèng wú liàng shòu jué dìng guāng míng wáng tuó luó ní',
-  药师灌顶真言: 'yào shī guàn dǐng zhēn yán',
-  观音灵感真言: 'guān yīn líng gǎn zhēn yán',
-  七佛灭罪真言: 'qī fó miè zuì zhēn yán',
-  往生净土神咒: 'wǎng shēng jìng tǔ shén zhòu',
-  大吉祥天女咒: 'dà jí xiáng tiān nǚ zhòu',
+  // 十小咒的咒名早课时不念出来，只显示、不跟读，不收
   // 楞严咒的「第一会」到「第五会」只是分段标记，持咒时不念，不收
   // 金刚经三十二分
   法会因由分第一: 'fǎ huì yīn yóu fēn dì yī',
@@ -63,6 +54,7 @@ export const HEADING_PINYIN = {
   补阙真言: 'bǔ quē zhēn yán',
   补阙圆满真言: 'bǔ quē yuán mǎn zhēn yán',
   普回向真言: 'pǔ huí xiàng zhēn yán',
+  七佛灭罪真言: 'qī fó miè zuì zhēn yán',
   灭定业真言: 'miè dìng yè zhēn yán',
   赞偈: 'zàn jì',
   回向偈: 'huí xiàng jì',
