@@ -49,7 +49,7 @@ function cursorFor(seg) {
 
 <style>
 /* 提词器和书页共用（不加 scoped） */
-.nj-para { margin: 0 0 0.5em; line-height: 2.25; }
+.nj-para { margin: 0 0 0.25em; line-height: var(--nj-lh, 2); }
 .nj-ln {
   border-radius: 6px;
   padding: 0 2px;
@@ -59,7 +59,7 @@ function cursorFor(seg) {
 }
 .nj-ln.now { background: rgba(230, 184, 102, 0.34); }
 .nj-hd {
-  margin: 1.3em 0 0.4em;
+  margin: 0.8em 0 0.2em;
   text-align: center;
   font-size: 0.8em;
   font-weight: 700;
@@ -68,8 +68,8 @@ function cursorFor(seg) {
 }
 /* 篇名后的「（三遍）」：小号灰字，只是提示 */
 .nj-times { margin-left: 0.2em; font-size: 0.62em; font-weight: 400; color: #9a8f84; }
-.nj-verse { margin: 0 0 0.6em; }
-.nj-vrow { margin: 0; text-align: center; line-height: 2.25; }
-.nj-vrow.gap { margin-top: 0.7em; }
+.nj-verse { margin: 0 0 0.3em; }
+.nj-vrow { margin: 0; text-align: center; line-height: var(--nj-lh, 2); }
+.nj-vrow.gap { margin-top: 0.35em; }
 .nj-vrow .nj-ln { display: inline-block; }
 </style>

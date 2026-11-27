@@ -10,7 +10,7 @@ import SutraHeader from '../components/nianjing/SutraHeader.vue'
 import { labelTokens, labelZhuyin, sourceNote } from '../data/nianjing.js'
 import { isHantPath, loadConverter } from '../i18n/hant.js'
 import { hantSutraText } from '../i18n/hantSutra.js'
-import { groupSegments, paginate, paginateByHeights, pagesFromRanges } from '../utils/nianjingLayout.js'
+import { groupSegments, paginate, paginateByHeights, pagesFromRanges, LINE_H_RUBY, LINE_H_PLAIN } from '../utils/nianjingLayout.js'
 import { NIANJING, buddhaImages } from '../data/nianjing.js'
 import { useNianjing } from '../composables/useNianjing.js'
 import { useWakeLock } from '../composables/useWakeLock.js'
@@ -42,6 +42,7 @@ watch(
 )
 
 const showSettings = ref(false)
+const showToc = ref(false)
 
 // ── 标音：注音 / 拼音 / 只看字（繁体、简体各记各的）──
 const RUBY_KEY = isHant ? 'nianjing:ruby:hant' : 'nianjing:ruby:hans'
@@ -71,6 +72,8 @@ if (isHant) loadConverter().then((c) => (hantConvert.value = c)).catch(() => {})
 const tw = (text, py = '') => (hantConvert.value ? hantSutraText(text, hantConvert.value, py) : text)
 const FONT_PX = { m: 25, l: 30, xl: 36 }
 const fontPx = computed(() => FONT_PX[fontSize.value] || 25)
+// 经文行高：标拼音/注音要给上面的小字留地方；不标音时行距收紧，一屏多显示几行
+const lineH = computed(() => (ruby.value === 'none' ? LINE_H_PLAIN : LINE_H_RUBY))
 // 经题块：每行配注音；繁体页把字先整行转好（header.hant），等转换器好了再显示
 const header = computed(() => {
   const h = meta.value?.header
@@ -164,16 +167,16 @@ function headerRows(cpr) {
   if (!h) return 0
   const one = (text, scale, lh) => {
     const n = labelTokens(text).length
-    return (Math.ceil((n * scale) / cpr) * scale * lh) / 2.25
+    return (Math.ceil((n * scale) / cpr) * scale * lh) / lineH.value
   }
-  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / 2.25 : 0) + (headerIntro.value ? (0.6 * 1.7 * Math.ceil((headerIntro.value.length * 0.6) / cpr)) / 2.25 : 0) + 0.4
+  return one(h.title, 1.15, 2.1) + (h.sub ? one(h.sub, 0.95, 2.1) : 0) + one(h.translator, 0.7, 2.3) + (headerNote.value ? (0.62 * 2) / lineH.value : 0) + (headerIntro.value ? (0.6 * 1.7 * Math.ceil((headerIntro.value.length * 0.6) / cpr)) / lineH.value : 0) + 0.4
 }
 // 先用估算分页（立刻有页可看、偏保守），再用实测分页替换
 const pagesEst = computed(() => {
   const { w, h } = bookSize.value
   if (!w || !h || !segments.value.length) return []
   const charW = fontPx.value * 1.04
-  const rowH = fontPx.value * 2.25
+  const rowH = fontPx.value * lineH.value
   const cpr = Math.max(4, Math.floor(w / charW))
   const rows = Math.max(3, Math.floor(h / rowH))
   return headerSeg.value
@@ -320,6 +323,48 @@ function pick(u) {
   nj.setCursor(u)
 }
 
+// ── 目录：每个品名/篇名（heading 变化处）一项，点了跳到那一行 ──
+const toc = computed(() => {
+  const out = []
+  let prev = ''
+  units.value.lines.forEach((l, i) => {
+    if (l.heading && l.heading !== prev) out.push({ line: i, heading: l.heading, times: l.times || '' })
+    prev = l.heading || prev
+  })
+  return out.length > 1 ? out : []
+})
+const curTocLine = computed(() => {
+  let cur = -1
+  for (const t of toc.value) if (t.line <= lineIndex.value) cur = t.line
+  return cur
+})
+function goToLine(i) {
+  showToc.value = false
+  showSettings.value = false
+  nj.setCursor(units.value.lines[i]?.start ?? 0)
+  nextTick(() => {
+    if (!reading.value) {
+      // 全文：整页往下滚到这一品的品名
+      const el = document.querySelector(`.nj-prompt [data-line="${i}"]`)
+      const hd = el?.closest('.nj-para, .nj-verse')?.previousElementSibling
+      const target = hd && hd.classList.contains('nj-hd') ? hd : el
+      target?.scrollIntoView({ block: 'start' }) // 整页的滚动容器不一定是 window；留白见 .nj-full 的 scroll-margin-top
+    } else {
+      userScrollUntil = 0
+      scrollPromptToCurrent(false)
+    }
+  })
+}
+
+// ── 书页：直接跳到第几页 ──
+const pageInput = ref('')
+function jumpPage() {
+  const n = parseInt(pageInput.value, 10)
+  pageInput.value = ''
+  if (!Number.isFinite(n)) return
+  bookPage.value = Math.max(0, Math.min(pages.value.length - 1, n - 1))
+}
+
 function toggleRun() {
   if (running.value) nj.stop()
   else {
@@ -403,11 +448,15 @@ onBeforeUnmount(() => {
   </main>
 
   <!-- 念经 -->
-  <main v-else class="nj-reader" :class="[`nj-view-${view}`, { 'nj-full': !reading }]" :style="{ '--nj-font': fontPx + 'px' }">
+  <main v-else class="nj-reader" :class="[`nj-view-${view}`, { 'nj-full': !reading }]" :style="{ '--nj-font': fontPx + 'px', '--nj-lh': lineH }">
     <header class="nj-bar">
       <router-link to="/nianjing/" class="nj-back" aria-label="返回经目">‹ 经目</router-link>
       <h1 class="nj-title">{{ heading }}</h1>
       <span v-if="reading" class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
+      <button v-if="reading && toc.length" type="button" class="nj-tocbtn" :aria-expanded="showToc" @click="showToc = !showToc; showSettings = false">目录</button>
+      <div v-if="showToc && reading && toc.length" class="nj-toc nj-toc--top" role="dialog" aria-label="目录">
+        <button v-for="t in toc" :key="t.line" type="button" :class="{ on: t.line === curTocLine }" @click="goToLine(t.line)">{{ t.heading }}<small v-if="t.times">（{{ t.times }}）</small></button>
+      </div>
       <div class="nj-viewtoggle" role="group" aria-label="显示方式">
         <button type="button" :class="{ on: !reading }" @click="reading = false">全文</button>
         <button type="button" class="nj-vt-port" :class="{ on: reading && view === 'karaoke' }" @click="enterReading('karaoke')">卡拉OK</button>
@@ -484,7 +533,9 @@ onBeforeUnmount(() => {
         </div>
         <div class="nj-book__nav">
           <button type="button" :disabled="bookPage <= 0" @click="flip(-1)">‹ 上一页</button>
-          <span>第 {{ bookPage + 1 }} / {{ pages.length || 1 }} 页</span>
+          <form class="nj-pagejump" @submit.prevent="jumpPage">
+            第 <input v-model="pageInput" type="number" inputmode="numeric" min="1" :max="pages.length || 1" :placeholder="String(bookPage + 1)" :aria-label="`跳到第几页（共 ${pages.length || 1} 页）`" @change="jumpPage" /> / {{ pages.length || 1 }} 页
+          </form>
           <button type="button" :disabled="bookPage >= pages.length - 1" @click="flip(1)">下一页 ›</button>
         </div>
       </div>
@@ -528,7 +579,11 @@ onBeforeUnmount(() => {
         <button type="button" aria-label="上一句" @click="nj.prevSegment()">‹</button>
         <button type="button" aria-label="下一句" @click="nj.nextSegment()">›</button>
       </div>
-      <button type="button" class="nj-gear" :aria-expanded="showSettings" @click="showSettings = !showSettings">设置</button>
+      <button v-if="!reading && toc.length" type="button" class="nj-gear nj-tocbtn" :aria-expanded="showToc" @click="showToc = !showToc; showSettings = false">目录</button>
+      <button type="button" class="nj-gear" :class="{ 'nj-gear--after': !reading && toc.length }" :aria-expanded="showSettings" @click="showSettings = !showSettings; showToc = false">设置</button>
+      <div v-if="showToc && !reading && toc.length" class="nj-toc nj-toc--bottom" role="dialog" aria-label="目录">
+        <button v-for="t in toc" :key="t.line" type="button" :class="{ on: t.line === curTocLine }" @click="goToLine(t.line)">{{ t.heading }}<small v-if="t.times">（{{ t.times }}）</small></button>
+      </div>
 
       <div v-if="showSettings" class="nj-settings">
         <div class="nj-row">
@@ -617,6 +672,8 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 .nj-bar {
+  position: relative;
+  z-index: 5;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -779,6 +836,8 @@ onBeforeUnmount(() => {
 .nj-reader.nj-full :deep(.sl-ch.done rt) { color: var(--nj-py, #9a8a7a); }
 .nj-reader.nj-full .nj-controls { position: sticky; bottom: 0; z-index: 4; }
 .nj-reader.nj-full .nj-resume { position: fixed; }
+.nj-reader.nj-full :deep(.nj-hd),
+.nj-reader.nj-full .nj-ln { scroll-margin-top: 16px; }
 .nj-more {
   max-width: 46em;
   margin: 8px auto 0;
@@ -849,6 +908,51 @@ onBeforeUnmount(() => {
 .nj-step { display: flex; gap: 4px; }
 .nj-step button { padding: 6px 14px; font-size: 1.05rem; line-height: 1; }
 .nj-gear { margin-left: auto; }
+.nj-gear--after { margin-left: 0; }
+.nj-tocbtn { font: inherit; font-family: 'Noto Sans SC', system-ui, sans-serif; font-size: 0.9rem; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(178, 126, 54, 0.4); background: #fffaf2; color: #392b24; cursor: pointer; white-space: nowrap; }
+.nj-tocbtn[aria-expanded='true'] { background: #f1dfbf; }
+/* 目录：品名一项一个按钮，可滚动 */
+.nj-toc {
+  position: absolute;
+  z-index: 7;
+  width: min(94vw, 380px);
+  max-height: min(60vh, 520px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 16px;
+  background: #fffaf2;
+  box-shadow: 0 16px 40px rgba(72, 42, 18, 0.22);
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+}
+.nj-toc--top { right: 8px; top: calc(100% + 4px); }
+.nj-toc--bottom { right: 8px; bottom: calc(100% + 6px); }
+.nj-toc button {
+  font: inherit;
+  text-align: left;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: #392b24;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.nj-toc button + button { border-top: 1px solid rgba(122, 86, 51, 0.1); }
+.nj-toc button.on { background: #f6e8cf; color: #7a2a1c; font-weight: 600; }
+.nj-toc small { margin-left: 0.3em; color: #9a8f84; font-size: 0.78em; font-weight: 400; }
+.nj-pagejump { display: flex; align-items: center; gap: 4px; margin: 0; }
+.nj-pagejump input {
+  width: 3.6em;
+  padding: 3px 4px;
+  border: 1px solid rgba(178, 126, 54, 0.45);
+  border-radius: 8px;
+  background: #fffdf8;
+  font: inherit;
+  text-align: center;
+  color: #392b24;
+}
 .nj-settings {
   position: absolute;
   right: 8px;

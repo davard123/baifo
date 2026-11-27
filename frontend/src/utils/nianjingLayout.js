@@ -158,10 +158,13 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
   return out
 }
 
-// 品名小标题占的行数、偈颂一偈之间的小间距、段落之间的间距（按「行」算）
-export const HEADING_ROWS = 1.7
-export const VERSE_GAP_ROWS = 0.35
-export const PARA_GAP_ROWS = 0.25
+// 经文行高（倍字号）：标拼音/注音时 2.0，不标音 1.7（原来一律 2.25，空白太多，跟读时一屏看不到几行）
+export const LINE_H_RUBY = 2
+export const LINE_H_PLAIN = 1.7
+// 品名小标题占的行数、偈颂一偈之间的小间距、段落之间的间距（按「行」算，实测分页会再校正）
+export const HEADING_ROWS = 1.4
+export const VERSE_GAP_ROWS = 0.2
+export const PARA_GAP_ROWS = 0.15
 
 /**
  * 一个字单位在页面上占多宽（px）：汉字一个字号宽；拼音比字宽时 ruby 会被拼音撑开。
@@ -176,7 +179,7 @@ export function tokenWidth(t, fontPx) {
 const segWidth = (s, fontPx) => s.tokens.reduce((a, t) => a + (t.sep ? fontPx : tokenWidth(t, fontPx)), 0) + s.parts.length * 4
 
 /**
- * 把小段排进书页。width 一行可用宽度（px）、fontPx 字号、rows 一页行数（行高 2.25 倍字号）、
+ * 把小段排进书页。width 一行可用宽度（px）、fontPx 字号、rows 一页行数（行高 LINE_H_RUBY / LINE_H_PLAIN 倍字号）、
  * topRows 第一页顶上经题块占的行数；经题块不在最前时（地藏经卷首仪文之后）改传 headerAt（小段 idx）和 headerRows。
  * 返回 [{ start, groups: [{ block, kind, heading, segs }] }]，各页 segs 依次拼起来 = 全部 segs。
  * 一个段落可以跨页，只在小段边界断开。
