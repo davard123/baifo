@@ -367,7 +367,7 @@ const repeatRanges = computed(() => {
   const out = []
   ls.forEach((l, i) => {
     // 篇的遍数：从这篇第一行到最后一行
-    if (l.times && (i === 0 || ls[i - 1].heading !== l.heading || ls[i - 1].times !== l.times)) {
+    if (l.times && !l.isHeading && (i === 0 || ls[i - 1].isHeading || ls[i - 1].heading !== l.heading || ls[i - 1].times !== l.times)) {
       const n = timesCount(l.times)
       let j = i
       while (j + 1 < ls.length && ls[j + 1].heading === l.heading) j += 1
@@ -531,7 +531,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="nj-kline">
           <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" :intro="headerIntro" class="nj-kheader" />
-          <p v-if="curHeading" class="nj-heading">{{ curHeading }}<span v-if="curTimes" class="nj-times">（{{ curTimes }}）</span><span v-if="repeatNow" class="nj-rep">第 {{ repeatNow.k }}/{{ repeatNow.n }} 遍</span></p>
+          <p v-if="curHeading && !curSeg?.head" class="nj-heading">{{ curHeading }}<span v-if="curTimes" class="nj-times">（{{ curTimes }}）</span><span v-if="repeatNow" class="nj-rep">第 {{ repeatNow.k }}/{{ repeatNow.n }} 遍</span></p>
           <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
           <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
           <p class="nj-k nj-k--next"><SutraSeg v-if="nextSeg" :seg="nextSeg" :cursor="-1" @pick="pick" /></p>
@@ -544,7 +544,17 @@ onBeforeUnmount(() => {
         <p v-if="jingLink" class="nj-xlink"><router-link :to="jingLink.to">{{ jingLink.label }}</router-link></p>
         <template v-for="(b, bi) in blocks" :key="bi">
           <SutraHeader v-if="header && headerLine && b.lines[0] === headerLine" :header="header" :note="headerNote" :intro="headerIntro" class="nj-pheader" />
-          <p v-if="b.headStart" class="nj-hd">{{ b.heading }}<span v-if="b.times" class="nj-times">（{{ b.times }}）</span></p>
+          <!-- 要念的标题：显示成品名，字也跟着高亮 -->
+          <p v-if="b.kind === 'head'" class="nj-hd nj-hd--read"><span
+            :data-line="b.lines[0]"
+            class="nj-ln"
+            :class="{ now: b.lines[0] === lineIndex }"
+          ><SutraLine
+            :tokens="units.lines[b.lines[0]].tokens"
+            :cursor="b.lines[0] < lineIndex ? Infinity : b.lines[0] > lineIndex ? -1 : cursor"
+            @pick="pick"
+          /></span><span v-if="b.times" class="nj-times">（{{ b.times }}）</span></p>
+          <p v-else-if="b.headStart" class="nj-hd">{{ b.heading }}<span v-if="b.times" class="nj-times">（{{ b.times }}）</span></p>
           <p v-if="b.kind === 'para'" class="nj-para"><span
             v-for="li in b.lines"
             :key="li"
@@ -556,7 +566,7 @@ onBeforeUnmount(() => {
             :cursor="li < lineIndex ? Infinity : li > lineIndex ? -1 : cursor"
             @pick="pick"
           /></span></p>
-          <div v-else class="nj-verse">
+          <div v-else-if="b.kind === 'verse'" class="nj-verse">
             <p v-for="row in b.rows" :key="row.lines[0]" class="nj-vrow" :class="{ gap: row.gapBefore }"><template v-for="(li, k) in row.lines" :key="li"><template v-if="k">　</template><span
               :data-line="li"
               class="nj-ln"

@@ -2,6 +2,7 @@
 // 经文只取已两源对照校订的数据；每部按需加载，不进主包。
 import { BUDDHAS } from './buddhas.js'
 import { zhuyinForChars, zhuyinForText } from './zhuyinReadings.js'
+import { HEADING_PINYIN } from './headingPinyin.js'
 
 export const NIANJING = [
   { slug: 'xinjing', title: '心经', buddha: 'guanyin', jingSlug: 'xinjing', note: '二百六十字，几分钟念完', header: { title: '般若波罗蜜多心经', titlePy: 'bō rě bō luó mì duō xīn jīng', translator: '唐 三藏法师玄奘 译', translatorPy: 'táng sān zàng fǎ shī xuán zàng yì' }, load: () => import('./sutras/xinjing.js') },
@@ -41,6 +42,31 @@ export function buddhaImages(buddhaSlug) {
  * 返回 { chars: [{ ch, py, line, idx }], lines: [{ text, heading, start, end, tokens }] }
  * tokens 是这一行的显示片段：汉字 { ch, py, u（字单位序号）}，标点 { ch }。
  */
+/**
+ * 念经页：品名/分名/篇名/咒名也要念出来、跟着高亮。在每个标题第一次出现的那行前面插一行标题本身
+ * （带拼音，isHeading:true），之后排版把它当标题显示。HEADING_PINYIN 里没有的标题照旧只显示。
+ * 标题和下一行文字一样时（「南无本师释迦牟尼佛」这种只有一句的篇）不插，免得念两遍。
+ */
+export function withHeadingLines(rawLines) {
+  const out = []
+  let prev = ''
+  for (const l of rawLines) {
+    const h = l.heading || l.fenName || l.section || ''
+    if (h && h !== prev) {
+      const py = HEADING_PINYIN[h]
+      const same = String(l.text).replace(/[^\p{Script=Han}]/gu, '') === h.replace(/[^\p{Script=Han}]/gu, '')
+      if (py && !same) {
+        const head = { text: h, pinyin: py, isHeading: true, part: l.part }
+        for (const k of ['heading', 'fenName', 'section', 'times']) if (l[k]) head[k] = l[k]
+        out.push(head)
+      }
+      prev = h
+    }
+    out.push(l)
+  }
+  return out
+}
+
 export function toUnits(rawLines) {
   const chars = []
   const lines = []
@@ -73,6 +99,7 @@ export function toUnits(rawLines) {
       text: l.text,
       heading: carried,
       times: carriedTimes,
+      isHeading: !!l.isHeading,
       lineTimes: l.times && !l.heading ? l.times : '', // 这一行自己的遍数（「南无……（合掌三称）」）
       stanza: l.stanza,
       verse: l.verse,

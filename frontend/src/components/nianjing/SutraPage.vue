@@ -28,7 +28,13 @@ function cursorFor(seg) {
     <SutraHeader v-if="showHeader && header && !headerSeg" :header="header" :note="note" :intro="intro" data-sp-header />
     <template v-for="g in groups" :key="g.segs[0].start">
       <SutraHeader v-if="header && headerSeg && g.segs[0].idx === headerSeg" :header="header" :note="note" :intro="intro" :data-hd-for="headerSeg" data-sp-header />
-      <p v-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}<span v-if="g.times" class="nj-times">（{{ g.times }}）</span></p>
+      <!-- 要念的标题：显示成品名，字也跟着高亮 -->
+      <p v-if="g.kind === 'head'" class="nj-hd nj-hd--read" :data-hd-for="g.segs[0].idx" :data-sg="g.segs[0].idx"><span
+        :data-line="g.segs[0].line"
+        class="nj-ln"
+        :class="{ now: g.segs[0].line === lineIndex }"
+      ><SutraLine :tokens="g.segs[0].tokens" :cursor="cursorFor(g.segs[0])" @pick="$emit('pick', $event)" /></span><span v-if="g.times" class="nj-times">（{{ g.times }}）</span></p>
+      <p v-else-if="g.heading" class="nj-hd" :data-hd-for="g.segs[0].idx">{{ g.heading }}<span v-if="g.times" class="nj-times">（{{ g.times }}）</span></p>
       <p v-if="g.kind === 'para'" class="nj-para"><template v-for="sg in g.segs" :key="sg.start"><span class="nj-sg" :data-sg="sg.idx"><span
         v-for="pt in sg.parts"
         :key="pt.line + '-' + pt.tokens[0].u"
@@ -36,7 +42,7 @@ function cursorFor(seg) {
         class="nj-ln"
         :class="{ now: pt.line === lineIndex }"
       ><SutraLine :tokens="pt.tokens" :cursor="cursorFor(sg)" @pick="$emit('pick', $event)" /></span></span></template></p>
-      <div v-else class="nj-verse">
+      <div v-else-if="g.kind === 'verse'" class="nj-verse">
         <p v-for="sg in g.segs" :key="sg.start" class="nj-vrow" :class="{ gap: sg.gapBefore }" :data-sg="sg.idx"><template v-for="(pt, k) in sg.parts" :key="pt.line"><template v-if="k">　</template><span
           :data-line="pt.line"
           class="nj-ln"
@@ -66,6 +72,9 @@ function cursorFor(seg) {
   color: #7a2a1c;
   line-height: 1.8;
 }
+/* 要念的标题：带拼音，行高跟经文一样留出拼音的位置 */
+.nj-hd--read { line-height: var(--nj-lh, 2); }
+.nj-hd--read .nj-ln.now { background: rgba(230, 184, 102, 0.34); }
 /* 篇名后的「（三遍）」：小号灰字，只是提示 */
 .nj-times { margin-left: 0.2em; font-size: 0.62em; font-weight: 400; color: #9a8f84; }
 .nj-verse { margin: 0 0 0.3em; }

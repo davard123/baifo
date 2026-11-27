@@ -23,6 +23,13 @@ export function buildBlocks(lines) {
   let prevHeading = ''
   lines.forEach((l, i) => {
     const heading = l.heading || ''
+    // 要念的标题行（withHeadingLines 插进来的）：单独一块，显示成品名，也跟着高亮
+    if (l.isHeading) {
+      blocks.push({ kind: 'head', heading, times: l.times || '', headStart: true, lines: [i], rows: [], closed: true })
+      cur = null
+      prevHeading = heading
+      return
+    }
     const headStart = !!heading && heading !== prevHeading
     prevHeading = heading
     const verse = isVerseLine(l)
@@ -80,6 +87,15 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
   const segs = []
   blocks.forEach((b, bi) => {
     const begin = segs.length
+    if (b.kind === 'head') {
+      const s = makeSeg([{ line: b.lines[0], tokens: lines[b.lines[0]].tokens }], lines)
+      s.head = true
+      s.headTimes = b.times || ''
+      s.block = bi
+      s.paraStart = true
+      segs.push(s)
+      return
+    }
     if (b.kind === 'verse') {
       for (const row of b.rows) {
         const pieces = []
@@ -161,6 +177,8 @@ export function buildSegments(lines, blocks = buildBlocks(lines)) {
 // 经文行高（倍字号）：标拼音/注音时 2.0，不标音 1.7（原来一律 2.25，空白太多，跟读时一屏看不到几行）
 export const LINE_H_RUBY = 2
 export const LINE_H_PLAIN = 1.7
+const segKind = (sg) => (sg.head ? 'head' : sg.gapBefore !== undefined ? 'verse' : 'para')
+
 // 品名小标题占的行数、偈颂一偈之间的小间距、段落之间的间距（按「行」算，实测分页会再校正）
 export const HEADING_ROWS = 1.4
 export const VERSE_GAP_ROWS = 0.2
@@ -194,13 +212,15 @@ export function paginate(segments, { width, fontPx, rows, topRows = 0, headerAt 
     return sg.parts.reduce((a, p) => a + Math.max(1, Math.ceil(p.tokens.filter((t) => !t.sep).reduce((x, t) => x + tokenWidth(t, fontPx), 0) / avail)), 0)
   }
   const groupRows = (g) =>
-    g.kind === 'verse'
+    g.kind === 'head'
+      ? HEADING_ROWS
+      : g.kind === 'verse'
       ? g.segs.reduce((a, sg) => a + verseRows(sg) + (sg.gapBefore ? VERSE_GAP_ROWS : 0), 0) + PARA_GAP_ROWS
       : Math.ceil(g.segs.reduce((a, sg) => a + segWidth(sg, fontPx), 0) / avail) + PARA_GAP_ROWS
   const startPage = () => ({ start: 0, groups: [], used: pages.length ? 0 : topRows })
   let page = startPage()
   for (const sg of segments) {
-    const kind = sg.gapBefore !== undefined ? 'verse' : 'para'
+    const kind = segKind(sg)
     const g = page.groups.at(-1)
     const sameGroup = g && g.block === sg.block && !sg.paraStart
     const cost = sameGroup
@@ -229,7 +249,7 @@ export function groupSegments(segs) {
   for (const sg of segs) {
     const g = groups.at(-1)
     if (g && g.block === sg.block && !sg.paraStart) g.segs.push(sg)
-    else groups.push({ block: sg.block, kind: sg.gapBefore !== undefined ? 'verse' : 'para', heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
+    else groups.push({ block: sg.block, kind: segKind(sg), heading: sg.heading || '', times: sg.headTimes || '', segs: [sg] })
   }
   return groups
 }

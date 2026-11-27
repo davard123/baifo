@@ -1,7 +1,7 @@
 // 念经页的状态：念到哪个字、往下走的方式、背景声、字号、续读。
 // 「念到哪」统一用 cursor 表示：已经念完的字数（0…总字数）。
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
-import { NIANJING_BY_SLUG, UNVERIFIED_CHARS, decorateUnits, toUnits } from '../data/nianjing.js'
+import { NIANJING_BY_SLUG, UNVERIFIED_CHARS, decorateUnits, toUnits, withHeadingLines } from '../data/nianjing.js'
 import { loadConverter } from '../i18n/hant.js'
 import { hantSutraText } from '../i18n/hantSutra.js'
 import { SutraAligner, fuzzy } from '../utils/sutraAligner.js'
@@ -304,7 +304,7 @@ export function useNianjing(slugRef, { hant = false } = {}) {
     const [mod, convert] = await Promise.all([meta.value.load(), hant ? loadConverter().catch(() => null) : null])
     if (slug !== slugRef.value) return
     sutra.value = mod.default
-    const rawLines = mod.default.lines
+    const rawLines = withHeadingLines(mod.default.lines) // 品名/篇名也跟着念
     const hantLines = convert ? rawLines.map((l) => hantSutraText(l.text, convert, l.pinyin)) : null
     units.value = decorateUnits(toUnits(rawLines), hantLines)
     blocks.value = buildBlocks(units.value.lines)
