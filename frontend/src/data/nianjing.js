@@ -73,6 +73,7 @@ export function toUnits(rawLines) {
       text: l.text,
       heading: carried,
       times: carriedTimes,
+      lineTimes: l.times && !l.heading ? l.times : '', // 这一行自己的遍数（「南无……（合掌三称）」）
       stanza: l.stanza,
       verse: l.verse,
       part: l.part,

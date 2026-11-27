@@ -356,6 +356,60 @@ function goToLine(i) {
   })
 }
 
+// ── 要念几遍的篇/句（「三遍」「合掌三称」）：念到末尾自动回到开头再念，念够遍数才往下走 ──
+const CN_NUM = { 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 }
+function timesCount(t) {
+  const m = String(t || '').match(/([一二两三四五六七八九十])[遍称声]/)
+  return m ? CN_NUM[m[1]] : 0
+}
+const repeatRanges = computed(() => {
+  const ls = units.value.lines
+  const out = []
+  ls.forEach((l, i) => {
+    // 篇的遍数：从这篇第一行到最后一行
+    if (l.times && (i === 0 || ls[i - 1].heading !== l.heading || ls[i - 1].times !== l.times)) {
+      const n = timesCount(l.times)
+      let j = i
+      while (j + 1 < ls.length && ls[j + 1].heading === l.heading) j += 1
+      if (n > 1) out.push({ start: l.start, end: ls[j].end, n })
+    }
+    // 单句的遍数：这一行
+    const n = timesCount(l.lineTimes)
+    if (n > 1) out.push({ start: l.start, end: l.end, n })
+  })
+  return out.filter((r) => r.end > r.start)
+})
+const repeatDone = ref({}) // 区间 start → 已经念完几遍
+let repeating = false
+watch(cursor, (cur, prev) => {
+  if (repeating) return
+  for (const r of repeatRanges.value) {
+    const done = repeatDone.value[r.start] || 0
+    if (cur < r.start) {
+      if (done) repeatDone.value = { ...repeatDone.value, [r.start]: 0 }
+      continue
+    }
+    // 从区间里面往前走过了末尾：还没念够就回到开头
+    if (prev >= r.start && prev < r.end && cur >= r.end) {
+      if (done + 1 < r.n) {
+        repeatDone.value = { ...repeatDone.value, [r.start]: done + 1 }
+        repeating = true
+        nj.setCursor(r.start)
+        repeating = false
+      } else if (done) repeatDone.value = { ...repeatDone.value, [r.start]: 0 }
+      return
+    }
+  }
+})
+// 正在念的那个要念几遍的区间：第几遍 / 共几遍（单句优先）
+const repeatNow = computed(() => {
+  const c = cursor.value
+  const hits = repeatRanges.value.filter((r) => c >= r.start && c < r.end)
+  if (!hits.length) return null
+  const r = hits.reduce((a, b) => (b.end - b.start < a.end - a.start ? b : a))
+  return { k: (repeatDone.value[r.start] || 0) + 1, n: r.n }
+})
+
 // ── 书页：直接跳到第几页 ──
 const pageInput = ref('')
 function jumpPage() {
@@ -452,7 +506,9 @@ onBeforeUnmount(() => {
     <header class="nj-bar">
       <router-link to="/nianjing/" class="nj-back" aria-label="返回经目">‹ 经目</router-link>
       <h1 class="nj-title">{{ heading }}</h1>
-      <span v-if="reading" class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
+      <!-- 卡拉OK 的品名旁已有「第几遍」；提词器在顶栏显示（顶栏挤，这时不显示百分比） -->
+      <span v-if="reading && repeatNow && view !== 'karaoke'" class="nj-rep nj-rep--bar" aria-live="polite">第 {{ repeatNow.k }}/{{ repeatNow.n }} 遍</span>
+      <span v-else-if="reading" class="nj-pct" aria-label="进度">{{ progressPct }}%</span>
       <button v-if="reading && toc.length" type="button" class="nj-tocbtn" :aria-expanded="showToc" @click="showToc = !showToc; showSettings = false">目录</button>
       <div v-if="showToc && reading && toc.length" class="nj-toc nj-toc--top" role="dialog" aria-label="目录">
         <button v-for="t in toc" :key="t.line" type="button" :class="{ on: t.line === curTocLine }" @click="goToLine(t.line)">{{ t.heading }}<small v-if="t.times">（{{ t.times }}）</small></button>
@@ -475,7 +531,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="nj-kline">
           <SutraHeader v-if="showKHeader" :header="header" :note="headerNote" :intro="headerIntro" class="nj-kheader" />
-          <p v-if="curHeading" class="nj-heading">{{ curHeading }}<span v-if="curTimes" class="nj-times">（{{ curTimes }}）</span></p>
+          <p v-if="curHeading" class="nj-heading">{{ curHeading }}<span v-if="curTimes" class="nj-times">（{{ curTimes }}）</span><span v-if="repeatNow" class="nj-rep">第 {{ repeatNow.k }}/{{ repeatNow.n }} 遍</span></p>
           <p class="nj-k nj-k--prev"><SutraSeg v-if="prevSeg" :seg="prevSeg" :cursor="Infinity" @pick="pick" /></p>
           <p class="nj-k nj-k--cur"><SutraSeg v-if="curSeg" :seg="curSeg" :cursor="cursorFor(curSeg)" @pick="pick" /></p>
           <p class="nj-k nj-k--next"><SutraSeg v-if="nextSeg" :seg="nextSeg" :cursor="-1" @pick="pick" /></p>
@@ -686,6 +742,8 @@ onBeforeUnmount(() => {
 .nj-back { color: #756558; text-decoration: none; white-space: nowrap; }
 .nj-title { font-size: 1.1rem; margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5a2a1a; }
 .nj-pct { font-size: 0.85rem; color: #9a8a7a; }
+/* 要念几遍的篇：念到第几遍 */
+.nj-rep { margin-left: 0.4em; padding: 1px 8px; border-radius: 999px; background: #f1dfbf; color: #7a2a1c; font-size: 0.78rem; font-weight: 600; white-space: nowrap; font-family: 'Noto Sans SC', system-ui, sans-serif; }
 .nj-viewtoggle { display: flex; gap: 4px; }
 .nj-viewtoggle button,
 .nj-chips button,
@@ -974,6 +1032,11 @@ onBeforeUnmount(() => {
 .nj-note { margin: 0; font-size: 0.8rem; color: #9a8a7a; }
 
 @media (max-width: 420px) {
+  /* 跟读时顶栏放不下：经名本来就被挤成一两个字，干脆不显示，留给「目录」「第几遍」 */
+  .nj-reader:not(.nj-full) .nj-bar { gap: 6px; padding-left: 8px; padding-right: 8px; }
+  .nj-reader:not(.nj-full) .nj-title { display: none; }
+  .nj-reader:not(.nj-full) .nj-viewtoggle { margin-left: auto; }
+  .nj-tocbtn { padding: 6px 8px; font-size: 0.82rem; }
   .nj-controls { gap: 5px; padding-left: 8px; padding-right: 8px; }
   .nj-chips { gap: 2px; }
   .nj-viewtoggle button,
