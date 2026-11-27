@@ -4,7 +4,7 @@
 
 export const FENGSHUI_APP = {
   name: '九宫风水',
-  url: 'https://apps.apple.com/us/app/id6779891043',
+  url: 'https://apps.apple.com/us/app/id6779891043?ct=fopusha',
   icon: '/app-icon-fengshui.jpg',
   iconAlt: '九宫风水 App 图标',
   tag: '免费下载 App',
